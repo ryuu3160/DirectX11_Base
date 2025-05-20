@@ -12,7 +12,6 @@
 // ==============================
 //	include
 // ==============================
-#include <Windows.h>
 #include "../Singleton/Singleton.hpp"
 
 // メンバ関数にGetClassNameがあるため、マクロを無効化

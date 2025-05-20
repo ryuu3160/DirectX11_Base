@@ -12,7 +12,6 @@
 //	include
 // ==============================
 #include "Window.hpp"
-#include <Windows.h>
 
 Window::Window()
 {
