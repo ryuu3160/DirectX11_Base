@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{18b3ecc8-5696-48d8-b559-0899ccaf461d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader">
+      <UniqueIdentifier>{b10e3103-14d0-46c3-b3a6-ec1f3eade95c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11">
+      <UniqueIdentifier>{8cda81ea-19aa-4e93-af7e-896524b9f5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\App">
+      <UniqueIdentifier>{b87f74a5-89db-40db-9a52-9cef2625feea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System">
+      <UniqueIdentifier>{6e3a07cc-1a60-48ea-9c88-58408954477a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\System">
+      <UniqueIdentifier>{57613732-92ce-4310-9d78-4aaa06eae2fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\Texture">
+      <UniqueIdentifier>{56545085-a460-4ad3-ba8a-44c2b2036d81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib">
+      <UniqueIdentifier>{0e6f99b9-aa4d-46fa-b2c4-5def24b407d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\Singleton">
+      <UniqueIdentifier>{283ede98-0f56-40ed-ad6e-0f8101b18787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\WindowGenerator">
+      <UniqueIdentifier>{c99e992c-7b7f-4d23-8256-2126e16ce848}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
+      <Filter>Source\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\Shader.cpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\Texture.cpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\UnorderedAccessView.cpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Sprite.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\Main.cpp">
+      <Filter>Source\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\Singleton\SingletonController.cpp">
+      <Filter>Source\System\ryuu_lib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp">
+      <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
+      <Filter>Source\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\Shader.hpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\Texture.hpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Sprite.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Main.hpp">
+      <Filter>Source\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp">
+      <Filter>Source\System\ryuu_lib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp">
+      <Filter>Source\System\ryuu_lib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp">
+      <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
