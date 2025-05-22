@@ -28,25 +28,42 @@ using Microsoft::WRL::ComPtr;
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <iostream>
+#include <iomanip>
 #include <memory>
 #include <algorithm>
-#include <array>
 #include <functional>
-#include <map>
 #include <any>
-#include <list>
 #include <mutex>
 #include <cmath>
+#include <random>
+#include <future>
 
-// ------------------------------
-//  Original
-// ------------------------------
+// -------------------------------
+//  STL ƒRƒ“ƒeƒi
+// -------------------------------
+#include <vector>
+#include <array>
+#include <map>
+#include <list>
+#include <unordered_map>
+#include <deque>
+#include <initializer_list>
 
 // ------------------------------
 //  ryuu_lib
 // ------------------------------
 #include "System/ryuu_lib/Singleton/Singleton.hpp"
 #include "System/ryuu_lib/WindowGenerator/Window.hpp"
+#include "System/ryuu_lib/RandomModule/Random.hpp"
+#include "System/ryuu_lib/Observer/Observer.hpp"
+#include "System/ryuu_lib/IME_Controller/IME.hpp"
+#include "System/ryuu_lib/FrameManager/FrameManager.hpp"
+#include "System/ryuu_lib/Easing/Easing.hpp"
+#include "System/ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
+
+// ------------------------------
+//  Original
+// ------------------------------
+
 

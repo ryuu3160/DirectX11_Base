@@ -393,7 +393,7 @@ void ComputeShader::Dispatch(UINT num, UnorderedAccessView **ppUAV, UINT thread)
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
 	ID3D11UnorderedAccessView *ptr[4];
 	if (num > 4) num = 4;
-	for (int i = 0; i < num; ++i)
+	for (unsigned int i = 0; i < num; ++i)
 		ptr[i] = ppUAV[i]->GetUAV();
 	pContext->CSSetUnorderedAccessViews(0, num, ptr, nullptr);
 	pContext->Dispatch(thread, 1, 1);

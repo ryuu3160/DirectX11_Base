@@ -159,6 +159,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\IME_Controller\IME.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\Observer\Observer.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\Singleton\SingletonController.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp" />
   </ItemGroup>
@@ -174,6 +180,12 @@
     <ClInclude Include="Source\DirectX11\Texture\Texture.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\RandomModule\Random.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp" />
