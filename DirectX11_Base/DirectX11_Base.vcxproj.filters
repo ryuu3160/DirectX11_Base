@@ -157,4 +157,12 @@
       <Filter>Source\System\ryuu_lib\CRC31_HashGenerator</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\Shader\VS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\PS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>
