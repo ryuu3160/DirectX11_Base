@@ -72,6 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+    <PublicIncludeDirectories>
+    </PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
@@ -115,7 +117,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +141,7 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,12 +159,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp" />
+    <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Shader.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Texture.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\UnorderedAccessView.cpp" />
+    <ClCompile Include="Source\EntryPoint.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -187,6 +192,7 @@
     <ClInclude Include="Source\DirectX11\Texture\Shader.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\Texture.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp" />
+    <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />

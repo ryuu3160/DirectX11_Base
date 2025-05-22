@@ -12,6 +12,7 @@
 //	include
 // ==============================
 #include "Window.hpp"
+#include <Windows.h>
 
 Window::Window()
 {
@@ -21,6 +22,8 @@ Window::Window()
 	m_nWidth = 0;
 	m_nHeight = 0;
 	m_rcWindowRect = { 0, 0, 0, 0 };
+	m_bIsCloseWindow = false;
+	m_msgRoop = {};
 
 	// 既定のアイコン
 	m_hIconInstance = NULL;
@@ -157,6 +160,31 @@ void Window::SetWindowPosCenter()
 
 	// ウィンドウの位置を設定
 	SetWindowPos(m_hWnd, NULL, m_nX, m_nY, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+}
+
+bool Window::MessageLoop()
+{
+	if (PeekMessage(&m_msgRoop, NULL, 0, 0, PM_NOREMOVE))
+	{
+		if (!GetMessage(&m_msgRoop, NULL, 0, 0))
+		{
+			m_bIsCloseWindow = true;	// ウィンドウを閉じるフラグを立てる
+		}
+		else
+		{
+			TranslateMessage(&m_msgRoop);
+			DispatchMessage(&m_msgRoop);
+		}
+
+		return false;
+	}
+
+	return true;
+}
+
+bool Window::IsLoop() const noexcept
+{
+	return !m_bIsCloseWindow;
 }
 
 HWND& Window::GetHwnd()

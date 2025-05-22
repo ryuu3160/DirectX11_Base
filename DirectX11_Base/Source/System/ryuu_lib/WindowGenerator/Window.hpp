@@ -12,6 +12,7 @@
 // ==============================
 //	include
 // ==============================
+#include <Windows.h>
 #include "../Singleton/Singleton.hpp"
 
 // メンバ関数にGetClassNameがあるため、マクロを無効化
@@ -48,6 +49,22 @@ public:
 	/// ウィンドウを画面中央に移動
 	/// </summary>
 	void SetWindowPosCenter();
+
+	/// <summary>
+	/// メッセージループで使用する
+	/// </summary>
+	/// <returns>メッセージループの結果(trueの間はゲームループを実行してください)</returns>
+	/// <memo>if文の条件式で使用し、trueが帰ってきた場合は、ゲームのメインループを実行してください</memo>
+	bool MessageLoop();
+
+	/// <summary>
+	/// メインループの制御
+	/// </summary>
+	/// <returns>
+	/// <para>Windowのバツボタンが押された場合、falsを返す</para>
+	/// <para>それ以外はtrueを返し続ける</para>
+	/// </returns>
+	bool IsLoop() const noexcept;
 
 	/// <summary>
 	/// ウィンドウハンドルの取得
@@ -159,11 +176,13 @@ private:
 	~Window() override;
 
 private:
-	WNDCLASSEX m_wcex;		//ウィンドウクラス情報
-	HWND m_hWnd;			//ウィンドウハンドル
-	int m_nWidth;			//ウィンドウの横幅
-	int m_nHeight;			//ウィンドウの縦幅
-	RECT m_rcWindowRect;	//ウィンドウの矩形
+	WNDCLASSEX m_wcex;		// ウィンドウクラス情報
+	HWND m_hWnd;			// ウィンドウハンドル
+	int m_nWidth;			// ウィンドウの横幅
+	int m_nHeight;			// ウィンドウの縦幅
+	RECT m_rcWindowRect;	// ウィンドウの矩形
+	MSG m_msgRoop;			// メッセージループ
+	bool m_bIsCloseWindow;	// ウィンドウが閉じられたかどうか
 
 	LPCSTR m_lpcTitleName;	// タイトルバーの表示名
 

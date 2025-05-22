@@ -1,18 +1,39 @@
 /*+===================================================================
 	File: Main.cpp
-	Summary: エントリーポイント
+	Summary: ゲームのメイン処理
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/05/20 Tue PM 12:11:45 初回作成
+	Date: 2025/5/22 Thu PM 06:14:25 初回作成
+	（これ以降下に更新日時と更新内容を書く）
 ===================================================================+*/
 
 // ==============================
 //	include
 // ==============================
 #include "Main.hpp"
+#include "DirectX11/DX11_Initialize.hpp"
 
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+HRESULT Main::Init(HWND hWnd, UINT width, UINT height)
 {
-	// メモリリーク検出
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	HRESULT hr;
+
+	// DirectXの初期化
+	//hr = 
+
+	return hr;
+}
+
+void Main::Uninit()
+{
+	
+}
+
+void Main::Update()
+{
+	
+}
+
+void Main::Draw()
+{
+	
 }
