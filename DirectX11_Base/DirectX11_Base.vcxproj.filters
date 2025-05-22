@@ -35,6 +35,24 @@
     <Filter Include="Source\System\ryuu_lib\WindowGenerator">
       <UniqueIdentifier>{c99e992c-7b7f-4d23-8256-2126e16ce848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\ryuu_lib\RandomModule">
+      <UniqueIdentifier>{7c2da15c-f68e-4580-a26a-ce45501ff175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\Observer">
+      <UniqueIdentifier>{2446a2e2-57e9-4351-94bf-4c94c43dcfae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\IME_Controller">
+      <UniqueIdentifier>{7389d220-369c-4170-92df-75da7a200a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\FrameManager">
+      <UniqueIdentifier>{18675544-67e8-46a2-9f00-eb191d140bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\Easing">
+      <UniqueIdentifier>{8a393d85-d628-40f4-839d-c17069b36b37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ryuu_lib\CRC31_HashGenerator">
+      <UniqueIdentifier>{b5238888-7062-49fe-b0c2-957286dd4a15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -66,6 +84,24 @@
     </ClCompile>
     <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp">
       <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp">
+      <Filter>Source\System\ryuu_lib\RandomModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\Observer\Observer.cpp">
+      <Filter>Source\System\ryuu_lib\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\IME_Controller\IME.cpp">
+      <Filter>Source\System\ryuu_lib\IME_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp">
+      <Filter>Source\System\ryuu_lib\FrameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp">
+      <Filter>Source\System\ryuu_lib\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp">
+      <Filter>Source\System\ryuu_lib\CRC31_HashGenerator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +137,24 @@
     </ClInclude>
     <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp">
       <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\RandomModule\Random.hpp">
+      <Filter>Source\System\ryuu_lib\RandomModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp">
+      <Filter>Source\System\ryuu_lib\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp">
+      <Filter>Source\System\ryuu_lib\IME_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp">
+      <Filter>Source\System\ryuu_lib\FrameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp">
+      <Filter>Source\System\ryuu_lib\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp">
+      <Filter>Source\System\ryuu_lib\CRC31_HashGenerator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
