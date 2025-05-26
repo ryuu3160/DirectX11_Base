@@ -13,7 +13,7 @@
 
 namespace Main
 {
-	HRESULT Init(HWND hWnd, UINT width, UINT height);
+	HRESULT Init(HWND hWnd, int width, int height);
 	void Uninit();
 	void Update();
 	void Draw();

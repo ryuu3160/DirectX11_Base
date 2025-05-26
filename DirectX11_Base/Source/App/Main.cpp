@@ -13,12 +13,16 @@
 #include "DirectX11/DX11_Initialize.hpp"
 
 
-HRESULT Main::Init(HWND hWnd, UINT width, UINT height)
+HRESULT Main::Init(HWND hWnd, int width, int height)
 {
 	HRESULT hr;
 
 	// DirectXÇÃèâä˙âª
-	//hr = 
+	hr = DX11_Initialize::GetInstance().Init();
+	if (FAILED(hr))
+		return hr;
+
+
 
 	return hr;
 }
@@ -35,5 +39,8 @@ void Main::Update()
 
 void Main::Draw()
 {
-	
+	DX11_Initialize::GetInstance().BeginDraw();
+
+
+	DX11_Initialize::GetInstance().EndDraw();
 }

@@ -50,12 +50,13 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			// fps制御
 			if (frame.UpdateMain())
 			{
-
+				Main::Update();	// 更新処理
+				Main::Draw();	// 描画処理
 			}
 		}
 	}
 
-
+	Main::Uninit();	// 各種機能の解放
 
 	// Singletonオブジェクトの解放
 	SingletonController::Release();
