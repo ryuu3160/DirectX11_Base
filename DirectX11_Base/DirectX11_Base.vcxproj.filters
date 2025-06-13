@@ -53,6 +53,18 @@
     <Filter Include="Source\System\ryuu_lib\CRC31_HashGenerator">
       <UniqueIdentifier>{b5238888-7062-49fe-b0c2-957286dd4a15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\Input">
+      <UniqueIdentifier>{ddbead5c-28a6-46fb-b1c3-4ee858584f62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\App\Scene">
+      <UniqueIdentifier>{1cd1d12b-2c87-4c03-b92a-25d18b3128ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Scene">
+      <UniqueIdentifier>{21fa017c-a310-442c-aba6-e901c6b760dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\ImGui">
+      <UniqueIdentifier>{18b9022a-3be1-4ad4-95b3-fe1f3eb0dac3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -105,6 +117,30 @@
     </ClCompile>
     <ClCompile Include="Source\App\Main.cpp">
       <Filter>Source\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Input\Input.cpp">
+      <Filter>Source\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Scene\SceneBase.cpp">
+      <Filter>Source\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui_draw.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui_tables.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
+      <Filter>Source\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Geometory.cpp">
+      <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,12 +198,48 @@
     <ClInclude Include="Source\App\Main.hpp">
       <Filter>Source\App</Filter>
     </ClInclude>
+    <ClInclude Include="Source\System\Input\Input.hpp">
+      <Filter>Source\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Scene\SceneBase.hpp">
+      <Filter>Source\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imgui.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imgui_internal.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imstb_rectpack.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imstb_textedit.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imstb_truetype.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imconfig.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
+      <Filter>Source\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Geometory.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\VS_Sprite.hlsl">
       <Filter>リソース ファイル\Shader</Filter>
     </FxCompile>
     <FxCompile Include="Assets\Shader\PS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\VS_Geometory.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\PS_Geometory.hlsl">
       <Filter>リソース ファイル\Shader</Filter>
     </FxCompile>
   </ItemGroup>

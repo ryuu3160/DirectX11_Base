@@ -162,6 +162,7 @@
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
     <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Shader.cpp" />
@@ -172,6 +173,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui.cpp" />
+    <ClCompile Include="Source\System\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\System\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\System\Input\Input.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp" />
@@ -180,6 +186,14 @@
     <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\Singleton\SingletonController.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp" />
+    <ClCompile Include="Source\System\Scene\SceneBase.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\Main.hpp">
@@ -187,6 +201,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
+    <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
     <ClInclude Include="Source\DirectX11\System\Sprite.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\Shader.hpp" />
@@ -194,6 +209,13 @@
     <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp" />
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\System\ImGui\imconfig.h" />
+    <ClInclude Include="Source\System\ImGui\imgui.h" />
+    <ClInclude Include="Source\System\ImGui\imgui_internal.h" />
+    <ClInclude Include="Source\System\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Source\System\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Source\System\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\System\Input\Input.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp" />
@@ -203,12 +225,32 @@
     <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp" />
+    <ClInclude Include="Source\System\Scene\SceneBase.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Assets\Shader\PS_Geometory.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Assets\Shader\PS_Sprite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Assets\Shader\VS_Geometory.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Assets\Shader\VS_Sprite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
