@@ -1,0 +1,63 @@
+//Input.cpp
+#include "Input.hpp"
+
+namespace Input
+{
+
+namespace
+{
+BYTE g_KeyTable[256]; // キーボードのキーの状態を保存するテーブル
+BYTE g_oldKeyTable[256]; // 前のキーボードのキーの状態を保存するテーブル
+}
+
+HRESULT Init()
+{
+	//最初の入力
+	if (GetKeyboardState(g_KeyTable))
+	{
+		return S_OK;
+	}
+	else
+	{
+		OutputDebugStringA("error : キーボードの初期化に失敗しました。");
+		return E_FAIL;
+	}
+}
+
+void Uninit()
+{
+}
+
+void Update()
+{
+	//古い入力を更新
+	memcpy_s(g_oldKeyTable, sizeof(g_oldKeyTable), g_KeyTable, sizeof(g_KeyTable));
+	//現在の入力を取得
+	//最初の入力
+	if (!GetKeyboardState(g_KeyTable))
+	{
+		OutputDebugStringA("error : キーボードの更新に失敗しました。");
+	}
+}
+
+bool IsKeyPress(BYTE key)
+{
+	return g_KeyTable[key] & 0x80;
+}
+
+bool IsKeyTrigger(BYTE key)
+{
+	return (g_KeyTable[key] ^ g_oldKeyTable[key]) & g_KeyTable[key] & 0x80;
+}
+
+bool IsKeyRelease(BYTE key)
+{
+	return (g_KeyTable[key] ^ g_oldKeyTable[key]) & g_oldKeyTable[key] & 0x80;
+}
+
+bool IsKeyRepeat(BYTE key)
+{
+	return false;
+}
+
+} // namespace Input
