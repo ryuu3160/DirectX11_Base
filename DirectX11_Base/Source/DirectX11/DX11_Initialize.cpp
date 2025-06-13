@@ -12,12 +12,9 @@
 #include "Texture/Texture.hpp"
 
 DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_BlendFactor{0.0f, 0.0f, 0.0f, 0.0f}
-								, m_pRT(nullptr), m_pDS(nullptr)
 {
 	//nullptrでの初期化
 	m_cpDevice = nullptr;
-	m_pDebug1 = nullptr;
-	m_pDebug2 = nullptr;
 	m_cpContext = nullptr;
 	m_cpSwapChain = nullptr;
 	m_cpRasterizerState[0] = nullptr;
@@ -29,7 +26,7 @@ DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_B
 	m_Width = Window::GetInstance().GetWidth();
 	m_Height = Window::GetInstance().GetHeight();
 
-	m_RefreshRate_Numerator = 60;
+	m_RefreshRate_Numerator = 1000;
 	m_RefreshRate_Denominator = 1;
 	m_SampleDesc_Count = 1;
 	m_SampleDesc_Quality = 0;
@@ -65,28 +62,11 @@ DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_B
 
 DX11_Initialize::~DX11_Initialize()
 {
-	if(m_pDebug1) m_pDebug1->Release();//デバッグ機能の解放
-	if (m_pDebug2) m_pDebug2->Release();//デバッグ機能の解放
 }
 
 HRESULT DX11_Initialize::Init()
 {
-	//factoryの作成
-	m_hr = CreateDXGIFactory1(IID_PPV_ARGS(&m_cpFactory));
-	if (FAILED(m_hr)) { return m_hr; }
-
-	//デバイスとでデバイスコンテキストの作成
-	for (UINT Index = 0; Index < m_nuDriverTypes; Index++)
-	{
-		m_hr = D3D11CreateDevice(nullptr, m_DriverType, nullptr, m_nuCreateDeviceFlags, m_FeatureLevels, m_nuFeatureLevels,
-			D3D11_SDK_VERSION, &m_cpDevice, &m_FeatureLevel, &m_cpContext);
-
-		if (SUCCEEDED(m_hr))
-		{
-			break;
-		}
-	}
-	if (FAILED(m_hr)) { return m_hr; }
+	m_hr = E_FAIL;
 
 	///==========================
 	/// スワップチェインの作成
@@ -96,33 +76,43 @@ HRESULT DX11_Initialize::Init()
 	ini_sd.BufferDesc.Width = m_Width; // フレームバッファの幅
 	ini_sd.BufferDesc.Height = m_Height; // フレームバッファの高さ
 	ini_sd.BufferDesc.Format = m_Format; // フレームバッファの色情報(各8bit)
-	//ini_sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	//ini_sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	ini_sd.SampleDesc.Count = m_SampleDesc_Count; // マルチサンプリングの数
 	ini_sd.BufferDesc.RefreshRate.Numerator = m_RefreshRate_Numerator;
 	ini_sd.BufferDesc.RefreshRate.Denominator = m_RefreshRate_Denominator;
-	ini_sd.SampleDesc.Count = m_SampleDesc_Count; // マルチサンプリングの数
-	//ini_sd.SampleDesc.Quality = m_SampleDesc_Quality; // マルチサンプリングの品質
 	ini_sd.BufferUsage = m_BufferUsage; // バックバッファの使用方法
 	ini_sd.BufferCount = m_BufferCount; // バックバッファの数
 	ini_sd.OutputWindow = Window::GetInstance().GetHwnd(); // 関連付けるウインドウ
 	ini_sd.Windowed = m_FullScreen ? FALSE : TRUE; // ウィンドウモードかフルスクリーンモードか
-	//ini_sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	ini_sd.Flags = m_Flags;
 
-	//スワップチェイン作成
-	m_hr = m_cpFactory->CreateSwapChain(m_cpDevice.Get(), &ini_sd, &m_cpSwapChain);
-	if (FAILED(m_hr)) { return m_hr; }
-
-	//レンダーターゲット設定
-	m_pRT = new RenderTarget();
-	if (FAILED(m_hr = m_pRT->CreateFromScreen()))
+	for (UINT driverTypeIndex = 0; driverTypeIndex < m_nuDriverTypes; ++driverTypeIndex)
+	{
+		auto SwapChain = m_cpSwapChain.Get();
+		auto Device = m_cpDevice.Get();
+		auto Context = m_cpContext.Get();
+		m_DriverType = m_DriverTypes[driverTypeIndex];
+		m_hr = D3D11CreateDeviceAndSwapChain(
+			NULL,					// ディスプレイデバイスのアダプタ（NULLの場合最初に見つかったアダプタ）
+			m_DriverType,				// デバイスドライバのタイプ
+			NULL,					// ソフトウェアラスタライザを使用する場合に指定する
+			m_nuCreateDeviceFlags,		// デバイスフラグ
+			m_FeatureLevels,			// 機能レベル
+			m_nuFeatureLevels,		// 機能レベル数
+			D3D11_SDK_VERSION,		// 
+			&ini_sd,					// スワップチェインの設定
+			&SwapChain,			// IDXGIDwapChainインタフェース	
+			&Device,				// ID3D11Deviceインタフェース
+			&m_FeatureLevel,		// サポートされている機能レベル
+			&Context);		// デバイスコンテキスト
+		if (SUCCEEDED(m_hr))
+		{
+			break;
+		}
+	}
+	if (FAILED(m_hr))
+	{
 		return m_hr;
-
-	//深度テクスチャ設定
-	m_pDS = new DepthStencil();
-	if (FAILED(m_hr = m_pDS->Create(m_pRT->GetWidth(), m_pRT->GetHeight(), false)))
-		return m_hr;
-	SetRenderTargets(1, &m_pRT, nullptr);
+	}
 
 	// カリング設定
 	D3D11_RASTERIZER_DESC rasterizer = {};
@@ -140,6 +130,36 @@ HRESULT DX11_Initialize::Init()
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetCullingMode(D3D11_CULL_BACK);
+
+	// 深度テスト
+	// https://tositeru.github.io/ImasaraDX11/part/ZBuffer-and-depth-stencil
+	D3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.StencilEnable = true;
+	dsDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+	dsDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+	dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
+	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
+	dsDesc.BackFace = dsDesc.FrontFace;
+	bool enablePattern[] = { true, true, false };
+	D3D11_DEPTH_WRITE_MASK maskPattern[] = {
+		D3D11_DEPTH_WRITE_MASK_ALL,
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+		D3D11_DEPTH_WRITE_MASK_ZERO,
+	};
+	for (int i = 0; i < DEPTH_MAX; ++i)
+	{
+		auto DepthStencilState = m_cpDepthStencilState[i].Get();
+		dsDesc.DepthEnable = dsDesc.StencilEnable = enablePattern[i];
+		dsDesc.DepthWriteMask = maskPattern[i];
+		m_hr = m_cpDevice->CreateDepthStencilState(&dsDesc, &DepthStencilState);
+		if (FAILED(m_hr)) { return m_hr; }
+	}
+	SetDepthTest(DEPTH_ENABLE_WRITE_TEST);
 
 	//ブレンドステートの設定
 	// https://pgming-ctrl.com/directx11/blend/
@@ -162,9 +182,10 @@ HRESULT DX11_Initialize::Init()
 	};
 	for (int i = 0; i < BLEND_MAX; i++)
 	{
+		auto BlendState = m_cpBlendState[i].Get();
 		BlendDesc.RenderTarget[0].SrcBlend = Blend[i][0];
 		BlendDesc.RenderTarget[0].DestBlend = Blend[i][1];
-		m_hr = m_cpDevice->CreateBlendState(&BlendDesc, &m_cpBlendState[i]);
+		m_hr = m_cpDevice->CreateBlendState(&BlendDesc, &BlendState);
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetBlendMode(BLEND_ALPHA);
@@ -185,56 +206,26 @@ HRESULT DX11_Initialize::Init()
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetSamplerState(SAMPLER_LINEAR);
-
-#ifdef _DEBUG
-	// デバッグ機能の設定
-	m_hr = m_cpDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void **>(&m_pDebug1));
-	if (FAILED(m_hr)) return E_FAIL;
-
-	// デバッグ機能の設定(LiveObjects用)
-	auto handle = GetModuleHandle("DXGIDebug.dll");
-	if (handle)
-	{
-		auto fun = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(handle, "DXGIGetDebugInterface"));
-		if (fun)
-		{
-			fun(__uuidof(IDXGIDebug), (void **)&m_pDebug2);
-		}
-	}
-#endif // _DEBUG
 	
 	return m_hr;
 }
 
 void DX11_Initialize::Uninit()
 {
-	if (m_pDS)
-	{
-		delete m_pDS;
-		m_pDS = nullptr;
-	}
-	if (m_pRT)
-	{
-		delete m_pRT;
-		m_pRT = nullptr;
-	}
 	for (int i = 0; i < SAMPLER_MAX; i++)
 		m_cpSamplerState[i] = nullptr;
 	for (int i = 0; i < BLEND_MAX; i++)
 		m_cpBlendState[i] = nullptr;
+	for (int i = 0;i < 3; i++)
+		m_cpRasterizerState[i] = nullptr;
+
 	if(m_cpContext)
 		m_cpContext->ClearState();
 	if(m_cpSwapChain)
 		m_cpSwapChain->SetFullscreenState(false, NULL);
 }
 
-void DX11_Initialize::BeginDraw()
-{
-	// 描画開始時に画面をクリア
-	m_pRT->Clear(m_WindowColor);
-	m_pDS->Clear();
-}
-void DX11_Initialize::EndDraw()
+void DX11_Initialize::Swap()
 {
 	// 描画完了時に画面へ出力
 	m_cpSwapChain->Present(0, 0);
@@ -253,16 +244,6 @@ ID3D11DeviceContext* DX11_Initialize::GetDeviceContext()
 IDXGISwapChain *DX11_Initialize::GetSwapChain()
 {
 	return m_cpSwapChain.Get();
-}
-
-RenderTarget *DX11_Initialize::GetDefaultRTV()
-{
-	return m_pRT;
-}
-
-DepthStencil *DX11_Initialize::GetDefaultDSV()
-{
-	return m_pDS;
 }
 
 UINT DX11_Initialize::GetWidth() const
@@ -356,32 +337,6 @@ void DX11_Initialize::_SetFlags(UINT In_unFlags)
 	m_Flags = In_unFlags;
 }
 
-void DX11_Initialize::DebugOutput_LiveDeviceObjects()
-{
-	if (m_pDebug1)
-	{
-		m_pDebug1->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-		OutputDebugStringA(">>>>>>>>> DebugOutput_LiveDeviceObjects\n>>>>>>>>> デバッグ出力完了\n");
-	}
-	else
-	{
-		OutputDebugStringA(">>>>>>>>> DebugOutput_LiveDeviceObjects\n>>>>>>>>> デバッグ出力失敗\n");
-	}
-}
-
-void DX11_Initialize::DebugOutput_LiveObjects()
-{
-	if (m_pDebug2)
-	{
-		m_pDebug2->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-		OutputDebugStringA(">>>>>>>>> DebugOutput_LiveObjects\n>>>>>>>>> デバッグ出力完了\n");
-	}
-	else
-	{
-		OutputDebugStringA(">>>>>>>>> DebugOutput_LiveObjects\n>>>>>>>>> デバッグ出力失敗\n");
-	}
-}
-
 void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView)
 {
 	ID3D11RenderTargetView *rtvs[4];
@@ -419,8 +374,9 @@ void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull)
 	}
 }
 
-void DX11_Initialize::SetDepthTest(bool In_Enable)
+void DX11_Initialize::SetDepthTest(DepthState In_State)
 {
+	m_cpContext->OMSetDepthStencilState(m_cpDepthStencilState[In_State].Get(),0);
 }
 
 void DX11_Initialize::SetBlendMode(BlendMode In_Blend)
@@ -436,5 +392,8 @@ void DX11_Initialize::SetSamplerState(SamplerState In_State)
 	if (In_State < 0 || In_State >= SAMPLER_MAX)
 		return;
 	auto ptr = m_cpSamplerState[In_State].Get();
+	m_cpContext->VSSetSamplers(0, 1, &ptr);
 	m_cpContext->PSSetSamplers(0, 1, &ptr);
+	m_cpContext->HSSetSamplers(0, 1, &ptr);
+	m_cpContext->DSSetSamplers(0, 1, &ptr);
 }

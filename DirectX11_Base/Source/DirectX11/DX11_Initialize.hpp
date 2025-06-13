@@ -63,6 +63,17 @@ enum SamplerState
 };
 
 /// <summary>
+/// 深度ステート
+/// </summary>
+enum DepthState
+{
+	DEPTH_ENABLE_WRITE_TEST,
+	DEPTH_ENABLE_TEST,
+	DEPTH_DISABLE,
+	DEPTH_MAX
+};
+
+/// <summary>
 /// DirectX初期化クラス
 /// </summary>
 class DX11_Initialize : public Singleton<DX11_Initialize>
@@ -79,13 +90,9 @@ public:
 	/// </summary>
 	void Uninit();
 	/// <summary>
-	/// 描画開始処理
-	/// </summary>
-	void BeginDraw();
-	/// <summary>
 	/// 描画終了処理
 	/// </summary>
-	void EndDraw();
+	void Swap();
 
 	/// <summary>
 	/// ID3D11Deviceを取得する
@@ -102,16 +109,7 @@ public:
 	/// </summary>
 	/// <returns>IDXGISwapChainへのポインター</returns>
 	IDXGISwapChain *GetSwapChain();
-	/// <summary>
-	/// デフォルトのRenderTargetを取得する
-	/// </summary>
-	/// <returns>RanderTargetへのポインタ</returns>
-	RenderTarget *GetDefaultRTV();
-	/// <summary>
-	/// デフォルトのDepthStencilを取得する
-	/// </summary>
-	/// <returns>DepthStencilへのポインタ</returns>
-	DepthStencil *GetDefaultDSV();
+
 	/// <summary>
 	/// 幅を取得する
 	/// </summary>
@@ -200,15 +198,6 @@ public:
 	void _SetFlags(UINT In_unFlags);
 
 	/// <summary>
-	/// LiveDeviceObjectsのデバッグ出力
-	/// </summary>
-	void DebugOutput_LiveDeviceObjects();
-	/// <summary>
-	/// LiveObjectsのデバッグ出力
-	/// </summary>
-	void DebugOutput_LiveObjects();
-
-	/// <summary>
 	/// レンダーターゲットの設定
 	/// </summary>
 	/// <param name="[In_unNum]">設定数</param>
@@ -223,8 +212,8 @@ public:
 	/// <summary>
 	/// DepthTestの設定
 	/// </summary>
-	/// <param name="[In_Enable]">有効にするか否か</param>
-	void SetDepthTest(bool In_Enable);
+	/// <param name="[In_State]">有効にするか否か</param>
+	void SetDepthTest(DepthState In_State);
 	/// <summary>
 	/// BlendModeの設定
 	/// </summary>
@@ -247,18 +236,13 @@ private:
 	~DX11_Initialize() override;
 
 private:
-	ComPtr<IDXGIFactory> m_cpFactory;							//ファクトリー
 	ComPtr<ID3D11Device> m_cpDevice;							//DirectXでアセットの作成を行う機能
-	ID3D11Debug *m_pDebug1;										//デバッグ機能(LiveDeviceObjects用)
-	IDXGIDebug *m_pDebug2;										//デバッグ機能(LiveObjects用)
 	ComPtr<ID3D11DeviceContext> m_cpContext;					//DirectXで描画命令を発行する機能
 	ComPtr<IDXGISwapChain> m_cpSwapChain;						//フレームバッファとディスプレイの橋渡し
 	ComPtr<ID3D11RasterizerState> m_cpRasterizerState[3];		//ラスタライザステート
 	ComPtr<ID3D11BlendState> m_cpBlendState[BLEND_MAX];			// ブレンドステート
 	ComPtr<ID3D11SamplerState> m_cpSamplerState[SAMPLER_MAX];	//テクスチャのサンプリング方法を設定する
-
-	RenderTarget *m_pRT; //レンダーターゲットクラスのポインタ
-	DepthStencil *m_pDS; //デプスステンシルクラスのポインタ
+	ComPtr<ID3D11DepthStencilState> m_cpDepthStencilState[DEPTH_MAX];
 
 	HRESULT m_hr;	// エラーチェック用
 
