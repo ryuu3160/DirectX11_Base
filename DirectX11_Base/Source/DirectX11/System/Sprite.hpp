@@ -14,7 +14,7 @@
 #include "../Texture/Shader.hpp"
 #include "../Texture/Texture.hpp"
 
-class Sprite : Singleton<Sprite>  
+class Sprite : public Singleton<Sprite>  
 {  
    friend class Singleton<Sprite>;  
 public:  

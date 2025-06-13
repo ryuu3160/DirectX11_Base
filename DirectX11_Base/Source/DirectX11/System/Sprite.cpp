@@ -12,54 +12,6 @@
 
 void Sprite::Init()
 {
-	const char *VS = R"EOT(
-struct VS_IN {
-	float3 pos : POSITION0;
-	float2 uv : TEXCOORD0;
-};
-struct VS_OUT {
-	float4 pos : SV_POSITION;
-	float2 uv : TEXCOORD0;
-	float4 color : TEXCOORD1;
-};
-cbuffer Matrix : register(b0) {
-	float4x4 world;
-	float4x4 view;
-	float4x4 proj;
-};
-cbuffer Param : register(b1) {
-	float2 offset;
-	float2 size;
-	float2 uvPos;
-	float2 uvScale;
-	float4 color;
-};
-VS_OUT main(VS_IN vin) {
-	VS_OUT vout;
-	vout.pos = float4(vin.pos, 1.0f);
-	vout.pos.xy *= size;
-	vout.pos.xy += offset;
-	vout.pos = mul(vout.pos, world);
-	vout.pos = mul(vout.pos, view);
-	vout.pos = mul(vout.pos, proj);
-	vout.uv = vin.uv;
-	vout.uv *= uvScale;
-	vout.uv += uvPos;
-	vout.color = color;
-	return vout;
-})EOT";
-	const char *PS = R"EOT(
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float2 uv : TEXCOORD0;
-	float4 color : TEXCOORD1;
-};
-Texture2D tex : register(t0);
-SamplerState samp : register(s0);
-float4 main(PS_IN pin) : SV_TARGET {
-	return tex.Sample(samp, pin.uv) * pin.color;
-})EOT";
-
 	struct Vertex
 	{
 		float pos[3];
@@ -89,10 +41,10 @@ float4 main(PS_IN pin) : SV_TARGET {
 
 	// シェーダー
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Assets/Shader/SpriteVS.cso");
+	m_defVS->Load("Assets/Shader/VS_Sprite.cso");
 	m_data.vs = m_defVS.get();
 	m_defPS = std::make_shared <PixelShader>();
-	m_defPS->Compile(PS);
+	m_defPS->Load("Assets/Shader/PS_Sprite.cso");
 	m_data.ps = m_defPS.get();
 
 	// デフォルトテクスチャ
