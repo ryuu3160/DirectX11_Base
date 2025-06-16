@@ -1,7 +1,7 @@
 /*+===================================================================
 	File: SceneBase.hpp
 	Summary: シーンのベースクラス
-	Author: ryuu3160
+	Author: AT13C 01 青木雄一郎
 	Date: 2025/6/14 Sat AM 04:54:50 初回作成
 ===================================================================+*/
 #pragma once
@@ -11,28 +11,9 @@
 // ==============================
 
 // ==============================
-//	define
+//  undefine
 // ==============================
-
-// ==============================
-//	構造体定義
-// ==============================
-
-// ==============================
-//	列挙型定義
-// ==============================
-
-// ==============================
-//	プロトタイプ宣言
-// ==============================
-
-// ==============================
-//	定数定義
-// ==============================
-
-// ==============================
-//	グローバル変数宣言
-// ==============================
+#undef GetObject
 
 /// <summary>
 /// SceneBaseクラス
@@ -40,25 +21,43 @@
 class SceneBase
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	SceneBase() = default;
+	SceneBase();
+	virtual ~SceneBase();
 
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~SceneBase() = default;
+	static void Initialize() noexcept;
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	void RootUpdate() noexcept;
+	void RootDraw() noexcept;
+
+	// サブシーン操作
+	template <class T = SceneBase>
+	T* AddSubScene();
+	void RemoveSubScene();
+
+	// オブジェクト操作
+	template <class T = GameObject>
+	T *CreateObject(const char *In_szName);
+	
+	template <class T = GameObject>
+	T *GetObject(const char *In_szName);
 
 
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	// 継承先で使用する関数
+	virtual void Init() = 0;
+	virtual void Uninit() = 0;
+	virtual void Update() = 0;
+	virtual void Draw() = 0;
+
+protected:
+	SceneBase *m_pParent;		// 親シーン
+	SceneBase *m_pSubScene;		// サブシーンへのポインタ
 
 private:
-
+	std::string m_strName;
 };
+
+template<class T>
+inline T *SceneBase::AddSubScene()
+{
+	return nullptr;
+}

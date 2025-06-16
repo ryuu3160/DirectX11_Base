@@ -65,6 +65,12 @@
     <Filter Include="Source\System\ImGui">
       <UniqueIdentifier>{18b9022a-3be1-4ad4-95b3-fe1f3eb0dac3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\Object">
+      <UniqueIdentifier>{14a13e31-0a80-4cc5-bc59-c2cb32622f4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Component">
+      <UniqueIdentifier>{ae5c6251-7f69-4d65-bb84-667ec22e5e68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -141,6 +147,12 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp">
       <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Object\GameObject.cpp">
+      <Filter>Source\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\Component.cpp">
+      <Filter>Source\System\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp">
       <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Object\GameObject.hpp">
+      <Filter>Source\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\Component.hpp">
+      <Filter>Source\System\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

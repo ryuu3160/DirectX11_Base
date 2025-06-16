@@ -1,32 +1,31 @@
 /*+===================================================================
-	File: SceneRoot.hpp
-	Summary: （このファイルで何をするか記載する）
-	Author: AT13C 01 青木雄一郎
-	Date: 2025/6/14 Sat AM 07:23:10 初回作成
+	File: Component.hpp
+	Summary: コンポーネントの基底クラス
+	Author: AT13C192 01 青木雄一郎
+	Date: 2025/06/16 Mon AM 10:28:25 初回作成
 ===================================================================+*/
 #pragma once
 
 // ==============================
 //	include
 // ==============================
-#include "SceneBase.hpp"
 
 
 /// <summary>
-/// SceneRootクラス
+/// Componentクラス
 /// </summary>
-class SceneRoot : public SceneBase
+class Component
 {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	SceneRoot() = default;
+	Component() = default;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~SceneRoot() = default;
+	~Component() = default;
 
 	// ------------------------------
 	//  Getter

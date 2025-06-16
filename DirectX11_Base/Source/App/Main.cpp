@@ -38,8 +38,9 @@ HRESULT Main::Init()
 	Input::Init();
 
 	// ƒV[ƒ“‚Ì‰Šú‰»
-
+	SceneBase::Initialize();
 	g_pScene = std::make_shared<SceneRoot>();
+	g_pScene->Init();
 
 	DX11_Initialize::GetInstance().SetRenderTargets(1,)
 

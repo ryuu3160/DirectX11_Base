@@ -1,10 +1,10 @@
 /*+===================================================================
     File: SingletonController.hpp
     Summary: 自作シングルトン
-    Author: ryuu3160
+    Author: AT13C 01 青木雄一郎
     Date: 2024/08/16   初回作成
 
-    (C) 2024 ryuu3160. All Rights Reserved.
+    (C) 2024 AT13C 01 青木雄一郎. All Rights Reserved.
 ===================================================================+*/
 #pragma once
 

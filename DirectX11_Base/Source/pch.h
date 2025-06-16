@@ -65,5 +65,7 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 //  Original
 // ------------------------------
-
+#include "System/Object/GameObject.hpp"
+#include "System/Component/Component.hpp"
+#include "System/Input/Input.hpp"
 
