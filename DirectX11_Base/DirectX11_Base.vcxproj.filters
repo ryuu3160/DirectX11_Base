@@ -154,6 +154,12 @@
     <ClCompile Include="Source\System\Component\Component.cpp">
       <Filter>Source\System\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ImGui\imgui_impl_win32.cpp">
+      <Filter>Source\System\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -245,6 +251,12 @@
     </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
       <Filter>Source\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imgui_impl_dx11.h">
+      <Filter>Source\System\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\ImGui\imgui_impl_win32.h">
+      <Filter>Source\System\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

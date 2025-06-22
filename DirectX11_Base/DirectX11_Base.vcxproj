@@ -179,6 +179,8 @@
     </ClCompile>
     <ClCompile Include="Source\System\ImGui\imgui.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Source\System\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Source\System\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\System\Input\Input.cpp" />
@@ -223,6 +225,8 @@
     </ClInclude>
     <ClInclude Include="Source\System\ImGui\imconfig.h" />
     <ClInclude Include="Source\System\ImGui\imgui.h" />
+    <ClInclude Include="Source\System\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Source\System\ImGui\imgui_impl_win32.h" />
     <ClInclude Include="Source\System\ImGui\imgui_internal.h" />
     <ClInclude Include="Source\System\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Source\System\ImGui\imstb_textedit.h" />
