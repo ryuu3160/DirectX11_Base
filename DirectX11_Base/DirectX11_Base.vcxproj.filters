@@ -258,6 +258,9 @@
     <ClInclude Include="Source\System\ImGui\imgui_impl_win32.h">
       <Filter>Source\System\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Defines.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\VS_Sprite.hlsl">

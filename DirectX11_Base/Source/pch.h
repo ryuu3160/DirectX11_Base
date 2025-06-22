@@ -51,6 +51,11 @@ using Microsoft::WRL::ComPtr;
 #include <initializer_list>
 
 // ------------------------------
+//  DirectX11
+// ------------------------------
+#include <DirectXMath.h>
+
+// ------------------------------
 //  ryuu_lib
 // ------------------------------
 #include "System/ryuu_lib/Singleton/Singleton.hpp"
@@ -65,7 +70,7 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 //  Original
 // ------------------------------
+#include "Defines.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Component/Component.hpp"
 #include "System/Input/Input.hpp"
-

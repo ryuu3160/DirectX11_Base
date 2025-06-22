@@ -10,26 +10,145 @@
 // ==============================
 #include "GameObject.hpp"
 
-// ==============================
-//	define
-// ==============================
+GameObject::GameObject(std::string In_Name)
+	: m_Name(In_Name)
+	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
+{
+	// オブジェクト名に応じて、保存ファイルの読み込み
+	FilePath path = "Assets/GameObject/" + m_Name + ".dat";
+	std::fstream file;
+	file.open(path.data(), std::ios::in | std::ios::binary);
+	if (file.is_open())
+	{
+		// ファイルが開けた場合、データを読み込む
+		file.seekg(0, std::ios::end);
+		long fileSize = file.tellg();
+		file.seekg(0, std::ios::beg);
+		char *ptr = new char[fileSize];
+		file.read(ptr, fileSize); // ファイルの内容を一括で読み込む
+		m_Datas.push_back({ "data", ptr }); // 一括で読み込んだデータを保存
+		file.close();
 
-// ==============================
-//	構造体定義
-// ==============================
+		// ゲームオブジェクト内のデータの読み込み
+		std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
+		std::memcpy(&m_Quat, ptr += sizeof(m_Pos), sizeof(m_Quat));
+		std::memcpy(&m_Scale, ptr += sizeof(m_Quat), sizeof(m_Scale));
+		ptr += sizeof(m_Scale);
+		// データのキーと値が保存されている個所へのポインタを取得
+		while (ptr - m_Datas[0].value < fileSize)
+		{
+			char *data[2]; // キー,値
+			size_t size;
+			for (int i = 0; i < 2; ++i)
+			{
+				// データサイズ
+				size = *reinterpret_cast<size_t *>(ptr);
+				ptr += sizeof(size);
+				// データ
+				data[i] = ptr;
+				ptr += size;
+			}
+			m_Datas.push_back({ data[0], data[1] });
+		}
+	}
+}
 
-// ==============================
-//	列挙型定義
-// ==============================
+GameObject::~GameObject()
+{
+	// 保存データの削除
+	if (!m_Datas.empty())
+		delete[] m_Datas[0].value;
 
-// ==============================
-//	プロトタイプ宣言
-// ==============================
+	auto it = m_Components.begin();
+}
 
-// ==============================
-//	定数定義
-// ==============================
+void GameObject::Execute()
+{
+	// コンポーネントの処理
+	auto it = m_Components.begin();
+	while (it != m_Components.end())
+	{
+		(*it)->Execute();
+		++it;
+	}
+	// 継承先オブジェクトの処理
+	Update();
+}
 
-// ==============================
-//	グローバル変数宣言
-// ==============================
+inline DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
+{
+	// 前方ベクトルを取得
+	DirectX::XMVECTOR vFront = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	// クォータニオンを使って回転
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	vFront = DirectX::XMVector3Rotate(vFront, qRotate);
+	DirectX::XMFLOAT3 dir;
+	// 正規化してXMFLOAT3に変換
+	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vFront));
+	return dir;
+}
+
+inline DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
+{
+	// 右方向ベクトルを取得
+	DirectX::XMVECTOR vRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	// クォータニオンを使って回転
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	vRight = DirectX::XMVector3Rotate(vRight, qRotate);
+	DirectX::XMFLOAT3 dir;
+	// 正規化してXMFLOAT3に変換
+	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vRight));
+	return dir;
+}
+
+inline DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
+{
+	// 上方向ベクトルを取得
+	DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	// クォータニオンを使って回転
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	vUp = DirectX::XMVector3Rotate(vUp, qRotate);
+	DirectX::XMFLOAT3 dir;
+	// 正規化してXMFLOAT3に変換
+	DirectX::XMStoreFloat3(&dir, vUp);
+	return dir;
+}
+
+inline DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
+{
+	// 各要素の行列を取得
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
+		DirectX::XMVectorSet(m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w)
+	);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	// 行列の合算
+	DirectX::XMMATRIX M = S * R * T;
+	// 転置
+	if (In_IsTranspose)
+		M = DirectX::XMMatrixTranspose(M);
+	// XMMATRIXからXMFLOATへ変換
+	DirectX::XMFLOAT4X4 fMat;
+	DirectX::XMStoreFloat4x4(&fMat, M);
+
+	return fMat;
+}
+
+void GameObject::_addComponent(_In_ Component *In_pComponent)
+{
+	// 所持オブジェクトの登録
+	In_pComponent->m_pTransform = this;
+
+	// 保存データに一致するコンポーネントがあるか探索
+	const char *name = typeid(*In_pComponent).name();
+	auto it = std::find_if(m_Datas.begin(), m_Datas.end(), [&name](SaveData &data)
+		{
+			// コンポーネントの名前と保存データのキーが一致するか確認
+			return strstr(data.name, name) == data.name;
+		});
+	if (it == m_Datas.end()) return;
+
+	// 保存されている情報を設定
+	Component::DataAccessor accessor(it->value);
+	In_pComponent->ReadWrite(&accessor);
+}
