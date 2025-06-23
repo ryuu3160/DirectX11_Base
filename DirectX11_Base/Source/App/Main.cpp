@@ -26,6 +26,7 @@ namespace
 HRESULT Main::Init()
 {
 	HRESULT hr;
+	Window &Instance = Window::GetInstance();
 
 	// DirectXの初期化
 	hr = DX11_Initialize::GetInstance().Init();
@@ -42,13 +43,21 @@ HRESULT Main::Init()
 	g_pScene = std::make_shared<SceneRoot>();
 	g_pScene->Init();
 
-	DX11_Initialize::GetInstance().SetRenderTargets(1,)
+	// 初期リソース作成
+	auto rtv = g_pScene->CreateObject<RenderTarget>("RTV");
+	rtv->CreateFromScreen();
+	auto dsp = g_pScene->CreateObject<DepthStencil>("DSV");
+	hr = dsp->Create(Instance.GetWidth(), Instance.GetHeight(),false);
+
+	DX11_Initialize::GetInstance().SetRenderTargets(1, &rtv, dsp);
 
 	return hr;
 }
 
 void Main::Uninit()
 {
+	g_pScene->Uninit();
+	g_pScene.reset();
 	
 	// 各種機能の終了処理
 	Input::Uninit();
@@ -60,12 +69,21 @@ void Main::Uninit()
 void Main::Update()
 {
 	Input::Update();
-
+	g_pScene->RootUpdate();
 }
 
 void Main::Draw()
 {
+	DX11_Initialize &DX11 = DX11_Initialize::GetInstance();
+	auto rtv = g_pScene->GetObject<RenderTarget>("RTV");
+	auto dsv = g_pScene->GetObject<DepthStencil>("DSV");
+	float color[4] = { 0.1f, 0.2f, 0.3f, 1.0f };
+
+	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
+	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
-	DX11_Initialize::GetInstance().Swap();
+	g_pScene->RootDraw();
+
+	DX11.Swap();
 }

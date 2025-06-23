@@ -38,10 +38,10 @@ public:
 
 	inline void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_Pos = In_Pos; }
 	inline DirectX::XMFLOAT3 GetPos() const noexcept { return m_Pos; }
-	inline DirectX::XMFLOAT3 GetFront() const noexcept;
-	inline DirectX::XMFLOAT3 GetRight() const noexcept;
-	inline DirectX::XMFLOAT3 GetUp() const noexcept;
-	inline DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
+	DirectX::XMFLOAT3 GetFront() const noexcept;
+	DirectX::XMFLOAT3 GetRight() const noexcept;
+	DirectX::XMFLOAT3 GetUp() const noexcept;
+	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
 protected:
 	// 継承先のクラスでオブジェクト別の処理を実装する場合、上書きすること。

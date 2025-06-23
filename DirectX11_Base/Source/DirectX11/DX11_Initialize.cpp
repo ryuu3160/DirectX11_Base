@@ -87,9 +87,6 @@ HRESULT DX11_Initialize::Init()
 
 	for (UINT driverTypeIndex = 0; driverTypeIndex < m_nuDriverTypes; ++driverTypeIndex)
 	{
-		auto SwapChain = m_cpSwapChain.Get();
-		auto Device = m_cpDevice.Get();
-		auto Context = m_cpContext.Get();
 		m_DriverType = m_DriverTypes[driverTypeIndex];
 		m_hr = D3D11CreateDeviceAndSwapChain(
 			NULL,					// ディスプレイデバイスのアダプタ（NULLの場合最初に見つかったアダプタ）
@@ -100,10 +97,10 @@ HRESULT DX11_Initialize::Init()
 			m_nuFeatureLevels,		// 機能レベル数
 			D3D11_SDK_VERSION,		// 
 			&ini_sd,					// スワップチェインの設定
-			&SwapChain,			// IDXGIDwapChainインタフェース	
-			&Device,				// ID3D11Deviceインタフェース
+			&m_cpSwapChain,			// IDXGIDwapChainインタフェース	
+			&m_cpDevice,				// ID3D11Deviceインタフェース
 			&m_FeatureLevel,		// サポートされている機能レベル
-			&Context);		// デバイスコンテキスト
+			&m_cpContext);		// デバイスコンテキスト
 		if (SUCCEEDED(m_hr))
 		{
 			break;
@@ -339,7 +336,7 @@ void DX11_Initialize::_SetFlags(UINT In_unFlags)
 
 void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView)
 {
-	ID3D11RenderTargetView *rtvs[4];
+	static ID3D11RenderTargetView *rtvs[4];
 
 	if (In_unNum > 4)
 		In_unNum = 4;

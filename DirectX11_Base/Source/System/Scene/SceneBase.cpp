@@ -16,7 +16,7 @@
 // ==============================
 SceneBase::Objects SceneBase::m_Objects;
 
-SceneBase::SceneBase(_In_ const std::string_view &In_Name)
+SceneBase::SceneBase(_In_ const std::string &In_Name)
 	: m_pParent(nullptr)
 	, m_pSubScene(nullptr)
 	, m_Name(In_Name)
@@ -40,7 +40,7 @@ SceneBase::~SceneBase()
 		m_pParent->m_pSubScene = nullptr;
 }
 
-void SceneBase::Initialize()
+void SceneBase::Initialize() noexcept
 {
 #ifdef _DEBUG
 	/*debug::Menu::Create("Inspector");
@@ -108,15 +108,14 @@ void SceneBase::RemoveSubScene()
 }
 
 template<> GameObject
-*SceneBase::CreateObject(_In_ const std::string_view &In_Name)
+*SceneBase::CreateObject(_In_ const std::string &In_Name)
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator it = m_Objects.find(In_Name.data());
+	Objects::iterator it = m_Objects.find(In_Name);
 	if (it != m_Objects.end())
 	{
-		std::string buf = "Failed to create object.";
-		buf += In_Name;
+		std::string buf = "Failed to create object." + In_Name;
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
@@ -124,21 +123,21 @@ template<> GameObject
 	//hierarchy->AddListItem(In_Name.data());
 #endif // _DEBUG
 
-	GameObject *ptr = new GameObject(In_Name.data());
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name.data(), new SceneObject<GameObject>(ptr)));
-	m_Items.push_back(In_Name.data());
+	GameObject *ptr = new GameObject(In_Name);
+	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<GameObject>(ptr)));
+	m_Items.push_back(In_Name);
 	return ptr;
 }
 
-void SceneBase::DestroyObj(const std::string_view &In_Name)
+void SceneBase::DestroyObj(const std::string &In_Name)
 {
-	auto obj = m_Objects.find(In_Name.data());
+	auto obj = m_Objects.find(In_Name);
 	if (obj == m_Objects.end()) return;
 
 	delete obj->second;
 	m_Objects.erase(obj);
 
-	m_Items.remove(In_Name.data());
+	m_Items.remove(In_Name);
 }
 
 void SceneBase::Setup(const std::string_view *In_ShaderFiles, int In_ShaderNum, int In_ModelNum)

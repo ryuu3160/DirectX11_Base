@@ -75,7 +75,7 @@ void GameObject::Execute()
 	Update();
 }
 
-inline DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
+DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
 {
 	// 前方ベクトルを取得
 	DirectX::XMVECTOR vFront = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
@@ -88,7 +88,7 @@ inline DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
 	return dir;
 }
 
-inline DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
+DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
 {
 	// 右方向ベクトルを取得
 	DirectX::XMVECTOR vRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
@@ -101,7 +101,7 @@ inline DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
 	return dir;
 }
 
-inline DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
+DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 {
 	// 上方向ベクトルを取得
 	DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -114,7 +114,7 @@ inline DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 	return dir;
 }
 
-inline DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
+DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
 	// 各要素の行列を取得
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);

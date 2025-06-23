@@ -49,10 +49,10 @@ public:
 		{
 			int size = sizeof(T);
 			// 確保済みのサイズより大きくなりそうであれば再確保
-			if (m_size < m_cur + size)
+			if (m_nSize < m_cur + size)
 			{
 				char *work = m_ptr;
-				m_ptr = new char[m_size <<= 1];
+				m_ptr = new char[m_nSize <<= 1];
 				memcpy(m_ptr, work, m_cur);
 				delete[] work;
 			}

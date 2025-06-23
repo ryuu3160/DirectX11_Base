@@ -11,32 +11,29 @@
 // ==============================
 #include "SceneBase.hpp"
 
-
 /// <summary>
 /// SceneRootクラス
 /// </summary>
 class SceneRoot : public SceneBase
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	SceneRoot() = default;
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~SceneRoot() = default;
-
-	// ------------------------------
-	//  Getter
-	// ------------------------------
-
-
-	// ------------------------------
-	//  Setter
-	// ------------------------------
-
+	SceneRoot() : SceneBase("Root") {}
+	// シーンの初期化
+	void Init() override;
+	// シーンの解放
+	void Uninit() override;
+	// シーンの更新
+	void Update() override;
+	// シーンの描画
+	void Draw() override;
 private:
 
+	void ChangeScene();
+private:
+	int m_Index;
+#ifdef _DEBUG
+	DirectX::XMFLOAT3 m_CamPos;
+	DirectX::XMFLOAT3 m_CamLook;
+	DirectX::XMFLOAT3 m_CamUp;
+#endif
 };

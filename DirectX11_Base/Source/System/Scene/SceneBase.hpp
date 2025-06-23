@@ -19,7 +19,7 @@
 class SceneObjectBase
 {
 public:
-	~SceneObjectBase() = default;
+	virtual ~SceneObjectBase() {};
 	void *m_pObject;
 	bool m_bIsGameObject;	// GameObjectかどうか
 };
@@ -30,11 +30,11 @@ class SceneObject : public SceneObjectBase
 public:
 	SceneObject(T *ptr)
 	{
-		m_pObj = ptr;
+		m_pObject = ptr;
 		// TがGameObjectの派生クラスかどうかを判定
-		isGameObject = std::is_base_of<GameObject, T>();
+		m_bIsGameObject = std::is_base_of<GameObject, T>();
 	}
-	virtual ~SceneObject() { delete static_cast<T *>(m_pObj); }
+	virtual ~SceneObject() { delete static_cast<T *>(m_pObject); }
 };
 
 /// <summary>
@@ -46,10 +46,10 @@ private:
 	using Objects = std::map<std::string, SceneObjectBase *>;
 	using Items = std::list<std::string>;
 public:
-	SceneBase(_In_ const std::string_view &In_Name);
-	virtual ~SceneBase();
-
 	static void Initialize() noexcept;
+
+	SceneBase(_In_ const std::string &In_Name);
+	virtual ~SceneBase();
 
 	void RootUpdate() noexcept;
 	void RootDraw() noexcept;
@@ -60,17 +60,16 @@ public:
 	void RemoveSubScene();
 
 	// オブジェクト操作
-	template <class T = GameObject>
-	T *CreateObject(_In_ const std::string_view &In_Name);
+	template <class T>
+	T *CreateObject(_In_ const std::string &In_Name);
 
 	template<>
-	GameObject *CreateObject(_In_ const std::string_view &In_Name);
+	GameObject *CreateObject(_In_ const std::string &In_Name);
 	
-	template <class T = GameObject>
+	template <class T>
 	T *GetObject(_In_ const std::string_view &In_Name);
 
-	void DestroyObj(_In_ const std::string_view &In_Name);
-
+	void DestroyObj(const std::string &In_Name);
 
 	// 継承先で使用する関数
 	virtual void Init() = 0;
@@ -79,7 +78,7 @@ public:
 	virtual void Draw() = 0;
 
 protected:
-	void Setup(_In_ const std::string_view *In_ShaderFiles, _In_ int In_ShaderNum, _In_ int In_ModelNum);
+	void Setup(const std::string_view *In_ShaderFiles, int In_ShaderNum, int In_ModelNum);
 
 private:
 	static Objects m_Objects;
@@ -97,7 +96,7 @@ protected:
 /// <typeparam name="T">サブシーンの型</typeparam>
 /// <returns>生成したサブシーン</returns>
 template<class T>
-inline T *SceneBase::AddSubScene()
+T *SceneBase::AddSubScene()
 {
 	RemoveSubScene();
 	T *pScene = new T;
@@ -114,15 +113,14 @@ inline T *SceneBase::AddSubScene()
 /// <param name="[In_szName]">オブジェクトの名称</param>
 /// <returns>生成したオブジェクト</returns>
 template<class T>
-inline T *SceneBase::CreateObject(_In_ const std::string_view &In_Name)
+T *SceneBase::CreateObject(_In_ const std::string &In_Name)
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator it = m_objects.find(In_Name);
-	if (it != m_objects.end())
+	Objects::iterator it = m_Objects.find(In_Name);
+	if (it != m_Objects.end())
 	{
-		std::string buf = "Failed to create object.";
-		buf += In_Name;
+		std::string buf = "Failed to create object." + In_Name;
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
@@ -140,10 +138,10 @@ inline T *SceneBase::CreateObject(_In_ const std::string_view &In_Name)
 }
 
 template<class T>
-inline T *SceneBase::GetObject(_In_ const std::string_view &In_Name)
+T *SceneBase::GetObject(_In_ const std::string_view &In_Name)
 {
 	// オブジェクトの探索
-	Objects::iterator it = m_Objects.find(In_Name);
+	Objects::iterator it = m_Objects.find(In_Name.data());
 	if (it == m_Objects.end()) return nullptr;
 
 	// 型変換
