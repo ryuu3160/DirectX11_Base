@@ -20,8 +20,8 @@ class SceneObjectBase
 {
 public:
 	virtual ~SceneObjectBase() {};
-	void *m_pObject;
-	bool m_bIsGameObject;	// GameObject‚©‚Ç‚¤‚©
+	void *m_pObject = nullptr;
+	bool m_bIsGameObject = false;	// GameObject‚©‚Ç‚¤‚©
 };
 
 template<class T>

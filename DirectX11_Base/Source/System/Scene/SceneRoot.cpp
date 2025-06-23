@@ -79,3 +79,7 @@ void SceneRoot::Draw()
 
 #endif
 }
+
+void SceneRoot::ChangeScene()
+{
+}

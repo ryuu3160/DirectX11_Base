@@ -17,7 +17,7 @@
 class SceneRoot : public SceneBase
 {
 public:
-	SceneRoot() : SceneBase("Root") {}
+	SceneRoot() : SceneBase("Root") {} 
 	// シーンの初期化
 	void Init() override;
 	// シーンの解放
@@ -30,10 +30,10 @@ private:
 
 	void ChangeScene();
 private:
-	int m_Index;
+	int m_Index = 0;
 #ifdef _DEBUG
-	DirectX::XMFLOAT3 m_CamPos;
-	DirectX::XMFLOAT3 m_CamLook;
-	DirectX::XMFLOAT3 m_CamUp;
+	DirectX::XMFLOAT3 m_CamPos{};
+	DirectX::XMFLOAT3 m_CamLook{};
+	DirectX::XMFLOAT3 m_CamUp{};
 #endif
 };
