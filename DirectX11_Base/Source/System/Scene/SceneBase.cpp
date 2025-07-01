@@ -187,6 +187,6 @@ void SceneBase::Setup(const std::string_view *In_ShaderFiles, int In_ShaderNum, 
 	{
 		std::string name = m_Name + "Model" + std::to_string(i);
 		GameObject *obj = CreateObject<GameObject>(name.c_str());
-		//ModelRenderer *renderer = obj->AddComponent<ModelRenderer>();
+		ModelRenderer *renderer = obj->AddComponent<ModelRenderer>();
 	}
 }

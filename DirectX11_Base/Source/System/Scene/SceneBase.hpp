@@ -11,6 +11,7 @@
 // ==============================
 #include "System/Object/GameObject.hpp"
 #include "DirectX11/Texture/Shader.hpp"
+#include "DirectX11/System/ModelRenderer.hpp"
 // ==============================
 //  undefine
 // ==============================
