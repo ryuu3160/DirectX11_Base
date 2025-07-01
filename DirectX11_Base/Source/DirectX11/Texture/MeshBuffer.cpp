@@ -36,8 +36,10 @@ MeshBuffer::~MeshBuffer()
 {
 	delete[] m_desc.pIdx;
 	delete[] m_desc.pVtx;
-	SAFE_RELEASE(m_pIdxBuffer);
-	SAFE_RELEASE(m_pVtxBuffer);
+
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pIdxBuffer = nullptr;
+	m_pVtxBuffer = nullptr;
 }
 
 HRESULT MeshBuffer::CreateVertexBuffer(const void *pVtx, UINT size, UINT count, bool isWrite)
@@ -60,7 +62,7 @@ HRESULT MeshBuffer::CreateVertexBuffer(const void *pVtx, UINT size, UINT count, 
 	//--- 頂点バッファの作成
 	HRESULT hr;
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
-	hr = pDevice->CreateBuffer(&bufDesc, &subResource, &m_pVtxBuffer);
+	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pVtxBuffer.GetAddressOf());
 
 	return hr;
 }
@@ -89,7 +91,7 @@ HRESULT MeshBuffer::CreateIndexBuffer(const void *pIdx, UINT size, UINT count)
 	// インデックスバッファ生成
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
 	HRESULT hr;
-	hr = pDevice->CreateBuffer(&bufDesc, &subResource, &m_pIdxBuffer);
+	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pIdxBuffer.GetAddressOf());
 
 	return hr;
 }
@@ -109,7 +111,7 @@ void MeshBuffer::Draw(int count)
 		pContext->IASetPrimitiveTopology(m_desc.topology);
 
 	// 頂点バッファ設定
-	pContext->IASetVertexBuffers(0, 1, &m_pVtxBuffer, &stride, &offset);
+	pContext->IASetVertexBuffers(0, 1, m_pVtxBuffer.GetAddressOf(), &stride, &offset);
 
 	// 描画
 	if (m_desc.idxCount > 0)
@@ -120,7 +122,7 @@ void MeshBuffer::Draw(int count)
 		case 4: format = DXGI_FORMAT_R32_UINT; break;
 		case 2: format = DXGI_FORMAT_R16_UINT; break;
 		}
-		pContext->IASetIndexBuffer(m_pIdxBuffer, format, 0);
+		pContext->IASetIndexBuffer(m_pIdxBuffer.Get(), format, 0);
 		pContext->DrawIndexed(count ? count : m_desc.idxCount, 0, 0);
 	}
 	else
@@ -141,17 +143,12 @@ HRESULT MeshBuffer::Write(void *pVtx)
 	D3D11_MAPPED_SUBRESOURCE mapResource;
 
 	// データコピー
-	hr = pContext->Map(m_pVtxBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource);
+	hr = pContext->Map(m_pVtxBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource);
 	if (SUCCEEDED(hr))
 	{
 		rsize_t size = m_desc.vtxCount * m_desc.vtxSize;
 		memcpy_s(mapResource.pData, size, pVtx, size);
-		pContext->Unmap(m_pVtxBuffer, 0);
+		pContext->Unmap(m_pVtxBuffer.Get(), 0);
 	}
 	return hr;
-}
-
-MeshBuffer::Description MeshBuffer::GetDesc()
-{
-	return m_desc;
 }

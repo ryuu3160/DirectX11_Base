@@ -62,6 +62,26 @@ DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_B
 
 DX11_Initialize::~DX11_Initialize()
 {
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_cpDevice = nullptr;
+	m_cpContext = nullptr;
+	m_cpSwapChain = nullptr;
+	for (int i = 0; i < 3; ++i)
+	{
+		m_cpRasterizerState[i] = nullptr;
+	}
+	for (int i = 0; i < BLEND_MAX; ++i)
+	{
+		m_cpBlendState[i] = nullptr;
+	}
+	for (int i = 0; i < SAMPLER_MAX; ++i)
+	{
+		m_cpSamplerState[i] = nullptr;
+	}
+	for (int i = 0; i < DEPTH_MAX; ++i)
+	{
+		m_cpDepthStencilState[i] = nullptr;
+	}
 }
 
 HRESULT DX11_Initialize::Init()
@@ -89,18 +109,18 @@ HRESULT DX11_Initialize::Init()
 	{
 		m_DriverType = m_DriverTypes[driverTypeIndex];
 		m_hr = D3D11CreateDeviceAndSwapChain(
-			NULL,					// ディスプレイデバイスのアダプタ（NULLの場合最初に見つかったアダプタ）
-			m_DriverType,				// デバイスドライバのタイプ
-			NULL,					// ソフトウェアラスタライザを使用する場合に指定する
-			m_nuCreateDeviceFlags,		// デバイスフラグ
-			m_FeatureLevels,			// 機能レベル
-			m_nuFeatureLevels,		// 機能レベル数
-			D3D11_SDK_VERSION,		// 
-			&ini_sd,					// スワップチェインの設定
-			&m_cpSwapChain,			// IDXGIDwapChainインタフェース	
-			&m_cpDevice,				// ID3D11Deviceインタフェース
-			&m_FeatureLevel,		// サポートされている機能レベル
-			&m_cpContext);		// デバイスコンテキスト
+			NULL,								// ディスプレイデバイスのアダプタ（NULLの場合最初に見つかったアダプタ）
+			m_DriverType,						// デバイスドライバのタイプ
+			NULL,								// ソフトウェアラスタライザを使用する場合に指定する
+			m_nuCreateDeviceFlags,				// デバイスフラグ
+			m_FeatureLevels,					// 機能レベル
+			m_nuFeatureLevels,					// 機能レベル数
+			D3D11_SDK_VERSION, 
+			&ini_sd,							// スワップチェインの設定
+			m_cpSwapChain.GetAddressOf(),		// IDXGIDwapChainインタフェース	
+			m_cpDevice.GetAddressOf(),			// ID3D11Deviceインタフェース
+			&m_FeatureLevel,					// サポートされている機能レベル
+			m_cpContext.GetAddressOf());		// デバイスコンテキスト
 		if (SUCCEEDED(m_hr))
 		{
 			break;
@@ -123,7 +143,7 @@ HRESULT DX11_Initialize::Init()
 	for (int i = 0; i < 3; i++)
 	{
 		rasterizer.CullMode = cull[i];
-		m_hr = m_cpDevice->CreateRasterizerState(&rasterizer, &m_cpRasterizerState[i]);
+		m_hr = m_cpDevice->CreateRasterizerState(&rasterizer, m_cpRasterizerState[i].GetAddressOf());
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetCullingMode(D3D11_CULL_BACK);

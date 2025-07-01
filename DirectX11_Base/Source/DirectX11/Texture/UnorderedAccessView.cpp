@@ -18,9 +18,10 @@ UnorderedAccessView::UnorderedAccessView()
 }
 UnorderedAccessView::~UnorderedAccessView()
 {
-    SAFE_RELEASE(m_pSRV);
-    SAFE_RELEASE(m_pUAV);
-    SAFE_RELEASE(m_pBuffer);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+    m_pSRV = nullptr;
+	m_pUAV = nullptr;
+	m_pBuffer = nullptr;
 }
 HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
 {
@@ -40,7 +41,7 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
         desc.StructureByteStride = stride;
         D3D11_SUBRESOURCE_DATA data = {};
         data.pSysMem = pData;
-        hr = pDevice->CreateBuffer(&desc, pData ? &data : nullptr, &m_pBuffer);
+        hr = pDevice->CreateBuffer(&desc, pData ? &data : nullptr, m_pBuffer.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
 
@@ -50,7 +51,7 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
         desc.Format = DXGI_FORMAT_UNKNOWN;
         desc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
         desc.Buffer.NumElements = num;
-        hr = pDevice->CreateUnorderedAccessView(m_pBuffer, &desc, &m_pUAV);
+        hr = pDevice->CreateUnorderedAccessView(m_pBuffer.Get(), &desc, m_pUAV.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
 
@@ -61,7 +62,7 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
         desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
         desc.Buffer.FirstElement = 0;
         desc.Buffer.NumElements = num;
-        hr = pDevice->CreateShaderResourceView(m_pBuffer, &desc, &m_pSRV);
+        hr = pDevice->CreateShaderResourceView(m_pBuffer.Get(), &desc, m_pSRV.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
 
@@ -81,7 +82,7 @@ void UnorderedAccessView::Copy()
     desc.StructureByteStride = base.StructureByteStride;
     ID3D11Buffer *pLocal;
     Instance.GetDevice()->CreateBuffer(&desc, nullptr, &pLocal);
-    Instance.GetDeviceContext()->CopyResource(pLocal, m_pBuffer);
+    Instance.GetDeviceContext()->CopyResource(pLocal, m_pBuffer.Get());
     if (SUCCEEDED(Instance.GetDeviceContext()->Map(pLocal, 0, D3D11_MAP_READ, 0, &MappedResource)))
     {
         float check[100];
@@ -92,9 +93,9 @@ void UnorderedAccessView::Copy()
 
 ID3D11UnorderedAccessView *UnorderedAccessView::GetUAV()
 {
-    return m_pUAV;
+    return m_pUAV.Get();
 }
 ID3D11ShaderResourceView *UnorderedAccessView::GetSRV()
 {
-    return m_pSRV;
+    return m_pSRV.Get();
 }

@@ -33,8 +33,8 @@ protected:
 protected:
 	UINT m_width;	///< ‰¡•
 	UINT m_height;	///< c•
-	ID3D11ShaderResourceView *m_pSRV;
-	ID3D11Texture2D *m_pTex;
+	ComPtr<ID3D11ShaderResourceView> m_pSRV;
+	ComPtr<ID3D11Texture2D> m_pTex;
 };
 
 /// <summary>
@@ -55,7 +55,7 @@ protected:
 	virtual HRESULT CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData = nullptr);
 
 private:
-	ID3D11RenderTargetView *m_pRTV;
+	ComPtr<ID3D11RenderTargetView> m_pRTV;
 };
 
 /// <summary>
@@ -74,5 +74,5 @@ protected:
 	virtual HRESULT CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData = nullptr);
 
 private:
-	ID3D11DepthStencilView *m_pDSV;
+	ComPtr<ID3D11DepthStencilView> m_pDSV;
 };

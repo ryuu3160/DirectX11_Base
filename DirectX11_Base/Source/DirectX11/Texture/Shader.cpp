@@ -144,14 +144,15 @@ VertexShader::VertexShader()
 
 VertexShader::~VertexShader()
 {
-	SAFE_RELEASE(m_pVS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pVS = nullptr;
 }
 
 void VertexShader::Bind(void)
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->VSSetShader(m_pVS, NULL, 0);
-	pContext->IASetInputLayout(m_pInputLayout);
+	pContext->VSSetShader(m_pVS.Get(), NULL, 0);
+	pContext->IASetInputLayout(m_pInputLayout.Get());
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->VSSetConstantBuffers(i, 1, &m_pBuffers[i]);
 	for (int i = 0; i < m_pTextures.size(); ++i)
@@ -164,7 +165,7 @@ HRESULT VertexShader::MakeShader(void *pData, UINT size)
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
 
 	// シェーダー作成
-	hr = pDevice->CreateVertexShader(pData, size, NULL, &m_pVS);
+	hr = pDevice->CreateVertexShader(pData, size, NULL, m_pVS.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
 	/*
@@ -235,7 +236,7 @@ HRESULT VertexShader::MakeShader(void *pData, UINT size)
 
 	hr = pDevice->CreateInputLayout(
 		pInputDesc, shaderDesc.InputParameters,
-		pData, size, &m_pInputLayout
+		pData, size, m_pInputLayout.GetAddressOf()
 	);
 
 	delete[] pInputDesc;
@@ -251,12 +252,13 @@ PixelShader::PixelShader()
 }
 PixelShader::~PixelShader()
 {
-	SAFE_RELEASE(m_pPS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pPS = nullptr;
 }
 void PixelShader::Bind(void)
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->PSSetShader(m_pPS, nullptr, 0);
+	pContext->PSSetShader(m_pPS.Get(), nullptr, 0);
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->PSSetConstantBuffers(i, 1, &m_pBuffers[i]);
 	for (int i = 0; i < m_pTextures.size(); ++i)
@@ -264,7 +266,7 @@ void PixelShader::Bind(void)
 }
 HRESULT PixelShader::MakeShader(void *pData, UINT size)
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreatePixelShader(pData, size, NULL, &m_pPS);
+	return DX11_Initialize::GetInstance().GetDevice()->CreatePixelShader(pData, size, NULL, m_pPS.GetAddressOf());
 }
 
 //----------
@@ -276,12 +278,13 @@ HullShader::HullShader()
 }
 HullShader::~HullShader()
 {
-	SAFE_RELEASE(m_pHS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pHS = nullptr;
 }
 void HullShader::Bind(void)
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->HSSetShader(m_pHS, nullptr, 0);
+	pContext->HSSetShader(m_pHS.Get(), nullptr, 0);
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->HSSetConstantBuffers(i, 1, &m_pBuffers[i]);
@@ -294,7 +297,7 @@ void HullShader::Unbind(void)
 }
 HRESULT HullShader::MakeShader(void *pData, UINT size)
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateHullShader(pData, size, NULL, &m_pHS);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateHullShader(pData, size, NULL, m_pHS.GetAddressOf());
 }
 
 //----------
@@ -306,12 +309,13 @@ DomainShader::DomainShader()
 }
 DomainShader::~DomainShader()
 {
-	SAFE_RELEASE(m_pDS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pDS = nullptr;
 }
 void DomainShader::Bind(void)
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->DSSetShader(m_pDS, nullptr, 0);
+	pContext->DSSetShader(m_pDS.Get(), nullptr, 0);
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->DSSetConstantBuffers(i, 1, &m_pBuffers[i]);
 	for (int i = 0; i < m_pTextures.size(); ++i)
@@ -323,7 +327,7 @@ void DomainShader::Unbind(void)
 }
 HRESULT DomainShader::MakeShader(void *pData, UINT size)
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateDomainShader(pData, size, NULL, &m_pDS);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateDomainShader(pData, size, NULL, m_pDS.GetAddressOf());
 }
 
 //----------
@@ -335,12 +339,13 @@ GeometryShader::GeometryShader()
 }
 GeometryShader::~GeometryShader()
 {
-	SAFE_RELEASE(m_pGS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pGS = nullptr;
 }
 void GeometryShader::Bind()
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->GSSetShader(m_pGS, nullptr, 0);
+	pContext->GSSetShader(m_pGS.Get(), nullptr, 0);
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->GSSetConstantBuffers(i, 1, &m_pBuffers[i]);
 	for (int i = 0; i < m_pTextures.size(); ++i)
@@ -355,7 +360,7 @@ void GeometryShader::Unbind()
 }
 HRESULT GeometryShader::MakeShader(void *pData, UINT size)
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateGeometryShader(pData, size, NULL, &m_pGS);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateGeometryShader(pData, size, NULL, m_pGS.GetAddressOf());
 }
 
 //----------
@@ -367,12 +372,13 @@ ComputeShader::ComputeShader()
 }
 ComputeShader::~ComputeShader()
 {
-	SAFE_RELEASE(m_pCS);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pCS = nullptr;
 }
 void ComputeShader::Bind()
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	pContext->CSSetShader(m_pCS, nullptr, 0);
+	pContext->CSSetShader(m_pCS.Get(), nullptr, 0);
 	for (int i = 0; i < m_pBuffers.size(); ++i)
 		pContext->CSSetConstantBuffers(i, 1, &m_pBuffers[i]);
 	for (int i = 0; i < m_pTextures.size(); ++i)
@@ -400,5 +406,5 @@ void ComputeShader::Dispatch(UINT num, UnorderedAccessView **ppUAV, UINT thread)
 }
 HRESULT ComputeShader::MakeShader(void *pData, UINT size)
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateComputeShader(pData, size, NULL, &m_pCS);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateComputeShader(pData, size, NULL, m_pCS.GetAddressOf());
 }

@@ -20,9 +20,17 @@ public:
     ~ModelRenderer();
     void Execute() final;
 
-    Model *GetModel();
+	/// <summary>
+	/// モデルへのポインタを取得します。
+	/// </summary>
+	/// <returns>現在のオブジェクトに関連付けられている Model 型のポインタ。</returns>
+	inline Model *GetModel() const noexcept { return m_pModel; }
 
-    void ReadWrite(DataAccessor *data) final;
+    /// <summary>
+    /// データアクセサーを使用して読み書きを行います。
+    /// </summary>
+    /// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
+    void ReadWrite(_In_ DataAccessor *In_Data) override final;
 //#if _DEBUG
 //    void Debug(debug::Window *window) final;
 //#endif

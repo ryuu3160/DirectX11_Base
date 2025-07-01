@@ -33,14 +33,14 @@ public:
 	void Draw(int count = 0);
 	HRESULT Write(void *pVtx);
 
-	Description GetDesc();
+	inline Description GetDesc() const noexcept { return m_desc; }
 
 private:
 	HRESULT CreateVertexBuffer(const void *pIdx, UINT size, UINT count, bool isWrite);
 	HRESULT CreateIndexBuffer(const void *pVtx, UINT size, UINT count);
 
 private:
-	ID3D11Buffer *m_pVtxBuffer;
-	ID3D11Buffer *m_pIdxBuffer;
+	ComPtr<ID3D11Buffer> m_pVtxBuffer;
+	ComPtr<ID3D11Buffer> m_pIdxBuffer;
 	Description m_desc;
 };

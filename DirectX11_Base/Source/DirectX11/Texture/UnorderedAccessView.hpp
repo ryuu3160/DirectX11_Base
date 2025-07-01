@@ -24,7 +24,7 @@ public:
 	ID3D11ShaderResourceView *GetSRV();
 
 private:
-	ID3D11Buffer *m_pBuffer;
-	ID3D11UnorderedAccessView *m_pUAV;
-	ID3D11ShaderResourceView *m_pSRV;
+	ComPtr<ID3D11Buffer> m_pBuffer;
+	ComPtr<ID3D11UnorderedAccessView> m_pUAV;
+	ComPtr< ID3D11ShaderResourceView> m_pSRV;
 };

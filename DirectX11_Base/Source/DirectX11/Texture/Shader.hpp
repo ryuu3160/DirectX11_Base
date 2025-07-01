@@ -72,8 +72,8 @@ protected:
 	HRESULT MakeShader(void *pData, UINT size);
 
 private:
-	ID3D11VertexShader *m_pVS;
-	ID3D11InputLayout *m_pInputLayout;
+	ComPtr<ID3D11VertexShader> m_pVS;
+	ComPtr<ID3D11InputLayout> m_pInputLayout;
 };
 
 //----------
@@ -87,7 +87,7 @@ public:
 protected:
 	HRESULT MakeShader(void *pData, UINT size);
 private:
-	ID3D11PixelShader *m_pPS;
+	ComPtr<ID3D11PixelShader> m_pPS;
 };
 
 //----------
@@ -102,7 +102,7 @@ public:
 protected:
 	HRESULT MakeShader(void *pData, UINT size);
 private:
-	ID3D11HullShader *m_pHS;
+	ComPtr<ID3D11HullShader> m_pHS;
 };
 
 //----------
@@ -117,7 +117,7 @@ public:
 protected:
 	HRESULT MakeShader(void *pData, UINT size);
 private:
-	ID3D11DomainShader *m_pDS;
+	ComPtr<ID3D11DomainShader> m_pDS;
 };
 
 //----------
@@ -132,7 +132,7 @@ public:
 protected:
 	HRESULT MakeShader(void *pData, UINT size);
 private:
-	ID3D11GeometryShader *m_pGS;
+	ComPtr<ID3D11GeometryShader> m_pGS;
 };
 
 //----------
@@ -149,6 +149,6 @@ public:
 protected:
 	HRESULT MakeShader(void *pData, UINT size);
 private:
-	ID3D11ComputeShader *m_pCS;
+	ComPtr<ID3D11ComputeShader> m_pCS;
 };
 

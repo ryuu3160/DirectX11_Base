@@ -18,8 +18,9 @@ Texture::Texture()
 }
 Texture::~Texture()
 {
-	SAFE_RELEASE(m_pSRV);
-	SAFE_RELEASE(m_pTex);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pSRV = nullptr;
+	m_pTex = nullptr;
 }
 HRESULT Texture::Create(const char *fileName)
 {
@@ -43,7 +44,7 @@ HRESULT Texture::Create(const char *fileName)
 	}
 
 	// シェーダリソース生成
-	hr = CreateShaderResourceView(DX11_Initialize::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, &m_pSRV);
+	hr = CreateShaderResourceView(DX11_Initialize::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = (UINT)mdata.width;
@@ -67,7 +68,7 @@ UINT Texture::GetHeight() const
 }
 ID3D11ShaderResourceView *Texture::GetResource() const
 {
-	return m_pSRV;
+	return m_pSRV.Get();
 }
 
 D3D11_TEXTURE2D_DESC Texture::MakeTexDesc(DXGI_FORMAT format, UINT width, UINT height)
@@ -93,7 +94,7 @@ HRESULT Texture::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData)
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = pData;
 	data.SysMemPitch = desc.Width * 4;
-	hr = Device->CreateTexture2D(&desc, pData ? &data : nullptr, &m_pTex);
+	hr = Device->CreateTexture2D(&desc, pData ? &data : nullptr, m_pTex.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
 	// 設定
@@ -106,7 +107,7 @@ HRESULT Texture::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData)
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 	// 生成
-	hr = Device->CreateShaderResourceView(m_pTex, &srvDesc, &m_pSRV);
+	hr = Device->CreateShaderResourceView(m_pTex.Get(), &srvDesc, m_pSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = desc.Width;
@@ -124,7 +125,8 @@ RenderTarget::RenderTarget()
 }
 RenderTarget::~RenderTarget()
 {
-	SAFE_RELEASE(m_pRTV);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pRTV = nullptr;
 }
 void RenderTarget::Clear()
 {
@@ -133,7 +135,7 @@ void RenderTarget::Clear()
 }
 void RenderTarget::Clear(const float *color)
 {
-	DX11_Initialize::GetInstance().GetDeviceContext()->ClearRenderTargetView(m_pRTV, color);
+	DX11_Initialize::GetInstance().GetDeviceContext()->ClearRenderTargetView(m_pRTV.Get(), color);
 }
 HRESULT RenderTarget::Create(DXGI_FORMAT format, UINT width, UINT height)
 {
@@ -148,7 +150,7 @@ HRESULT RenderTarget::CreateFromScreen()
 
 	// バックバッファのポインタを取得
 	ID3D11Texture2D *pBackBuffer = NULL;
-	hr = Instance.GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&m_pTex);
+	hr = Instance.GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(m_pTex.GetAddressOf()));
 	if (FAILED(hr)) { return hr; }
 
 	// バックバッファへのポインタを指定してレンダーターゲットビューを作成
@@ -156,7 +158,7 @@ HRESULT RenderTarget::CreateFromScreen()
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.Texture2D.MipSlice = 0;
-	hr = Instance.GetDevice()->CreateRenderTargetView(m_pTex, &rtvDesc, &m_pRTV);
+	hr = Instance.GetDevice()->CreateRenderTargetView(m_pTex.Get(), &rtvDesc, m_pRTV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		D3D11_TEXTURE2D_DESC desc;
@@ -168,7 +170,7 @@ HRESULT RenderTarget::CreateFromScreen()
 }
 ID3D11RenderTargetView *RenderTarget::GetView() const
 {
-	return m_pRTV;
+	return m_pRTV.Get();
 }
 HRESULT RenderTarget::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData)
 {
@@ -182,7 +184,7 @@ HRESULT RenderTarget::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pDa
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
 	// 生成
-	return DX11_Initialize::GetInstance().GetDevice()->CreateRenderTargetView(m_pTex, &rtvDesc, &m_pRTV);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateRenderTargetView(m_pTex.Get(), &rtvDesc, m_pRTV.GetAddressOf());
 }
 
 /// <summary>
@@ -194,11 +196,12 @@ DepthStencil::DepthStencil()
 }
 DepthStencil::~DepthStencil()
 {
-	SAFE_RELEASE(m_pDSV);
+	// ComPtrは自動的に解放されるため、明示的な解放は不要
+	m_pDSV = nullptr;
 }
 void DepthStencil::Clear()
 {
-	DX11_Initialize::GetInstance().GetDeviceContext()->ClearDepthStencilView(m_pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	DX11_Initialize::GetInstance().GetDeviceContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 HRESULT DepthStencil::Create(UINT width, UINT height, bool useStencil)
 {
@@ -209,7 +212,7 @@ HRESULT DepthStencil::Create(UINT width, UINT height, bool useStencil)
 }
 ID3D11DepthStencilView *DepthStencil::GetView() const
 {
-	return m_pDSV;
+	return m_pDSV.Get();
 }
 HRESULT DepthStencil::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pData)
 {
@@ -227,5 +230,5 @@ HRESULT DepthStencil::CreateResource(D3D11_TEXTURE2D_DESC &desc, const void *pDa
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	// 生成
-	return DX11_Initialize::GetInstance().GetDevice()->CreateDepthStencilView(m_pTex, &dsvDesc, &m_pDSV);
+	return DX11_Initialize::GetInstance().GetDevice()->CreateDepthStencilView(m_pTex.Get(), &dsvDesc, m_pDSV.GetAddressOf());
 }
