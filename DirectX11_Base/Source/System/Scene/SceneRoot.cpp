@@ -51,14 +51,12 @@ void SceneRoot::Draw()
 	geometory.SetColor(color);
 	float d = GridMargin;
 	float s = GridSize;
-	while (s >= GridMargin && GridMargin > 0.0f)
+	for (;s >= GridMargin && GridMargin > 0.0f;d += GridMargin,s -= GridMargin)
 	{
 		geometory.AddLine(DirectX::XMFLOAT3(d, 0.0f, -GridSize), DirectX::XMFLOAT3(d, 0.0f, GridSize));
 		geometory.AddLine(DirectX::XMFLOAT3(-d, 0.0f, -GridSize), DirectX::XMFLOAT3(-d, 0.0f, GridSize));
 		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, d), DirectX::XMFLOAT3(GridSize, 0.0f, d));
 		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, -d), DirectX::XMFLOAT3(GridSize, 0.0f, -d));
-		d += GridMargin;
-		s -= GridMargin;
 	}
 	// Ž²•`‰æ
 	if (cx_bGridAxis)
