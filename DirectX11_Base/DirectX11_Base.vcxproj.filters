@@ -160,6 +160,12 @@
     <ClCompile Include="Source\System\ImGui\imgui_impl_win32.cpp">
       <Filter>Source\System\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Model.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -260,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="Source\Defines.hpp">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Model.hpp">
+      <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

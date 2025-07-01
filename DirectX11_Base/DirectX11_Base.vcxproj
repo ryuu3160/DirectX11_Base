@@ -163,6 +163,14 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
+    <ClCompile Include="Source\DirectX11\System\Model.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Shader.cpp" />
@@ -216,6 +224,14 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
+    <ClInclude Include="Source\DirectX11\System\Model.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Sprite.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\Shader.hpp" />
