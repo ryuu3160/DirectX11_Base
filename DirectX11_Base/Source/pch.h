@@ -28,6 +28,7 @@ using Microsoft::WRL::ComPtr;
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <iomanip>
 #include <memory>

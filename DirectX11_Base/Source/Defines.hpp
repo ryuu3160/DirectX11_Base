@@ -7,28 +7,51 @@
 #pragma once
 
 // ==============================
+//	include
+// ==============================
+
+// C++20以降の機能を利用するための条件付きインクルード
+#if __cplusplus >= 202002L
+#include <format>
+#endif
+
+
+
+// ==============================
 //	using宣言
 // ==============================
 using FilePath = std::string_view; // ファイルパスを表す型。std::string_viewを使用して、文字列の参照を保持する
 
 // ==============================
-//	define
+//  マクロ/関数定義
 // ==============================
 
-// ==============================
-//	構造体定義
-// ==============================
+#if __cplusplus <= 201703L
+// エラーメッセージを表示する関数
+template<typename... Args>
+inline void Error(std::string_view format, Args&&... args)
+{
+    // 必要なバッファサイズを取得
+    int required = std::snprintf(nullptr, 0, format.data(), args...);
 
-// ==============================
-//	列挙型定義
-// ==============================
+    if (required < 0)
+    {
+        MessageBoxA(nullptr, "Format error", "Error", MB_OK);
+        return;
+    }
 
-// ==============================
-//	プロトタイプ宣言
-// ==============================
+    std::vector<char> buf(required + 1);
+    std::snprintf(buf.data(), buf.size(), format.data(), args...);
 
-// ==============================
-//	定数定義
-// ==============================
-
+    MessageBoxA(nullptr, buf.data(), "Error", MB_OK);
+}
+#elif __cplusplus >= 202002L
+// C++20以降のstd::formatを使用してエラーメッセージを表示する関数
+template<typename... Args>
+inline void Error(std::string_view In_Format, Args&&... In_Args)
+{
+	std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
+	MessageBoxA(nullptr, msg.c_str(), "Error", MB_OK);
+}
+#endif
 

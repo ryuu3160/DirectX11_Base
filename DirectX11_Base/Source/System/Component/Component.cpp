@@ -18,6 +18,6 @@ void Component::Execute()
 {
 }
 
-void Component::ReadWrite(DataAccessor *data)
+void Component::ReadWrite(_In_ DataAccessor *In_Data)
 {
 }
