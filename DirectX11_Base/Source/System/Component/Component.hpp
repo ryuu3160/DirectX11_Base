@@ -38,8 +38,17 @@ public:
 			else
 				Write<T>(ptr);
 		}
-		inline int GetWriteSize() const { return m_cur; }
-		char *GetData() { return m_ptr; }
+		/// <summary>
+		/// 現在の書き込みサイズを取得します。
+		/// </summary>
+		/// <returns>現在の書き込みサイズを表す整数値。</returns>
+		inline int GetWriteSize() const noexcept { return m_cur; }
+
+		/// <summary>
+		/// データへのポインタを取得します。
+		/// </summary>
+		/// <returns>データを指す char 型ポインタ。</returns>
+		char *GetData() const noexcept { return m_ptr; }
 	private:
 		// 読み込み
 		template<class T> void Read(T *ptr)
