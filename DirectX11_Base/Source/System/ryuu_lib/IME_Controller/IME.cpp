@@ -135,7 +135,7 @@ void IME::SetCompositionWindowPos(const SF2Position& In_f2Pos) noexcept
 }
 
 void IME::SetCompositionFont(int In_nFontSizeHeight, int In_nFontSizeWidth, BYTE In_lfWeight,
-	BYTE In_lfItalic, BYTE In_lfUnderline, BYTE In_lfStrikeOut, BYTE In_lfCharSet) noexcept
+	BYTE In_lfItalic, BYTE In_lfUnderline, BYTE In_lfStrikeOut, BYTE In_lfCharSet)
 {
 	LPLOGFONTA lpLogFont = new LOGFONTA(); // LOGFONTA‚Å‰Šú‰»
 	// Œ»İ‚ÌIME‚Ìfontî•ñ‚ğæ“¾Ao—ˆ‚È‚©‚Á‚½ê‡‚Íreturn
