@@ -33,7 +33,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ------------------------------
 	// DirectXなどの各種機能の初期化
 	// ------------------------------
-	if (Main::Init())
+	if (FAILED(Main::Init()))
 	{
 		Main::Uninit();
 		// Singletonオブジェクトの解放
