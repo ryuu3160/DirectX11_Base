@@ -34,24 +34,47 @@ protected:
 public:
 	virtual ~Shader();
 public:
-	// シェーダーファイル(*.cso)を読み込む処理
-	HRESULT Load(const char *pFileName);
+	/// <summary>
+	/// 指定されたファイルパスからデータを読み込みます。
+	/// </summary>
+	/// <param name="[In_FileName]">読み込むファイルのパスを指定します。</param>
+	/// <returns>操作の結果を示すHRESULT値を返します。成功の場合はS_OK、失敗の場合はエラーコードが返されます。</returns>
+	HRESULT Load(_In_ const FilePath &In_FileName) noexcept;
 	// 文字列からシェーダをコンパイル
-	HRESULT Compile(const char *pCode);
+	HRESULT Compile(_In_ const char *In_pCode);
 
 
-	// 定数の書き込み
-	void WriteBuffer(UINT slot, void *pData);
-	// テクスチャの設定
-	void SetTexture(UINT slot, Texture *tex);
-	// シェーダーを描画に使用
+	/// <summary>
+	/// 指定されたスロットにデータバッファを書き込みます。
+	/// </summary>
+	/// <param name="[In_Slot]">データを書き込む対象のスロット番号。</param>
+	/// <param name="[In_pData]">書き込むデータへのポインタ。</param>
+	void WriteBuffer(_In_ const UINT &In_Slot, _In_ void *In_pData) noexcept;
+	/// <summary>
+	/// テクスチャを指定したスロットに設定します。
+	/// </summary>
+	/// <param name="[In_Slot]">テクスチャを設定するスロット番号。</param>
+	/// <param name="[In_Tex]">設定するテクスチャへのポインタ。</param>
+	void SetTexture(_In_ const UINT &In_Slot, _In_ Texture *In_Tex) noexcept;
+	
 	virtual void Bind(void) = 0;
 
 private:
-	HRESULT Make(void *pData, UINT size);
+	/// <summary>
+	/// データとサイズを指定して処理を行います。
+	/// </summary>
+	/// <param name="pData">処理対象となるデータへのポインタ。</param>
+	/// <param name="size">データのバイト数。</param>
+	/// <returns>処理の結果を示すHRESULT値。成功時はS_OK、失敗時はエラーコードが返されます。</returns>
+	HRESULT Make(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 protected:
-	// シェーダーファイルを読み込んだ後、シェーダーの種類別に処理を行う
-	virtual HRESULT MakeShader(void *pData, UINT size) = 0;
+	/// <summary>
+	/// シェーダーファイルを読み込んだ後、シェーダーの種類別に処理を行う
+	/// </summary>
+	/// <param name="pData">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="size">データのバイト数。</param>
+	/// <returns>操作の成功または失敗を示す HRESULT 値。</returns>
+	virtual HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept = 0;
 
 private:
 	Kind m_kind;
@@ -69,7 +92,13 @@ public:
 	~VertexShader();
 	void Bind(void);
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// 頂点シェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 
 private:
 	ComPtr<ID3D11VertexShader> m_pVS;
@@ -85,7 +114,13 @@ public:
 	~PixelShader();
 	void Bind(void);
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// ピクセルシェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 private:
 	ComPtr<ID3D11PixelShader> m_pPS;
 };
@@ -100,7 +135,13 @@ public:
 	void Bind();
 	static void Unbind();
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// ハルシェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 private:
 	ComPtr<ID3D11HullShader> m_pHS;
 };
@@ -115,7 +156,13 @@ public:
 	void Bind();
 	static void Unbind();
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// ドメインシェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 private:
 	ComPtr<ID3D11DomainShader> m_pDS;
 };
@@ -128,9 +175,18 @@ public:
 	GeometryShader();
 	~GeometryShader();
 	void Bind();
+	/// <summary>
+	/// バインドされているリソースを解除します。
+	/// </summary>
 	static void Unbind();
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// ジオメトリシェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 private:
 	ComPtr<ID3D11GeometryShader> m_pGS;
 };
@@ -143,11 +199,26 @@ public:
 	ComputeShader();
 	~ComputeShader();
 	void Bind();
+	/// <summary>
+	/// バインドされているリソースや接続を解除します。
+	/// </summary>
 	static void Unbind();
-	void Dispatch(UINT num, UnorderedAccessView **ppUAV, UINT thread);
+	/// <summary>
+	/// 指定された数のスレッドで、アンオーダードアクセスビューの配列に対してディスパッチ処理を行います。
+	/// </summary>
+	/// <param name="[In_Num]">ディスパッチするスレッドの数。</param>
+	/// <param name="[ppUAV]">UnorderedAccessView オブジェクトへのポインタの配列へのポインタ。</param>
+	/// <param name="[In_hread]">各ディスパッチで使用するスレッドの識別子またはインデックス。</param>
+	void Dispatch(_In_ UINT In_Num, _In_ UnorderedAccessView **ppUAV, _In_ const UINT &In_hread) noexcept;
 
 protected:
-	HRESULT MakeShader(void *pData, UINT size);
+	/// <summary>
+	/// コンピュートシェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
 private:
 	ComPtr<ID3D11ComputeShader> m_pCS;
 };

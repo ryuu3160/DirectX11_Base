@@ -23,13 +23,13 @@ Shader::Shader(Kind kind)
 Shader::~Shader()
 {
 }
-HRESULT Shader::Load(const char *pFileName)
+HRESULT Shader::Load(_In_ const FilePath &In_FileName) noexcept
 {
 	HRESULT hr = E_FAIL;
 
 	// ファイルを読み込む
 	std::fstream file;
-	file.open(pFileName, std::ios::in | std::ios::binary);
+	file.open(In_FileName.data(), std::ios::in | std::ios::binary);
 	if (!file.is_open()) { return hr; }
 
 	// ファイルのサイズを調べる
@@ -50,7 +50,7 @@ HRESULT Shader::Load(const char *pFileName)
 	if (pData) { delete[] pData; }
 	return hr;
 }
-HRESULT Shader::Compile(const char *pCode)
+HRESULT Shader::Compile(_In_ const char *pCode)
 {
 	static const char *pTargetList[] =
 	{
@@ -76,34 +76,34 @@ HRESULT Shader::Compile(const char *pCode)
 	return hr;
 }
 
-void Shader::WriteBuffer(UINT slot, void *pData)
+void Shader::WriteBuffer(_In_ const UINT &In_Slot, _In_ void *In_pData) noexcept
 {
-	if (slot < m_pBuffers.size())
-		DX11_Initialize::GetInstance().GetDeviceContext()->UpdateSubresource(m_pBuffers[slot], 0, nullptr, pData, 0, 0);
+	if (In_Slot < m_pBuffers.size())
+		DX11_Initialize::GetInstance().GetDeviceContext()->UpdateSubresource(m_pBuffers[In_Slot], 0, nullptr, In_pData, 0, 0);
 }
-void Shader::SetTexture(UINT slot, Texture *tex)
+void Shader::SetTexture(_In_ const UINT &In_Slot, _In_ Texture *In_Tex) noexcept
 {
-	if (slot >= m_pTextures.size()) { return; }
-	ID3D11ShaderResourceView *pTex = tex ? tex->GetResource() : nullptr;
-	m_pTextures[slot] = pTex;
+	if (In_Slot >= m_pTextures.size()) { return; }
+	ID3D11ShaderResourceView *pTex = In_Tex ? In_Tex->GetResource() : nullptr;
+	m_pTextures[In_Slot] = pTex;
 	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
 	switch (m_kind)
 	{
-	case Vertex:	Instance.GetDeviceContext()->VSSetShaderResources(slot, 1, &pTex); break;
-	case Pixel:		Instance.GetDeviceContext()->PSSetShaderResources(slot, 1, &pTex); break;
-	case Hull:		Instance.GetDeviceContext()->HSSetShaderResources(slot, 1, &pTex); break;
-	case Domain:	Instance.GetDeviceContext()->DSSetShaderResources(slot, 1, &pTex); break;
+	case Vertex:	Instance.GetDeviceContext()->VSSetShaderResources(In_Slot, 1, &pTex); break;
+	case Pixel:		Instance.GetDeviceContext()->PSSetShaderResources(In_Slot, 1, &pTex); break;
+	case Hull:		Instance.GetDeviceContext()->HSSetShaderResources(In_Slot, 1, &pTex); break;
+	case Domain:	Instance.GetDeviceContext()->DSSetShaderResources(In_Slot, 1, &pTex); break;
 	}
 }
 
-HRESULT Shader::Make(void *pData, UINT size)
+HRESULT Shader::Make(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
 	HRESULT hr;
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
 
 	// 解析用のリフレクション作成
 	ID3D11ShaderReflection *pReflection;
-	hr = D3DReflect(pData, size, IID_PPV_ARGS(&pReflection));
+	hr = D3DReflect(In_pData, In_Size, IID_PPV_ARGS(&pReflection));
 	if (FAILED(hr)) { return hr; }
 
 	// 定数バッファ作成
@@ -130,7 +130,7 @@ HRESULT Shader::Make(void *pData, UINT size)
 	// テクスチャ領域作成
 	m_pTextures.resize(shaderDesc.BoundResources, nullptr);
 
-	return MakeShader(pData, size);
+	return MakeShader(In_pData, In_Size);
 }
 
 //----------
@@ -159,13 +159,13 @@ void VertexShader::Bind(void)
 		pContext->VSSetShaderResources(i, 1, &m_pTextures[i]);
 }
 
-HRESULT VertexShader::MakeShader(void *pData, UINT size)
+HRESULT VertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
 	HRESULT hr;
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
 
 	// シェーダー作成
-	hr = pDevice->CreateVertexShader(pData, size, NULL, m_pVS.GetAddressOf());
+	hr = pDevice->CreateVertexShader(In_pData, In_Size, NULL, m_pVS.GetAddressOf());
 	if (FAILED(hr)) { return hr; }
 
 	/*
@@ -200,7 +200,7 @@ HRESULT VertexShader::MakeShader(void *pData, UINT size)
 		},
 	};
 
-	hr = D3DReflect(pData, size, IID_PPV_ARGS(&pReflection));
+	hr = D3DReflect(In_pData, In_Size, IID_PPV_ARGS(&pReflection));
 	if (FAILED(hr)) { return hr; }
 
 	pReflection->GetDesc(&shaderDesc);
@@ -236,7 +236,7 @@ HRESULT VertexShader::MakeShader(void *pData, UINT size)
 
 	hr = pDevice->CreateInputLayout(
 		pInputDesc, shaderDesc.InputParameters,
-		pData, size, m_pInputLayout.GetAddressOf()
+		In_pData, In_Size, m_pInputLayout.GetAddressOf()
 	);
 
 	delete[] pInputDesc;
@@ -264,9 +264,9 @@ void PixelShader::Bind(void)
 	for (int i = 0; i < m_pTextures.size(); ++i)
 		pContext->PSSetShaderResources(i, 1, &m_pTextures[i]);
 }
-HRESULT PixelShader::MakeShader(void *pData, UINT size)
+HRESULT PixelShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreatePixelShader(pData, size, NULL, m_pPS.GetAddressOf());
+	return DX11_Initialize::GetInstance().GetDevice()->CreatePixelShader(In_pData, In_Size, NULL, m_pPS.GetAddressOf());
 }
 
 //----------
@@ -295,9 +295,9 @@ void HullShader::Unbind(void)
 {
 	DX11_Initialize::GetInstance().GetDeviceContext()->HSSetShader(nullptr, nullptr, 0);
 }
-HRESULT HullShader::MakeShader(void *pData, UINT size)
+HRESULT HullShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateHullShader(pData, size, NULL, m_pHS.GetAddressOf());
+	return DX11_Initialize::GetInstance().GetDevice()->CreateHullShader(In_pData, In_Size, NULL, m_pHS.GetAddressOf());
 }
 
 //----------
@@ -325,9 +325,9 @@ void DomainShader::Unbind(void)
 {
 	DX11_Initialize::GetInstance().GetDeviceContext()->DSSetShader(nullptr, nullptr, 0);
 }
-HRESULT DomainShader::MakeShader(void *pData, UINT size)
+HRESULT DomainShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateDomainShader(pData, size, NULL, m_pDS.GetAddressOf());
+	return DX11_Initialize::GetInstance().GetDevice()->CreateDomainShader(In_pData, In_Size, NULL, m_pDS.GetAddressOf());
 }
 
 //----------
@@ -358,9 +358,9 @@ void GeometryShader::Unbind()
 	pContext->GSSetShaderResources(0, 1, &pSRV);
 	pContext->GSSetShader(nullptr, nullptr, 0);
 }
-HRESULT GeometryShader::MakeShader(void *pData, UINT size)
+HRESULT GeometryShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateGeometryShader(pData, size, NULL, m_pGS.GetAddressOf());
+	return DX11_Initialize::GetInstance().GetDevice()->CreateGeometryShader(In_pData, In_Size, NULL, m_pGS.GetAddressOf());
 }
 
 //----------
@@ -394,17 +394,17 @@ void ComputeShader::Unbind()
 	pContext->CSSetShaderResources(0, 1, &pSRV);
 	pContext->CSSetShader(nullptr, nullptr, 0);
 }
-void ComputeShader::Dispatch(UINT num, UnorderedAccessView **ppUAV, UINT thread)
+void ComputeShader::Dispatch(_In_ UINT In_Num, _In_ UnorderedAccessView **ppUAV, _In_ const UINT &In_Thread) noexcept
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
 	ID3D11UnorderedAccessView *ptr[4];
-	if (num > 4) num = 4;
-	for (unsigned int i = 0; i < num; ++i)
+	if (In_Num > 4) In_Num = 4;
+	for (unsigned int i = 0; i < In_Num; ++i)
 		ptr[i] = ppUAV[i]->GetUAV();
-	pContext->CSSetUnorderedAccessViews(0, num, ptr, nullptr);
-	pContext->Dispatch(thread, 1, 1);
+	pContext->CSSetUnorderedAccessViews(0, In_Num, ptr, nullptr);
+	pContext->Dispatch(In_Thread, 1, 1);
 }
-HRESULT ComputeShader::MakeShader(void *pData, UINT size)
+HRESULT ComputeShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
-	return DX11_Initialize::GetInstance().GetDevice()->CreateComputeShader(pData, size, NULL, m_pCS.GetAddressOf());
+	return DX11_Initialize::GetInstance().GetDevice()->CreateComputeShader(In_pData, In_Size, NULL, m_pCS.GetAddressOf());
 }
