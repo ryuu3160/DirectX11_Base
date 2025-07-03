@@ -10,46 +10,44 @@
 // ==============================
 #include "MeshBuffer.hpp"
 
-MeshBuffer::MeshBuffer(const Description &desc)
-	: m_pVtxBuffer(NULL), m_pIdxBuffer(NULL), m_desc{}
+MeshBuffer::MeshBuffer(_In_ const Description &In_Desc) noexcept
+	: m_pVtxBuffer(NULL), m_pIdxBuffer(NULL), m_Desc{}
 {
 	HRESULT hr = E_FAIL;
-	hr = CreateVertexBuffer(desc.pVtx, desc.vtxSize, desc.vtxCount, desc.isWrite);
-	if (desc.pIdx)
+	hr = CreateVertexBuffer(In_Desc.pVtx, In_Desc.vtxSize, In_Desc.vtxCount, In_Desc.isWrite);
+	if (In_Desc.pIdx)
 	{
-		hr = CreateIndexBuffer(desc.pIdx, desc.idxSize, desc.idxCount);
+		hr = CreateIndexBuffer(In_Desc.pIdx, In_Desc.idxSize, In_Desc.idxCount);
 	}
-	m_desc = desc;
+	m_Desc = In_Desc;
 
-	rsize_t vtxMemSize = desc.vtxSize * desc.vtxCount;
+	rsize_t vtxMemSize = In_Desc.vtxSize * In_Desc.vtxCount;
 	void *pVtx = new char[vtxMemSize];
-	memcpy_s(pVtx, vtxMemSize, desc.pVtx, vtxMemSize);
-	m_desc.pVtx = pVtx;
-	rsize_t idxMemSize = desc.idxSize * desc.idxCount;
+	memcpy_s(pVtx, vtxMemSize, In_Desc.pVtx, vtxMemSize);
+	m_Desc.pVtx = pVtx;
+	rsize_t idxMemSize = In_Desc.idxSize * In_Desc.idxCount;
 	void *pIdx = new char[idxMemSize];
-	memcpy_s(pIdx, idxMemSize, desc.pIdx, idxMemSize);
-	m_desc.pIdx = pIdx;
-
-
+	memcpy_s(pIdx, idxMemSize, In_Desc.pIdx, idxMemSize);
+	m_Desc.pIdx = pIdx;
 }
 MeshBuffer::~MeshBuffer()
 {
-	delete[] m_desc.pIdx;
-	delete[] m_desc.pVtx;
+	delete[] m_Desc.pIdx;
+	delete[] m_Desc.pVtx;
 
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
 	m_pIdxBuffer = nullptr;
 	m_pVtxBuffer = nullptr;
 }
 
-HRESULT MeshBuffer::CreateVertexBuffer(const void *pVtx, UINT size, UINT count, bool isWrite)
+HRESULT MeshBuffer::CreateVertexBuffer(_In_ const void *In_pVtx, _In_ const UINT &In_Size, _In_ const UINT &In_Count, _In_ const bool &In_IsWrite) noexcept
 {
 	//--- 作成するバッファの情報
 	D3D11_BUFFER_DESC bufDesc = {};
-	bufDesc.ByteWidth = size * count;
+	bufDesc.ByteWidth = In_Size * In_Count;
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	if (isWrite)
+	if (In_IsWrite)
 	{
 		bufDesc.Usage = D3D11_USAGE_DYNAMIC;
 		bufDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -57,7 +55,7 @@ HRESULT MeshBuffer::CreateVertexBuffer(const void *pVtx, UINT size, UINT count, 
 
 	//--- バッファの初期値を設定
 	D3D11_SUBRESOURCE_DATA subResource = {};
-	subResource.pSysMem = pVtx;
+	subResource.pSysMem = In_pVtx;
 
 	//--- 頂点バッファの作成
 	HRESULT hr;
@@ -67,10 +65,10 @@ HRESULT MeshBuffer::CreateVertexBuffer(const void *pVtx, UINT size, UINT count, 
 	return hr;
 }
 
-HRESULT MeshBuffer::CreateIndexBuffer(const void *pIdx, UINT size, UINT count)
+HRESULT MeshBuffer::CreateIndexBuffer(_In_ const void *In_pIdx, _In_ const UINT &In_Size, _In_ const UINT &In_Count) noexcept
 {
 	// インデックスサイズの確認
-	switch (size)
+	switch (In_Size)
 	{
 	default:
 		return E_FAIL;
@@ -81,12 +79,12 @@ HRESULT MeshBuffer::CreateIndexBuffer(const void *pIdx, UINT size, UINT count)
 
 	// バッファの情報を設定
 	D3D11_BUFFER_DESC bufDesc = {};
-	bufDesc.ByteWidth = size * count;
+	bufDesc.ByteWidth = In_Size * In_Count;
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	// バッファの初期データ
 	D3D11_SUBRESOURCE_DATA subResource = {};
-	subResource.pSysMem = pIdx;
+	subResource.pSysMem = In_pIdx;
 
 	// インデックスバッファ生成
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
@@ -96,10 +94,10 @@ HRESULT MeshBuffer::CreateIndexBuffer(const void *pIdx, UINT size, UINT count)
 	return hr;
 }
 
-void MeshBuffer::Draw(int count)
+void MeshBuffer::Draw(_In_ int In_Count) noexcept
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
-	UINT stride = m_desc.vtxSize;
+	UINT stride = m_Desc.vtxSize;
 	UINT offset = 0;
 
 	// トポロジの設定
@@ -108,34 +106,34 @@ void MeshBuffer::Draw(int count)
 	if (hullShader)
 		hullShader->Release();
 	else
-		pContext->IASetPrimitiveTopology(m_desc.topology);
+		pContext->IASetPrimitiveTopology(m_Desc.topology);
 
 	// 頂点バッファ設定
 	pContext->IASetVertexBuffers(0, 1, m_pVtxBuffer.GetAddressOf(), &stride, &offset);
 
 	// 描画
-	if (m_desc.idxCount > 0)
+	if (m_Desc.idxCount > 0)
 	{
 		DXGI_FORMAT format{};
-		switch (m_desc.idxSize)
+		switch (m_Desc.idxSize)
 		{
 		case 4: format = DXGI_FORMAT_R32_UINT; break;
 		case 2: format = DXGI_FORMAT_R16_UINT; break;
 		}
 		pContext->IASetIndexBuffer(m_pIdxBuffer.Get(), format, 0);
-		pContext->DrawIndexed(count ? count : m_desc.idxCount, 0, 0);
+		pContext->DrawIndexed(count ? count : m_Desc.idxCount, 0, 0);
 	}
 	else
 	{
 		// 頂点バッファのみで描画
-		pContext->Draw(count ? count : m_desc.vtxCount, 0);
+		pContext->Draw(count ? count : m_Desc.vtxCount, 0);
 	}
 
 }
 
 HRESULT MeshBuffer::Write(void *pVtx)
 {
-	if (!m_desc.isWrite) { return E_FAIL; }
+	if (!m_Desc.isWrite) { return E_FAIL; }
 	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
 	HRESULT hr;
 	ID3D11Device *pDevice = Instance.GetDevice();
@@ -146,7 +144,7 @@ HRESULT MeshBuffer::Write(void *pVtx)
 	hr = pContext->Map(m_pVtxBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapResource);
 	if (SUCCEEDED(hr))
 	{
-		rsize_t size = m_desc.vtxCount * m_desc.vtxSize;
+		rsize_t size = m_Desc.vtxCount * m_Desc.vtxSize;
 		memcpy_s(mapResource.pData, size, pVtx, size);
 		pContext->Unmap(m_pVtxBuffer.Get(), 0);
 	}
