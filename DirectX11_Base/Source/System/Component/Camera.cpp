@@ -1,0 +1,111 @@
+/*+===================================================================
+	File: Camera.cpp
+	Summary: カメラのコンポーネント
+	Author: AT13C192 01 青木雄一郎
+	Date: 2025/07/03 Thu PM 02:11:41 初回作成
+===================================================================+*/
+
+// ==============================
+//	include
+// ==============================
+#include "Camera.hpp"
+#include "DirectX11/System/Geometory.hpp"
+#include "System/Object/GameObject.hpp"
+
+Camera::Camera()
+	: m_bIs3D(true)
+	, m_fFovy(60.0f), m_fWidth(20.0f)
+	, m_fAspect(16.0f / 9.0f), m_fNear(0.2f), m_fFar(1000.0f)
+	, m_fFocus(1.0f)
+#ifdef _DEBUG
+	, m_bIsShow(false)
+#endif
+{
+}
+
+Camera::~Camera()
+{
+}
+
+void Camera::ReadWrite(_In_ DataAccessor *In_Data)
+{
+	In_Data->Access<bool>(&m_bIs3D);
+	In_Data->Access<float>(&m_fFovy);
+	In_Data->Access<float>(&m_fWidth);
+	In_Data->Access<float>(&m_fNear);
+	In_Data->Access<float>(&m_fFar);
+	In_Data->Access<float>(&m_fAspect);
+	In_Data->Access<float>(&m_fFocus);
+#ifdef _DEBUG
+	In_Data->Access<bool>(&m_bIsShow);
+#endif
+}
+
+#ifdef _DEBUG
+void Camera::Draw() const noexcept
+{
+	if (!m_bIsShow) return;
+	DirectX::XMFLOAT3 look = GetLook();
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(look.x, look.y, look.z);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
+	DirectX::XMFLOAT4X4 mat;
+	DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixTranspose(S * T));
+	Geometory::GetInstance().SetWorld(mat);
+	Geometory::GetInstance().DrawBox();
+}
+#endif
+
+DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
+{
+	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
+	DirectX::XMFLOAT3 look = GetLook();
+	DirectX::XMFLOAT3 up(0.0f, 1.0f, 0.0f);
+	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
+	DirectX::XMVECTOR vLook = DirectX::XMLoadFloat3(&look);
+	DirectX::XMVECTOR vUp = DirectX::XMLoadFloat3(&up);
+	DirectX::XMMATRIX mat = DirectX::XMMatrixLookAtLH(vPos, vLook, vUp);
+	
+	// Transposeするかどうか
+	if (In_Transpose)
+		mat = DirectX::XMMatrixTranspose(mat);
+	DirectX::XMFLOAT4X4 fmat;
+	DirectX::XMStoreFloat4x4(&fmat, mat);
+	return fmat;
+}
+
+DirectX::XMFLOAT4X4 Camera::GetProj(_In_ bool In_Transpose) const noexcept
+{
+	DirectX::XMMATRIX mat;
+	if (m_bIs3D)
+	{
+		mat = DirectX::XMMatrixPerspectiveFovLH(GetFovy(), m_fAspect, m_fNear, m_fFar);
+	}
+	else
+	{
+		mat = DirectX::XMMatrixOrthographicLH(m_fWidth, m_fWidth / m_fAspect, m_fNear, m_fFar);
+	}
+	// Transposeするかどうか
+	if (In_Transpose)
+		mat = DirectX::XMMatrixTranspose(mat);
+	DirectX::XMFLOAT4X4 fmat;
+	DirectX::XMStoreFloat4x4(&fmat, mat);
+	return fmat;
+}
+
+DirectX::XMFLOAT3 Camera::GetLook() const noexcept
+{
+	// 位置の取得
+	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
+	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
+
+	// 前方ベクトル取得
+	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
+	DirectX::XMVECTOR vFront = DirectX::XMLoadFloat3(&front);
+
+	// カメラの位置からフォーカス距離まで進んだ位置を注視点とする
+	vFront = DirectX::XMVectorScale(vFront, m_fFocus);
+	DirectX::XMVECTOR vLook = DirectX::XMVectorAdd(vPos, vFront);
+
+	DirectX::XMStoreFloat3(&pos, vLook);
+	return pos;
+}
