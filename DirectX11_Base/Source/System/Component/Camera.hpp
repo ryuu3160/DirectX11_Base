@@ -38,7 +38,7 @@ public:
 	/// ƒJƒƒ‰‚Ì‹–ìŠp‚ğæ“¾
 	/// </summary>
 	/// <returns>‹–ìŠp</returns>
-	inline const float &GetFovy() const noexcept {return DirectX::XMConvertToRadians(m_fFovy);}
+	inline float GetFovy() const noexcept {return DirectX::XMConvertToRadians(m_fFovy);}
 	/// <summary>
 	/// ƒJƒƒ‰‚Ì•‚ğæ“¾
 	/// </summary>
