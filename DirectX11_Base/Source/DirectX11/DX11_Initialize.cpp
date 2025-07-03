@@ -248,32 +248,7 @@ void DX11_Initialize::Swap()
 	m_cpSwapChain->Present(0, 0);
 }
 
-ID3D11Device* DX11_Initialize::GetDevice()
-{
-	return m_cpDevice.Get();
-}
-
-ID3D11DeviceContext* DX11_Initialize::GetDeviceContext()
-{
-	return m_cpContext.Get();
-}
-
-IDXGISwapChain *DX11_Initialize::GetSwapChain()
-{
-	return m_cpSwapChain.Get();
-}
-
-UINT DX11_Initialize::GetWidth() const
-{
-	return m_Width;
-}
-
-UINT DX11_Initialize::GetHeight() const
-{
-	return m_Height;
-}
-
-void DX11_Initialize::SetWindowColor(float In_fR, float In_fG, float In_fB, float In_fA)
+void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
 {
 	m_WindowColor[0] = In_fR;
 	m_WindowColor[1] = In_fG;
@@ -281,80 +256,75 @@ void DX11_Initialize::SetWindowColor(float In_fR, float In_fG, float In_fB, floa
 	m_WindowColor[3] = In_fA;
 }
 
-void DX11_Initialize::SetWindowColor(const std::vector<float>&In_vecRgba)
+void DX11_Initialize::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) noexcept
 {
-	if (In_vecRgba.size() != 4)
-	{
-		throw std::runtime_error("DX11 Init Error : ColorElement count error");
-	}
-
-	m_WindowColor[0] = In_vecRgba[0];
-	m_WindowColor[1] = In_vecRgba[1];
-	m_WindowColor[2] = In_vecRgba[2];
-	m_WindowColor[3] = In_vecRgba[3];
+	m_WindowColor[0] = In_arrRgba.x;
+	m_WindowColor[1] = In_arrRgba.y;
+	m_WindowColor[2] = In_arrRgba.z;
+	m_WindowColor[3] = In_arrRgba.w;
 }
 
-void DX11_Initialize::SetWindowColor_R(float In_fR)
+void DX11_Initialize::SetWindowColor_R(const float &In_fR) noexcept
 {
 	m_WindowColor[0] = In_fR;
 }
 
-void DX11_Initialize::SetWindowColor_G(float In_fG)
+void DX11_Initialize::SetWindowColor_G(_In_ const float &In_fG) noexcept
 {
 	m_WindowColor[1] = In_fG;
 }
 
-void DX11_Initialize::SetWindowColor_B(float In_fB)
+void DX11_Initialize::SetWindowColor_B(_In_ const float &In_fB) noexcept
 {
 	m_WindowColor[2] = In_fB;
 }
 
-void DX11_Initialize::SetWindowColor_A(float In_fA)
+void DX11_Initialize::SetWindowColor_A(_In_ const float &In_fA) noexcept
 {
 	m_WindowColor[3] = In_fA;
 }
 
-void DX11_Initialize::_SetRefreshRate_Numerator(UINT In_unNum)
+void DX11_Initialize::_SetRefreshRate_Numerator(_In_ const UINT &In_unNum) noexcept
 {
 	m_RefreshRate_Numerator = In_unNum;
 }
 
-void DX11_Initialize::_SetRefreshRate_Denominator(UINT In_unNum)
+void DX11_Initialize::_SetRefreshRate_Denominator(_In_ const UINT &In_unNum) noexcept
 {
 	m_RefreshRate_Denominator = In_unNum;
 }
 
-void DX11_Initialize::_SetSampleDesc_Count(UINT In_unCount)
+void DX11_Initialize::_SetSampleDesc_Count(_In_ const UINT &In_unCount) noexcept
 {
 	m_SampleDesc_Count = In_unCount;
 }
 
-void DX11_Initialize::_SetFormat(DXGI_FORMAT In_dxgiFormat)
+void DX11_Initialize::_SetFormat(_In_ const DXGI_FORMAT &In_dxgiFormat) noexcept
 {
 	m_Format = In_dxgiFormat;
 }
 
-void DX11_Initialize::_SetBufferUsage(DXGI_USAGE In_dxgiBufferUsage)
+void DX11_Initialize::_SetBufferUsage(_In_ const DXGI_USAGE &In_dxgiBufferUsage) noexcept
 {
 	m_BufferUsage = In_dxgiBufferUsage;
 }
 
-void DX11_Initialize::_SetBufferCount(UINT In_unBufferCount)
+void DX11_Initialize::_SetBufferCount(_In_ const UINT &In_unBufferCount) noexcept
 {
 	m_BufferCount = In_unBufferCount;
 }
 
-void DX11_Initialize::_SetFullScreen(bool In_bFullScreen)
+void DX11_Initialize::_SetFullScreen(_In_ const bool &In_bFullScreen) noexcept
 {
 	m_FullScreen = In_bFullScreen;
 }
 
-void DX11_Initialize::_SetFlags(UINT In_unFlags)
+void DX11_Initialize::_SetFlags(_In_ const UINT &In_unFlags) noexcept
 {
 	m_Flags = In_unFlags;
 }
 
-void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView)
+void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView) noexcept
 {
 	static ID3D11RenderTargetView *rtvs[4];
 
@@ -375,7 +345,7 @@ void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppView
 	m_cpContext->RSSetViewports(1, &vp);
 }
 
-void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull)
+void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull) noexcept
 {
 	switch (In_cull)
 	{
@@ -391,12 +361,12 @@ void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull)
 	}
 }
 
-void DX11_Initialize::SetDepthTest(DepthState In_State)
+void DX11_Initialize::SetDepthTest(DepthState In_State) noexcept
 {
 	m_cpContext->OMSetDepthStencilState(m_cpDepthStencilState[In_State].Get(),0);
 }
 
-void DX11_Initialize::SetBlendMode(BlendMode In_Blend)
+void DX11_Initialize::SetBlendMode(BlendMode In_Blend) noexcept
 {
 	if (In_Blend < 0 || In_Blend >= BLEND_MAX)
 		return;
@@ -404,7 +374,7 @@ void DX11_Initialize::SetBlendMode(BlendMode In_Blend)
 	m_cpContext->OMSetBlendState(m_cpBlendState[In_Blend].Get(), BlendFactor, 0xffffffff);
 }
 
-void DX11_Initialize::SetSamplerState(SamplerState In_State)
+void DX11_Initialize::SetSamplerState(SamplerState In_State) noexcept
 {
 	if (In_State < 0 || In_State >= SAMPLER_MAX)
 		return;

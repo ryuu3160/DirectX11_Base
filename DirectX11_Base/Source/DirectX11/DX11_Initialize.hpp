@@ -97,28 +97,28 @@ public:
 	/// ID3D11Deviceを取得する
 	/// </summary>
 	/// <returns>ID3D11Deviceへのポインター</returns>
-	ID3D11Device* GetDevice();
+	inline ID3D11Device* GetDevice() const noexcept { return m_cpDevice.Get(); }
 	/// <summary>
 	/// ID3D11DeviceContextを取得する
 	/// </summary>
 	/// <returns>ID3D11DeviceContextへのポインター</returns>
-	ID3D11DeviceContext* GetDeviceContext();
+	inline ID3D11DeviceContext* GetDeviceContext() const noexcept { return m_cpContext.Get(); }
 	/// <summary>
 	/// IDXGISwapChainを取得する
 	/// </summary>
 	/// <returns>IDXGISwapChainへのポインター</returns>
-	IDXGISwapChain *GetSwapChain();
+	inline IDXGISwapChain *GetSwapChain() const noexcept { return m_cpSwapChain.Get(); }
 
 	/// <summary>
 	/// 幅を取得する
 	/// </summary>
 	/// <returns>UINT型</returns>
-	UINT GetWidth() const;
+	inline const UINT &GetWidth() const noexcept { return m_Width; }
 	/// <summary>
 	/// 高さを取得する
 	/// </summary>
 	/// <returns>UINT型</returns>
-	UINT GetHeight() const;
+	inline const UINT &GetHeight() const noexcept { return m_Height; }
 
 	/// <summary>
 	/// WindowColorをセットする
@@ -127,74 +127,74 @@ public:
 	/// <param name="[In_fG]">グリーン</param>
 	/// <param name="[In_fB]">ブルー</param>
 	/// <param name="[In_fA]">透過度</param>
-	void SetWindowColor(float In_fR, float In_fG, float In_fB, float In_fA);
+	void SetWindowColor(_In_ const float &In_fR,_In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept;
 
 	/// <summary>
 	/// WindowColorをセットする
 	/// </summary>
 	/// <param name="[In_vecRgba]">vector型の配列※要素数は4限定</param>
-	void SetWindowColor(const std::vector<float>&In_vecRgba);
+	void SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) noexcept;
 	/// <summary>
 	/// WindowColorのレッドの値をセットする
 	/// </summary>
 	/// <param name="[In_fR]">レッド</param>
-	void SetWindowColor_R(float In_fR);
+	void SetWindowColor_R(_In_ const float &In_fR) noexcept;
 	/// <summary>
 	/// WindowColorのグリーンの値をセットする
 	/// </summary>
 	/// <param nameIn_fGg]">グリーン</param>
-	void SetWindowColor_G(float In_fG);
+	void SetWindowColor_G(_In_ const float &In_fG) noexcept;
 	/// <summary>
 	/// WindowColorのブルーの値をセットする
 	/// </summary>
 	/// <param name="[In_fB]">ブルー</param>
-	void SetWindowColor_B(float In_fB);
+	void SetWindowColor_B(_In_ const float &In_fB) noexcept;
 	/// <summary>
 	/// WindowColorの透過度の値をセットする
 	/// </summary>
 	/// <param name="[In_fA]">透過度</param>
-	void SetWindowColor_A(float In_fA);
+	void SetWindowColor_A(_In_ const float &In_fA) noexcept;
 
 	/// <summary>
 	/// fps値を変更
 	/// </summary>
 	/// <param name="[In_unNum]">fps値</param>
-	void _SetRefreshRate_Numerator(UINT In_unNum);
+	void _SetRefreshRate_Numerator(_In_ const UINT &In_unNum) noexcept;
 	/// <summary>
 	/// fpsの分母値を変更
 	/// </summary>
 	/// <param name="[In_unNum]">fpsの分母値</param>
-	void _SetRefreshRate_Denominator(UINT In_unNum);
+	void _SetRefreshRate_Denominator(_In_ const UINT &In_unNum) noexcept;
 	/// <summary>
 	/// マルチサンプル数を変更
 	/// </summary>
 	/// <param name="[In_unCount]">サンプル数</param>
-	void _SetSampleDesc_Count(UINT In_unCount);
+	void _SetSampleDesc_Count(_In_ const UINT &In_unCount) noexcept;
 	/// <summary>
 	/// フレームバッファの色情報(各8bit)を変更
 	/// </summary>
 	/// <param name="[In_dxgiFormat]">色情報</param>
-	void _SetFormat(DXGI_FORMAT In_dxgiFormat);
+	void _SetFormat(_In_ const DXGI_FORMAT &In_dxgiFormat) noexcept;
 	/// <summary>
 	/// バッファの使用方法を変更
 	/// </summary>
 	/// <param name="[In_dxgiBufferUsage]">使用方法</param>
-	void _SetBufferUsage(DXGI_USAGE In_dxgiBufferUsage);
+	void _SetBufferUsage(_In_ const DXGI_USAGE &In_dxgiBufferUsage) noexcept;
 	/// <summary>
 	/// バックバッファ数の変更
 	/// </summary>
 	/// <param name="[In_unBufferCount]">カウント</param>
-	void _SetBufferCount(UINT In_unBufferCount);
+	void _SetBufferCount(_In_ const UINT &In_unBufferCount) noexcept;
 	/// <summary>
 	/// フルスクリーンの可否を変更
 	/// </summary>
 	/// <param name="[In_bFullScreen]">true or false</param>
-	void _SetFullScreen(bool In_bFullScreen);
+	void _SetFullScreen(_In_ const bool &In_bFullScreen) noexcept;
 	/// <summary>
 	/// フラグの設定
 	/// </summary>
 	/// <param name="[In_unFlags]">フラグ</param>
-	void _SetFlags(UINT In_unFlags);
+	void _SetFlags(_In_ const UINT &In_unFlags) noexcept;
 
 	/// <summary>
 	/// レンダーターゲットの設定
@@ -202,27 +202,27 @@ public:
 	/// <param name="[In_unNum]">設定数</param>
 	/// <param name="[In_rtppViews]">RenderTargetクラスへのポインター</param>
 	/// <param name="[In_dspView]">DepthStencilクラスへのポインター</param>
-	void SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView);
+	void SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView) noexcept;
 	/// <summary>
 	/// CullingModeの設定
 	/// </summary>
 	/// <param name="[In_cull]">モード</param>
-	void SetCullingMode(D3D11_CULL_MODE In_cull);
+	void SetCullingMode(D3D11_CULL_MODE In_cull) noexcept;
 	/// <summary>
 	/// DepthTestの設定
 	/// </summary>
 	/// <param name="[In_State]">有効にするか否か</param>
-	void SetDepthTest(DepthState In_State);
+	void SetDepthTest(DepthState In_State) noexcept;
 	/// <summary>
 	/// BlendModeの設定
 	/// </summary>
 	/// <param name="[In_Blend]">モード</param>
-	void SetBlendMode(BlendMode In_Blend);
+	void SetBlendMode(BlendMode In_Blend) noexcept;
 	/// <summary>
 	/// SamplerStateの設定
 	/// </summary>
 	/// <param name="[In_State]">SamplerState</param>
-	void SetSamplerState(SamplerState In_State);
+	void SetSamplerState(SamplerState In_State) noexcept;
 
 private:
 	/// <summary>

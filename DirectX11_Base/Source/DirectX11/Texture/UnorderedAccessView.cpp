@@ -23,7 +23,7 @@ UnorderedAccessView::~UnorderedAccessView()
 	m_pUAV = nullptr;
 	m_pBuffer = nullptr;
 }
-HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
+HRESULT UnorderedAccessView::Create(_In_ const UINT &In_Stride, _In_ const UINT &In_Num, _In_ void *In_pData) noexcept
 {
     // https://wizframework.github.io/BaseCross64/15_01.html
     DX11_Initialize &Instance = DX11_Initialize::GetInstance();
@@ -34,14 +34,14 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
     // バッファ作成
     {
         D3D11_BUFFER_DESC desc = {};
-        desc.ByteWidth = stride * num;
+        desc.ByteWidth = In_Stride * In_Num;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
         desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED; // ComputeShaderで利用するための構造化バッファ
-        desc.StructureByteStride = stride;
+        desc.StructureByteStride = In_Stride;
         D3D11_SUBRESOURCE_DATA data = {};
-        data.pSysMem = pData;
-        hr = pDevice->CreateBuffer(&desc, pData ? &data : nullptr, m_pBuffer.GetAddressOf());
+        data.pSysMem = In_pData;
+        hr = pDevice->CreateBuffer(&desc, In_pData ? &data : nullptr, m_pBuffer.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
 
@@ -50,7 +50,7 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
         D3D11_UNORDERED_ACCESS_VIEW_DESC desc = {};
         desc.Format = DXGI_FORMAT_UNKNOWN;
         desc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-        desc.Buffer.NumElements = num;
+        desc.Buffer.NumElements = In_Num;
         hr = pDevice->CreateUnorderedAccessView(m_pBuffer.Get(), &desc, m_pUAV.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
@@ -61,7 +61,7 @@ HRESULT UnorderedAccessView::Create(UINT stride, UINT num, void *pData)
         desc.Format = DXGI_FORMAT_UNKNOWN;
         desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
         desc.Buffer.FirstElement = 0;
-        desc.Buffer.NumElements = num;
+        desc.Buffer.NumElements = In_Num;
         hr = pDevice->CreateShaderResourceView(m_pBuffer.Get(), &desc, m_pSRV.GetAddressOf());
         if (FAILED(hr)) { return hr; }
     }
@@ -89,13 +89,4 @@ void UnorderedAccessView::Copy()
         memcpy(check, MappedResource.pData, sizeof(check));
         int a = 0;
     }
-}
-
-ID3D11UnorderedAccessView *UnorderedAccessView::GetUAV()
-{
-    return m_pUAV.Get();
-}
-ID3D11ShaderResourceView *UnorderedAccessView::GetSRV()
-{
-    return m_pSRV.Get();
 }

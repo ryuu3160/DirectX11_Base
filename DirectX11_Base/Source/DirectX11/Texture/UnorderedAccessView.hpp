@@ -16,12 +16,12 @@ class UnorderedAccessView
 public:
 	UnorderedAccessView();
 	~UnorderedAccessView();
-	HRESULT Create(UINT stride, UINT num, void *pData = nullptr);
+	HRESULT Create(_In_ const UINT &In_Stride, _In_ const  UINT &In_Num, _In_ void *In_pData = nullptr) noexcept;
 
 	void Copy();
 
-	ID3D11UnorderedAccessView *GetUAV();
-	ID3D11ShaderResourceView *GetSRV();
+	inline ID3D11UnorderedAccessView *GetUAV() const noexcept { return m_pUAV.Get(); }
+	inline ID3D11ShaderResourceView *GetSRV() const noexcept { return m_pSRV.Get(); }
 
 private:
 	ComPtr<ID3D11Buffer> m_pBuffer;
