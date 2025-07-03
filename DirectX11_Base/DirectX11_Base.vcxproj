@@ -183,6 +183,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\Camera.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Component\Component.cpp">
       <SubType>
       </SubType>
@@ -194,6 +198,10 @@
     <ClCompile Include="Source\System\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\System\Input\Input.cpp" />
+    <ClCompile Include="Source\System\Object\CameraDCC.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Object\GameObject.cpp">
       <SubType>
       </SubType>
@@ -241,6 +249,10 @@
     <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp" />
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
+    <ClInclude Include="Source\System\Component\Camera.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
       <SubType>
       </SubType>
@@ -254,6 +266,10 @@
     <ClInclude Include="Source\System\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\System\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\System\Input\Input.hpp" />
+    <ClInclude Include="Source\System\Object\CameraDCC.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\System\Object\GameObject.hpp">
       <SubType>
       </SubType>
