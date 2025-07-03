@@ -80,8 +80,13 @@ void UnorderedAccessView::Copy()
     desc.Usage = D3D11_USAGE_STAGING;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     desc.StructureByteStride = base.StructureByteStride;
-    ID3D11Buffer *pLocal;
+    ID3D11Buffer *pLocal = nullptr;
     Instance.GetDevice()->CreateBuffer(&desc, nullptr, &pLocal);
+
+	// バッファが作成できなかった場合は何もしない
+    if (pLocal == nullptr)
+        return;
+
     Instance.GetDeviceContext()->CopyResource(pLocal, m_pBuffer.Get());
     if (SUCCEEDED(Instance.GetDeviceContext()->Map(pLocal, 0, D3D11_MAP_READ, 0, &MappedResource)))
     {
