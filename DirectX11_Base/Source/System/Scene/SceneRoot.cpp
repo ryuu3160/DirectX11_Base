@@ -10,6 +10,7 @@
 // ==============================
 #include "SceneRoot.hpp"
 #include "DirectX11/System/Geometory.hpp"
+#include "System/Object/CameraDCC.hpp"
 
 // ==============================
 //  定数
@@ -24,6 +25,8 @@ namespace
 
 void SceneRoot::Init()
 {
+	// オブジェクトの作成
+	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
 }
 
 void SceneRoot::Uninit()
@@ -38,6 +41,12 @@ void SceneRoot::Draw()
 {
 #ifdef _DEBUG
 	Geometory &geometory = Geometory::GetInstance();
+	Camera *pCamera = GetObject<CameraDCC>("Camera")->GetComponent<Camera>();
+
+	geometory.SetView(pCamera->GetView());
+	geometory.SetProjection(pCamera->GetProj());
+	pCamera->Draw();
+
 	DirectX::XMFLOAT4X4 fmat;
 	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
 	geometory.SetWorld(fmat);
