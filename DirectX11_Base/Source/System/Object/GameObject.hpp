@@ -77,11 +77,33 @@ protected:
 template<class T>
 inline T *GameObject::AddComponent()
 {
-	return nullptr;
+#ifdef _DEBUG
+	// デバッグ時のみ、指定された型がComponentを継承しているか確認
+	static_assert(std::is_base_of<Component, T>(),
+		"[GameObject::GetComponent] template T does not inherit from 'Component'");
+#endif
+	// コンポーネント生成
+	T *ptr = new T;
+	// 型に関係ない初期化処理を実施
+	_addComponent(ptr);
+	// 管理リストに追加
+	m_Components.push_back(ptr);
+
+	return ptr;
 }
 
 template<class T>
 inline T *GameObject::GetComponent()
 {
-	return nullptr;
+	T *ptr = nullptr;
+	for (auto itr = m_Components.begin(); itr != m_Components.end();itr++)
+	{
+		// 型チェック
+		if (typeid(T) == typeid(**itr))
+		{
+			ptr = reinterpret_cast<T *>(*itr);
+			break;
+		}
+	}
+	return ptr;
 }
