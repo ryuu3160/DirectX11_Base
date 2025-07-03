@@ -24,8 +24,10 @@ CameraDCC::CameraDCC()
 	, m_nState(CAM_DCC_NONE)
 	, m_OldPos{ 0, 0 }
 	, m_pComponent(AddComponent<Camera>())
-	, m_cMode("None")
 {
+#ifdef _DEBUG
+	sprintf_s(m_cMode, "None");
+#endif
 }
 
 CameraDCC::~CameraDCC()
