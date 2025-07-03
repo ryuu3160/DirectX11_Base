@@ -28,20 +28,20 @@ HRESULT Shader::Load(const char *pFileName)
 	HRESULT hr = E_FAIL;
 
 	// ファイルを読み込む
-	FILE *fp;
-	fopen_s(&fp, pFileName, "rb");
-	if (!fp) { return hr; }
+	std::fstream file;
+	file.open(pFileName, std::ios::in | std::ios::binary);
+	if (!file.is_open()) { return hr; }
 
 	// ファイルのサイズを調べる
 	int fileSize = 0;
-	fseek(fp, 0, SEEK_END);
-	fileSize = ftell(fp);
+	file.seekg(0, std::ios::end);
+	fileSize = (int)file.tellg();
 
 	// メモリに読み込み
-	fseek(fp, 0, SEEK_SET);
+	file.seekg(0, std::ios::beg);
 	char *pData = new char[fileSize];
-	fread(pData, fileSize, 1, fp);
-	fclose(fp);
+	file.read(pData, fileSize);
+	file.close();
 
 	// シェーダー作成
 	hr = Make(pData, fileSize);
