@@ -121,12 +121,12 @@ void MeshBuffer::Draw(_In_ int In_Count) noexcept
 		case 2: format = DXGI_FORMAT_R16_UINT; break;
 		}
 		pContext->IASetIndexBuffer(m_pIdxBuffer.Get(), format, 0);
-		pContext->DrawIndexed(count ? count : m_Desc.idxCount, 0, 0);
+		pContext->DrawIndexed(In_Count ? In_Count : m_Desc.idxCount, 0, 0);
 	}
 	else
 	{
 		// 頂点バッファのみで描画
-		pContext->Draw(count ? count : m_Desc.vtxCount, 0);
+		pContext->Draw(In_Count ? In_Count : m_Desc.vtxCount, 0);
 	}
 
 }
