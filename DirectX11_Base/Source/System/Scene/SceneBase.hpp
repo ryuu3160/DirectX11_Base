@@ -79,7 +79,7 @@ public:
 	virtual void Draw() = 0;
 
 protected:
-	void Setup(const std::string_view *In_ShaderFiles, int In_ShaderNum, int In_ModelNum);
+	void Setup(const char **In_ShaderFiles, int In_ShaderNum, int In_ModelNum);
 
 private:
 	static Objects m_Objects;

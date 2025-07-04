@@ -140,45 +140,45 @@ void SceneBase::DestroyObj(const std::string &In_Name)
 	m_Items.remove(In_Name);
 }
 
-void SceneBase::Setup(const std::string_view *In_ShaderFiles, int In_ShaderNum, int In_ModelNum)
+void SceneBase::Setup(const char **In_ShaderFiles, int In_ShaderNum, int In_ModelNum)
 {
 	for (int i = 0; i < In_ShaderNum; ++i)
 	{
 		Shader *shader = nullptr;
-		if (strstr(In_ShaderFiles[i].data(), "PS_") == In_ShaderFiles[i].data())
+		if (strstr(In_ShaderFiles[i], "PS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<PixelShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<PixelShader>(In_ShaderFiles[i]);
 		}
-		else if (strstr(In_ShaderFiles[i].data(), "VS_") == In_ShaderFiles[i].data())
+		else if (strstr(In_ShaderFiles[i], "VS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<VertexShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<VertexShader>(In_ShaderFiles[i]);
 		}
-		else if (strstr(In_ShaderFiles[i].data(), "GS_") == In_ShaderFiles[i].data())
+		else if (strstr(In_ShaderFiles[i], "GS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<GeometryShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<GeometryShader>(In_ShaderFiles[i]);
 		}
-		else if (strstr(In_ShaderFiles[i].data(), "HS_") == In_ShaderFiles[i].data())
+		else if (strstr(In_ShaderFiles[i], "HS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<HullShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<HullShader>(In_ShaderFiles[i]);
 		}
-		else if (strstr(In_ShaderFiles[i].data(), "DS_") == In_ShaderFiles[i].data())
+		else if (strstr(In_ShaderFiles[i], "DS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<DomainShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<DomainShader>(In_ShaderFiles[i]);
 		}
-		else if (strstr(In_ShaderFiles[i].data(), "CS_") == In_ShaderFiles[i].data())
+		else if (strstr(In_ShaderFiles[i], "CS_") == In_ShaderFiles[i])
 		{
-			shader = CreateObject<ComputeShader>(In_ShaderFiles[i].data());
+			shader = CreateObject<ComputeShader>(In_ShaderFiles[i]);
 		}
 		else
 		{
-			MessageBox(NULL, In_ShaderFiles[i].data(), "Shader name [VS_ / PS_]", MB_OK);
+			MessageBox(NULL, In_ShaderFiles[i], "Shader name [VS_ / PS_]", MB_OK);
 		}
 		std::string path = "Assets/Shader/";
-		path += In_ShaderFiles[i].data();
+		path += In_ShaderFiles[i];
 		path += ".cso";
 		if (shader && FAILED(shader->Load(path.c_str())))
 		{
-			MessageBox(NULL, In_ShaderFiles[i].data(), "Shader Error", MB_OK);
+			MessageBox(NULL, In_ShaderFiles[i], "Shader Error", MB_OK);
 		}
 	}
 

@@ -27,6 +27,12 @@ void SceneRoot::Init()
 {
 	// オブジェクトの作成
 	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
+
+	const char *file[] = {
+		"VS_Object",
+		"PS_TexColor",	// テクスチャ貼っただけ
+	};
+	Setup(file, _countof(file), 1);
 }
 
 void SceneRoot::Uninit()
@@ -85,6 +91,67 @@ void SceneRoot::Draw()
 	geometory.DrawLines();
 
 #endif
+
+	// ゲーム内のオブジェクトの取得
+	GameObject *pModel[] = {
+		// GetObj - 引数の名前で指定された
+		// ヒエラルキー内のオブジェクトを取得
+		GetObject<GameObject>("RootModel0")
+	};
+	// カメラオブジェクトの取得
+	GameObject *pCameraObj2 = GetObject<GameObject>("Camera");
+	// カメラコンポーネントの取得
+	Camera *pCamera2 = pCameraObj2->GetComponent<Camera>();
+
+	// 読み込まれたシェーダーファイルの取得
+	Shader *pVS = GetObject<Shader>("VS_Object");
+	Shader *pPS[] =
+	{
+		GetObject<Shader>("PS_TexColor"),
+	};
+
+	// 定数バッファに渡す行列の情報を作成
+	DirectX::XMFLOAT4X4 mat[3];
+	// カメラのビュー/プロジェクション行列を設定
+	mat[1] = pCamera2->GetView(false);
+	mat[2] = pCamera2->GetProj(false);
+
+	// カメラの情報を定数バッファで渡す
+	DirectX::XMFLOAT3 CamPos = pCameraObj2->GetPos();
+	DirectX::XMFLOAT4 CameraParam[] = {
+		{CamPos.x,CamPos.y,CamPos.z,0.0f}
+	};
+
+	// 描画に必要な奴ら
+	ModelRenderer *pRenderer;
+	Model *pDrawModel;
+
+	// 描画
+	for (int i = 0; i < sizeof(pModel) / sizeof(GameObject *); i++)
+	{
+		// 単位行列でワールド行列を作成
+		mat[0] = pModel[i]->GetWorld(false);
+		// カメラのビュー/プロジェクション行列を設定
+
+		// メモリ上の行列をグラフィックスメモリへコピー
+		// 1つ目の引数はバッファの番号
+		pVS->WriteBuffer(0, mat);
+
+		// オブジェクト内のコンポーネントを取得
+		pRenderer = pModel[i]->GetComponent<ModelRenderer>();
+
+		// ModelRenderコンポーネントの内部に
+		// DX22で使用していたModelクラスがあり、
+		// 描画はModelクラスで行うため取得する
+		pDrawModel = pRenderer->GetModel();
+		if (pDrawModel)
+		{
+			// 描画
+			pDrawModel->SetVertexShader(pVS);
+			pDrawModel->SetPixelShader(pPS[i]);
+			pDrawModel->Draw();
+		}
+	}
 }
 
 void SceneRoot::ChangeScene()

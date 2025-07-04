@@ -71,6 +71,15 @@
     <Filter Include="Source\System\Component">
       <UniqueIdentifier>{ae5c6251-7f69-4d65-bb84-667ec22e5e68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Shader\Original">
+      <UniqueIdentifier>{96a9b3fc-0f0b-47f9-b015-03e5e7c8feec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader\VertexShader">
+      <UniqueIdentifier>{c1b8c8ea-43dc-4912-8737-11a9a0d31fde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader\PixelShader">
+      <UniqueIdentifier>{4324fb67-9ca3-4945-ab45-49cc1c85313a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -287,26 +296,32 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Assets\Shader\VS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shader\PS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shader\VS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shader\PS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shader\PS_Model.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Assets\Shader\VS_Model.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
-    </FxCompile>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <FxCompile Include="Source\Shader\Original\PS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Original\VS_Geometory.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Original\VS_Model.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Original\VS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Original\PS_Geometory.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\Original\PS_Model.hlsl">
+      <Filter>リソース ファイル\Shader\Original</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Object.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_TexColor.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
