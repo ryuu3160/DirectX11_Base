@@ -31,6 +31,12 @@ public:
     /// </summary>
     /// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
     void ReadWrite(_In_ DataAccessor *In_Data) override final;
+
+    /// <summary>
+    /// モデルのパスを設定します。
+    /// </summary>
+    /// <param name="[In_File]">設定するモデルファイルのパス。</param>
+    void SetModelPath(_In_ FilePath In_File) noexcept;
 //#if _DEBUG
 //    void Debug(debug::Window *window) final;
 //#endif

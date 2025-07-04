@@ -33,6 +33,8 @@ void SceneRoot::Init()
 		"PS_TexColor",	// テクスチャ貼っただけ
 	};
 	Setup(file, _countof(file), 1);
+	GameObject *pModel = GetObject<GameObject>("RootModel0");
+	pModel->GetComponent<ModelRenderer>()->SetModelPath("Assets/Model/spot/spot.fbx");
 }
 
 void SceneRoot::Uninit()

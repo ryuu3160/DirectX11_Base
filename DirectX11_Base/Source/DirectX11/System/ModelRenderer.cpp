@@ -38,3 +38,11 @@ void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
 		In_Data->Access<char>(&m_cModelName[i]);
 	m_cModelName[size] = '\0';
 }
+
+void ModelRenderer::SetModelPath(FilePath In_File) noexcept
+{
+	// 長さを超えないようにコピー
+	size_t len = std::min(In_File.size(), sizeof(m_cModelName) - 1);
+	std::memcpy(m_cModelName, In_File.data(), len);
+	m_cModelName[len] = '\0'; // 終端
+}
