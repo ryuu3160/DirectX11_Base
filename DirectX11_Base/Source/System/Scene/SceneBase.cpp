@@ -64,17 +64,15 @@ void SceneBase::Initialize() noexcept
 void SceneBase::RootUpdate() noexcept
 {
 	// シーンが所持しているオブジェクトの更新
-	auto itemIt = m_Items.begin();
-	while (itemIt != m_Items.end())
+	for (auto &itr :m_Items)
 	{
-		auto objIt = m_Objects.find(*itemIt);
+		auto objIt = m_Objects.find(itr);
 		// 型チェック
 		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
 		{
 			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
 			obj->Execute();
 		}
-		itemIt++;
 	}
 
 	// シーン自体の更新(クリア判定など

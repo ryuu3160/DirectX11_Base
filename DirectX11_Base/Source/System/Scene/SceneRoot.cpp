@@ -28,6 +28,7 @@ void SceneRoot::Init()
 	// オブジェクトの作成
 	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
 
+
 	const char *file[] = {
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ

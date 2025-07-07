@@ -22,6 +22,32 @@ public:
    void Draw();  
 
    /// <summary>
+   /// オフセット値を取得
+   /// </summary>
+   /// <returns>DirectX::XMFLOAT2型のオフセット値</returns>
+   inline const DirectX::XMFLOAT2 &GetOffset() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].x, m_SpriteData.param[0].y); }
+   /// <summary>
+   /// 
+   /// </summary>
+   /// <returns>DirectX::XMFLOAT2型のサイズ</returns>
+   inline const DirectX::XMFLOAT2 &GetSize() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].z, m_SpriteData.param[0].w); }
+   /// <summary>
+   /// UV座標を取得
+   /// </summary>
+   /// <returns>DirectX::XMFLOAT2型のUV座標</returns>
+   inline const DirectX::XMFLOAT2 &GetUVPos() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].x, m_SpriteData.param[1].y); }
+   /// <summary>
+   /// UVスケールを取得
+   /// </summary>
+   /// <returns>DirectX::XMFLOAT2型のUVスケール</returns>
+   inline const DirectX::XMFLOAT2 &GetUVScale() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].z, m_SpriteData.param[1].w); }
+   /// <summary>
+   /// 色を取得
+   /// </summary>
+   /// <returns>DirectX::XMFLOAT4型の色</returns>
+   inline const DirectX::XMFLOAT4 &GetColor() const noexcept { return m_SpriteData.param[2]; }
+
+   /// <summary>
    /// 2次元オフセット値を設定します。
    /// </summary>
    /// <param name="In_Offset">設定するDirectX::XMFLOAT2型のオフセット値。</param>

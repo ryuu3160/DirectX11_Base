@@ -209,12 +209,11 @@ void Model::Draw(_In_ const int &In_TexSlot)
 	m_pVS->Bind();
 	m_pPS->Bind();
 	auto it = m_vecMeshes.begin();
-	while (it != m_vecMeshes.end())
+	for (auto &itr : m_vecMeshes)
 	{
 		if (In_TexSlot >= 0)
-			m_pPS->SetTexture(In_TexSlot, m_vecMaterials[it->materialID].texture.get());
-		it->mesh->Draw();
-		++it;
+			m_pPS->SetTexture(In_TexSlot, m_vecMaterials[itr.materialID].texture.get());
+		itr.mesh->Draw();
 	}
 }
 
