@@ -39,7 +39,7 @@ void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
 	m_cModelName[size] = '\0';
 }
 
-void ModelRenderer::SetModelPath(FilePath In_File) noexcept
+void ModelRenderer::SetModelPath(_In_ FilePath In_File) noexcept
 {
 	// í∑Ç≥Çí¥Ç¶Ç»Ç¢ÇÊÇ§Ç…ÉRÉsÅ[
 	size_t len = std::min(In_File.size(), sizeof(m_cModelName) - 1);

@@ -9,12 +9,9 @@
 // ==============================
 //	include
 // ==============================
-#include "../DX11_Initialize.hpp"
+#include "DirectX11/DX11_Initialize.hpp"
 #include "Texture.hpp"
 #include "UnorderedAccessView.hpp"
-#include <string>
-#include <map>
-#include <vector>
 
 // シェーダーの基本クラス
 class Shader

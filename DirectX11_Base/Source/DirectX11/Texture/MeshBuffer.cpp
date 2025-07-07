@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: MeshBuffer.cpp
-	Summary: 佐々木先生のものを参考にして作成
+	Summary: メッシュバッファクラス 佐々木先生のものを参考にして作成
 	Author: AT13C 01 青木雄一郎
 	Date: 2025/05/19 Mon PM 04:55:43 初回作成
 ===================================================================+*/
@@ -14,6 +14,7 @@ MeshBuffer::MeshBuffer(_In_ const Description &In_Desc) noexcept
 	: m_pVtxBuffer(NULL), m_pIdxBuffer(NULL), m_Desc{}
 {
 	HRESULT hr = E_FAIL;
+	// 頂点バッファとインデックスバッファの作成
 	hr = CreateVertexBuffer(In_Desc.pVtx, In_Desc.vtxSize, In_Desc.vtxCount, In_Desc.isWrite);
 	if (In_Desc.pIdx)
 	{
@@ -21,6 +22,7 @@ MeshBuffer::MeshBuffer(_In_ const Description &In_Desc) noexcept
 	}
 	m_Desc = In_Desc;
 
+	// 頂点とインデックスの情報をコピー
 	rsize_t vtxMemSize = In_Desc.vtxSize * In_Desc.vtxCount;
 	void *pVtx = new char[vtxMemSize];
 	memcpy_s(pVtx, vtxMemSize, In_Desc.pVtx, vtxMemSize);
@@ -47,6 +49,7 @@ HRESULT MeshBuffer::CreateVertexBuffer(_In_ const void *In_pVtx, _In_ const UINT
 	bufDesc.ByteWidth = In_Size * In_Count;
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	// UsageとCPUAccessFlagsの設定
 	if (In_IsWrite)
 	{
 		bufDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -100,7 +103,7 @@ void MeshBuffer::Draw(_In_ int In_Count) noexcept
 	UINT stride = m_Desc.vtxSize;
 	UINT offset = 0;
 
-	// トポロジの設定
+	// ハルシェーダーが設定されている場合は、プリミティブトポロジを設定しない
 	ID3D11HullShader *hullShader;
 	pContext->HSGetShader(&hullShader, nullptr, nullptr);
 	if (hullShader)
@@ -131,7 +134,7 @@ void MeshBuffer::Draw(_In_ int In_Count) noexcept
 
 }
 
-HRESULT MeshBuffer::Write(void *pVtx)
+HRESULT MeshBuffer::Write(_In_ void *In_pVtx) noexcept
 {
 	if (!m_Desc.isWrite) { return E_FAIL; }
 	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
@@ -145,7 +148,7 @@ HRESULT MeshBuffer::Write(void *pVtx)
 	if (SUCCEEDED(hr))
 	{
 		rsize_t size = m_Desc.vtxCount * m_Desc.vtxSize;
-		memcpy_s(mapResource.pData, size, pVtx, size);
+		memcpy_s(mapResource.pData, size, In_pVtx, size);
 		pContext->Unmap(m_pVtxBuffer.Get(), 0);
 	}
 	return hr;

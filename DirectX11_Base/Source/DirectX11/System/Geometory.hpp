@@ -21,29 +21,29 @@ public:
 	void Init();
 	void Uninit();
 
-	void SetVertexShader(VertexShader* vs);
-	void SetPixelShader(PixelShader* ps);
-	void SetWorld(DirectX::XMFLOAT4X4 world);
-	void SetView(DirectX::XMFLOAT4X4 view);
-	void SetProjection(DirectX::XMFLOAT4X4 proj);
-	void SetColor(DirectX::XMFLOAT4 color);
-	void SetLightDirection(DirectX::XMFLOAT3 dir);
-	void EnableLight(bool enable);
+	void SetVertexShader(_In_ VertexShader* In_Vs) noexcept;
+	void SetPixelShader(_In_ PixelShader* In_Ps) noexcept;
+	void SetWorld(_In_ DirectX::XMFLOAT4X4 In_World) noexcept;
+	void SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept;
+	void SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept;
+	void SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept;
+	void SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept;
+	void EnableLight(_In_ bool In_Enable) noexcept;
 
-	void AddLine(DirectX::XMFLOAT3 start, DirectX::XMFLOAT3 end);
+	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End) noexcept;
 	void AddLine(
-		DirectX::XMFLOAT3 startPos, DirectX::XMFLOAT4 startColor, 
-		DirectX::XMFLOAT3 endPos, DirectX::XMFLOAT4 endColor);
-	void DrawLines();
-	void DrawBox();
-	void DrawSphere();
+		_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
+		_In_ DirectX::XMFLOAT3 In_EndPos, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept;
+	void DrawLines() noexcept;
+	void DrawBox() noexcept;
+	void DrawSphere() noexcept;
 
 private:
-	void MakeVertexShader();
-	void MakePixelShader();
-	void MakeLine();
-	void MakeBox();
-	void MakeSphere();
+	void MakeVertexShader() noexcept;
+	void MakePixelShader() noexcept;
+	void MakeLine() noexcept;
+	void MakeBox() noexcept;
+	void MakeSphere() noexcept;
 
 private:
 	struct Vertex

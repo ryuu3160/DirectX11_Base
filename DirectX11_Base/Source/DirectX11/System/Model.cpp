@@ -14,6 +14,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+// assimp‚Ìƒ‰ƒCƒuƒ‰ƒŠƒŠƒ“ƒN
 #ifdef _DEBUG
 #pragma comment(lib, "assimp-vc143-mtd.lib")
 #else
