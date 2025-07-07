@@ -92,6 +92,11 @@ inline T *GameObject::AddComponent()
 	return ptr;
 }
 
+/// <summary>
+/// 指定した型のコンポーネントを取得します。
+/// </summary>
+/// <typeparam name="[T]">取得したいコンポーネントの型。</typeparam>
+/// <returns>指定した型Tのコンポーネントへのポインタ。該当するコンポーネントが存在しない場合はnullptrを返します。</returns>
 template<class T>
 inline T *GameObject::GetComponent()
 {

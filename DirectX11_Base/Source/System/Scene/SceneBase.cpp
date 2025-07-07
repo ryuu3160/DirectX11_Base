@@ -16,7 +16,7 @@
 // ==============================
 SceneBase::Objects SceneBase::m_Objects;
 
-SceneBase::SceneBase(_In_ const std::string &In_Name)
+SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_pParent(nullptr)
 	, m_pSubScene(nullptr)
 	, m_Name(In_Name)
@@ -92,7 +92,7 @@ void SceneBase::RootDraw() noexcept
 		m_pSubScene->Draw();
 }
 
-void SceneBase::RemoveSubScene()
+void SceneBase::RemoveSubScene() noexcept
 {
 	// 削除するサブシーンが存在するか
 	if (!m_pSubScene) return;
@@ -108,7 +108,7 @@ void SceneBase::RemoveSubScene()
 }
 
 template<> GameObject
-*SceneBase::CreateObject(_In_ const std::string &In_Name)
+*SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
@@ -129,7 +129,7 @@ template<> GameObject
 	return ptr;
 }
 
-void SceneBase::DestroyObj(const std::string &In_Name)
+void SceneBase::DestroyObj(_In_ const std::string &In_Name) noexcept
 {
 	auto obj = m_Objects.find(In_Name);
 	if (obj == m_Objects.end()) return;
@@ -140,7 +140,7 @@ void SceneBase::DestroyObj(const std::string &In_Name)
 	m_Items.remove(In_Name);
 }
 
-void SceneBase::Setup(const char **In_ShaderFiles, int In_ShaderNum, int In_ModelNum)
+void SceneBase::Setup(_In_ const char **In_ShaderFiles, _In_ int const &In_ShaderNum, _In_ int const &In_ModelNum) noexcept
 {
 	for (int i = 0; i < In_ShaderNum; ++i)
 	{
@@ -171,14 +171,14 @@ void SceneBase::Setup(const char **In_ShaderFiles, int In_ShaderNum, int In_Mode
 		}
 		else
 		{
-			MessageBox(NULL, In_ShaderFiles[i], "Shader name [VS_ / PS_]", MB_OK);
+			MessageBoxA(NULL, In_ShaderFiles[i], "Shader name [VS_ / PS_]", MB_OK);
 		}
 		std::string path = "Assets/Shader/";
 		path += In_ShaderFiles[i];
 		path += ".cso";
 		if (shader && FAILED(shader->Load(path.c_str())))
 		{
-			MessageBox(NULL, In_ShaderFiles[i], "Shader Error", MB_OK);
+			MessageBoxA(NULL, In_ShaderFiles[i], "Shader Error", MB_OK);
 		}
 	}
 

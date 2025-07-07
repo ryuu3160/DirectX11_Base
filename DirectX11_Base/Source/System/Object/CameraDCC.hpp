@@ -31,6 +31,10 @@ private:
 public:
 	CameraDCC();
 	~CameraDCC();
+
+	/// <summary>
+	/// オブジェクトの状態を更新します。
+	/// </summary>
 	void Update() final;
 
 private:
