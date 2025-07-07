@@ -31,8 +31,7 @@ public:
 	void EnableLight(_In_ bool In_Enable) noexcept;
 
 	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End) noexcept;
-	void AddLine(
-		_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
+	void AddLine(_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
 		_In_ DirectX::XMFLOAT3 In_EndPos, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept;
 	void DrawLines() noexcept;
 	void DrawBox() noexcept;

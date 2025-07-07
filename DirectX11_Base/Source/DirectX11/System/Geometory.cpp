@@ -77,8 +77,7 @@ void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 
 		++m_Data.lineIndex;
 	}
 }
-void Geometory::AddLine(
-	_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
+void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
 	_In_ DirectX::XMFLOAT3 In_EndPos, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
 {
 	if (m_Data.lineIndex < GEOMETORY_MAX_LINE_NUM)
