@@ -44,7 +44,7 @@ public:
 	/// <param name="[In_nHeight]">ウィンドウの縦幅</param>
 	/// <param name="[In_hInstance]">WinMainの引数にあるインスタンスハンドル</param>
 	/// <param name="[In_nCmdShow]">ウィンドウの表示方法</param>
-	void Create(_In_ LPCTSTR In_lpcTitleName, _In_ UINT In_unWidth, UINT In_unHeight, _In_ HINSTANCE In_hInstance, _In_ int In_nCmdShow = SW_SHOWDEFAULT);
+	void Create(_In_ LPCTSTR In_lpcTitleName, _In_ UINT In_unWidth, _In_ UINT In_unHeight, _In_ HINSTANCE In_hInstance, _In_ int In_nCmdShow = SW_SHOWDEFAULT);
 
 	/// <summary>
 	/// ウィンドウを画面中央に移動
