@@ -5,7 +5,7 @@
 	Date: 10/19/2024 Sat AM 01:20:06 初回作成
 ===================================================================+*/
 #include "Texture.hpp"
-#include "../DirectXTex/TextureLoad.h"
+#include "DirectX11/DirectXTex/TextureLoad.h"
 
 /// <summary>
 /// テクスチャ

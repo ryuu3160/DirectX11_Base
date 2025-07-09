@@ -28,70 +28,69 @@ void Geometory::Uninit()
 	m_Data.defVS.reset();
 }
 
-void Geometory::SetVertexShader(VertexShader* vs)
+void Geometory::SetVertexShader(_In_ VertexShader *In_Vs) noexcept
 {
-	m_Data.pVS = vs;
+	m_Data.pVS = In_Vs;
 }
-void Geometory::SetPixelShader(PixelShader* ps)
+void Geometory::SetPixelShader(_In_ PixelShader *In_Ps) noexcept
 {
-	m_Data.pPS = ps;
+	m_Data.pPS = In_Ps;
 }
-void Geometory::SetWorld(DirectX::XMFLOAT4X4 world)
+void Geometory::SetWorld(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
 {
-	m_Data.matrix[0] = world;
+	m_Data.matrix[0] = In_World;
 }
-void Geometory::SetView(DirectX::XMFLOAT4X4 view)
+void Geometory::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
 {
-	m_Data.matrix[1] = view;
+	m_Data.matrix[1] = In_View;
 }
-void Geometory::SetProjection(DirectX::XMFLOAT4X4 proj)
+void Geometory::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
 {
-	m_Data.matrix[2] = proj;
+	m_Data.matrix[2] = In_Proj;
 }
-void Geometory::SetColor(DirectX::XMFLOAT4 color)
+void Geometory::SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept
 {
-	m_Data.param[0] = color;
+	m_Data.param[0] = In_Color;
 }
-void Geometory::SetLightDirection(DirectX::XMFLOAT3 dir)
+void Geometory::SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept
 {
-	DirectX::XMVECTOR vDir = DirectX::XMLoadFloat3(&dir);
-	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vDir));
-	m_Data.param[1].x = dir.x;
-	m_Data.param[1].y = dir.y;
-	m_Data.param[1].z = dir.z;
+	DirectX::XMVECTOR vDir = DirectX::XMLoadFloat3(&In_Dir);
+	DirectX::XMStoreFloat3(&In_Dir, DirectX::XMVector3Normalize(vDir));
+	m_Data.param[1].x = In_Dir.x;
+	m_Data.param[1].y = In_Dir.y;
+	m_Data.param[1].z = In_Dir.z;
 }
-void Geometory::EnableLight(bool enable)
+void Geometory::EnableLight(_In_ bool In_Enable) noexcept
 {
-	m_Data.param[1].w = enable ? 0.0f : 1.0f;
+	m_Data.param[1].w = In_Enable ? 0.0f : 1.0f;
 }
 
-void Geometory::AddLine(const DirectX::XMFLOAT3 start, const DirectX::XMFLOAT3 end)
+void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End) noexcept
 {
 	if (m_Data.lineIndex < GEOMETORY_MAX_LINE_NUM)
 	{
-		m_Data.lineVtx[m_Data.lineIndex].pos = start;
+		m_Data.lineVtx[m_Data.lineIndex].pos = In_Start;
 		m_Data.lineVtx[m_Data.lineIndex].color = m_Data.param[0];
 		++m_Data.lineIndex;
-		m_Data.lineVtx[m_Data.lineIndex].pos = end;
+		m_Data.lineVtx[m_Data.lineIndex].pos = In_End;
 		m_Data.lineVtx[m_Data.lineIndex].color = m_Data.param[0];
 		++m_Data.lineIndex;
 	}
 }
-void Geometory::AddLine(
-	DirectX::XMFLOAT3 startPos, DirectX::XMFLOAT4 startColor,
-	DirectX::XMFLOAT3 endPos, DirectX::XMFLOAT4 endColor)
+void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
+	_In_ DirectX::XMFLOAT3 In_EndPos, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
 {
 	if (m_Data.lineIndex < GEOMETORY_MAX_LINE_NUM)
 	{
-		m_Data.lineVtx[m_Data.lineIndex].pos = startPos;
-		m_Data.lineVtx[m_Data.lineIndex].color = startColor;
+		m_Data.lineVtx[m_Data.lineIndex].pos = In_StartPos;
+		m_Data.lineVtx[m_Data.lineIndex].color = In_StartColor;
 		++m_Data.lineIndex;
-		m_Data.lineVtx[m_Data.lineIndex].pos = endPos;
-		m_Data.lineVtx[m_Data.lineIndex].color = endColor;
+		m_Data.lineVtx[m_Data.lineIndex].pos = In_EndPos;
+		m_Data.lineVtx[m_Data.lineIndex].color = In_EndColor;
 		++m_Data.lineIndex;
 	}
 }
-void Geometory::DrawLines()
+void Geometory::DrawLines() noexcept
 {
 	DirectX::XMFLOAT4X4 worldBackup = m_Data.matrix[0];
 	DirectX::XMFLOAT4 colorBackup = m_Data.param[0];
@@ -114,7 +113,7 @@ void Geometory::DrawLines()
 
 	m_Data.lineIndex = 0;
 }
-void Geometory::DrawBox()
+void Geometory::DrawBox() noexcept
 {
 	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
@@ -122,7 +121,7 @@ void Geometory::DrawBox()
 	m_Data.pPS->Bind();
 	m_Data.boxMesh->Draw();
 }
-void Geometory::DrawSphere()
+void Geometory::DrawSphere() noexcept
 {
 	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
@@ -131,21 +130,21 @@ void Geometory::DrawSphere()
 	m_Data.sphereMesh->Draw();
 }
 
-void Geometory::MakeVertexShader()
+void Geometory::MakeVertexShader() noexcept
 {
 	m_Data.defVS = std::make_shared<VertexShader>();
 	HRESULT hr = m_Data.defVS->Load("Assets/Shader/VS_Geometory.cso");
 	m_Data.pVS = m_Data.defVS.get();
 }
 
-void Geometory::MakePixelShader()
+void Geometory::MakePixelShader() noexcept
 {
 	m_Data.defPS = std::make_shared<PixelShader>();
 	HRESULT hr = m_Data.defPS->Load("Assets/Shader/PS_Geometory.cso");
 	m_Data.pPS = m_Data.defPS.get();
 }
 
-void Geometory::MakeLine()
+void Geometory::MakeLine() noexcept
 {
 	MeshBuffer::Description desc = {};
 	for (int i = 0; i < GEOMETORY_MAX_LINE_NUM; ++i)
@@ -162,7 +161,7 @@ void Geometory::MakeLine()
 	m_Data.lineIndex = 0;
 	m_Data.lineMesh = std::make_shared<MeshBuffer>(desc);
 }
-void Geometory::MakeBox()
+void Geometory::MakeBox() noexcept
 {
 	const float d = 0.5f;
 	DirectX::XMFLOAT4 color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -224,7 +223,7 @@ void Geometory::MakeBox()
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_Data.boxMesh = std::make_shared<MeshBuffer>(desc);
 }
-void Geometory::MakeSphere()
+void Geometory::MakeSphere() noexcept
 {
 	std::vector<Vertex> vtx;
 	const int detail = 32;

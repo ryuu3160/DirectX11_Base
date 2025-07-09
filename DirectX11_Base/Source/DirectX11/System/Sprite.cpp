@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: Sprite.cpp
-	Summary: 佐々木先生のものを参考にして作成
+	Summary: スプライトクラス 佐々木先生のものを参考にして作成
 	Author: AT13C 01 青木雄一郎
 	Date: 2025/05/19 Mon PM 05:28:01 初回作成
 ===================================================================+*/
@@ -12,6 +12,7 @@
 
 void Sprite::Init()
 {
+	// 頂点データの定義
 	struct Vertex
 	{
 		float pos[3];
@@ -29,23 +30,23 @@ void Sprite::Init()
 	desc.vtxSize = sizeof(Vertex);
 	desc.vtxCount = _countof(vtx);
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-	m_data.mesh = std::make_shared<MeshBuffer>(desc);
+	m_SpriteData.mesh = std::make_shared<MeshBuffer>(desc);
 
 	// パラメーター
-	m_data.param[0] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	m_data.param[1] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	m_data.param[2] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	DirectX::XMStoreFloat4x4(&m_data.matrix[0], DirectX::XMMatrixIdentity());
-	DirectX::XMStoreFloat4x4(&m_data.matrix[1], DirectX::XMMatrixIdentity());
-	DirectX::XMStoreFloat4x4(&m_data.matrix[2], DirectX::XMMatrixIdentity());
+	m_SpriteData.param[0] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	m_SpriteData.param[1] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	m_SpriteData.param[2] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	DirectX::XMStoreFloat4x4(&m_SpriteData.matrix[0], DirectX::XMMatrixIdentity());
+	DirectX::XMStoreFloat4x4(&m_SpriteData.matrix[1], DirectX::XMMatrixIdentity());
+	DirectX::XMStoreFloat4x4(&m_SpriteData.matrix[2], DirectX::XMMatrixIdentity());
 
 	// シェーダー
 	m_defVS = std::make_shared<VertexShader>();
 	m_defVS->Load("Assets/Shader/VS_Sprite.cso");
-	m_data.vs = m_defVS.get();
+	m_SpriteData.vs = m_defVS.get();
 	m_defPS = std::make_shared <PixelShader>();
 	m_defPS->Load("Assets/Shader/PS_Sprite.cso");
-	m_data.ps = m_defPS.get();
+	m_SpriteData.ps = m_defPS.get();
 
 	// デフォルトテクスチャ
 	BYTE color[] = { 255,255,255,255 };
@@ -57,68 +58,68 @@ void Sprite::Uninit()
 }
 void Sprite::Draw()
 {
-	m_data.vs->WriteBuffer(0, m_data.matrix);
-	m_data.vs->WriteBuffer(1, m_data.param);
-	m_data.vs->Bind();
-	m_data.ps->SetTexture(0, m_data.texture);
-	m_data.ps->Bind();
-	m_data.mesh->Draw();
+	m_SpriteData.vs->WriteBuffer(0, m_SpriteData.matrix);
+	m_SpriteData.vs->WriteBuffer(1, m_SpriteData.param);
+	m_SpriteData.vs->Bind();
+	m_SpriteData.ps->SetTexture(0, m_SpriteData.texture);
+	m_SpriteData.ps->Bind();
+	m_SpriteData.mesh->Draw();
 }
 
-void Sprite::SetOffset(DirectX::XMFLOAT2 offset)
+void Sprite::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept
 {
-	m_data.param[0].x = offset.x;
-	m_data.param[0].y = offset.y;
+	m_SpriteData.param[0].x = In_Offset.x;
+	m_SpriteData.param[0].y = In_Offset.y;
 }
-void Sprite::SetSize(DirectX::XMFLOAT2 size)
+void Sprite::SetSize(_In_ const DirectX::XMFLOAT2 &In_Size) noexcept
 {
-	m_data.param[0].z = size.x;
-	m_data.param[0].w = size.y;
+	m_SpriteData.param[0].z = In_Size.x;
+	m_SpriteData.param[0].w = In_Size.y;
 }
 
-void Sprite::SetUVPos(DirectX::XMFLOAT2 pos)
+void Sprite::SetUVPos(_In_ const DirectX::XMFLOAT2 &In_Pos) noexcept
 {
-	m_data.param[1].x = pos.x;
-	m_data.param[1].y = pos.y;
+	m_SpriteData.param[1].x = In_Pos.x;
+	m_SpriteData.param[1].y = In_Pos.y;
 }
-void Sprite::SetUVScale(DirectX::XMFLOAT2 scale)
+void Sprite::SetUVScale(_In_ const DirectX::XMFLOAT2 &In_Scale) noexcept
 {
-	m_data.param[1].x = scale.x;
-	m_data.param[1].y = scale.y;
+	m_SpriteData.param[1].x = In_Scale.x;
+	m_SpriteData.param[1].y = In_Scale.y;
 }
-void Sprite::SetColor(DirectX::XMFLOAT4 color)
+void Sprite::SetColor(_In_ const DirectX::XMFLOAT4 &In_Color) noexcept
 {
-	m_data.param[2] = color;
+	m_SpriteData.param[2] = In_Color;
 }
-void Sprite::SetTexture(Texture *tex)
+void Sprite::SetTexture(_In_ Texture *In_pTex) noexcept
 {
-	m_data.texture = tex ? tex : m_whiteTex.get();
+	m_SpriteData.texture = In_pTex ? In_pTex : m_whiteTex.get();
 }
-void Sprite::SetWorld(DirectX::XMFLOAT4X4 world)
+void Sprite::SetWorld(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
 {
-	m_data.matrix[0] = world;
+	m_SpriteData.matrix[0] = In_World;
 }
-void Sprite::SetView(DirectX::XMFLOAT4X4 view)
+void Sprite::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
 {
-	m_data.matrix[1] = view;
+	m_SpriteData.matrix[1] = In_View;
 }
-void Sprite::SetProjection(DirectX::XMFLOAT4X4 proj)
+void Sprite::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
 {
-	m_data.matrix[2] = proj;
+	m_SpriteData.matrix[2] = In_Proj;
 }
-void Sprite::SetVertexShader(Shader *vs)
+void Sprite::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
-	if (vs && typeid(VertexShader) == typeid(*vs))
-		m_data.vs = vs;
+	if (In_Vs && typeid(VertexShader) == typeid(*In_Vs))
+		m_SpriteData.vs = In_Vs;
 	else
-		m_data.vs = m_defVS.get();
+		m_SpriteData.vs = m_defVS.get();
 }
-void Sprite::SetPixelShader(Shader *ps)
+void Sprite::SetPixelShader(_In_ Shader *In_Ps) noexcept
 {
-	if (ps && typeid(PixelShader) == typeid(*ps))
-		m_data.ps = ps;
+	if (In_Ps && typeid(PixelShader) == typeid(*In_Ps))
+		m_SpriteData.ps = In_Ps;
 	else
-		m_data.ps = m_defPS.get();
+		m_SpriteData.ps = m_defPS.get();
 }
 
 Sprite::Sprite()

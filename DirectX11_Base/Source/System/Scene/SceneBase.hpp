@@ -49,28 +49,66 @@ private:
 public:
 	static void Initialize() noexcept;
 
-	SceneBase(_In_ const std::string &In_Name);
+	/// <summary>
+	/// シーンの名前を指定して、SceneBase オブジェクトを初期化します。
+	/// </summary>
+	/// <param name="[In_Name]">シーンの名前を表す文字列。</param>
+	SceneBase(_In_ const std::string &In_Name) noexcept;
 	virtual ~SceneBase();
 
+	/// <summary>
+	/// 大本のシーンの更新と描画を行います。
+	/// </summary>
 	void RootUpdate() noexcept;
 	void RootDraw() noexcept;
 
 	// サブシーン操作
+
+	/// <summary>
+	/// サブシーンを追加し、そのポインタを返します。
+	/// </summary>
+	/// <typeparam name="[T]">追加するサブシーンの型。デフォルトは SceneBase です。</typeparam>
+	/// <returns>追加されたサブシーンのポインタ。</returns>
 	template <class T = SceneBase>
-	T* AddSubScene();
-	void RemoveSubScene();
+	T* AddSubScene() noexcept;
+	/// <summary>
+	/// サブシーンを削除します。
+	/// </summary>
+	void RemoveSubScene() noexcept;
 
 	// オブジェクト操作
-	template <class T>
-	T *CreateObject(_In_ const std::string &In_Name);
 
+	/// <summary>
+	/// 指定された名前でオブジェクトを作成します。
+	/// </summary>
+	/// <typeparam name="[T]">作成するオブジェクトの型。</typeparam>
+	/// <param name="[In_Name]">作成するオブジェクトの名前を表す文字列。</param>
+	/// <returns>作成されたオブジェクトへのポインタ。</returns>
+	template <class T>
+	T *CreateObject(_In_ const std::string &In_Name) noexcept;
+
+	/// <summary>
+	/// 指定された名前でGameObjectを作成します。
+	/// </summary>
+	/// <param name="[In_Name]">作成するGameObjectの名前。</param>
+	/// <returns>新しく作成されたGameObjectへのポインタ。</returns>
 	template<>
-	GameObject *CreateObject(_In_ const std::string &In_Name);
+	GameObject *CreateObject(_In_ const std::string &In_Name) noexcept;
 	
+	/// <summary>
+	/// 指定された名前に対応するオブジェクトへのポインタを取得します。
+	/// </summary>
+	/// <typeparam name="[T]">取得するオブジェクトの型。</typeparam>
+	/// <param name="[In_Name]">検索するオブジェクトの名前を表す文字列ビュー。</param>
+	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します。</returns>
 	template <class T>
-	T *GetObject(_In_ const std::string_view &In_Name);
+	T *GetObject(_In_ const std::string_view &In_Name) noexcept;
 
-	void DestroyObj(const std::string &In_Name);
+	/// <summary>
+	/// 指定された名前のオブジェクトを破棄します。
+	/// </summary>
+	/// <param name="[In_Name]">破棄するオブジェクトの名前。</param>
+	void DestroyObj(_In_ const std::string &In_Name) noexcept;
 
 	// 継承先で使用する関数
 	virtual void Init() = 0;
@@ -79,7 +117,13 @@ public:
 	virtual void Draw() = 0;
 
 protected:
-	void Setup(const char **In_ShaderFiles, int In_ShaderNum, int In_ModelNum);
+	/// <summary>
+	/// シェーダーファイルとモデル数を指定してセットアップを行います。
+	/// </summary>
+	/// <param name="[In_ShaderFiles]">シェーダーファイル名の配列へのポインタ。</param>
+	/// <param name="[In_ShaderNum]">シェーダーファイルの数への参照。</param>
+	/// <param name="[In_ModelNum]">モデルの数への参照。</param>
+	void Setup(_In_ const char **In_ShaderFiles, _In_ const int &In_ShaderNum, _In_ const int &In_ModelNum) noexcept;
 
 private:
 	static Objects m_Objects;
@@ -94,10 +138,10 @@ protected:
 /// <summary>
 /// サブシーンの追加
 /// </summary>
-/// <typeparam name="T">サブシーンの型</typeparam>
+/// <typeparam name="[T]">サブシーンの型</typeparam>
 /// <returns>生成したサブシーン</returns>
 template<class T>
-T *SceneBase::AddSubScene()
+T *SceneBase::AddSubScene() noexcept
 {
 	RemoveSubScene();
 	T *pScene = new T;
@@ -110,11 +154,11 @@ T *SceneBase::AddSubScene()
 /// <summary>
 /// オブジェクトの生成
 /// </summary>
-/// <typeparam name="T">オブジェクトの型</typeparam>
+/// <typeparam name="[T]">オブジェクトの型</typeparam>
 /// <param name="[In_szName]">オブジェクトの名称</param>
 /// <returns>生成したオブジェクト</returns>
 template<class T>
-T *SceneBase::CreateObject(_In_ const std::string &In_Name)
+T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
@@ -138,8 +182,14 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name)
 	return ptr;
 }
 
+/// <summary>
+/// 指定された名前のオブジェクトを検索し、指定した型へのポインタとして返します。
+/// </summary>
+/// <typeparam name="[T]">取得するオブジェクトの型。</typeparam>
+/// <param name="[In_Name]">検索するオブジェクトの名前。</param>
+/// <returns>見つかった場合は指定した型Tのポインタ、見つからなかった場合はnullptrを返します。</returns>
 template<class T>
-T *SceneBase::GetObject(_In_ const std::string_view &In_Name)
+T *SceneBase::GetObject(_In_ const std::string_view &In_Name) noexcept
 {
 	// オブジェクトの探索
 	Objects::iterator it = m_Objects.find(In_Name.data());

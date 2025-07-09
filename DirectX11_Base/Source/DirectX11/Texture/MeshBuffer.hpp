@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: MeshBuffer.hpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: メッシュバッファクラス 佐々木先生のものを参考にして作成
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/05/19 Mon PM 04:55:36 初回作成
 	（これ以降下に更新日時と更新内容を書く）
@@ -10,7 +10,7 @@
 // ==============================
 //	include
 // ==============================
-#include "../DX11_Initialize.hpp"
+#include "DirectX11/DX11_Initialize.hpp"
 
 class MeshBuffer
 {
@@ -34,8 +34,18 @@ public:
 	~MeshBuffer();
 
 	void Draw(_In_ int In_Count = 0) noexcept;
-	HRESULT Write(void *pVtx);
 
+	/// <summary>
+	/// 頂点データを書き込みます。
+	/// </summary>
+	/// <param name="pVtx">書き込む頂点データへのポインタ。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT Write(_In_ void *In_pVtx) noexcept;
+
+	/// <summary>
+	/// 頂点及びインデックスバッファの情報を取得します。
+	/// </summary>
+	/// <returns>頂点及びインデックスバッファの情報を格納したDescription構造体。</returns>
 	inline Description GetDesc() const noexcept { return m_Desc; }
 
 private:

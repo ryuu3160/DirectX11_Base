@@ -212,6 +212,7 @@ HRESULT VertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) 
 		pInputDesc[i].SemanticIndex = sigDesc.SemanticIndex;
 
 		// http://marupeke296.com/TIPS_No17_Bit.html
+		// 立っているビットの数を数える(要素数を求められる)
 		BYTE elementCount = sigDesc.Mask;
 		elementCount = (elementCount & 0x05) + ((elementCount >> 1) & 0x05);
 		elementCount = (elementCount & 0x03) + ((elementCount >> 2) & 0x03);

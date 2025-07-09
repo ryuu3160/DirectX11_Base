@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "../DX11_Initialize.hpp"
+#include "DirectX11/DX11_Initialize.hpp"
 
 class UnorderedAccessView
 {

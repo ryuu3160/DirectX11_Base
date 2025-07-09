@@ -36,11 +36,11 @@ GameObject::GameObject(_In_ std::string In_Name)
 		std::memcpy(&m_Quat, ptr += sizeof(m_Pos), sizeof(m_Quat));
 		std::memcpy(&m_Scale, ptr += sizeof(m_Quat), sizeof(m_Scale));
 		ptr += sizeof(m_Scale);
+		size_t size;
 		// データのキーと値が保存されている個所へのポインタを取得
-		while (ptr - m_Datas[0].value < fileSize)
+		for (;ptr - m_Datas[0].value < fileSize;ptr += size)
 		{
 			char *data[2]; // キー,値
-			size_t size;
 			for (int i = 0; i < 2; ++i)
 			{
 				// データサイズ
@@ -104,11 +104,9 @@ GameObject::~GameObject()
 void GameObject::Execute()
 {
 	// コンポーネントの処理
-	auto it = m_Components.begin();
-	while (it != m_Components.end())
+	for (auto &itr : m_Components)
 	{
-		(*it)->Execute();
-		++it;
+		itr->Execute();
 	}
 	// 継承先オブジェクトの処理
 	Update();
