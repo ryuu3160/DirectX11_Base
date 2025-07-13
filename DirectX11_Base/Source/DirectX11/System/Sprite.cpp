@@ -60,6 +60,7 @@ void Sprite::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale)
 	m_whiteTex->Create(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, color);
 
 	// テクスチャの設定
+	m_SpriteData.texture = new Texture();
 	if (FAILED(m_SpriteData.texture->Create(In_File.data())))
 	{
 		// テクスチャの読み込みに失敗した場合は白いテクスチャを使用
