@@ -174,10 +174,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
-    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Shader.cpp" />
     <ClCompile Include="Source\DirectX11\Texture\Texture.cpp" />
@@ -247,10 +243,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Sprite.hpp" />
-    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\Shader.hpp" />
     <ClInclude Include="Source\DirectX11\Texture\Texture.hpp" />

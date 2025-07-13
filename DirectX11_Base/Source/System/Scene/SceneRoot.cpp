@@ -9,8 +9,10 @@
 //	include
 // ==============================
 #include "SceneRoot.hpp"
+#include "Source/App/Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
+#include "DirectX11/System/Sprite.hpp"
 
 // ==============================
 //  定数
@@ -36,6 +38,10 @@ void SceneRoot::Init()
 	Setup(file, _countof(file), 1);
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	pModel->GetComponent<ModelRenderer>()->SetModelPath("Assets/Model/spot/spot.fbx");
+
+	Sprite *pSprite = CreateObject<Sprite>("SpriteTest");
+	pSprite->Load("Assets/Texture/TestTexture.png", 1.0f);
+	//pSprite->AddComponent<SpriteRenderer>()->SetSpritePath("Assets/Texture/TestTexture.png");
 }
 
 void SceneRoot::Uninit()
@@ -155,6 +161,32 @@ void SceneRoot::Draw()
 			pDrawModel->Draw();
 		}
 	}
+
+	// todo: スプライトクラスをもっと使いやすく改造
+	
+	// 2D描画の準備
+	Main::Change2D_Draw();
+
+	//スプライトに設定するワールド、ビュー、プロジェクション行列を計算
+	DirectX::XMFLOAT4X4 world, view, proj;
+	DirectX::XMMATRIX mView = DirectX::XMMatrixLookAtLH({ 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
+	// 真正面(-Z)の位置にカメラを設定
+	DirectX::XMMATRIX mProj = DirectX::XMMatrixOrthographicOffCenterLH
+	(0.0f, static_cast<float>(cx_nWINDOW_WIDTH), static_cast<float>(cx_nWINDOW_HEIGHT), 0.0f, 0.0f, 1.0f);
+	// 左上が0, 0、右下が画面の大きさとなるように設定
+	// mView行列、mProj行列をそれぞれ転置して、読み取り用のview, projに格納
+	DirectX::XMStoreFloat4x4(&view, DirectX::XMMatrixTranspose(mView));
+	DirectX::XMStoreFloat4x4(&proj, DirectX::XMMatrixTranspose(mProj));
+	pCamera2->Set3D(false);
+	Sprite *pSprite = GetObject<Sprite>("SpriteTest");
+	if (pSprite)
+	{
+		pSprite->SetView(view);
+		pSprite->SetProjection(pCamera2->GetProj(true));
+		pSprite->Draw();
+	}
+	pCamera2->Set3D(true);
+	Main::Change3D_Draw();
 }
 
 void SceneRoot::ChangeScene()

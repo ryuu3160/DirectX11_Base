@@ -16,8 +16,6 @@
 // ==============================
 namespace
 {
-	LPCSTR lpClassName = "DX11Base";	// ウィンドウクラス名
-	constexpr int cx_nWINDOW_WIDTH = 1280;			// ウィンドウ幅
-	constexpr int cx_nWINDOW_HEIGHT = 720;			// ウィンドウ高さ
+	
 }
 

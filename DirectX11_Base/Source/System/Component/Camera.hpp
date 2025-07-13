@@ -77,6 +77,8 @@ public:
 	/// <param name="focus">è≈ì_ãóó£</param>
 	inline void SetFocus(_In_ const float &In_fFocus) noexcept { m_fFocus = In_fFocus; }
 
+	inline void Set3D(_In_ const bool &In_bIs3D) noexcept { m_bIs3D = In_bIs3D; }
+
 private:
 	bool m_bIs3D;
 	float m_fFovy;

@@ -85,3 +85,25 @@ void Main::Draw()
 
 	DX11.Swap();
 }
+
+void Main::Change2D_Draw() noexcept
+{
+	// 2Dï`âÊÇÃê›íË
+	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
+	Instance.SetRenderTargets(1, &pRTV, nullptr);
+}
+
+void Main::Change3D_Draw() noexcept
+{
+	// 3Dï`âÊÇÃê›íË
+	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
+	auto pDSV = Main::GetScene().GetObject<DepthStencil>("DSV");
+	Instance.SetRenderTargets(1, &pRTV, pDSV);
+}
+
+SceneRoot &Main::GetScene() noexcept
+{
+	return *g_pScene;
+}

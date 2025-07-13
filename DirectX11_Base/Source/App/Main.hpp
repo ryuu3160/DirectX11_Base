@@ -11,10 +11,21 @@
 //	include
 // ==============================
 
+// ==============================
+//  ëOï˚êÈåæ
+// ==============================
+class SceneRoot;
+
 namespace Main
 {
 	HRESULT Init();
 	void Uninit();
 	void Update();
 	void Draw();
+
+	void Change2D_Draw() noexcept;
+
+	void Change3D_Draw() noexcept;
+
+	SceneRoot &GetScene() noexcept;
 }
