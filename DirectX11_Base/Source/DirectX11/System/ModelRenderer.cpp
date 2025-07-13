@@ -20,7 +20,10 @@ ModelRenderer::ModelRenderer()
 ModelRenderer::~ModelRenderer()
 {
 	if (m_pModel)
+	{
 		delete m_pModel;
+		m_pModel = nullptr;
+	}
 }
 
 void ModelRenderer::Execute()

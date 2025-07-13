@@ -9,7 +9,6 @@
 // ==============================
 //	include
 // ==============================
-
 #include "System/Component/Component.hpp"
 #include "Model.hpp"
 
@@ -37,6 +36,7 @@ public:
     /// </summary>
     /// <param name="[In_File]">設定するモデルファイルのパス。</param>
     void SetModelPath(_In_ FilePath In_File) noexcept;
+
 //#if _DEBUG
 //    void Debug(debug::Window *window) final;
 //#endif
