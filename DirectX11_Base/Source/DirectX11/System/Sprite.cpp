@@ -130,4 +130,6 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
+	delete m_SpriteData.texture; // テクスチャの解放
+	m_SpriteData.texture = nullptr; // nullptrに設定しておく
 }
