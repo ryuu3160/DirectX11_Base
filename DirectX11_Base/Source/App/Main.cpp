@@ -35,7 +35,6 @@ HRESULT Main::Init()
 
 	// 各種機能の初期化
 	Geometory::GetInstance().Init();
-	Sprite::GetInstance().Init();
 	Input::Init();
 
 	// シーンの初期化
@@ -61,7 +60,6 @@ void Main::Uninit()
 	
 	// 各種機能の終了処理
 	Input::Uninit();
-	Sprite::GetInstance().Uninit();
 	Geometory::GetInstance().Uninit();
 	DX11_Initialize::GetInstance().Uninit();
 }
