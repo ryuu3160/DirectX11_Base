@@ -10,30 +10,36 @@
 // ==============================
 #include "Sprite.hpp"
 
-void Sprite::Init()
+void Sprite::Draw()
 {
-	// 頂点データの定義
-	struct Vertex
-	{
-		float pos[3];
-		float uv[2];
-	} vtx[] = {
-		{{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f}},
-		{{ 0.5f, 0.5f, 0.0f}, {1.0f, 0.0f}},
-		{{-0.5f,-0.5f, 0.0f}, {0.0f, 1.0f}},
-		{{ 0.5f,-0.5f, 0.0f}, {1.0f, 1.0f}},
+	m_SpriteData.vs->WriteBuffer(0, m_SpriteData.matrix);
+	m_SpriteData.vs->WriteBuffer(1, m_SpriteData.param);
+	m_SpriteData.vs->Bind();
+	m_SpriteData.ps->SetTexture(0, m_SpriteData.texture);
+	m_SpriteData.ps->Bind();
+	m_SpriteData.mesh->Draw();
+}
+
+void Sprite::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale)
+{
+	// 頂点データの作成
+	SpriteVertex vtx[] = {
+		{DirectX::XMFLOAT3(-0.5f, 0.5f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f)},
+		{DirectX::XMFLOAT3( 0.5f, 0.5f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f)},
+		{DirectX::XMFLOAT3(-0.5f,-0.5f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f)},
+		{DirectX::XMFLOAT3( 0.5f,-0.5f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f)},
 	};
 
 	// メッシュ
 	MeshBuffer::Description desc = {};
 	desc.pVtx = vtx;
-	desc.vtxSize = sizeof(Vertex);
+	desc.vtxSize = sizeof(SpriteVertex);
 	desc.vtxCount = _countof(vtx);
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 	m_SpriteData.mesh = std::make_shared<MeshBuffer>(desc);
 
 	// パラメーター
-	m_SpriteData.param[0] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	m_SpriteData.param[0] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f * In_Scale, 1.0f * In_Scale);
 	m_SpriteData.param[1] = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 	m_SpriteData.param[2] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	DirectX::XMStoreFloat4x4(&m_SpriteData.matrix[0], DirectX::XMMatrixIdentity());
@@ -52,18 +58,13 @@ void Sprite::Init()
 	BYTE color[] = { 255,255,255,255 };
 	m_whiteTex = std::make_shared<Texture>();
 	m_whiteTex->Create(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, color);
-}
-void Sprite::Uninit()
-{
-}
-void Sprite::Draw()
-{
-	m_SpriteData.vs->WriteBuffer(0, m_SpriteData.matrix);
-	m_SpriteData.vs->WriteBuffer(1, m_SpriteData.param);
-	m_SpriteData.vs->Bind();
-	m_SpriteData.ps->SetTexture(0, m_SpriteData.texture);
-	m_SpriteData.ps->Bind();
-	m_SpriteData.mesh->Draw();
+
+	// テクスチャの設定
+	if (FAILED(m_SpriteData.texture->Create(In_File.data())))
+	{
+		// テクスチャの読み込みに失敗した場合は白いテクスチャを使用
+		m_SpriteData.texture = m_whiteTex.get();
+	}
 }
 
 void Sprite::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept

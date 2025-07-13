@@ -13,13 +13,33 @@
 #include "DirectX11/Texture/Shader.hpp"
 #include "DirectX11/Texture/Texture.hpp"
 
-class Sprite : public Singleton<Sprite>  
-{  
-   friend class Singleton<Sprite>;  
-public:  
-   void Init();  
-   void Uninit();  
+class Sprite
+{
+public:
+    struct SpriteVertex
+    {
+        DirectX::XMFLOAT3 pos;
+        DirectX::XMFLOAT2 uv;
+    };
+
+    struct SpriteData
+    {
+        std::shared_ptr<MeshBuffer> mesh;
+        DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values  
+        DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values  
+        Texture *texture = nullptr;        // Initialize to nullptr  
+        Shader *vs = nullptr;              // Initialize to nullptr  
+        Shader *ps = nullptr;              // Initialize to nullptr  
+    };
+
+public:
+    Sprite();
+    ~Sprite();
+
    void Draw();  
+
+   void Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f);
+
 
    /// <summary>
    /// オフセット値を取得
@@ -105,21 +125,8 @@ public:
    /// <param name="In_Ps">設定するピクセルシェーダーへのポインタ。</param>
    void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
-private:  
-
-   Sprite();  
-   ~Sprite();  
-
-   struct Data  
-   {  
-       std::shared_ptr<MeshBuffer> mesh;  
-       DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values  
-       DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values  
-       Texture *texture = nullptr;        // Initialize to nullptr  
-       Shader *vs = nullptr;              // Initialize to nullptr  
-       Shader *ps = nullptr;              // Initialize to nullptr  
-   };
-   Data m_SpriteData;  
+private:
+   SpriteData m_SpriteData;
    std::shared_ptr<VertexShader> m_defVS;  
    std::shared_ptr<PixelShader> m_defPS;  
    std::shared_ptr<Texture> m_whiteTex;  
