@@ -11,7 +11,7 @@
 #include "Main.hpp"
 #include "DirectX11/DX11_Initialize.hpp"
 #include "DirectX11/System/Geometory.hpp"
-#include "DirectX11/System/Sprite.hpp"
+#include "DirectX11/System/SpriteManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
 
@@ -35,6 +35,7 @@ HRESULT Main::Init()
 
 	// 各種機能の初期化
 	Geometory::GetInstance().Init();
+	SpriteManager::GetInstance().Init();
 	Input::Init();
 
 	// シーンの初期化

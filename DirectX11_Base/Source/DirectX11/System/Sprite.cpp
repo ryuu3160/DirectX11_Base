@@ -12,6 +12,44 @@
 
 void Sprite::Draw()
 {
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMMATRIX mWorld;
+	DirectX::XMMATRIX BillBoard = DirectX::XMMatrixIdentity();
+
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
+
+	// ビルボードかそうでないかで処理を分ける
+	if (m_SpriteData.IsBillBoard)
+	{
+		// 計算用の型に置き換え
+		BillBoard = DirectX::XMLoadFloat4x4(&m_BillBoardView);
+		// 逆行列を求める
+		BillBoard = DirectX::XMMatrixInverse(nullptr, BillBoard);
+		// 一度、mCamInvをviewに変換
+		DirectX::XMStoreFloat4x4(&m_BillBoardView, BillBoard);
+		// 逆行列の座標を0にする
+		m_BillBoardView._41 = m_BillBoardView._42 = m_BillBoardView._43 = 0.0f;
+		// World行列と計算を行うため、再度veiwをmCamInvに変換
+		BillBoard = DirectX::XMLoadFloat4x4(&m_BillBoardView);
+
+		mWorld = BillBoard * S * T;
+		// mWorldの転置行列を計算
+		mWorld = DirectX::XMMatrixTranspose(mWorld);
+
+		// スプライトに設定するWorld行列を用意
+		DirectX::XMStoreFloat4x4(&world, mWorld);
+	}
+	else
+	{
+		// ビルボードではない時は回転も掛ける
+		mWorld = R * S * T;
+		DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixTranspose(mWorld));
+	}
+
+	m_SpriteData.matrix[0] = world;
+
 	m_SpriteData.vs->WriteBuffer(0, m_SpriteData.matrix);
 	m_SpriteData.vs->WriteBuffer(1, m_SpriteData.param);
 	m_SpriteData.vs->Bind();
@@ -97,6 +135,26 @@ void Sprite::SetTexture(_In_ Texture *In_pTex) noexcept
 {
 	m_SpriteData.texture = In_pTex ? In_pTex : m_whiteTex.get();
 }
+void Sprite::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+{
+	m_Position = In_Pos;
+}
+void Sprite::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
+{
+	m_Scale = In_Scale;
+}
+void Sprite::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rot) noexcept
+{
+	m_Rotation = Dx11Math::ToRad(In_Rot);
+}
+void Sprite::Set3D(_In_ const bool &In_Is3D) noexcept
+{
+	m_SpriteData.Is3D = In_Is3D;
+}
+void Sprite::SetBillBoard(_In_ const bool &In_IsBillBoard) noexcept
+{
+	m_SpriteData.IsBillBoard = In_IsBillBoard;
+}
 void Sprite::SetWorld(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
 {
 	m_SpriteData.matrix[0] = In_World;
@@ -108,6 +166,10 @@ void Sprite::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
 void Sprite::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
 {
 	m_SpriteData.matrix[2] = In_Proj;
+}
+void Sprite::SetBillBoardView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
+{
+	m_BillBoardView = In_View;
 }
 void Sprite::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
@@ -125,6 +187,7 @@ void Sprite::SetPixelShader(_In_ Shader *In_Ps) noexcept
 }
 
 Sprite::Sprite()
+	: m_Position(), m_Scale(1.0f,1.0f,1.0f), m_Rotation(), m_BillBoardView()
 {
 }
 

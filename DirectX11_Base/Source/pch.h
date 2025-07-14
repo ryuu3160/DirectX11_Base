@@ -75,3 +75,4 @@ using Microsoft::WRL::ComPtr;
 #include "System/Object/GameObject.hpp"
 #include "System/Component/Component.hpp"
 #include "System/Input/Input.hpp"
+#include "DirectX11/System/DX11_Math.hpp"

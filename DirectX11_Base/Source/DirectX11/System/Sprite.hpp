@@ -27,9 +27,11 @@ public:
         std::shared_ptr<MeshBuffer> mesh;
         DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values  
         DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values  
-        Texture *texture = nullptr;        // Initialize to nullptr  
-        Shader *vs = nullptr;              // Initialize to nullptr  
-        Shader *ps = nullptr;              // Initialize to nullptr  
+        Texture *texture = nullptr;         // Initialize to nullptr
+        Shader *vs = nullptr;               // Initialize to nullptr  
+        Shader *ps = nullptr;               // Initialize to nullptr
+        bool Is3D = false;
+        bool IsBillBoard = false;
     };
 
 public:
@@ -68,6 +70,36 @@ public:
    inline const DirectX::XMFLOAT4 &GetColor() const noexcept { return m_SpriteData.param[2]; }
 
    /// <summary>
+   /// 位置ベクトルを取得します。
+   /// </summary>
+   /// <returns>オブジェクトの位置を表す const DirectX::XMFLOAT3 型の参照。</returns>
+   inline const DirectX::XMFLOAT3 &GetPosition() const noexcept { return m_Position; }
+
+   /// <summary>
+   /// スケール値（DirectX::XMFLOAT3型）への参照を取得します。
+   /// </summary>
+   /// <returns>オブジェクトのスケール値を表すDirectX::XMFLOAT3型への定数参照。</returns>
+   inline const DirectX::XMFLOAT3 &GetScale() const noexcept { return m_Scale; }
+
+   /// <summary>
+   /// 回転ベクトルを取得します。
+   /// </summary>
+   /// <returns>オブジェクトの回転を表す const DirectX::XMFLOAT3 型の参照。</returns>
+   inline const DirectX::XMFLOAT3 &GetRotation() const noexcept { return m_Rotation; }
+
+   /// <summary>
+   /// 3D空間に配置されているかどうか
+   /// </summary>
+   /// <returns>スプライトが3Dである場合はtrue、そうでない場合はfalseを参照で返します。</returns>
+   inline const bool &GetIs3D() const noexcept { return m_SpriteData.Is3D; }
+
+   /// <summary>
+   /// スプライトがビルボードかどうかを示すフラグを取得します。
+   /// </summary>
+   /// <returns>ビルボードである場合は true、そうでない場合は false を指す定数参照。</returns>
+   inline const bool &GetIsBillBoard() const noexcept { return m_SpriteData.IsBillBoard; }
+
+   /// <summary>
    /// 2次元オフセット値を設定します。
    /// </summary>
    /// <param name="In_Offset">設定するDirectX::XMFLOAT2型のオフセット値。</param>
@@ -99,6 +131,37 @@ public:
    void SetTexture(_In_ Texture *In_pTex) noexcept;
 
    /// <summary>
+   /// 位置を設定します。
+   /// </summary>
+   /// <param name="In_Pos">設定する位置を表す DirectX::XMFLOAT3 型の参照。</param>
+   void SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
+
+   /// <summary>
+   /// スケール値を設定します。
+   /// </summary>
+   /// <param name="In_Scale">設定するスケール値（DirectX::XMFLOAT3 型の参照）。</param>
+   void SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept;
+
+   /// <summary>
+   /// 回転を指定された値に設定します。
+   /// </summary>
+   /// <param name="In_Rot">設定する回転値（DirectX::XMFLOAT3 型の参照）。</param>
+   void SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rot) noexcept;
+
+   /// <summary>
+   /// 3Dモードを設定します。
+   /// </summary>
+   /// <param name="[In_Is3D]">3Dモードを有効にする場合はtrue、無効にする場合はfalseを指定します。</param>
+   void Set3D(_In_ const bool &In_Is3D) noexcept;
+
+   /// <summary>
+   /// <para>ビルボード状態を設定します。</para>
+   /// <para>3Dが有効な場合のみ効果が反映されます。</para>
+   /// </summary>
+   /// <param name="[In_IsBillBoard]">ビルボード状態に設定するかどうかを示すブール値（true でビルボード、false で非ビルボード）。</param>
+   void SetBillBoard(_In_ const bool &In_IsBillBoard) noexcept;
+
+   /// <summary>
    /// ワールド行列を設定します。
    /// </summary>
    /// <param name="In_World">設定する DirectX::XMFLOAT4X4 型のワールド行列。</param>
@@ -115,6 +178,12 @@ public:
    void SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept;
 
    /// <summary>
+   /// ビルボード用のビュー行列を設定します。
+   /// </summary>
+   /// <param name="[In_View]">設定するDirectX::XMFLOAT4X4型のビュー行列。</param>
+   void SetBillBoardView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept;
+
+   /// <summary>
    /// 頂点シェーダーを設定します。
    /// </summary>
    /// <param name="In_Vs">設定するシェーダーへのポインタ。</param>
@@ -127,7 +196,12 @@ public:
 
 private:
    SpriteData m_SpriteData;
+   DirectX::XMFLOAT3 m_Position;  // 座標
+   DirectX::XMFLOAT3 m_Scale;     // スケール
+   DirectX::XMFLOAT3 m_Rotation;  // 回転
+
    std::shared_ptr<VertexShader> m_defVS;  
    std::shared_ptr<PixelShader> m_defPS;  
-   std::shared_ptr<Texture> m_whiteTex;  
+   std::shared_ptr<Texture> m_whiteTex;
+   DirectX::XMFLOAT4X4 m_BillBoardView;
 };

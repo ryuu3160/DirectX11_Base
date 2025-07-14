@@ -56,12 +56,12 @@ private:
 		const int LineNum = GEOMETORY_MAX_LINE_NUM; // 1íºê¸Ç…Ç¬Ç´ÅA2í∏ì_
 		std::shared_ptr<VertexShader> defVS;
 		std::shared_ptr<PixelShader> defPS;
-		VertexShader* pVS;
-		PixelShader* pPS;
-		DirectX::XMFLOAT4X4 matrix[3];
-		DirectX::XMFLOAT4 param[2];
-		Vertex lineVtx[GEOMETORY_MAX_LINE_NUM];
-		UINT lineIndex;
+		VertexShader* pVS = nullptr;
+		PixelShader* pPS = nullptr;
+		DirectX::XMFLOAT4X4 matrix[3] = {};
+		DirectX::XMFLOAT4 param[2] = {};
+		Vertex lineVtx[GEOMETORY_MAX_LINE_NUM] = {};
+		UINT lineIndex{};
 		std::shared_ptr<MeshBuffer> lineMesh;
 		std::shared_ptr<MeshBuffer> boxMesh;
 		std::shared_ptr<MeshBuffer> sphereMesh;
