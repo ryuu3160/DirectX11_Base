@@ -145,7 +145,7 @@ void Sprite::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 }
 void Sprite::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rot) noexcept
 {
-	m_Rotation = Dx11Math::ToRad(In_Rot);
+	m_Rotation = ToRad(In_Rot);
 }
 void Sprite::Set3D(_In_ const bool &In_Is3D) noexcept
 {
