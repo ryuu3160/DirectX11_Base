@@ -20,6 +20,9 @@ class Component;
 /// </summary>
 class GameObject
 {
+private:
+	// 子オブジェクトリスト
+	using ChildObjects = std::map<std::string, GameObject *>;
 public:
 	GameObject(_In_ std::string In_Name);
 	virtual ~GameObject();
@@ -35,6 +38,20 @@ public:
 	// コンポーネントの取得
 	template<class T>
 	T *GetComponent();
+
+	// 子オブジェクトを生成、追加する
+	template<typename T,typename std::enable_if<std::is_base_of<GameObject,T>::value>>
+	T *AddChildObject(_In_ const std::string &In_Name);
+
+	// 指定した名前の子オブジェクトを取得する
+	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+	T *GetChildObject(_In_ const std::string &In_Name);
+
+	/// <summary>
+	/// 子オブジェクトのポインタのリストを取得します。
+	/// </summary>
+	/// <returns>子オブジェクトへのポインタを格納した std::map を返します。</returns>
+	ChildObjects GetChildObjects() const noexcept;
 
 	inline void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_Pos = In_Pos; }
 	inline DirectX::XMFLOAT3 GetPos() const noexcept { return m_Pos; }
@@ -65,6 +82,7 @@ private:
 
 private:
 	Components			m_Components;	// コンポーネントの一覧
+	ChildObjects		m_ChildObjects;	// 子オブジェクトの一覧
 	Datas				m_Datas;		// 保存データ
 	std::string			m_Name;			// オブジェクト名
 	DirectX::XMFLOAT3	m_Rotation;		// 回転
@@ -111,4 +129,63 @@ inline T *GameObject::GetComponent()
 		}
 	}
 	return ptr;
+}
+
+/// <summary>
+/// <para>指定した型の子オブジェクトを生成し、追加します。</para>
+/// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
+/// </summary>
+/// <param name="[In_Name]">オブジェクト名</param>
+/// <returns>生成、追加したオブジェクトへのポインタを返す</returns>
+template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+inline T *GameObject::AddChildObject(const std::string &In_Name)
+{
+#ifdef _DEBUG
+	// デバッグ中のみ、名称ダブりがないかチェック
+	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
+	if (itr != m_ChildObjects.end())
+	{
+		std::string buf = "Failed to create object." + In_Name;
+		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+		return nullptr;
+	}
+
+	// ヒエラルキーに追加
+	//hierarchy->AddListItem(name);
+
+#endif // _DEBUG
+
+	// オブジェクト生成
+	T *ptr = new T();
+	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
+	return ptr;
+}
+
+/// <summary>
+/// <para>指定した名前の子オブジェクトを取得します。</para>
+/// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <typeparam name="enable_if"></typeparam>
+/// <param name="In_Name"></param>
+/// <returns></returns>
+template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+inline T *GameObject::GetChildObject(const std::string &In_Name)
+{
+	for (auto &itr : m_ChildObjects)
+	{
+		if (itr.first == In_Name)
+		{
+			// 型チェック
+			if (typeid(T) != typeid(*itr.second))
+			{
+				std::string buf = "Failed to get object." + In_Name;
+				MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+				return nullptr;
+			}
+			return reinterpret_cast<T *>(itr.second);
+		}
+	}
+
+	return nullptr;
 }

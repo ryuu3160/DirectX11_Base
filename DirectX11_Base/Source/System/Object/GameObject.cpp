@@ -112,6 +112,11 @@ void GameObject::Execute()
 	Update();
 }
 
+std::map<std::string,GameObject *> GameObject::GetChildObjects() const noexcept
+{
+	return m_ChildObjects;
+}
+
 DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
 {
 	// 前方ベクトルを取得
