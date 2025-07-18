@@ -53,13 +53,20 @@ public:
 	/// <returns>子オブジェクトへのポインタを格納した std::map を返します。</returns>
 	ChildObjects GetChildObjects() const noexcept;
 
-	inline void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_Pos = In_Pos; }
+	inline const std::string &GetName() const noexcept { return m_Name; }
+	inline DirectX::XMFLOAT3 GetRotation() const noexcept { return m_Rotation; }
+
 	inline DirectX::XMFLOAT3 GetPos() const noexcept { return m_Pos; }
+	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_Quat; }
+	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_Scale; }
+	inline const bool &IsChild() const noexcept { return m_bIsChild; }
+
 	DirectX::XMFLOAT3 GetFront() const noexcept;
 	DirectX::XMFLOAT3 GetRight() const noexcept;
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
+	inline void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_Pos = In_Pos; }
 protected:
 	// 継承先のクラスでオブジェクト別の処理を実装する場合、上書きすること。
 	virtual void Update() {}
@@ -90,6 +97,11 @@ protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
+
+	bool				m_bIsChild; // 子オブジェクトかどうか
+	DirectX::XMFLOAT3	m_ParentPos;	// 親オブジェクトの座標
+	DirectX::XMFLOAT4	m_ParentQuat;	// 親オブジェクトの回転
+	DirectX::XMFLOAT3	m_ParentScale;	// 親オブジェクトの拡縮
 };
 
 template<class T>
@@ -157,6 +169,7 @@ inline T *GameObject::AddChildObject(const std::string &In_Name)
 
 	// オブジェクト生成
 	T *ptr = new T();
+	reinterpret_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
