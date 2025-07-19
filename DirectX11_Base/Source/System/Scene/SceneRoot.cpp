@@ -49,6 +49,10 @@ void SceneRoot::Init()
 	auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
 	sprite->Set3D(true);
 	sprite->SetBillBoard(true);
+
+	auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
+	sprite2->Set3D(false);
+	//sprite->SetBillBoard(true);
 }
 
 void SceneRoot::Uninit()
@@ -180,7 +184,7 @@ void SceneRoot::Draw()
 	pCamera2->Set3D(false);
 	SpriteManager::GetInstance().SetCameraViewAndCameraProj(pCamera2);
 	SpriteManager::GetInstance().GetSprite("TestSprite")->SetPosition({ 5.0f,0.0f,0.0f });
-	SpriteManager::GetInstance().GetSprite("TestSprite")->SetRotation({ 0.0f,0.0f,90.0f });
+	SpriteManager::GetInstance().GetSprite("TestSprite2")->SetRotation({ 0.0f,0.0f,90.0f });
 	SpriteManager::GetInstance().Draw();
 
 	pCamera2->Set3D(true);
