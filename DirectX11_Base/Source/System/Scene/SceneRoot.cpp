@@ -38,6 +38,12 @@ void SceneRoot::Init()
 	Setup(file, _countof(file), 1);
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	pModel->GetComponent<ModelRenderer>()->SetModelPath("Assets/Model/spot/spot.fbx");
+	pModel->SetPos({ 0.0f, 1.0f, 0.0f });
+
+	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
+	auto comp = child->AddComponent<ModelRenderer>();
+	comp->SetModelPath("Assets/Model/spot/spot.fbx");
+	child->SetPos({ 1.0f, 0.0f, 0.0f });
 
 	auto &Instance = SpriteManager::GetInstance();
 	auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
@@ -107,7 +113,8 @@ void SceneRoot::Draw()
 	GameObject *pModel[] = {
 		// GetObj - 引数の名前で指定された
 		// ヒエラルキー内のオブジェクトを取得
-		GetObject<GameObject>("RootModel0")
+		GetObject<GameObject>("RootModel0"),
+		GetObject<GameObject>("RootModel0")->GetChildObject<GameObject>("RootModel0Child"),
 	};
 	// カメラオブジェクトの取得
 	GameObject *pCameraObj2 = GetObject<GameObject>("Camera");
@@ -118,6 +125,7 @@ void SceneRoot::Draw()
 	Shader *pVS = GetObject<Shader>("VS_Object");
 	Shader *pPS[] =
 	{
+		GetObject<Shader>("PS_TexColor"),
 		GetObject<Shader>("PS_TexColor"),
 	};
 

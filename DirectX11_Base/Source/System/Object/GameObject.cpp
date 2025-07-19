@@ -100,6 +100,12 @@ GameObject::~GameObject()
 	{
 		delete (*itr);
 	}
+
+	// 子オブジェクトの削除
+	for (auto &child : m_ChildObjects)
+	{
+		delete child.second; // 子オブジェクトの削除
+	}
 }
 
 void GameObject::Execute()
@@ -184,6 +190,19 @@ DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcep
 	DirectX::XMStoreFloat4x4(&fMat, M);
 
 	return fMat;
+}
+
+void GameObject::SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+{
+	if(m_bIsChild)
+	{
+		// 子オブジェクトの場合、親の座標を基準にする
+		m_Pos = {m_ParentPos.x + In_Pos.x, m_ParentPos.y + In_Pos.y, m_ParentPos.z + In_Pos.z };
+	}
+	else
+	{
+		m_Pos = In_Pos;
+	}
 }
 
 void GameObject::_addComponent(_In_ Component *In_pComponent)

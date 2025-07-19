@@ -40,11 +40,14 @@ public:
 	T *GetComponent();
 
 	// 子オブジェクトを生成、追加する
-	template<typename T,typename std::enable_if<std::is_base_of<GameObject,T>::value>>
+	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
 	T *AddChildObject(_In_ const std::string &In_Name);
 
+	template<>
+	GameObject *AddChildObject(_In_ const std::string &In_Name);
+
 	// 指定した名前の子オブジェクトを取得する
-	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
 	T *GetChildObject(_In_ const std::string &In_Name);
 
 	/// <summary>
@@ -66,7 +69,7 @@ public:
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
-	inline void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_Pos = In_Pos; }
+	void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
 protected:
 	// 継承先のクラスでオブジェクト別の処理を実装する場合、上書きすること。
 	virtual void Update() {}
@@ -149,7 +152,7 @@ inline T *GameObject::GetComponent()
 /// </summary>
 /// <param name="[In_Name]">オブジェクト名</param>
 /// <returns>生成、追加したオブジェクトへのポインタを返す</returns>
-template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
 inline T *GameObject::AddChildObject(const std::string &In_Name)
 {
 #ifdef _DEBUG
@@ -170,6 +173,34 @@ inline T *GameObject::AddChildObject(const std::string &In_Name)
 	// オブジェクト生成
 	T *ptr = new T();
 	reinterpret_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	ptr->m_ParentPos = m_Pos; // 親の座標を設定
+	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
+	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
+	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
+	return ptr;
+}
+
+template<>
+inline GameObject *GameObject::AddChildObject(const std::string &In_Name)
+{
+#ifdef _DEBUG
+	// デバッグ中のみ、名称ダブりがないかチェック
+	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
+	if (itr != m_ChildObjects.end())
+	{
+		std::string buf = "Failed to create object." + In_Name;
+		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+		return nullptr;
+	}
+	// ヒエラルキーに追加
+	//hierarchy->AddListItem(In_Name.data());
+#endif // _DEBUG
+
+	GameObject *ptr = new GameObject(In_Name);
+	ptr->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	ptr->m_ParentPos = m_Pos; // 親の座標を設定
+	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
+	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
@@ -182,7 +213,7 @@ inline T *GameObject::AddChildObject(const std::string &In_Name)
 /// <typeparam name="enable_if"></typeparam>
 /// <param name="In_Name"></param>
 /// <returns></returns>
-template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>>
+template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
 inline T *GameObject::GetChildObject(const std::string &In_Name)
 {
 	for (auto &itr : m_ChildObjects)
