@@ -147,7 +147,6 @@ void SceneRoot::Draw()
 
 	// 描画に必要な奴ら
 	ModelRenderer *pRenderer;
-	Model *pDrawModel;
 
 	// 描画
 	for (int i = 0; i < sizeof(pModel) / sizeof(GameObject *); i++)
@@ -163,16 +162,13 @@ void SceneRoot::Draw()
 		// オブジェクト内のコンポーネントを取得
 		pRenderer = pModel[i]->GetComponent<ModelRenderer>();
 
-		// ModelRenderコンポーネントの内部に
-		// DX22で使用していたModelクラスがあり、
-		// 描画はModelクラスで行うため取得する
-		pDrawModel = pRenderer->GetModel();
-		if (pDrawModel)
+		// 描画
+		if (pRenderer)
 		{
 			// 描画
-			pDrawModel->SetVertexShader(pVS);
-			pDrawModel->SetPixelShader(pPS[i]);
-			pDrawModel->Draw();
+			pRenderer->SetVertexShader(pVS);
+			pRenderer->SetPixelShader(pPS[i]);
+			pRenderer->Draw();
 		}
 	}
 

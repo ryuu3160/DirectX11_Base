@@ -172,9 +172,6 @@
     <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Model.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Camera.cpp">
       <Filter>Source\System\Component</Filter>
     </ClCompile>
@@ -286,9 +283,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Model.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Camera.hpp">

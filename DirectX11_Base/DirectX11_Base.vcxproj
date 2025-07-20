@@ -165,10 +165,6 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
-    <ClCompile Include="Source\DirectX11\System\Model.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
       <SubType>
       </SubType>
@@ -242,10 +238,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
-    <ClInclude Include="Source\DirectX11\System\Model.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
       <SubType>
       </SubType>
