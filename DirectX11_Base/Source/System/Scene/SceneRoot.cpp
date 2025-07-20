@@ -52,7 +52,6 @@ void SceneRoot::Init()
 
 	auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
 	sprite2->Set3D(false);
-	//sprite->SetBillBoard(true);
 }
 
 void SceneRoot::Uninit()
