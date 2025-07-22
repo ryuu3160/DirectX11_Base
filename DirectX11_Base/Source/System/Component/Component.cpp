@@ -14,7 +14,11 @@ Component::Component() : m_pTransform(nullptr)
 {
 }
 
-void Component::Execute()
+void Component::ExecuteUpdate() noexcept
+{
+}
+
+void Component::ExecuteDraw() noexcept
 {
 }
 
