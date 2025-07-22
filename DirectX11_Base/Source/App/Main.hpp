@@ -14,7 +14,7 @@
 // ==============================
 //  ‘O•ûéŒ¾
 // ==============================
-class SceneRoot;
+class SceneBase;
 
 namespace Main
 {
@@ -27,5 +27,5 @@ namespace Main
 
 	void Change3D_Draw() noexcept;
 
-	SceneRoot &GetScene() noexcept;
+	SceneBase &GetScene() noexcept;
 }

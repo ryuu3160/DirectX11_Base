@@ -104,7 +104,7 @@ void Main::Change3D_Draw() noexcept
 	Instance.SetRenderTargets(1, &pRTV, pDSV);
 }
 
-SceneRoot &Main::GetScene() noexcept
+SceneBase &Main::GetScene() noexcept
 {
 	return *g_pScene;
 }
