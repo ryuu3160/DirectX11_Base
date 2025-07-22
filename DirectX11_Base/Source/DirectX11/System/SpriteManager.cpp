@@ -99,7 +99,7 @@ void SpriteManager::DeleteAll() noexcept
 	m_SpriteList.clear();
 }
 
-SpriteManager::SpriteManager() : m_View(), m_Projection3D(), m_Projection2D()
+SpriteManager::SpriteManager() : m_View(), m_Projection3D(), m_Projection2D(), m_BillBoardView()
 {
 }
 
