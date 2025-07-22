@@ -169,6 +169,11 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp" />
+    <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
     <ClCompile Include="Source\DirectX11\System\SpriteManager.cpp">
       <SubType>
@@ -239,6 +244,11 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
     <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp" />
+    <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>

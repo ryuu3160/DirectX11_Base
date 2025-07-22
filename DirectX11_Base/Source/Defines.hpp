@@ -26,6 +26,17 @@ namespace
 }
 
 // ==============================
+//  列挙
+// ==============================
+enum class NullpCheckMode : unsigned char
+{
+	NONE = 0,		// 何も表示しない
+	OUTPUT,	    // コンソールに出力する
+	MSGBOX,		// メッセージボックスを表示する
+};
+using NCMode = NullpCheckMode; // NullpCheckModeのエイリアス
+
+// ==============================
 //	using宣言
 // ==============================
 using FilePath = std::string_view; // ファイルパスを表す型。std::string_viewを使用して、文字列の参照を保持する
@@ -63,3 +74,33 @@ inline void Error(std::string_view In_Format, Args&&... In_Args)
 }
 #endif
 
+/// <summary>
+/// 指定されたポインタがヌルかどうかをチェックし、モードに応じてエラーメッセージを出力します。
+/// </summary>
+/// <param name="[In_pData]">チェック対象のポインタ。</param>
+/// <param name="[In_Mode]">ヌル時の動作モード（デフォルトはNullpCheckMode::NONE）。</param>
+/// <param name="[In_strMessage]">エラー時に出力するメッセージ（省略可能）。</param>
+/// <returns>ポインタがヌルの場合はtrue、それ以外はfalse。</returns>
+inline bool NullCheck(_In_ void *In_pData,_In_ NullpCheckMode In_Mode = NullpCheckMode::NONE, _In_ std::string_view In_strMessage = "") noexcept
+{
+    if (In_pData == nullptr)
+    {
+        switch (In_Mode)
+        {
+        case NullpCheckMode::NONE:
+            return true;
+        case NullpCheckMode::OUTPUT:
+        {
+            std::string message = "error : " + std::string(In_strMessage);
+            OutputDebugStringA(message.c_str());
+            return true;
+        }
+            case NullpCheckMode::MSGBOX:
+            MessageBoxA(nullptr, In_strMessage.data(), "Error", MB_OK);
+			return true;
+        default:
+		    return true;
+        }
+    }
+    return false;
+}

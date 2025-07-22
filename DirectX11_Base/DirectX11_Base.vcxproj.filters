@@ -181,6 +181,12 @@
     <ClCompile Include="Source\DirectX11\System\SpriteManager.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -295,6 +301,12 @@
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\DX11_Math.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
   </ItemGroup>
