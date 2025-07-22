@@ -108,12 +108,12 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::Execute()
+void GameObject::ExecuteUpdate() noexcept
 {
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		itr->Execute();
+		itr->ExecuteUpdate();
 	}
 	// 継承先オブジェクトの処理
 	Update();
@@ -124,7 +124,24 @@ void GameObject::Execute()
 		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
-		itr.second->Execute();
+		itr.second->ExecuteUpdate();
+	}
+}
+
+void GameObject::ExecuteDraw() noexcept
+{
+	// コンポーネントの描画
+	for (auto &itr : m_Components)
+	{
+		itr->ExecuteDraw();
+	}
+	// 継承先オブジェクトの描画
+	Draw();
+
+	// 子オブジェクトの描画
+	for (auto &itr : m_ChildObjects)
+	{
+		itr.second->ExecuteDraw();
 	}
 }
 

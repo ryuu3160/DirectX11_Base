@@ -30,7 +30,12 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Execute();
+	void ExecuteUpdate() noexcept;
+
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void ExecuteDraw() noexcept;
 
 	// コンポーネントの生成
 	template<class T>
@@ -71,8 +76,11 @@ public:
 
 	void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
 protected:
-	// 継承先のクラスでオブジェクト別の処理を実装する場合、上書きすること。
+	// 継承先のクラスでオブジェクト別の更新処理を実装する場合、上書きすること。
 	virtual void Update() {}
+
+	// 継承先のクラスでオブジェクト別の描画処理を実装する場合、上書きすること。
+	virtual void Draw() {}
 
 private:
 	// コンポーネント追加時に型に関係なく呼び出す処理
