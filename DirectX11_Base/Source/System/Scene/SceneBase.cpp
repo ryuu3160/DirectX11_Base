@@ -71,7 +71,7 @@ void SceneBase::RootUpdate() noexcept
 		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
 		{
 			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
-			obj->Execute();
+			obj->ExecuteUpdate();
 		}
 	}
 
@@ -85,7 +85,21 @@ void SceneBase::RootUpdate() noexcept
 
 void SceneBase::RootDraw() noexcept
 {
+	// シーンが所持しているオブジェクトの描画
+	for (auto &itr : m_Items)
+	{
+		auto objIt = m_Objects.find(itr);
+		// 型チェック
+		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
+		{
+			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
+			obj->ExecuteDraw();
+		}
+	}
+
+	// シーン自体の描画
 	Draw();
+	// サブシーンの描画
 	if (m_pSubScene)
 		m_pSubScene->Draw();
 }

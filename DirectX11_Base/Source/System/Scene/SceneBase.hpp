@@ -76,6 +76,12 @@ public:
 	/// </summary>
 	void RemoveSubScene() noexcept;
 
+	/// <summary>
+	/// サブシーンへのポインタを取得します。
+	/// </summary>
+	/// <returns>サブシーンを指す SceneBase 型のポインタ。</returns>
+	SceneBase *GetSubScene() noexcept { return m_pSubScene; }
+
 	// オブジェクト操作
 
 	/// <summary>
@@ -109,6 +115,12 @@ public:
 	/// </summary>
 	/// <param name="[In_Name]">破棄するオブジェクトの名前。</param>
 	void DestroyObj(_In_ const std::string &In_Name) noexcept;
+
+	/// <summary>
+	/// シーンを取得する関数
+	/// </summary>
+	/// <returns>このシーンのポインタを返します。</returns>
+	inline SceneBase *GetScene() noexcept { return this; }
 
 	// 継承先で使用する関数
 	virtual void Init() = 0;
