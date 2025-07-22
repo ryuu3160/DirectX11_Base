@@ -9,12 +9,12 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Component/Component.hpp"
+#include "DirectX11/System/RenderComponent.hpp"
 #include "DirectX11/Texture/Shader.hpp"
 #include "DirectX11/Texture/MeshBuffer.hpp"
 #include "DirectX11/Texture/Texture.hpp"
 
-class ModelRenderer : public Component
+class ModelRenderer : public RenderComponent
 {
 public:
 
@@ -66,10 +66,12 @@ public:
 public:
     ModelRenderer();
     ~ModelRenderer();
-    void Execute() final;
+    void ExecuteUpdate() noexcept final;
+	void ExecuteDraw() noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
+	void SetTextureSlot(_In_ const int &In_TexSlot = 0) noexcept;
 
     /// <summary>
     /// データアクセサーを使用して読み書きを行います。
@@ -146,6 +148,7 @@ private:
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
-    char m_cModelName[MAX_PATH];
+    FilePath m_cModelName;
     float m_fScale;
+	int m_nTexSlot = 0; // テクスチャスロット番号
 };

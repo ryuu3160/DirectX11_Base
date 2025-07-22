@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "ModelRenderer.hpp"
+#include "System/Component/Camera.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -48,7 +49,7 @@ ModelRenderer::~ModelRenderer()
 {
 }
 
-void ModelRenderer::Execute()
+void ModelRenderer::ExecuteUpdate() noexcept
 {
 	// 既にメッシュが読み込まれている場合は何もしない
 	if (!m_vecMeshes.empty()) return;
@@ -56,21 +57,46 @@ void ModelRenderer::Execute()
 	this->Load(m_cModelName, m_fScale);
 }
 
+void ModelRenderer::ExecuteDraw() noexcept
+{
+	// 定数バッファに渡す行列の情報を作成
+	DirectX::XMFLOAT4X4 mat[3];
+	// カメラのビュー/プロジェクション行列を設定
+	mat[1] = m_pViewCamera->GetView(false);
+	mat[2] = m_pViewCamera->GetProj(false);
+
+	// カメラの情報を定数バッファで渡す
+	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
+	DirectX::XMFLOAT4 CameraParam[] = {
+		{CamPos.x,CamPos.y,CamPos.z,0.0f}
+	};
+
+	// 単位行列でワールド行列を作成
+	mat[0] = m_pTransform->GetWorld(false);
+
+	// メモリ上の行列をグラフィックスメモリへコピー
+	// 1つ目の引数はバッファの番号
+	m_pVS->WriteBuffer(0, mat);
+
+	m_pVS->Bind();
+	m_pPS->Bind();
+	auto it = m_vecMeshes.begin();
+	for (auto &itr : m_vecMeshes)
+	{
+		if (m_nTexSlot >= 0)
+			m_pPS->SetTexture(m_nTexSlot, m_vecMaterials[itr.materialID].texture.get());
+		itr.mesh->Draw();
+	}
+}
+
 void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
 {
-	size_t size = strlen(m_cModelName);
-	In_Data->Access<size_t>(&size);
-	for (size_t i = 0; i < size; ++i)
-		In_Data->Access<char>(&m_cModelName[i]);
-	m_cModelName[size] = '\0';
+	In_Data->Access<FilePath>(&m_cModelName);
 }
 
 void ModelRenderer::SetModelPath(_In_ FilePath In_File) noexcept
 {
-	// 長さを超えないようにコピー
-	size_t len = std::min(In_File.size(), sizeof(m_cModelName) - 1);
-	std::memcpy(m_cModelName, In_File.data(), len);
-	m_cModelName[len] = '\0'; // 終端
+	m_cModelName = In_File;
 }
 
 void ModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
@@ -85,6 +111,11 @@ void ModelRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
 	PixelShader *cast = reinterpret_cast<PixelShader *>(In_pShader);
 	if (cast)
 		m_pPS = cast;
+}
+
+void ModelRenderer::SetTextureSlot(_In_ const int &In_TexSlot) noexcept
+{
+	m_nTexSlot = In_TexSlot;
 }
 
 bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
