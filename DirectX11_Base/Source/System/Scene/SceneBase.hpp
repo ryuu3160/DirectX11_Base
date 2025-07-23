@@ -12,6 +12,7 @@
 #include "System/Object/GameObject.hpp"
 #include "DirectX11/Texture/Shader.hpp"
 #include "DirectX11/System/ModelRenderer.hpp"
+#include "DirectX11/System/SpriteRenderer.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
