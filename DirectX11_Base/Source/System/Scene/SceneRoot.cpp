@@ -12,7 +12,7 @@
 #include "Source/App/Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
-#include "DirectX11/System/SpriteManager.hpp"
+#include "System/SpriteManager/SpriteManager.hpp"
 
 // ==============================
 //  íËêî
@@ -38,7 +38,7 @@ void SceneRoot::Init()
 	Setup(file, _countof(file), 1);
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
-	Component1->SetModelPath("Assets/Model/spot/spot.fbx");
+	Component1->SetAssetPath("Assets/Model/spot/spot.fbx");
 	Component1->SetCamera(pCamera);
 	Component1->SetVertexShader(GetObject<Shader>("VS_Object"));
 	Component1->SetPixelShader(GetObject<Shader>("PS_TexColor"));
@@ -47,7 +47,7 @@ void SceneRoot::Init()
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();
-	comp->SetModelPath("Assets/Model/spot/spot.fbx");
+	comp->SetAssetPath("Assets/Model/spot/spot.fbx");
 	comp->SetCamera(pCamera);
 	comp->SetVertexShader(GetObject<Shader>("VS_Object"));
 	comp->SetPixelShader(GetObject<Shader>("PS_TexColor"));

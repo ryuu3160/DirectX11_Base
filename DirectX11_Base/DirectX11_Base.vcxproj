@@ -174,8 +174,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Sprite.cpp" />
-    <ClCompile Include="Source\DirectX11\System\SpriteManager.cpp">
+    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -227,6 +226,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\Sprite.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\Main.hpp">
@@ -252,8 +253,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Sprite.hpp" />
-    <ClInclude Include="Source\DirectX11\System\SpriteManager.hpp">
+    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -305,6 +305,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\Sprite.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

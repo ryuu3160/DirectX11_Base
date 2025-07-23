@@ -80,6 +80,9 @@
     <Filter Include="リソース ファイル\Shader\PixelShader">
       <UniqueIdentifier>{4324fb67-9ca3-4945-ab45-49cc1c85313a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\SpriteManager">
+      <UniqueIdentifier>{692f91d4-8d5d-4441-84f0-e00b27082ad4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -96,9 +99,6 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Texture\UnorderedAccessView.cpp">
       <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Sprite.cpp">
-      <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source</Filter>
@@ -178,13 +178,19 @@
     <ClCompile Include="Source\System\Object\CameraDCC.cpp">
       <Filter>Source\System\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SpriteManager.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\Sprite.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,9 +209,6 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp">
       <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Sprite.hpp">
-      <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\pch.h">
       <Filter>Source</Filter>
@@ -297,9 +300,6 @@
     <ClInclude Include="Source\System\Object\CameraDCC.hpp">
       <Filter>Source\System\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SpriteManager.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DirectX11\System\DX11_Math.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
@@ -307,6 +307,15 @@
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\Sprite.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
   </ItemGroup>

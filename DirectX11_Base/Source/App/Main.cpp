@@ -11,7 +11,7 @@
 #include "Main.hpp"
 #include "DirectX11/DX11_Initialize.hpp"
 #include "DirectX11/System/Geometory.hpp"
-#include "DirectX11/System/SpriteManager.hpp"
+#include "System/SpriteManager/SpriteManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
 
