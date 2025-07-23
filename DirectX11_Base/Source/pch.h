@@ -71,6 +71,7 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 //  Original
 // ------------------------------
+#include "App/Main.hpp"
 #include "Defines.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Component/Component.hpp"
