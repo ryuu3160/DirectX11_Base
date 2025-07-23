@@ -11,7 +11,7 @@
 #include "SpriteRenderer.hpp"
 #include "System/Component/Camera.hpp"
 
-SpriteRenderer::SpriteRenderer()
+SpriteRenderer::SpriteRenderer() : m_bIsLoaded(false)
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
@@ -27,10 +27,11 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::ExecuteUpdate() noexcept
 {
 	// 既にメッシュが読み込まれている場合は何もしない
-	if (m_SpriteData.mesh.use_count() == 0)
+	if (m_bIsLoaded)
 		return;
 
 	this->Load(m_AssetPath, 1.0f); // デフォルトのスケール1.0fで読み込み
+	m_bIsLoaded = true; // 読み込み完了フラグを立てる
 }
 
 void SpriteRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
@@ -93,6 +94,9 @@ void SpriteRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Sca
 
 void SpriteRenderer::Draw() noexcept
 {
+	// 2D描画の準備
+	Main::Change2D_Draw();
+
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX BillBoard = DirectX::XMMatrixIdentity();
@@ -160,6 +164,9 @@ void SpriteRenderer::Draw() noexcept
 	m_SpriteData.ps->SetTexture(0, m_SpriteData.texture);
 	m_SpriteData.ps->Bind();
 	m_SpriteData.mesh->Draw();
+
+	// 3D描画の設定に戻す
+	Main::Change3D_Draw();
 }
 
 void SpriteRenderer::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept

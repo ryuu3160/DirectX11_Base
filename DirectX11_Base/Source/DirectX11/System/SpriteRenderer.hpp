@@ -10,9 +10,6 @@
 //	include
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
-#include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/Texture/MeshBuffer.hpp"
-#include "DirectX11/Texture/Texture.hpp"
 
 /// <summary>
 /// SpriteRendererクラス
@@ -66,12 +63,12 @@ public:
 	void Draw() noexcept override final;
 
 	/// <summary>
-   /// オフセット値を取得
-   /// </summary>
-   /// <returns>DirectX::XMFLOAT2型のオフセット値</returns>
+	/// オフセット値を取得
+	/// </summary>
+	/// <returns>DirectX::XMFLOAT2型のオフセット値</returns>
 	inline const DirectX::XMFLOAT2 &GetOffset() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].x, m_SpriteData.param[0].y); }
 	/// <summary>
-	/// 
+	/// サイズを取得
 	/// </summary>
 	/// <returns>DirectX::XMFLOAT2型のサイズ</returns>
 	inline const DirectX::XMFLOAT2 &GetSize() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].z, m_SpriteData.param[0].w); }
@@ -156,7 +153,7 @@ private:
 	void MakeDefaultTexture() noexcept;
 
 private:
-	SpriteData m_SpriteData;
-
-	std::shared_ptr<Texture> m_DefaultTex;
+	SpriteData m_SpriteData;				// スプライトデータ
+	bool m_bIsLoaded;						// 読み込み済みかどうか
+	std::shared_ptr<Texture> m_DefaultTex;	// デフォルトのテクスチャ
 };
