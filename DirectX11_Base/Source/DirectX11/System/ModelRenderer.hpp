@@ -10,9 +10,6 @@
 //	include
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
-#include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/Texture/MeshBuffer.hpp"
-#include "DirectX11/Texture/Texture.hpp"
 
 class ModelRenderer : public RenderComponent
 {
