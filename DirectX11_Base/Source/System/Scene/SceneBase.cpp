@@ -10,6 +10,7 @@
 // ==============================
 #include "SceneBase.hpp"
 #include "System/Object/GameObject.hpp"
+#include "DirectX11/System/RenderManager.hpp"
 
 // ==============================
 //  前方宣言
@@ -20,6 +21,7 @@ SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_pParent(nullptr)
 	, m_pSubScene(nullptr)
 	, m_Name(In_Name)
+	, m_RenderManager(RenderManager::GetInstance())
 {
 }
 
@@ -102,6 +104,9 @@ void SceneBase::RootDraw() noexcept
 	// サブシーンの描画
 	if (m_pSubScene)
 		m_pSubScene->Draw();
+
+	// 全ての描画
+	m_RenderManager.DrawAll();
 }
 
 void SceneBase::RemoveSubScene() noexcept

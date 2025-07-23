@@ -12,6 +12,12 @@
 #include "System/Object/GameObject.hpp"
 #include "DirectX11/Texture/Shader.hpp"
 #include "DirectX11/System/ModelRenderer.hpp"
+
+// ==============================
+//  前方宣言
+// ==============================
+class RenderManager;
+
 // ==============================
 //  undefine
 // ==============================
@@ -140,6 +146,8 @@ protected:
 private:
 	static Objects m_Objects;
 	std::string m_Name;
+
+	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
 
 protected:
 	SceneBase *m_pParent;		// 親シーン
