@@ -33,12 +33,7 @@ void RenderManager::DrawAll() noexcept
 			if (itr)
 				itr->Draw();
 		}
-	}
-
-	// レイヤーのコンポーネントをクリア
-	for (auto &layer : m_RenderComponents)
-	{
-		layer.second.clear(); // レイヤーのコンポーネントをクリア
+		layer.second.clear(); // レイヤーに登録されているRenderComponentをクリア
 	}
 	// レイヤー自体は残しておいた方が処理効率が良いため、マップ自体はクリアしない
 }
