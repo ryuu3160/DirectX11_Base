@@ -284,3 +284,26 @@ static inline DirectX::XMFLOAT4 ToDeg(_In_ DirectX::XMFLOAT4 In_Rad)
 {
 	return In_Rad * (180.0f / PI);
 }
+
+static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMFLOAT4 &In_Quat)
+{
+	DirectX::XMFLOAT3 euler;
+
+	euler.y = std::asinf(2.0f * In_Quat.x * In_Quat.z + 2.0f * In_Quat.y * In_Quat.w); // YŽ²‚Ì‰ñ“](ƒsƒbƒ`)
+
+	if (std::cosf(euler.y) != 0.0f)
+	{
+		euler.x = std::atanf(-((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
+			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f))));
+		euler.z = std::atanf(-((2.0f * In_Quat.x * In_Quat.y - 2.0f * In_Quat.z * In_Quat.w) /
+			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.x, 2.0f) - 1.0f))));
+	}
+	else
+	{
+		euler.x = std::atanf(((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
+			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f))));
+		euler.z = 0.0f;
+	}
+
+	return euler;
+}
