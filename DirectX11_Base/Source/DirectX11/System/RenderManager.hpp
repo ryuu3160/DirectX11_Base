@@ -10,13 +10,6 @@
 //	include
 // ==============================
 #include "RenderComponent.hpp"
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-
-}
 
 /// <summary>
 /// RenderManagerクラス
@@ -26,17 +19,23 @@ class RenderManager : public Singleton<RenderManager>
 	friend class Singleton<RenderManager>;
 public:
 
+	/// <summary>
+	/// レンダーコンポーネントを指定したレイヤーに追加します。
+	/// </summary>
+	/// <param name="[In_RenderComponent]">追加するRenderComponentへのポインタ。</param>
+	/// <param name="[In_Layer]">レンダーコンポーネントを追加するレイヤー番号。省略時は0。</param>
+	void AddRenderComponent(_In_ RenderComponent* In_RenderComponent, _In_ const int& In_Layer = 0) noexcept;
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
-
-
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	/// <summary>
+	/// すべての描画処理を実行します。
+	/// </summary>
+	void DrawAll() noexcept;
 
 private:
-	RenderManager() = default;
-	~RenderManager() = default;
+	RenderManager();
+	~RenderManager();
+
+private:
+
+	std::map<int, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
 };
