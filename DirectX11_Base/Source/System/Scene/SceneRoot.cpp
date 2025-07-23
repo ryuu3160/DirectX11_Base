@@ -36,6 +36,8 @@ void SceneRoot::Init()
 		"PS_TexColor",	// テクスチャ貼っただけ
 	};
 	Setup(file, _countof(file), 1);
+
+	// オブジェクトの設定
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
 	Component1->SetAssetPath("Assets/Model/spot/spot.fbx");
@@ -53,13 +55,29 @@ void SceneRoot::Init()
 	comp->SetPixelShader(GetObject<Shader>("PS_TexColor"));
 	child->SetPos({ 1.0f, 0.0f, 0.0f });
 
-	auto &Instance = SpriteManager::GetInstance();
-	auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
-	sprite->Set3D(true);
-	sprite->SetBillBoard(true);
+	// スプライトの作成
+	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
+	auto SpriteComp1 = pSpriteObj1->AddComponent<SpriteRenderer>();
+	SpriteComp1->SetAssetPath("Assets/Texture/TestTexture.png");
+	SpriteComp1->SetCamera(pCamera);
+	SpriteComp1->Set3D(true);
+	SpriteComp1->SetBillBoard(true);
+	pSpriteObj1->SetPos({ 5.0f, 0.0f, 0.0f });
 
-	auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
-	sprite2->Set3D(false);
+	GameObject *pSpriteObj2 = CreateObject<GameObject>("SpriteObj2");
+	auto SpriteComp2 = pSpriteObj2->AddComponent<SpriteRenderer>();
+	SpriteComp2->SetAssetPath("Assets/Texture/TestTexture.png");
+	SpriteComp2->SetCamera(pCamera);
+	SpriteComp2->Set3D(false);
+	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
+
+	//auto &Instance = SpriteManager::GetInstance();
+	//auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
+	//sprite->Set3D(true);
+	//sprite->SetBillBoard(true);
+
+	//auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
+	//sprite2->Set3D(false);
 }
 
 void SceneRoot::Uninit()
@@ -120,24 +138,24 @@ void SceneRoot::Draw()
 
 #endif
 
-	// カメラオブジェクトの取得
-	GameObject *pCameraObj2 = GetObject<GameObject>("Camera");
-	// カメラコンポーネントの取得
-	Camera *pCamera2 = pCameraObj2->GetComponent<Camera>();
+	//// カメラオブジェクトの取得
+	//GameObject *pCameraObj2 = GetObject<GameObject>("Camera");
+	//// カメラコンポーネントの取得
+	//Camera *pCamera2 = pCameraObj2->GetComponent<Camera>();
 
-	// todo: スプライトクラスをもっと使いやすく改造
-	
-	// 2D描画の準備
-	Main::Change2D_Draw();
+	//// todo: スプライトクラスをもっと使いやすく改造
+	//
+	//// 2D描画の準備
+	//Main::Change2D_Draw();
 
-	pCamera2->Set3D(false);
-	SpriteManager::GetInstance().SetCameraViewAndCameraProj(pCamera2);
-	SpriteManager::GetInstance().GetSprite("TestSprite")->SetPosition({ 5.0f,0.0f,0.0f });
-	SpriteManager::GetInstance().GetSprite("TestSprite2")->SetRotation({ 0.0f,0.0f,90.0f });
-	SpriteManager::GetInstance().Draw();
+	//pCamera2->Set3D(false);
+	//SpriteManager::GetInstance().SetCameraViewAndCameraProj(pCamera2);
+	//SpriteManager::GetInstance().GetSprite("TestSprite")->SetPosition({ 5.0f,0.0f,0.0f });
+	//SpriteManager::GetInstance().GetSprite("TestSprite2")->SetRotation({ 0.0f,0.0f,90.0f });
+	//SpriteManager::GetInstance().Draw();
 
-	pCamera2->Set3D(true);
-	Main::Change3D_Draw();
+	//pCamera2->Set3D(true);
+	//Main::Change3D_Draw();
 }
 
 void SceneRoot::ChangeScene()
