@@ -57,38 +57,6 @@ void ModelRenderer::ExecuteUpdate() noexcept
 	this->Load(m_cModelName, m_fScale);
 }
 
-void ModelRenderer::ExecuteDraw() noexcept
-{
-	// 定数バッファに渡す行列の情報を作成
-	DirectX::XMFLOAT4X4 mat[3];
-	// カメラのビュー/プロジェクション行列を設定
-	mat[1] = m_pViewCamera->GetView(false);
-	mat[2] = m_pViewCamera->GetProj(false);
-
-	// カメラの情報を定数バッファで渡す
-	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
-	DirectX::XMFLOAT4 CameraParam[] = {
-		{CamPos.x,CamPos.y,CamPos.z,0.0f}
-	};
-
-	// 単位行列でワールド行列を作成
-	mat[0] = m_pTransform->GetWorld(false);
-
-	// メモリ上の行列をグラフィックスメモリへコピー
-	// 1つ目の引数はバッファの番号
-	m_pVS->WriteBuffer(0, mat);
-
-	m_pVS->Bind();
-	m_pPS->Bind();
-	auto it = m_vecMeshes.begin();
-	for (auto &itr : m_vecMeshes)
-	{
-		if (m_nTexSlot >= 0)
-			m_pPS->SetTexture(m_nTexSlot, m_vecMaterials[itr.materialID].texture.get());
-		itr.mesh->Draw();
-	}
-}
-
 void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
 {
 	In_Data->Access<FilePath>(&m_cModelName);
@@ -265,15 +233,34 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 	return true;
 }
 
-void ModelRenderer::Draw(_In_ const int &In_TexSlot)
+void ModelRenderer::Draw() noexcept
 {
+	// 定数バッファに渡す行列の情報を作成
+	DirectX::XMFLOAT4X4 mat[3];
+	// カメラのビュー/プロジェクション行列を設定
+	mat[1] = m_pViewCamera->GetView(false);
+	mat[2] = m_pViewCamera->GetProj(false);
+
+	// カメラの情報を定数バッファで渡す
+	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
+	DirectX::XMFLOAT4 CameraParam[] = {
+		{CamPos.x,CamPos.y,CamPos.z,0.0f}
+	};
+
+	// 単位行列でワールド行列を作成
+	mat[0] = m_pTransform->GetWorld(false);
+
+	// メモリ上の行列をグラフィックスメモリへコピー
+	// 1つ目の引数はバッファの番号
+	m_pVS->WriteBuffer(0, mat);
+
 	m_pVS->Bind();
 	m_pPS->Bind();
 	auto it = m_vecMeshes.begin();
 	for (auto &itr : m_vecMeshes)
 	{
-		if (In_TexSlot >= 0)
-			m_pPS->SetTexture(In_TexSlot, m_vecMaterials[itr.materialID].texture.get());
+		if (m_nTexSlot >= 0)
+			m_pPS->SetTexture(m_nTexSlot, m_vecMaterials[itr.materialID].texture.get());
 		itr.mesh->Draw();
 	}
 }

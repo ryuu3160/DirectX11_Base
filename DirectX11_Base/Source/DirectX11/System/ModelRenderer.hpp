@@ -67,7 +67,6 @@ public:
     ModelRenderer();
     ~ModelRenderer();
     void ExecuteUpdate() noexcept final;
-	void ExecuteDraw() noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
@@ -119,7 +118,7 @@ public:
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
 	/// <param name="[In_TexSlot]">使用するテクスチャスロットのインデックス。デフォルトは0です。</param>
-	void Draw(_In_ const int &In_TexSlot = 0);
+	void Draw() noexcept override final;
 
 	/// <summary>
 	/// 頂点データを再生成するための関数を呼び出します。

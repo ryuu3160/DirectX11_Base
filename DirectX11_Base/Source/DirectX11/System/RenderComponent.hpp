@@ -18,6 +18,7 @@
 //  前方宣言
 // ==============================
 class Camera;
+class RenderManager;
 
 /// <summary>
 /// RenderComponentクラス
@@ -42,6 +43,12 @@ public:
 	void SetCamera(_In_ GameObject *In_Camera) noexcept;
 
 	/// <summary>
+	/// レイヤー番号を設定します。
+	/// </summary>
+	/// <param name="[In_Layer]">設定するレイヤー番号。</param>
+	void SetLayer(_In_ const int &In_Layer) noexcept { m_nLayer = In_Layer; }
+
+	/// <summary>
 	/// アセットのパスを設定します。
 	/// </summary>
 	/// <param name="[In_Path]">設定するファイルパス。</param>
@@ -54,8 +61,13 @@ public:
 	/// <summary>
 	/// データアクセサーを使用して読み書きを行います。
 	/// </summary>
-	/// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
+	/// <param name="[In_Data]">読み書き操作に使用する DataAccessor 型のポインタ。</param>
 	void ReadWrite(_In_ DataAccessor *In_Data) override;
+
+	/// <summary>
+	/// 描画処理の実装をする純粋仮想関数
+	/// </summary>
+	virtual void Draw() noexcept = 0;
 
 protected:
 	FilePath m_AssetPath;					// アセットパス
@@ -65,4 +77,8 @@ protected:
 
 	std::shared_ptr<VertexShader> m_defVS;	// デフォルトの頂点シェーダー
 	std::shared_ptr<PixelShader> m_defPS;	// デフォルトのピクセルシェーダー
+
+private:
+	// RenderManagerのインスタンス
+	RenderManager &m_RenderManager;
 };

@@ -9,10 +9,12 @@
 //	include
 // ==============================
 #include "RenderComponent.hpp"
+#include "RenderManager.hpp"
 #include "System/Component/Camera.hpp"
 
 RenderComponent::RenderComponent()
 	: m_nLayer(0), m_pViewCamera(nullptr), m_pCameraObj(nullptr)
+	, m_RenderManager(RenderManager::GetInstance())
 {
 }
 
@@ -39,6 +41,7 @@ void RenderComponent::ExecuteUpdate() noexcept
 
 void RenderComponent::ExecuteDraw() noexcept
 {
+	m_RenderManager.AddRenderComponent(this, m_nLayer);
 }
 
 void RenderComponent::ReadWrite(_In_ DataAccessor *In_Data)
