@@ -218,7 +218,58 @@ void GameObject::SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 	}
 	else
 	{
+		// 座標を設定
 		m_Pos = In_Pos;
+	}
+}
+
+void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
+{
+	if (m_bIsChild)
+	{
+		// 子オブジェクトの場合、親の回転を基準にする
+		m_Rotation = m_ParentRotation + ToRad(In_Rotation);
+		// クォータニオンに変換
+		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+	}
+	else
+	{
+		// 回転を設定
+		m_Rotation = ToRad(In_Rotation);
+		// クォータニオンに変換
+		DirectX::XMStoreFloat4(&m_Quat,DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+	}
+}
+
+void GameObject::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
+{
+	if (m_bIsChild)
+	{
+		// 子オブジェクトの場合、親の拡縮を基準にする
+		m_Scale = m_ParentScale + In_Scale;
+	}
+	else
+	{
+		// 拡縮を設定
+		m_Scale = In_Scale;
+	}
+}
+
+void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
+{
+	if (m_bIsChild)
+	{
+		// 子オブジェクトの場合、親のクォータニオンを基準にする
+		m_Quat = m_ParentQuat + In_Quat;
+		// オイラー角に変換
+		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
+	}
+	else
+	{
+		// クォータニオンを設定
+		m_Quat = In_Quat;
+		// オイラー角に変換
+		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
 	}
 }
 

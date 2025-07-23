@@ -75,6 +75,10 @@ public:
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
 	void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
+	void SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept;
+	void SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept;
+	void SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept;
+
 protected:
 	// 継承先のクラスでオブジェクト別の更新処理を実装する場合、上書きすること。
 	virtual void Update() {}
@@ -103,15 +107,16 @@ private:
 	ChildObjects		m_ChildObjects;	// 子オブジェクトの一覧
 	Datas				m_Datas;		// 保存データ
 	std::string			m_Name;			// オブジェクト名
-	DirectX::XMFLOAT3	m_Rotation;		// 回転
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
-	DirectX::XMFLOAT4	m_Quat;		// 回転
+	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
+	DirectX::XMFLOAT3	m_Rotation;	// 回転(オイラー角)
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
 
 	bool				m_bIsChild; // 子オブジェクトかどうか
 	DirectX::XMFLOAT3	m_ParentPos;	// 親オブジェクトの座標
-	DirectX::XMFLOAT4	m_ParentQuat;	// 親オブジェクトの回転
+	DirectX::XMFLOAT3	m_ParentRotation;	// 親オブジェクトの回転(オイラー角)
+	DirectX::XMFLOAT4	m_ParentQuat;	// 親オブジェクトの回転(クォータニオン)
 	DirectX::XMFLOAT3	m_ParentScale;	// 親オブジェクトの拡縮
 };
 
