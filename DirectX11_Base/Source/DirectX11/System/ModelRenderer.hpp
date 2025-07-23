@@ -78,12 +78,6 @@ public:
     /// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
     void ReadWrite(_In_ DataAccessor *In_Data) override final;
 
-    /// <summary>
-    /// モデルのパスを設定します。
-    /// </summary>
-    /// <param name="[In_File]">設定するモデルファイルのパス。</param>
-    void SetModelPath(_In_ FilePath In_File) noexcept;
-
 	/// <summary>
 	/// 指定されたインデックスのメッシュを取得します。
 	/// </summary>
@@ -117,7 +111,6 @@ public:
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
-	/// <param name="[In_TexSlot]">使用するテクスチャスロットのインデックス。デフォルトは0です。</param>
 	void Draw() noexcept override final;
 
 	/// <summary>
@@ -139,15 +132,11 @@ private:
 
 
 private:
-	static std::shared_ptr<VertexShader> m_defVS;
-	static std::shared_ptr<PixelShader> m_defPS;
-
 	Meshes m_vecMeshes;
 	Materials m_vecMaterials;
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
-    FilePath m_cModelName;
     float m_fScale;
 	int m_nTexSlot = 0; // テクスチャスロット番号
 };

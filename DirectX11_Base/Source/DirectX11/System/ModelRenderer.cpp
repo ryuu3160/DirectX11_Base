@@ -22,16 +22,9 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
 
-// ==============================
-//  静的メンバ変数の定義
-// ==============================
-std::shared_ptr<VertexShader> ModelRenderer::m_defVS = nullptr;
-std::shared_ptr<PixelShader> ModelRenderer::m_defPS = nullptr;
-
 ModelRenderer::ModelRenderer()
 	: m_pVS(nullptr)
 	, m_pPS(nullptr)
-	, m_cModelName{}
 	, m_fScale(1.0f)
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
@@ -54,17 +47,12 @@ void ModelRenderer::ExecuteUpdate() noexcept
 	// 既にメッシュが読み込まれている場合は何もしない
 	if (!m_vecMeshes.empty()) return;
 
-	this->Load(m_cModelName, m_fScale);
+	this->Load(m_AssetPath, m_fScale);
 }
 
 void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
 {
-	In_Data->Access<FilePath>(&m_cModelName);
-}
-
-void ModelRenderer::SetModelPath(_In_ FilePath In_File) noexcept
-{
-	m_cModelName = In_File;
+	In_Data->Access<FilePath>(&m_AssetPath);
 }
 
 void ModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
