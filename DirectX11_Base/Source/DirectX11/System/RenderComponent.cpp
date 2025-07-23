@@ -41,6 +41,9 @@ void RenderComponent::ExecuteUpdate() noexcept
 
 void RenderComponent::ExecuteDraw() noexcept
 {
+	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "Camera is null in RenderComponent::ExecuteDraw."))
+		return;
+
 	m_RenderManager.AddRenderComponent(this, m_nLayer);
 }
 
