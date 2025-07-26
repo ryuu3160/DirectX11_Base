@@ -11,6 +11,10 @@
 #include "SpriteRenderer.hpp"
 #include "System/Component/Camera.hpp"
 
+// メモリリークが発生してるnewの場所表示
+#include <crtdbg.h>
+#define new  new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
 SpriteRenderer::SpriteRenderer() : m_bIsLoaded(false)
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
@@ -22,6 +26,11 @@ SpriteRenderer::SpriteRenderer() : m_bIsLoaded(false)
 
 SpriteRenderer::~SpriteRenderer()
 {
+	if (m_SpriteData.texture)
+	{
+		delete m_SpriteData.texture; // テクスチャの解放
+		m_SpriteData.texture = nullptr; // nullptrに設定
+	}
 }
 
 void SpriteRenderer::ExecuteUpdate() noexcept
