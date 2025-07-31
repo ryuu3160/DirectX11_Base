@@ -18,7 +18,7 @@
 // ==============================
 //  staticメンバ変数の初期化
 // ==============================
-std::deque<std::function<void(HWND, UINT, WPARAM, LPARAM)>> Window::m_CustomProcQueue;
+std::deque<std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>> Window::m_CustomProcQueue;
 
 Window::Window()
 {
@@ -72,7 +72,8 @@ LRESULT CALLBACK Window::m_WndProc(_In_ HWND In_hWnd, _In_ UINT In_unMessage, _I
 	for (auto &func : m_CustomProcQueue)
 	{
 		// 登録されたカスタムプロシージャを呼び出す
-		func(In_hWnd, In_unMessage, In_wParam, In_lParam);
+		if (func(In_hWnd, In_unMessage, In_wParam, In_lParam))
+			return true;
 	}
 
 	switch (In_unMessage)
@@ -256,7 +257,7 @@ void Window::SetCreateStructParam(_In_ LPMDICREATESTRUCT In_lpParam)
 	m_lpParam = In_lpParam;
 }
 
-void Window::AppendFunction(std::function<void(HWND, UINT, WPARAM, LPARAM)> In_Function)
+void Window::AppendFunction(std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> In_Function)
 {
 	m_CustomProcQueue.push_back(In_Function);
 }
