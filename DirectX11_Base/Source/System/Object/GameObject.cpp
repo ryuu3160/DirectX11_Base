@@ -15,6 +15,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
+	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
