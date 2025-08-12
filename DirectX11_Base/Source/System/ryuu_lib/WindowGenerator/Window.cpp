@@ -72,7 +72,7 @@ LRESULT CALLBACK Window::m_WndProc(_In_ HWND In_hWnd, _In_ UINT In_unMessage, _I
 	for (auto &func : m_CustomProcQueue)
 	{
 		// 登録されたカスタムプロシージャを呼び出す
-		if (func(In_hWnd, In_unMessage, In_wParam, In_lParam))
+		if(func(In_hWnd, In_unMessage, In_wParam, In_lParam))
 			return true;
 	}
 
@@ -257,7 +257,7 @@ void Window::SetCreateStructParam(_In_ LPMDICREATESTRUCT In_lpParam)
 	m_lpParam = In_lpParam;
 }
 
-void Window::AppendFunction(std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> In_Function)
+void Window::AddCustomProc(std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> In_Function)
 {
 	m_CustomProcQueue.push_back(In_Function);
 }

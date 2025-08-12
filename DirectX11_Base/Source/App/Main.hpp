@@ -15,6 +15,8 @@
 //  ‘O•ûéŒ¾
 // ==============================
 class SceneBase;
+class RenderTarget;
+class DepthStencil;
 
 namespace Main
 {
@@ -28,4 +30,8 @@ namespace Main
 	void Change3D_Draw() noexcept;
 
 	SceneBase &GetScene() noexcept;
+
+	RenderTarget *GetRenderTarget() noexcept;
+
+	DepthStencil *GetDepthStencil() noexcept;
 }

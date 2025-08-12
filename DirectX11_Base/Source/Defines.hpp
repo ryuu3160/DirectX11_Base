@@ -40,6 +40,7 @@ using NCMode = NullpCheckMode; // NullpCheckModeのエイリアス
 //	using宣言
 // ==============================
 using FilePath = std::string_view; // ファイルパスを表す型。std::string_viewを使用して、文字列の参照を保持する
+using HoldFilePath = std::string; // ファイルパスを表す型。std::stringを使用して、文字列の所有権を持つ(メンバー変数の型に使用)
 
 // ==============================
 //  マクロ/関数定義

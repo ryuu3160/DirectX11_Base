@@ -171,7 +171,7 @@ public:
 	/// </summary>
 	/// <param name="[In_Function]">クラスメンバ以外の関数</param>
 	/// <param name="[In_strNotifyName]">通知名(指定しない場合はdefault)</param>
-	void AppendFunction(std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> In_Function);
+	void AddCustomProc(std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)> In_Function);
 
 	/**
 	* @brief カスタムプロシージャを登録する

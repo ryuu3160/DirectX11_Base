@@ -40,16 +40,16 @@ public:
 
    void Draw();  
 
-   void Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f);
-
+   void Load(_In_ const FilePath &In_File, _In_ const int& In_Layer, _In_ const float &In_Scale = 1.0f);
 
    /// <summary>
-   /// オフセット値を取得
+   /// 名前を取得します。
    /// </summary>
-   /// <returns>DirectX::XMFLOAT2型のオフセット値</returns>
-   inline const DirectX::XMFLOAT2 &GetOffset() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].x, m_SpriteData.param[0].y); }
+   /// <returns>メンバー変数 m_Name への参照。</returns>
+   inline const std::string &GetName() const noexcept { return m_Name; }
+
    /// <summary>
-   /// 
+   /// サイズを取得
    /// </summary>
    /// <returns>DirectX::XMFLOAT2型のサイズ</returns>
    inline const DirectX::XMFLOAT2 &GetSize() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].z, m_SpriteData.param[0].w); }
@@ -67,7 +67,7 @@ public:
    /// 色を取得
    /// </summary>
    /// <returns>DirectX::XMFLOAT4型の色</returns>
-   inline const DirectX::XMFLOAT4 &GetColor() const noexcept { return m_SpriteData.param[2]; }
+   inline DirectX::XMFLOAT4 &GetColor() noexcept { return m_SpriteData.param[2]; }
 
    /// <summary>
    /// 位置ベクトルを取得します。
@@ -88,6 +88,23 @@ public:
    inline const DirectX::XMFLOAT3 &GetRotation() const noexcept { return m_Rotation; }
 
    /// <summary>
+   /// クォータニオンを取得する
+   /// </summary>
+   /// <returns>Rotationをクォータニオンに変換したもの</returns>
+   inline const DirectX::XMFLOAT4 GetQuaternion() const noexcept
+   {
+       DirectX::XMFLOAT4 work;
+       DirectX::XMStoreFloat4(&work,DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+       return work;
+   }
+
+   /// <summary>
+   /// 法線ベクトルを取得します。
+   /// </summary>
+   /// <returns>このオブジェクトの法線ベクトルへの参照。</returns>
+   const DirectX::XMVECTOR GetNormal() const noexcept;
+
+   /// <summary>
    /// 3D空間に配置されているかどうか
    /// </summary>
    /// <returns>スプライトが3Dである場合はtrue、そうでない場合はfalseを参照で返します。</returns>
@@ -100,10 +117,25 @@ public:
    inline const bool &GetIsBillBoard() const noexcept { return m_SpriteData.IsBillBoard; }
 
    /// <summary>
-   /// 2次元オフセット値を設定します。
+   /// レイヤー値を取得します。
    /// </summary>
-   /// <param name="In_Offset">設定するDirectX::XMFLOAT2型のオフセット値。</param>
-   void SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept;
+   /// <returns>レイヤー値への定数参照。</returns>
+   inline const int &GetLayer() const noexcept { return m_Layer; }
+
+   /// <summary>
+   /// ファイルパスを取得します。
+   /// </summary>
+   /// <returns>ファイルパスを表す std::string への参照。</returns>
+   inline const HoldFilePath &GetFilePath() const noexcept { return m_FilePath; }
+
+   /// <summary>
+   /// 名前を設定します。
+   /// </summary>
+   /// <param name="[In_Name]">設定する名前。</param>
+   inline void SetName(_In_ const std::string &In_Name) noexcept { m_Name = In_Name; }
+
+   inline void SetFilePath(_In_ const HoldFilePath &In_FilePath) noexcept { m_FilePath = In_FilePath; }
+
    /// <summary>
    /// 指定されたサイズでオブジェクトのサイズを設定します。
    /// </summary>
@@ -195,13 +227,17 @@ public:
    void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
 private:
-   SpriteData m_SpriteData;
-   DirectX::XMFLOAT3 m_Position;  // 座標
-   DirectX::XMFLOAT3 m_Scale;     // スケール
-   DirectX::XMFLOAT3 m_Rotation;  // 回転
+	std::string m_Name; // スプライトの名前
+    SpriteData m_SpriteData;
+    DirectX::XMFLOAT3 m_Position;  // 座標
+    DirectX::XMFLOAT3 m_Scale;     // スケール
+    DirectX::XMFLOAT3 m_Rotation;  // 回転
+    int m_Layer; // レイヤー
 
-   std::shared_ptr<VertexShader> m_defVS;  
-   std::shared_ptr<PixelShader> m_defPS;  
-   std::shared_ptr<Texture> m_whiteTex;
-   DirectX::XMFLOAT4X4 m_BillBoardView;
+	HoldFilePath m_FilePath; // テクスチャのファイルパス
+
+    std::shared_ptr<VertexShader> m_defVS;  
+    std::shared_ptr<PixelShader> m_defPS;  
+    std::shared_ptr<Texture> m_whiteTex;
+    DirectX::XMFLOAT4X4 m_BillBoardView;
 };

@@ -1,0 +1,2 @@
+SetUp_nlohmann-json.batと、add_include.ps1を.vcxprojファイルと同じディレクトリにコピーまだは移動させてから、
+SetUp_nlohmann-json.batを実行してください

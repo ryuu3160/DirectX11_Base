@@ -10,18 +10,39 @@
 // ==============================
 #include "Sprite.hpp"
 
+// ==============================
+//	定数定義
+// ==============================
+namespace
+{
+	const inline constexpr float cx_fScreenWidthCorrect = 10.0f; // スクリーンの幅補正値
+	const inline constexpr float cx_fScreenHeightCorrect = 5.6f; // スクリーンの高さ補正値
+}
+
 void Sprite::Draw()
 {
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX BillBoard = DirectX::XMMatrixIdentity();
 
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+	DirectX::XMMATRIX T;
+	if (!m_SpriteData.Is3D)
+	{
+		// 2Dスプライトの場合は、スクリーン座標に変換
+		T = DirectX::XMMatrixTranslation(m_Position.x / (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / cx_fScreenWidthCorrect),
+			m_Position.y / (static_cast<float>(cx_nWINDOW_HEIGHT) / 2.0f / cx_fScreenHeightCorrect), m_Position.z);
+	}
+	else
+	{
+		// 3Dスプライトの場合は、ワールド座標に変換
+		T = DirectX::XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
+	}
+
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 
-	// ビルボードかそうでないかで処理を分ける
-	if (m_SpriteData.IsBillBoard)
+	// ビルボードかそうでないかで処理を分ける(ビルボードは3Dスプライトのみ)
+	if (m_SpriteData.IsBillBoard && m_SpriteData.Is3D)
 	{
 		// 計算用の型に置き換え
 		BillBoard = DirectX::XMLoadFloat4x4(&m_BillBoardView);
@@ -58,7 +79,7 @@ void Sprite::Draw()
 	m_SpriteData.mesh->Draw();
 }
 
-void Sprite::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale)
+void Sprite::Load(_In_ const FilePath &In_File, _In_ const int &In_Layer, _In_ const float &In_Scale)
 {
 	// 頂点データの作成
 	SpriteVertex vtx[] = {
@@ -104,13 +125,25 @@ void Sprite::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale)
 		// テクスチャの読み込みに失敗した場合は白いテクスチャを使用
 		m_SpriteData.texture = m_whiteTex.get();
 	}
+
+	// レイヤーの設定
+	m_Layer = In_Layer;
 }
 
-void Sprite::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept
+const DirectX::XMVECTOR Sprite::GetNormal() const noexcept
 {
-	m_SpriteData.param[0].x = In_Offset.x;
-	m_SpriteData.param[0].y = In_Offset.y;
+	MeshBuffer::Description desc = m_SpriteData.mesh->GetDesc();
+	SpriteVertex *pVtx = reinterpret_cast<SpriteVertex *>(const_cast<void*>(desc.pVtx));
+	DirectX::XMFLOAT3 A = pVtx[0].pos - pVtx[1].pos; // Aベクトル
+	DirectX::XMFLOAT3 B = pVtx[2].pos - pVtx[1].pos; // Bベクトル
+	DirectX::XMVECTOR normal = DirectX::XMVector2Cross(
+		DirectX::XMLoadFloat3(&A), 
+		DirectX::XMLoadFloat3(&B)
+	);
+	// 法線ベクトルを正規化して返す
+	return DirectX::XMVector3Normalize(normal);
 }
+
 void Sprite::SetSize(_In_ const DirectX::XMFLOAT2 &In_Size) noexcept
 {
 	m_SpriteData.param[0].z = In_Size.x;
@@ -187,7 +220,7 @@ void Sprite::SetPixelShader(_In_ Shader *In_Ps) noexcept
 }
 
 Sprite::Sprite()
-	: m_Position(), m_Scale(1.0f,1.0f,1.0f), m_Rotation(), m_BillBoardView()
+	: m_Position(), m_Scale(1.0f,1.0f,1.0f), m_Rotation(), m_BillBoardView(), m_Layer(0)
 {
 }
 

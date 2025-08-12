@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -117,7 +117,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories);$(ProjectDir)/Source/System/SpriteManager</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories);$(ProjectDir)/Source/System/SpriteManager</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -228,6 +228,11 @@
     </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\Sprite.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerHierarchy.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\Main.hpp">
@@ -307,6 +312,11 @@
     </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\Sprite.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerLoader.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

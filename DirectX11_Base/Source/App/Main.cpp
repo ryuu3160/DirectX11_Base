@@ -9,11 +9,11 @@
 //	include
 // ==============================
 #include "Main.hpp"
-#include "DirectX11/DX11_Initialize.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
+#include "System/ImGui/imgui_impl_win32.h"
 
 // ==============================
 //  グローバル変数
@@ -22,6 +22,8 @@ namespace
 {
 	std::shared_ptr<SceneRoot> g_pScene;
 }
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 HRESULT Main::Init()
 {
@@ -38,6 +40,9 @@ HRESULT Main::Init()
 	SpriteManager::GetInstance().Init();
 	Input::Init();
 
+	// Input用のカスタムウィンドウプロシージャを登録
+	Instance.AddCustomProc(Input::InputCustomProc);
+
 	// シーンの初期化
 	SceneBase::Initialize();
 	g_pScene = std::make_shared<SceneRoot>();
@@ -50,6 +55,11 @@ HRESULT Main::Init()
 	hr = dsp->Create(Instance.GetWidth(), Instance.GetHeight(),false);
 
 	DX11_Initialize::GetInstance().SetRenderTargets(1, &rtv, dsp);
+
+#ifdef _DEBUG
+	// ImGui専用のウィンドウプロシージャを登録
+	Instance.AddCustomProc(ImGui_ImplWin32_WndProcHandler);
+#endif
 
 	return hr;
 }
@@ -69,6 +79,10 @@ void Main::Update()
 {
 	Input::Update();
 	g_pScene->RootUpdate();
+	SpriteManager::GetInstance().Update();
+
+	// Inputの更新終了処理
+	Input::EndUpdate();
 }
 
 void Main::Draw()
@@ -83,6 +97,12 @@ void Main::Draw()
 
 
 	g_pScene->RootDraw();
+
+	Change2D_Draw(); // 2D描画の設定
+	SpriteManager::GetInstance().Draw2D();
+	Change3D_Draw(); // 3D描画の設定
+
+	SpriteManager::GetInstance().DrawImGui();
 
 	DX11.Swap();
 }
@@ -107,4 +127,14 @@ void Main::Change3D_Draw() noexcept
 SceneBase &Main::GetScene() noexcept
 {
 	return *g_pScene;
+}
+
+RenderTarget *Main::GetRenderTarget() noexcept
+{
+	return g_pScene->GetObject<RenderTarget>("RTV");
+}
+
+DepthStencil *Main::GetDepthStencil() noexcept
+{
+	return g_pScene->GetObject<DepthStencil>("DSV");
 }

@@ -184,14 +184,29 @@
     <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\Sprite.cpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
-      <Filter>Source\DirectX11\System</Filter>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerHierarchy.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp">
+      <Filter>Source\System\SpriteManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -309,14 +324,29 @@
     <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerLoader.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\Sprite.hpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
-      <Filter>Source\DirectX11\System</Filter>
+    <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp">
+      <Filter>Source\System\SpriteManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
