@@ -35,7 +35,7 @@ void SceneRoot::Init()
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ
 	};
-	Setup(file, _countof(file), 1);
+	Setup(file, _countof(file), 2);
 
 	// オブジェクトの設定
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
@@ -54,6 +54,17 @@ void SceneRoot::Init()
 	comp->SetVertexShader(GetObject<Shader>("VS_Object"));
 	comp->SetPixelShader(GetObject<Shader>("PS_TexColor"));
 	child->SetPos({ 1.0f, 0.0f, 0.0f });
+
+	// F15Eのモデルを読み込む
+	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
+	auto Component2 = pModel2->GetComponent<ModelRenderer>();
+	Component2->SetAssetPath("Assets/Model/F15E.fbx");
+	Component2->SetCamera(pCamera);
+	Component2->SetVertexShader(GetObject<Shader>("VS_Object"));
+	Component2->SetPixelShader(GetObject<Shader>("PS_TexColor"));
+
+	pModel2->SetPos({ -1.0f, 0.0f, 0.0f });
+	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
 
 	// スプライトの作成
 	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");

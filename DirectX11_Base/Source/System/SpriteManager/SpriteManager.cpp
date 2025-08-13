@@ -70,58 +70,6 @@ void SpriteManager::Update() noexcept
 	UpdateViewAndProjection();
 
 	SpriteController();
-
-	std::string pos;
-	for(const auto &itr : m_SpritePointerList[_3D])
-	{
-		if (itr == nullptr)
-			continue;
-
-		pos = itr->GetName();
-		if (itr)
-		{
-			pos += "Pos : X :";
-			pos += std::to_string(itr->GetPosition().x);
-			pos += " Y : ";
-			pos += std::to_string(itr->GetPosition().y);
-			pos += " Z : ";
-			pos += std::to_string(itr->GetPosition().z);
-			pos += " Scale : ";
-			pos += std::to_string(itr->GetScale().x);
-			pos += " Y : ";
-			pos += std::to_string(itr->GetScale().y);
-			pos += " Z : ";
-			pos += std::to_string(itr->GetScale().z);
-			pos += "\n";
-		}
-		OutputDebugStringA(pos.c_str());
-	}
-
-	std::string mouseWorld;
-	// スプライトの位置を取得
-	DirectX::XMFLOAT3 SpritePos = (*m_SpritePointerList[_3D].begin())->GetPosition();
-	SpritePos.y = 0.0f; // Y座標を0に設定して水平面上の位置を計算
-	SpritePos.z = 0.0f; // Z座標も0に設定
-
-	// カメラからスプライトの距離を取得
-	float distance;
-	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
-	CamPos.y = 0.0f; // Y座標を0に設定して水平面上の距離を計算
-	CamPos.z = 0.0f; // Z座標も0に設定
-	DirectX::XMStoreFloat(&distance, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&SpritePos), DirectX::XMLoadFloat3(&CamPos)));
-	//distance = std::abs(distance);
-	OutputDebugStringA(("Distance : " + std::to_string(distance) + "\n").c_str());
-	DirectX::XMVECTOR mousePos = ScreenToWorldPos(Input::GetMouseRelativePos(),distance, m_pCamera->GetView(false), m_pCamera->GetProj(false));
-	DirectX::XMFLOAT3 mouseWorldPos;
-	DirectX::XMStoreFloat3(&mouseWorldPos, mousePos);
-	mouseWorld = "Mouse World Position\nX : ";
-	mouseWorld += std::to_string(mouseWorldPos.x);
-	mouseWorld += " Y : ";
-	mouseWorld += std::to_string(mouseWorldPos.y);
-	mouseWorld += " Z : ";
-	mouseWorld += std::to_string(mouseWorldPos.z);
-	mouseWorld += "\n";
-	OutputDebugStringA(mouseWorld.c_str());
 }
 
 void SpriteManager::Draw2D() noexcept
