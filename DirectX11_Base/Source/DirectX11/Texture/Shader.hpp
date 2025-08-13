@@ -9,7 +9,6 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/DX11_Initialize.hpp"
 #include "Texture.hpp"
 #include "UnorderedAccessView.hpp"
 
