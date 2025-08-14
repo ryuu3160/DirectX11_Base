@@ -58,7 +58,7 @@ void SceneRoot::Init()
 	// F15E‚Ìƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
 	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
 	auto Component2 = pModel2->GetComponent<ModelRenderer>();
-	Component2->SetAssetPath("Assets/Model/F15E.fbx");
+	Component2->SetAssetPath("Assets/Model/test/Akai.fbx");
 	Component2->SetCamera(pCamera);
 	Component2->SetVertexShader(GetObject<Shader>("VS_Object"));
 	Component2->SetPixelShader(GetObject<Shader>("PS_TexColor"));
