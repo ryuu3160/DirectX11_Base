@@ -43,14 +43,17 @@ public:
 	/// <param name="[In_MaterialName]">マテリアル名</param>
 	void Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In_File, _In_ const std::string In_MaterialName) noexcept;
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	/// <summary>
+	/// テクスチャを取得します。
+	/// </summary>
+	/// <returns>テクスチャを指す std::shared_ptr を返します。</returns>
+	std::shared_ptr<Texture> GetTexture() const noexcept;
 
-
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	/// <summary>
+	/// マテリアル名を取得します。
+	/// </summary>
+	/// <returns>マテリアル名を表す std::string への参照。</returns>
+	inline const std::string &GetMaterialName() const noexcept { return m_strMaterialName; }
 
 private:
 	/// <summary>

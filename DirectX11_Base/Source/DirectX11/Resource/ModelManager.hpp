@@ -24,14 +24,14 @@ class ModelManager : public Singleton<ModelManager>
 	friend class Singleton<ModelManager>;
 public:
 
-	std::shared_ptr<Mesh> GetMesh(_In_ const FilePath &In_File) noexcept;
+	std::shared_ptr<Mesh> GetMesh(_In_ const std::string_view &In_File) noexcept;
 
-	std::shared_ptr<Mesh> CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale);
+	std::shared_ptr<Mesh> CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const int In_MeshIndex, _In_ std::shared_ptr<Material> In_Material);
 
 private:
 	ModelManager() = default;
 	~ModelManager() = default;
 
 private:
-	std::unordered_map<HoldFilePath, std::shared_ptr<Mesh>> m_mapModels; ///< モデルのリスト
+	std::unordered_map<std::string, std::shared_ptr<Mesh>> m_mapMeshes; ///< モデルのリスト
 };

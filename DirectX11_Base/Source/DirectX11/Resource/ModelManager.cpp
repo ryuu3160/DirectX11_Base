@@ -10,17 +10,45 @@
 // ==============================
 #include "ModelManager.hpp"
 
-std::shared_ptr<Mesh> ModelManager::GetMesh(const FilePath &In_File) noexcept
-{
-	auto itr = m_mapModels.find(In_File.data());
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
-	if (itr != m_mapModels.end())
+// assimpのライブラリリンク
+#ifdef _DEBUG
+#pragma comment(lib, "assimp-vc143-mtd.lib")
+#else
+#pragma comment (lib, "assimp-vc143-mt.lib")
+#endif
+
+std::shared_ptr<Mesh> ModelManager::GetMesh(_In_ const std::string_view &In_MeshName) noexcept
+{
+	auto itr = m_mapMeshes.find(In_MeshName.data());
+
+	if (itr != m_mapMeshes.end())
 		return itr->second;
 
 	return nullptr;
 }
 
-std::shared_ptr<Mesh> ModelManager::CreateMesh(const aiMesh *In_Mesh, const FilePath &In_File, const float &In_Scale)
+std::shared_ptr<Mesh> ModelManager::CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const int In_MeshIndex, _In_ std::shared_ptr<Material> In_Material)
 {
-	
+	std::string MeshName;
+	std::string MatName;
+	std::string FbxName = std::string(In_File);
+	FbxName = FbxName.substr(FbxName.find_last_of('/') + 1);
+	MatName = In_Material->GetMaterialName();
+	MatName = MatName.substr(MatName.find_first_of('_') + 1); // マテリアル名からFBX名を除去
+	MeshName = FbxName + "_" + MatName + "_" + std::to_string(In_MeshIndex);
+
+	std::shared_ptr<Mesh> mesh = GetMesh(MeshName);
+
+	if (mesh == nullptr)
+	{
+		mesh = std::make_shared<Mesh>();
+		mesh->Load(In_Mesh, In_Scale, In_Material);
+		m_mapMeshes[MeshName] = mesh;
+	}
+
+	return mesh;
 }

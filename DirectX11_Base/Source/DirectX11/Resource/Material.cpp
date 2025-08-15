@@ -83,6 +83,11 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 		Error(path.C_Str());
 }
 
+std::shared_ptr<Texture> Material::GetTexture() const noexcept
+{
+	return m_spTexture;
+}
+
 void Material::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<VertexShader>();

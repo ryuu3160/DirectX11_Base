@@ -70,6 +70,28 @@ void Mesh::Load(_In_ const aiMesh *In_Mesh, _In_ const float &In_Scale, _In_ std
 	m_spMeshBuffer = std::make_shared<MeshBuffer>(desc);
 }
 
+std::shared_ptr<MeshBuffer> Mesh::GetMesh() const noexcept
+{
+	return m_spMeshBuffer;
+}
+
+std::shared_ptr<Material> Mesh::GetMaterial() const noexcept
+{
+	return m_spMaterial;
+}
+
+void Mesh::ReplaceMeshBuffer(_In_ std::shared_ptr<MeshBuffer> In_MeshBuffer) noexcept
+{
+	if (In_MeshBuffer)
+	{
+		m_spMeshBuffer = In_MeshBuffer;
+	}
+	else
+	{
+		Error("MeshBuffer is nullptr.");
+	}
+}
+
 Mesh::Mesh()
 	: m_spMeshBuffer(nullptr)
 	, m_spMaterial(nullptr)

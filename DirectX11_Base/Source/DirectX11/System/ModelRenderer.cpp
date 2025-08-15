@@ -102,9 +102,6 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 	TextureManager::GetInstance().LoadTextures(pScene, In_File);
 
 	//--- マテリアルの作成
-	// ファイルの探索
-	std::string dir = std::string(In_File);
-	dir = dir.substr(0, dir.find_last_of('/') + 1);
 	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
 	{
 		// マテリアルを作成
@@ -121,60 +118,13 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 
 		// このメッシュが参照するマテリアルを取得
 		aiMaterial* aiMat = pScene->mMaterials[aiMesh->mMaterialIndex];
+		auto material = MaterialManager::GetInstance().GetMaterial(aiMat, In_File);
 
 		// モデルの作成
-		auto Mesh = ModelManager::GetInstance().CreateMesh(aiMesh, In_File, In_Scale);
-
-		// メッシュに対応するマテリアルを設定
-		Mesh->SetMaterial(MaterialManager::GetInstance().GetMaterial(aiMat, In_File));
-
-		// 頂点の作成
-		std::vector<Vertex> vtx;
-		vtx.resize(pScene->mMeshes[i]->mNumVertices);
-		for (unsigned int j = 0; j < vtx.size(); ++j)
-		{
-			// 値の吸出し
-			aiVector3D pos = pScene->mMeshes[i]->mVertices[j];
-			aiVector3D uv = pScene->mMeshes[i]->HasTextureCoords(0) ?
-				pScene->mMeshes[i]->mTextureCoords[0][j] : zero;
-			aiVector3D normal = pScene->mMeshes[i]->HasNormals() ?
-				pScene->mMeshes[i]->mNormals[j] : zero;
-			// 値を設定
-			vtx[j] = {
-				DirectX::XMFLOAT3(pos.x * In_Scale, pos.y * In_Scale, pos.z * In_Scale),
-				DirectX::XMFLOAT3(normal.x, normal.y, normal.z),
-				DirectX::XMFLOAT2(uv.x, uv.y),
-			};
-		}
-
-		// インデックスの作成
-		std::vector<unsigned int> idx;
-		idx.resize(pScene->mMeshes[i]->mNumFaces * 3); // faceはポリゴンの数を表す(１ポリゴンで3インデックス
-		for (unsigned int j = 0; j < pScene->mMeshes[i]->mNumFaces; ++j)
-		{
-			aiFace face = pScene->mMeshes[i]->mFaces[j];
-			int faceIdx = j * 3;
-			idx[faceIdx + 0] = face.mIndices[0];
-			idx[faceIdx + 1] = face.mIndices[1];
-			idx[faceIdx + 2] = face.mIndices[2];
-		}
-
-		// マテリアルの割り当て
-		mesh.materialID = pScene->mMeshes[i]->mMaterialIndex;
-
-		// メッシュを元に頂点バッファ作成
-		MeshBuffer::Description desc = {};
-		desc.pVtx = vtx.data();
-		desc.vtxSize = sizeof(Vertex);
-		desc.vtxCount = static_cast<UINT>(vtx.size());
-		desc.pIdx = idx.data();
-		desc.idxSize = sizeof(unsigned int);
-		desc.idxCount = static_cast<UINT>(idx.size());
-		desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		mesh.mesh = std::make_shared<MeshBuffer>(desc);
+		auto Mesh = ModelManager::GetInstance().CreateMesh(aiMesh, In_File, In_Scale,i,material);
 
 		// メッシュ追加
-		m_vecMeshes.push_back(mesh);
+		m_vecMeshes.push_back(Mesh);
 	}
 
 	return true;
@@ -207,8 +157,8 @@ void ModelRenderer::Draw() noexcept
 	for (auto &itr : m_vecMeshes)
 	{
 		if (m_nTexSlot >= 0)
-			m_pPS->SetTexture(m_nTexSlot, m_vecMaterials[itr.materialID].texture.get());
-		itr.mesh->Draw();
+			m_pPS->SetTexture(m_nTexSlot, itr->GetMaterial()->GetTexture().get());
+		itr->GetMesh()->Draw();
 	}
 }
 
@@ -217,7 +167,7 @@ void ModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<
 	for (auto &itr : m_vecMeshes)
 	{
 		// メッシュの頂点バッファの情報を取得
-		MeshBuffer::Description desc = itr.mesh->GetDesc();
+		MeshBuffer::Description desc = itr->GetMesh()->GetDesc();
 
 		// 新しい頂点バッファのメモリを確保
 		char *newVtx = new char[In_VtxSize * desc.vtxCount];
@@ -235,7 +185,7 @@ void ModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<
 		// 既存の頂点バッファを置き換え
 		desc.pVtx = newVtx;
 		desc.vtxSize = In_VtxSize;
-		itr.mesh = std::make_shared<MeshBuffer>(desc);
+		itr->ReplaceMeshBuffer(std::make_shared<MeshBuffer>(desc));
 
 		// 使用したメモリを解放
 		delete[] newVtx;

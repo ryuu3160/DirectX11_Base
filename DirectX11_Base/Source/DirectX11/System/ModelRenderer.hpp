@@ -15,32 +15,14 @@
 //	前方宣言
 // ==============================
 class Material;
+class Mesh;
 
 class ModelRenderer : public RenderComponent
 {
 public:
 
-	/// <summary>
-	/// 頂点データを表す構造体
-	/// </summary>
-	struct Vertex
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT3 normal;
-		DirectX::XMFLOAT2 uv;
-	};
-
 	using Materials = std::vector<std::shared_ptr<Material>>;
-
-	/// <summary>
-	/// メッシュデータとマテリアルIDを保持する構造体
-	/// </summary>
-	struct Mesh
-	{
-		std::shared_ptr<MeshBuffer> mesh;
-		unsigned int materialID;
-	};
-	using Meshes = std::vector<Mesh>;
+	using Meshes = std::vector<std::shared_ptr<Mesh>>;
 
 	/// <summary>
 	/// 頂点とインデックスデータの情報を格納する構造体
@@ -74,13 +56,13 @@ public:
 	/// </summary>
 	/// <param name="[In_Index]">取得したいメッシュのインデックス。</param>
 	/// <returns>インデックスが有効な場合は対応するMeshオブジェクトへのポインタ。無効な場合はnullptrを返します。</returns>
-	inline const Mesh *GetMesh(_In_ const unsigned int &In_Index) const noexcept
+	inline const std::shared_ptr<Mesh> GetMesh(_In_ const unsigned int &In_Index) const noexcept
 	{
 		if (In_Index < 0 || m_vecMeshes.size() <= In_Index)
 		{
 			return nullptr;
 		}
-		return &m_vecMeshes[In_Index];
+		return m_vecMeshes[In_Index];
 	}
 
 	/// <summary>
