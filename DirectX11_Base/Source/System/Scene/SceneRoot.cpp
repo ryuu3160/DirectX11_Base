@@ -58,13 +58,13 @@ void SceneRoot::Init()
 	// F15Eのモデルを読み込む
 	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
 	auto Component2 = pModel2->GetComponent<ModelRenderer>();
-	Component2->SetAssetPath("Assets/Model/test/Akai.fbx");
+	Component2->SetAssetPath("Assets/Model/F15E.fbx");
 	Component2->SetCamera(pCamera);
 	Component2->SetVertexShader(GetObject<Shader>("VS_Object"));
 	Component2->SetPixelShader(GetObject<Shader>("PS_TexColor"));
 
 	pModel2->SetPos({ -1.0f, 0.0f, 0.0f });
-	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
+	pModel2->SetScale({ 0.01f, 0.01f, 0.01f });
 
 	// スプライトの作成
 	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
