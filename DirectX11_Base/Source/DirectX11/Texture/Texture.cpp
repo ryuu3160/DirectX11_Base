@@ -4,8 +4,23 @@
 	Author: AT13C 01 青木雄一郎
 	Date: 10/19/2024 Sat AM 01:20:06 初回作成
 ===================================================================+*/
+
+// ==============================
+//	include
+// ==============================
 #include "Texture.hpp"
 #include "DirectX11/DirectXTex/TextureLoad.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+// assimpのライブラリリンク
+#ifdef _DEBUG
+#pragma comment(lib, "assimp-vc143-mtd.lib")
+#else
+#pragma comment (lib, "assimp-vc143-mt.lib")
+#endif
 
 /// <summary>
 /// テクスチャ
@@ -38,6 +53,28 @@ HRESULT Texture::Create(_In_ const FilePath &In_FileName) noexcept
 		hr = DirectX::LoadFromTGAFile(wPath, &mdata, image);
 	else
 		hr = DirectX::LoadFromWICFile(wPath, DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &mdata, image);
+	if (FAILED(hr))
+	{
+		return E_FAIL;
+	}
+
+	// シェーダリソース生成
+	hr = CreateShaderResourceView(DX11_Initialize::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
+	if (SUCCEEDED(hr))
+	{
+		m_width = (UINT)mdata.width;
+		m_height = (UINT)mdata.height;
+	}
+	return hr;
+}
+HRESULT Texture::Create(_In_ const aiTexture *In_aiTex) noexcept
+{
+	HRESULT hr = S_OK;
+
+	DirectX::TexMetadata mdata;
+	DirectX::ScratchImage image;
+	// 埋め込みテクスチャの読み込み
+	hr = DirectX::LoadFromWICMemory(In_aiTex->pcData, In_aiTex->mWidth, DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &mdata, image);
 	if (FAILED(hr))
 	{
 		return E_FAIL;

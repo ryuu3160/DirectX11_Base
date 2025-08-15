@@ -10,6 +10,9 @@
 // ==============================
 #include "ModelRenderer.hpp"
 #include "System/Component/Camera.hpp"
+#include "DirectX11/Resource/MaterialManager.hpp"
+#include "DirectX11/Resource/TextureManager.hpp"
+#include "DirectX11/Resource/ModelManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -95,11 +98,35 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 		return false;
 	}
 
+	// テクスチャ読み込み
+	TextureManager::GetInstance().LoadTextures(pScene, In_File);
+
+	//--- マテリアルの作成
+	// ファイルの探索
+	std::string dir = std::string(In_File);
+	dir = dir.substr(0, dir.find_last_of('/') + 1);
+	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
+	{
+		// マテリアルを作成
+		auto material = MaterialManager::GetInstance().GetMaterial(pScene->mMaterials[i], In_File);
+		// マテリアル追加
+		m_vecMaterials.push_back(material);
+	}
+
 	// メッシュの作成
 	aiVector3D zero(0.0f, 0.0f, 0.0f);
 	for (unsigned int i = 0; i < pScene->mNumMeshes; ++i)
 	{
-		Mesh mesh = {};
+		aiMesh *aiMesh = pScene->mMeshes[i];
+
+		// このメッシュが参照するマテリアルを取得
+		aiMaterial* aiMat = pScene->mMaterials[aiMesh->mMaterialIndex];
+
+		// モデルの作成
+		auto Mesh = ModelManager::GetInstance().CreateMesh(aiMesh, In_File, In_Scale);
+
+		// メッシュに対応するマテリアルを設定
+		Mesh->SetMaterial(MaterialManager::GetInstance().GetMaterial(aiMat, In_File));
 
 		// 頂点の作成
 		std::vector<Vertex> vtx;
@@ -148,74 +175,6 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 
 		// メッシュ追加
 		m_vecMeshes.push_back(mesh);
-	}
-
-	//--- マテリアルの作成
-	// ファイルの探索
-	std::string dir = std::string(In_File);
-	dir = dir.substr(0, dir.find_last_of('/') + 1);
-	// マテリアル
-	aiColor3D color(0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 diffuse(1.0f, 1.0f, 1.0f, 1.0f);
-	DirectX::XMFLOAT4 ambient(0.3f, 0.3f, 0.3f, 1.0f);
-	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
-	{
-		Material material = {};
-
-		// 各種パラメーター
-		float shininess;
-		// 色情報
-		material.diffuse = pScene->mMaterials[i]->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS ?
-			DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f) : diffuse;
-		// 環境光の色
-		material.ambient = pScene->mMaterials[i]->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS ?
-			DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f) : ambient;
-		// 鏡面反射の色
-		shininess = pScene->mMaterials[i]->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS ? shininess : 0.0f;
-		material.specular = pScene->mMaterials[i]->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS ?
-			DirectX::XMFLOAT4(color.r, color.g, color.b, shininess) : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, shininess);
-
-		// テクスチャ
-		HRESULT hr;
-		aiString path;
-		if (pScene->mMaterials[i]->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), path) == AI_SUCCESS)
-		{
-			// そのまま探索
-			material.texture = std::make_shared<Texture>();
-			hr = material.texture->Create(path.C_Str());
-			// モデルと同じ階層を探索
-			if (FAILED(hr))
-			{
-				std::string file = dir;
-				file += path.C_Str();
-				hr = material.texture->Create(file.c_str());
-			}
-			// ファイル名のみで探索
-			if (FAILED(hr))
-			{
-				std::string file = path.C_Str();
-				size_t idx = file.find_last_of('\\');
-				if (idx != std::string::npos)
-				{
-					file = file.substr(idx + 1);
-					file = dir + file;
-					hr = material.texture->Create(file.c_str());
-				}
-			}
-			// 失敗
-			if (FAILED(hr))
-			{
-				Error(path.C_Str());
-				material.texture = nullptr;
-			}
-		}
-		else
-		{
-			material.texture = nullptr;
-		}
-
-		// マテリアル追加
-		m_vecMaterials.push_back(material);
 	}
 
 	return true;

@@ -83,6 +83,9 @@
     <Filter Include="Source\System\SpriteManager">
       <UniqueIdentifier>{692f91d4-8d5d-4441-84f0-e00b27082ad4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\DirectX11\Resource">
+      <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -207,6 +210,21 @@
     </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp">
       <Filter>Source\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\MaterialManager.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Mesh.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\ModelManager.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\TextureManager.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,6 +365,21 @@
     </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp">
       <Filter>Source\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\MaterialManager.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Mesh.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\ModelManager.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\TextureManager.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

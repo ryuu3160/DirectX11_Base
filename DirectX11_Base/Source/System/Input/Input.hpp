@@ -8,7 +8,6 @@
 ===================================================================+*/
 #pragma once
 
-#include <sal.h>
 #include <Windows.h>
 #undef max
 #undef min

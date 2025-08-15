@@ -11,6 +11,11 @@
 // ===============================
 #include "DirectX11/DX11_Initialize.hpp"
 
+// ===============================
+//	前方宣言
+// ===============================
+struct aiTexture;
+
 /// <summary>
 /// テクスチャ
 /// </summary>
@@ -25,6 +30,14 @@ public:
 	/// <param name="[In_FileName]">作成に使用するファイルパス。</param>
 	/// <returns>操作が成功した場合はS_OK、失敗した場合はエラーコードを返します。</returns>
 	HRESULT Create(_In_ const FilePath &In_FileName) noexcept;
+
+	/// <summary>
+	/// 埋め込みテクスチャの場合のオブジェクト作成関数
+	/// </summary>
+	/// <param name="[In_aiTex]">aiTextureオブジェクトへのポインタ</param>
+	/// <returns>操作が成功した場合はS_OK、失敗した場合はエラーコードを返します。</returns>
+	HRESULT Create(_In_ const aiTexture *In_aiTex) noexcept;
+
 	/// <summary>
 	/// 指定されたフォーマット、幅、高さ、およびデータでオブジェクトを作成します。
 	/// </summary>

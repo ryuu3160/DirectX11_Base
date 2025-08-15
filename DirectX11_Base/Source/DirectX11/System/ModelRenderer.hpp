@@ -11,6 +11,11 @@
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
 
+// ==============================
+//	前方宣言
+// ==============================
+class Material;
+
 class ModelRenderer : public RenderComponent
 {
 public:
@@ -25,18 +30,7 @@ public:
 		DirectX::XMFLOAT2 uv;
 	};
 
-	/// <summary>
-	/// マテリアル構造体
-	/// </summary>
-	struct Material
-	{
-		DirectX::XMFLOAT4 diffuse;
-		DirectX::XMFLOAT4 ambient;
-		DirectX::XMFLOAT4 specular;
-		std::shared_ptr<Texture> texture;
-	};
-
-	using Materials = std::vector<Material>;
+	using Materials = std::vector<std::shared_ptr<Material>>;
 
 	/// <summary>
 	/// メッシュデータとマテリアルIDを保持する構造体

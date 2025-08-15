@@ -40,6 +40,7 @@ using Microsoft::WRL::ComPtr;
 #include <cmath>
 #include <random>
 #include <future>
+#include <sal.h>
 
 // -------------------------------
 //  STL ƒRƒ“ƒeƒi

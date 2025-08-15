@@ -1,0 +1,44 @@
+/*+===================================================================
+	File: Mesh.hpp
+	Summary: （このファイルで何をするか記載する）
+	Author: AT13C192 01 青木雄一郎
+	Date: 2025/08/14 Thu PM 05:02:12 初回作成
+===================================================================+*/
+#pragma once
+
+// ==============================
+//	include
+// ==============================
+#include "DirectX11/Texture/MeshBuffer.hpp"
+#include "DirectX11/Resource/Material.hpp"
+
+// ==============================
+//	前方宣言
+// ==============================
+struct aiMesh;
+
+/// <summary>
+/// Meshクラス
+/// </summary>
+class Mesh
+{
+public:
+	/// <summary>
+	/// 頂点データを表す構造体
+	/// </summary>
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMFLOAT2 uv;
+	};
+
+	Mesh();
+	~Mesh();
+
+	void Load(_In_ const aiMesh *In_Mesh, _In_ const float &In_Scale, _In_ std::shared_ptr<Material> In_Material) noexcept;
+
+private:
+	std::shared_ptr<MeshBuffer> m_spMeshBuffer; ///< メッシュバッファ
+	std::shared_ptr<Material> m_spMaterial; ///< マテリアル
+};
