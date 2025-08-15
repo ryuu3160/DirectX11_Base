@@ -38,7 +38,6 @@ ModelRenderer::ModelRenderer()
 	m_pPS = m_defPS.get();
 
 	m_vecMeshes.clear();
-	m_vecMaterials.clear();
 }
 
 ModelRenderer::~ModelRenderer()
@@ -105,9 +104,7 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 	for (unsigned int i = 0; i < pScene->mNumMaterials; ++i)
 	{
 		// マテリアルを作成
-		auto material = MaterialManager::GetInstance().GetMaterial(pScene->mMaterials[i], In_File);
-		// マテリアル追加
-		m_vecMaterials.push_back(material);
+		MaterialManager::GetInstance().GetMaterial(pScene->mMaterials[i], In_File);
 	}
 
 	// メッシュの作成

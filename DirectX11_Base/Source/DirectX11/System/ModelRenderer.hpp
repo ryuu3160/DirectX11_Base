@@ -20,8 +20,6 @@ class Mesh;
 class ModelRenderer : public RenderComponent
 {
 public:
-
-	using Materials = std::vector<std::shared_ptr<Material>>;
 	using Meshes = std::vector<std::shared_ptr<Mesh>>;
 
 	/// <summary>
@@ -106,7 +104,6 @@ private:
 
 private:
 	Meshes m_vecMeshes;
-	Materials m_vecMaterials;
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
