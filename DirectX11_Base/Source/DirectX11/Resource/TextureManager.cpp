@@ -21,6 +21,13 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
 
+aiTextureType types[] = {
+	aiTextureType_DIFFUSE,    // ディフューズ
+	aiTextureType_SPECULAR,   // スペキュラー
+	aiTextureType_NORMALS,    // ノーマルマップ
+	aiTextureType_EMISSIVE,   // エミッシブ
+};
+
 std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const FilePath &In_FilePath) noexcept
 {
 	auto itr = m_mapTextures.find(HoldFilePath(In_FilePath));
@@ -33,6 +40,19 @@ std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const FilePath &In_File
 	return nullptr; // テクスチャが見つからない場合はnullptrを返す
 }
 
+std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const aiMaterial *In_pMaterial) noexcept
+{
+	// テクスチャの取得
+	for (auto type : types)
+	{
+		aiString path;
+		if (In_pMaterial->GetTexture(type, 0, &path) == AI_SUCCESS)
+		{
+			return GetTexture(path.C_Str());
+		}
+	}
+}
+
 void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FilePath &In_File) noexcept
 {
 	HRESULT hr;
@@ -43,41 +63,45 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 
 	for (unsigned int i = 0; i < In_Scene->mNumMaterials; ++i)
 	{
-		// テクスチャ
-		aiString path;
-		if (In_Scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
+		// テクスチャタイプごとにテクスチャを取得
+		for (auto type : types)
 		{
-			// そのまま探索
-			auto Tex = std::make_shared<Texture>();
-			hr = Tex->Create(path.C_Str());
-			// モデルと同じ階層を探索
-			if (FAILED(hr))
+			// テクスチャ
+			aiString path;
+			if (In_Scene->mMaterials[i]->GetTexture(type, 0, &path) == AI_SUCCESS)
 			{
-				std::string file = dir;
-				file += path.C_Str();
-				hr = Tex->Create(file.c_str());
-			}
-			// ファイル名のみで探索
-			if (FAILED(hr))
-			{
-				std::string file = path.C_Str();
-				size_t idx = file.find_last_of('\\');
-				if (idx != std::string::npos)
+				// そのまま探索
+				auto Tex = std::make_shared<Texture>();
+				hr = Tex->Create(path.C_Str());
+				// モデルと同じ階層を探索
+				if (FAILED(hr))
 				{
-					file = file.substr(idx + 1);
-					file = dir + file;
+					std::string file = dir;
+					file += path.C_Str();
 					hr = Tex->Create(file.c_str());
 				}
-			}
-			// 失敗
-			if (FAILED(hr))
-			{
-				Tex = nullptr;
-			}
-			else
-			{
-				// 成功した場合はマップに追加
-				m_mapTextures.insert({ HoldFilePath(path.C_Str()), Tex });
+				// ファイル名のみで探索
+				if (FAILED(hr))
+				{
+					std::string file = path.C_Str();
+					size_t idx = file.find_last_of('\\');
+					if (idx != std::string::npos)
+					{
+						file = file.substr(idx + 1);
+						file = dir + file;
+						hr = Tex->Create(file.c_str());
+					}
+				}
+				// 失敗
+				if (FAILED(hr))
+				{
+					Tex = nullptr;
+				}
+				else
+				{
+					// 成功した場合はマップに追加
+					m_mapTextures.insert({ HoldFilePath(path.C_Str()), Tex });
+				}
 			}
 		}
 	}

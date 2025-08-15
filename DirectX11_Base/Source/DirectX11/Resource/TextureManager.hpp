@@ -15,6 +15,7 @@
 //  前方宣言
 // ==============================
 struct aiScene;
+struct aiMaterial;
 
 /// <summary>
 /// TextureManagerクラス
@@ -30,6 +31,13 @@ public:
 	/// <param name="[In_FilePath]">テクスチャファイルのパスを指定します。</param>
 	/// <returns>取得したテクスチャへのポインタ。失敗した場合は nullptr を返します。</returns>
 	std::shared_ptr<Texture> GetTexture(_In_ const FilePath &In_FilePath) noexcept;
+
+	/// <summary>
+	/// マテリアルからテクスチャを取得する
+	/// </summary>
+	/// <param name="[In_Material]">aiMaterialオブジェクトへのポインタ</param>
+	/// <returns>取得したテクスチャへのポインタ。失敗した場合は nullptr を返します。</returns>
+	std::shared_ptr<Texture> GetTexture(_In_ const aiMaterial *In_pMaterial) noexcept;
 
 	/// <summary>
 	/// 指定された aiScene からテクスチャを読み込みます。

@@ -71,16 +71,22 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 		DirectX::XMFLOAT4(color.r, color.g, color.b, shininess) : DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, shininess);
 
 	// テクスチャの取得
-	HRESULT hr;
 	aiString path;
-	if (In_pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
-	{
-		m_spTexture = TextureManager::GetInstance().GetTexture(path.C_Str());
-	}
+	m_spTexture = TextureManager::GetInstance().GetTexture(In_pMaterial);
 
 	// テクスチャが見つからない場合は、エラーを出力
-	if(m_spTexture == nullptr)
-		Error(path.C_Str());
+	if (m_spTexture == nullptr)
+	{
+		std::string ErrorMsg = "Texture not found\n";
+		ErrorMsg += m_strMaterialName;
+		ErrorMsg += " at ";
+
+		if (path.length == 0)
+			ErrorMsg += "Failed to load texture from material.";
+		else
+			ErrorMsg += path.C_Str();
+		Error(ErrorMsg);
+	}
 }
 
 std::shared_ptr<Texture> Material::GetTexture() const noexcept
