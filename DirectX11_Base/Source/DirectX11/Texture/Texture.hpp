@@ -70,8 +70,8 @@ protected:
 	virtual HRESULT CreateResource(_In_ D3D11_TEXTURE2D_DESC &In_Desc, const void *In_pData) noexcept;
 
 protected:
-	UINT m_width;	///< ‰¡•
-	UINT m_height;	///< c•
+	UINT m_width;	// ‰¡•
+	UINT m_height;	// c•
 	ComPtr<ID3D11ShaderResourceView> m_pSRV;
 	ComPtr<ID3D11Texture2D> m_pTex;
 };

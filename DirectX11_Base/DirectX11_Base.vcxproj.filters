@@ -381,6 +381,9 @@
     <ClInclude Include="Source\DirectX11\Resource\TextureManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\ResourceSetting.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
