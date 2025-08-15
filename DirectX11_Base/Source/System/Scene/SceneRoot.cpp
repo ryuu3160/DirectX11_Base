@@ -74,6 +74,7 @@ void SceneRoot::Init()
 	SpriteComp1->Set3D(true);
 	SpriteComp1->SetBillBoard(true);
 	pSpriteObj1->SetPos({ 5.0f, 0.0f, 0.0f });
+	SpriteComp1->SetLayer(-1); // ƒŒƒCƒ„[‚ğİ’è
 
 	GameObject *pSpriteObj2 = CreateObject<GameObject>("SpriteObj2");
 	auto SpriteComp2 = pSpriteObj2->AddComponent<SpriteRenderer>();
