@@ -12,19 +12,12 @@
 #include "DirectX11/Texture/Shader.hpp"
 #include "DirectX11/Texture/MeshBuffer.hpp"
 #include "DirectX11/Texture/Texture.hpp"
+#include "ResourceSetting.hpp"
 
 // ==============================
 //  前方宣言
 // ==============================
 struct aiMaterial;
-
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-
-}
 
 /// <summary>
 /// Materialクラス
@@ -62,7 +55,7 @@ private:
 	void MakeDefaultShader();
 
 private:
-	std::string m_strMaterialName; ///< マテリアル名
+	std::string m_strMaterialName; // マテリアル名
 	DirectX::XMFLOAT4 m_fDiffuse;
 	DirectX::XMFLOAT4 m_fAmbient;
 	DirectX::XMFLOAT4 m_fSpecular;

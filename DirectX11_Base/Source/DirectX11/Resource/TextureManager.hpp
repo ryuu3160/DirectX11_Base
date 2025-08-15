@@ -16,6 +16,7 @@
 // ==============================
 struct aiScene;
 struct aiMaterial;
+enum aiTextureType;
 
 /// <summary>
 /// TextureManagerクラス
@@ -33,13 +34,6 @@ public:
 	std::shared_ptr<Texture> GetTexture(_In_ const FilePath &In_FilePath) noexcept;
 
 	/// <summary>
-	/// マテリアルからテクスチャを取得する
-	/// </summary>
-	/// <param name="[In_Material]">aiMaterialオブジェクトへのポインタ</param>
-	/// <returns>取得したテクスチャへのポインタ。失敗した場合は nullptr を返します。</returns>
-	std::shared_ptr<Texture> GetTexture(_In_ const aiMaterial *In_pMaterial) noexcept;
-
-	/// <summary>
 	/// 指定された aiScene からテクスチャを読み込みます。
 	/// </summary>
 	/// <param name="[In_Scene]">テクスチャを読み込む対象となる aiScene オブジェクトへのポインタ</param>
@@ -51,5 +45,5 @@ private:
 	~TextureManager() override;
 
 private:
-	std::unordered_map<HoldFilePath, std::shared_ptr<Texture>> m_mapTextures; ///< テクスチャのマップ
+	std::unordered_map<HoldFilePath, std::shared_ptr<Texture>> m_mapTextures; // テクスチャのマップ
 };

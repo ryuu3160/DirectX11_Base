@@ -72,7 +72,14 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 
 	// テクスチャの取得
 	aiString path;
-	m_spTexture = TextureManager::GetInstance().GetTexture(In_pMaterial);
+	for (auto type : ResourceSetting::TextureTypes)
+	{
+		if (In_pMaterial->GetTexture(type, 0, &path) == AI_SUCCESS)
+		{
+			m_spTexture = TextureManager::GetInstance().GetTexture(path.C_Str());
+			break; // 最初に見つかったテクスチャを使用
+		}
+	}
 
 	// テクスチャが見つからない場合は、エラーを出力
 	if (m_spTexture == nullptr)

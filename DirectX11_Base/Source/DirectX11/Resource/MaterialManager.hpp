@@ -46,5 +46,5 @@ private:
 	std::shared_ptr<Material> CreateMaterial(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In_File, _In_ const std::string In_MaterialName) noexcept;
 
 private:
-	std::unordered_map<std::string,std::shared_ptr<Material>> m_mapMaterials; ///< マテリアルのリスト
+	std::unordered_map<std::string,std::shared_ptr<Material>> m_mapMaterials; // マテリアルのリスト
 };

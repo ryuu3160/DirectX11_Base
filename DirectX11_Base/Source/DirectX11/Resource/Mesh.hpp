@@ -11,6 +11,7 @@
 // ==============================
 #include "DirectX11/Texture/MeshBuffer.hpp"
 #include "DirectX11/Resource/Material.hpp"
+#include "ResourceSetting.hpp"
 
 // ==============================
 //	前方宣言
@@ -63,6 +64,6 @@ public:
 	void ReplaceMeshBuffer(_In_ std::shared_ptr<MeshBuffer> In_MeshBuffer) noexcept;
 
 private:
-	std::shared_ptr<MeshBuffer> m_spMeshBuffer; ///< メッシュバッファ
-	std::shared_ptr<Material> m_spMaterial; ///< マテリアル
+	std::shared_ptr<MeshBuffer> m_spMeshBuffer; // メッシュバッファ
+	std::shared_ptr<Material> m_spMaterial; // マテリアル
 };

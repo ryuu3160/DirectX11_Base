@@ -9,10 +9,7 @@
 //	include
 // ==============================
 #include "TextureManager.hpp"
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "ResourceSetting.hpp"
 
 // assimpのライブラリリンク
 #ifdef _DEBUG
@@ -20,13 +17,6 @@
 #else
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
-
-aiTextureType types[] = {
-	aiTextureType_DIFFUSE,    // ディフューズ
-	aiTextureType_SPECULAR,   // スペキュラー
-	aiTextureType_NORMALS,    // ノーマルマップ
-	aiTextureType_EMISSIVE,   // エミッシブ
-};
 
 std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const FilePath &In_FilePath) noexcept
 {
@@ -40,19 +30,6 @@ std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const FilePath &In_File
 	return nullptr; // テクスチャが見つからない場合はnullptrを返す
 }
 
-std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const aiMaterial *In_pMaterial) noexcept
-{
-	// テクスチャの取得
-	for (auto type : types)
-	{
-		aiString path;
-		if (In_pMaterial->GetTexture(type, 0, &path) == AI_SUCCESS)
-		{
-			return GetTexture(path.C_Str());
-		}
-	}
-}
-
 void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FilePath &In_File) noexcept
 {
 	HRESULT hr;
@@ -64,7 +41,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 	for (unsigned int i = 0; i < In_Scene->mNumMaterials; ++i)
 	{
 		// テクスチャタイプごとにテクスチャを取得
-		for (auto type : types)
+		for (auto type : ResourceSetting::TextureTypes)
 		{
 			// テクスチャ
 			aiString path;
@@ -106,7 +83,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 		}
 	}
 
-	for (int i = 0; i < In_Scene->mNumTextures; i++)
+	for (unsigned int i = 0; i < In_Scene->mNumTextures; i++)
 	{
 		aiTexture *aiTex = In_Scene->mTextures[i];
 

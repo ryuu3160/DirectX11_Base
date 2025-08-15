@@ -33,5 +33,5 @@ private:
 	~ModelManager() = default;
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<Mesh>> m_mapMeshes; ///< モデルのリスト
+	std::unordered_map<std::string, std::shared_ptr<Mesh>> m_mapMeshes; // モデルのリスト
 };
