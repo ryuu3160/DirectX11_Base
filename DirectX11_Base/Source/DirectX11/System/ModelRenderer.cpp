@@ -153,8 +153,18 @@ void ModelRenderer::Draw() noexcept
 	auto it = m_vecMeshes.begin();
 	for (auto &itr : m_vecMeshes)
 	{
-		if (m_nTexSlot >= 0)
-			m_pPS->SetTexture(m_nTexSlot, itr->GetMaterial()->GetTexture().get());
+		if (itr->GetMaterial()->GetTextureNum() > 0)
+		{
+			const auto &Textures = itr->GetMaterial()->GetTextures();
+			for(int i = 0; i < ResourceSetting::TextureType_Max; ++i)
+			{
+				if (Textures[i])
+				{
+					// テクスチャが存在する場合はシェーダーに設定
+					m_pPS->SetTexture(i, Textures[i].get());
+				}
+			}
+		}
 		itr->GetMesh()->Draw();
 	}
 }
