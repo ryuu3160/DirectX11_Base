@@ -36,6 +36,11 @@ Material::Material()
 	}
 	m_pVS = m_defVS.get();
 	m_pPS = m_defPS.get();
+
+	for(auto &itr : m_spTextures)
+	{
+		itr = nullptr; // テクスチャの初期化
+	}
 }
 
 Material::~Material()
@@ -76,13 +81,14 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 	{
 		if (In_pMaterial->GetTexture(type, 0, &path) == AI_SUCCESS)
 		{
-			m_spTexture = TextureManager::GetInstance().GetTexture(path.C_Str());
+			auto TexType = ResourceSetting::aiTextureTypeToTextureType(type);
+			m_spTextures[TexType] = TextureManager::GetInstance().GetTexture(path.C_Str());
 			break; // 最初に見つかったテクスチャを使用
 		}
 	}
 
 	// テクスチャが見つからない場合は、エラーを出力
-	if (m_spTexture == nullptr)
+	if (m_spTextures.empty())
 	{
 		std::string ErrorMsg = "Texture not found\n";
 		ErrorMsg += m_strMaterialName;
@@ -96,9 +102,25 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 	}
 }
 
-std::shared_ptr<Texture> Material::GetTexture() const noexcept
+std::shared_ptr<Texture> Material::GetTexture(_In_ const ResourceSetting::TextureType &In_Type) const noexcept
 {
-	return m_spTexture;
+	return m_spTextures[In_Type];
+}
+
+std::array<std::shared_ptr<Texture>, ResourceSetting::TextureType_Max> Material::GetTextures() const noexcept
+{
+	return m_spTextures;
+}
+
+int Material::GetTextureNum() const noexcept
+{
+	int count = 0; 	// テクスチャの数をカウント
+	for (const auto &itr : m_spTextures)
+	{
+		if (itr)
+			++count; // テクスチャが存在する場合はカウント
+	}
+	return count; // テクスチャの数を返す
 }
 
 void Material::MakeDefaultShader()

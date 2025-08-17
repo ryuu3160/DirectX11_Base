@@ -40,7 +40,19 @@ public:
 	/// テクスチャを取得します。
 	/// </summary>
 	/// <returns>テクスチャを指す std::shared_ptr を返します。</returns>
-	std::shared_ptr<Texture> GetTexture() const noexcept;
+	std::shared_ptr<Texture> GetTexture(_In_ const ResourceSetting::TextureType &In_Type) const noexcept;
+
+	/// <summary>
+	/// テクスチャの配列を取得します。
+	/// </summary>
+	/// <returns>ResourceSetting::TextureType_Max 個の std::shared_ptr<Texture> からなる std::array を返します。</returns>
+	std::array<std::shared_ptr<Texture>, ResourceSetting::TextureType_Max> GetTextures() const noexcept;
+
+	/// <summary>
+	/// テクスチャの数を取得します。
+	/// </summary>
+	/// <returns>テクスチャの数を表す整数値。</returns>
+	int GetTextureNum() const noexcept;
 
 	/// <summary>
 	/// マテリアル名を取得します。
@@ -59,7 +71,8 @@ private:
 	DirectX::XMFLOAT4 m_fDiffuse;
 	DirectX::XMFLOAT4 m_fAmbient;
 	DirectX::XMFLOAT4 m_fSpecular;
-	std::shared_ptr<Texture> m_spTexture;
+	std::array<std::shared_ptr<Texture>,ResourceSetting::TextureType_Max> m_spTextures;
+
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
