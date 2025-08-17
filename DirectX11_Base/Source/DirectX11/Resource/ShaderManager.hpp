@@ -14,28 +14,56 @@
 /// <summary>
 /// ShaderManagerクラス
 /// </summary>
-class ShaderManager
+class ShaderManager : public Singleton<ShaderManager>
 {
+	friend class Singleton<ShaderManager>;
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	ShaderManager() = default;
 
 	/// <summary>
-	/// デストラクタ
+	/// シェーダーファイルの読み込みとセットアップを行う
 	/// </summary>
-	~ShaderManager() = default;
+	/// <param name="[In_FileNames]">読みこむシェーダーファイルの名前</param>
+	void SetupShaders(_In_ const std::vector<std::string> &In_FileNames) noexcept;
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	/// <summary>
+	/// 指定されたファイル名からシェーダーを取得します。
+	/// </summary>
+	/// <param name="[In_FileName]">取得するシェーダーのファイルパス。</param>
+	/// <returns>取得した Shader オブジェクトへのポインタ。</returns>
+	Shader *GetShader(_In_ const FilePath &In_FileName) noexcept;
 
+	/// <summary>
+	/// 指定されたファイル名のシェーダーを解放します。
+	/// </summary>
+	/// <param name="[In_FileName]">解放するシェーダーのファイルパス。</param>
+	void ReleaseShader(_In_ const FilePath &In_FileName) noexcept;
+private:
+	ShaderManager();
+	~ShaderManager() override;
 
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	template<typename T, typename = std::enable_if_t<std::is_base_of<Shader, T>::value>>
+	T *CreateShader(_In_ const FilePath &In_FileName)
+	{
+		// デバッグモードのみ名前の競合チェック
+#ifdef _DEBUG
+		auto itr = m_mapShaders.find(In_FileName.data());
+		if (itr != m_mapShaders.end())
+		{
+			// 既に同じ名前のシェーダーが存在する場合はnullptrを返す
+			std::string msg = "Failed to create shader: " + std::string(In_FileName) + ". \nShader already exists with the same name.";
+			MessageBoxA(nullptr, msg.c_str(), "Error", MB_OK);
+			return nullptr;
+		}
+#endif
+
+		// シェーダー作成
+		T *shader = new T();
+		std::string name = std::string(In_FileName);
+		m_mapShaders.insert({ name, shader});
+
+		return shader; // 作成したシェーダーを返す
+	}
 
 private:
-
+	std::unordered_map<std::string, Shader *> m_mapShaders; // シェーダーのマップ
 };
