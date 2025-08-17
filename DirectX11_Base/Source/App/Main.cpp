@@ -11,6 +11,7 @@
 #include "Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
+#include "DirectX11/Resource/ShaderManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
 #include "System/ImGui/imgui_impl_win32.h"
@@ -39,6 +40,13 @@ HRESULT Main::Init()
 	Geometory::GetInstance().Init();
 	SpriteManager::GetInstance().Init();
 	Input::Init();
+
+	// よく使うシェーダーの読み込み
+	std::vector<std::string> shaders = {
+		"VS_Object",
+		"PS_TexColor",	// テクスチャ貼っただけ
+	};
+	ShaderManager::GetInstance().SetupShaders(shaders);
 
 	// Input用のカスタムウィンドウプロシージャを登録
 	Instance.AddCustomProc(Input::InputCustomProc);
