@@ -68,6 +68,23 @@ Shader *ShaderManager::GetShader(_In_ const FilePath &In_FileName) noexcept
 	return nullptr;
 }
 
+void ShaderManager::ReleaseShader(_In_ const FilePath &In_FileName) noexcept
+{
+	// ファイル名で検索
+	auto itr = m_mapShaders.find(In_FileName.data());
+	// 見つかったら削除
+	if (itr != m_mapShaders.end())
+	{
+		// シェーダーを解放
+		if (itr->second)
+		{
+			delete itr->second;
+			itr->second = nullptr;
+		}
+		m_mapShaders.erase(itr);
+	}
+}
+
 ShaderManager::ShaderManager()
 {
 	// シェーダーのマップを初期化
@@ -76,4 +93,14 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
+	// シェーダーを開放
+	for (auto &itr : m_mapShaders)
+	{
+		if (itr.second)
+		{
+			delete itr.second;
+			itr.second = nullptr;
+		}
+	}
+	m_mapShaders.clear();
 }
