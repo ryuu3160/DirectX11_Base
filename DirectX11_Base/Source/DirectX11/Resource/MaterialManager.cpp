@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: MaterialManager.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: マテリアル管理クラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/08/14 Thu PM 05:03:28 初回作成
 ===================================================================+*/
@@ -19,13 +19,7 @@
 
 std::shared_ptr<Material> MaterialManager::GetMaterial(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In_File) noexcept
 {
-	std::string MaterialName;
-
-	aiString MatName;
-	std::string FbxName = std::string(In_File);
-	FbxName = FbxName.substr(FbxName.find_last_of('/') + 1);
-	MatName = In_pMaterial->GetName();
-	MaterialName = FbxName + "_" + MatName.C_Str();
+	std::string MaterialName = ResourceSetting::CreateMaterialName(In_File, In_pMaterial);
 
 	// マテリアル名で検索
 	auto itr = m_mapMaterials.find(MaterialName);

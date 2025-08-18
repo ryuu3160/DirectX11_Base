@@ -60,11 +60,26 @@ public:
 	/// <returns>マテリアル名を表す std::string への参照。</returns>
 	inline const std::string &GetMaterialName() const noexcept { return m_strMaterialName; }
 
+	inline VertexShader *GetVertexShader() const noexcept { return m_pVS; }
+	inline PixelShader *GetPixelShader() const noexcept { return m_pPS; }
+
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成
 	/// </summary>
 	void MakeDefaultShader();
+
+	/// <summary>
+	/// MaterialShaderInfoファイルからシェーダー名を読み込みます。
+	/// </summary>
+	/// <param name="[In_Directory]">シェーダー名を検索するディレクトリへの参照。</param>
+	/// <returns>読み取りが成功したかどうか</returns>
+	bool LoadShaderName(_In_ const std::string_view &In_Directory) noexcept;
+
+	/// <summary>
+	/// マテリアルシェーダー情報を保存します。
+	/// </summary>
+	void SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory) const noexcept;
 
 private:
 	std::string m_strMaterialName; // マテリアル名
@@ -72,9 +87,12 @@ private:
 	DirectX::XMFLOAT4 m_fAmbient;
 	DirectX::XMFLOAT4 m_fSpecular;
 	std::array<std::shared_ptr<Texture>,ResourceSetting::TextureType_Max> m_spTextures;
+	std::string m_strDirectory; // マテリアルのディレクトリパス
 
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
+	std::string m_strVSName;
+	std::string m_strPSName;
 
 	std::shared_ptr<VertexShader> m_defVS;
 	std::shared_ptr<PixelShader> m_defPS;

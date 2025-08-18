@@ -41,7 +41,12 @@ public:
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
-	void SetTextureSlot(_In_ const int &In_TexSlot = 0) noexcept;
+
+	/// <summary>
+	/// マテリアルシェーダーの使用状態を設定します。
+	/// </summary>
+	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値。</param>
+	inline void IsUseMaterialShader(_In_ const bool &In_IsUse) noexcept { m_bUseMaterialShader = In_IsUse; }
 
     /// <summary>
     /// データアクセサーを使用して読み書きを行います。
@@ -101,12 +106,11 @@ private:
 	/// </summary>
 	void MakeDefaultShader();
 
-
 private:
 	Meshes m_vecMeshes;
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
     float m_fScale;
-	int m_nTexSlot = 0; // テクスチャスロット番号
+	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 };

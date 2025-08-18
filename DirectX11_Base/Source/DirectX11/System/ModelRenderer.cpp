@@ -29,6 +29,7 @@ ModelRenderer::ModelRenderer()
 	: m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
+	, m_bUseMaterialShader(false)
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
@@ -69,11 +70,6 @@ void ModelRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
 	PixelShader *cast = reinterpret_cast<PixelShader *>(In_pShader);
 	if (cast)
 		m_pPS = cast;
-}
-
-void ModelRenderer::SetTextureSlot(_In_ const int &In_TexSlot) noexcept
-{
-	m_nTexSlot = In_TexSlot;
 }
 
 bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
@@ -144,15 +140,33 @@ void ModelRenderer::Draw() noexcept
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);
 
-	// メモリ上の行列をグラフィックスメモリへコピー
-	// 1つ目の引数はバッファの番号
-	m_pVS->WriteBuffer(0, mat);
+	// マテリアルのシェーダーを使用しない場合は、デフォルトのシェーダーを使用
+	if (!m_bUseMaterialShader)
+	{
+		// メモリ上の行列をグラフィックスメモリへコピー
+		// 1つ目の引数はバッファの番号
+		m_pVS->WriteBuffer(0, mat);
 
-	m_pVS->Bind();
-	m_pPS->Bind();
-	auto it = m_vecMeshes.begin();
+		m_pVS->Bind();
+		m_pPS->Bind();
+	}
+
 	for (auto &itr : m_vecMeshes)
 	{
+		// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーをバインド
+		if (m_bUseMaterialShader)
+		{
+			VertexShader *pVS = itr->GetMaterial()->GetVertexShader();
+			PixelShader *pPS = itr->GetMaterial()->GetPixelShader();
+			if (pVS)
+			{
+				pVS->WriteBuffer(0, mat);
+				pVS->Bind();
+			}
+			if (pPS)
+				pPS->Bind();
+		}
+
 		if (itr->GetMaterial()->GetTextureNum() > 0)
 		{
 			const auto &Textures = itr->GetMaterial()->GetTextures();
@@ -160,8 +174,15 @@ void ModelRenderer::Draw() noexcept
 			{
 				if (Textures[i])
 				{
-					// テクスチャが存在する場合はシェーダーに設定
-					m_pPS->SetTexture(i, Textures[i].get());
+					if (m_bUseMaterialShader)
+					{
+						// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーにテクスチャを設定
+						itr->GetMaterial()->GetPixelShader()->SetTexture(i, Textures[i].get());
+					}
+					{
+						// モデル全体のシェーダーを使用する場合は、モデルのピクセルシェーダーにテクスチャを設定
+						m_pPS->SetTexture(i, Textures[i].get());
+					}
 				}
 			}
 		}

@@ -157,48 +157,8 @@ void SceneBase::DestroyObj(_In_ const std::string &In_Name) noexcept
 	m_Items.remove(In_Name);
 }
 
-void SceneBase::Setup(_In_ const char **In_ShaderFiles, _In_ int const &In_ShaderNum, _In_ int const &In_ModelNum) noexcept
+void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 {
-	for (int i = 0; i < In_ShaderNum; ++i)
-	{
-		Shader *shader = nullptr;
-		if (strstr(In_ShaderFiles[i], "PS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<PixelShader>(In_ShaderFiles[i]);
-		}
-		else if (strstr(In_ShaderFiles[i], "VS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<VertexShader>(In_ShaderFiles[i]);
-		}
-		else if (strstr(In_ShaderFiles[i], "GS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<GeometryShader>(In_ShaderFiles[i]);
-		}
-		else if (strstr(In_ShaderFiles[i], "HS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<HullShader>(In_ShaderFiles[i]);
-		}
-		else if (strstr(In_ShaderFiles[i], "DS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<DomainShader>(In_ShaderFiles[i]);
-		}
-		else if (strstr(In_ShaderFiles[i], "CS_") == In_ShaderFiles[i])
-		{
-			shader = CreateObject<ComputeShader>(In_ShaderFiles[i]);
-		}
-		else
-		{
-			MessageBoxA(NULL, In_ShaderFiles[i], "Shader name [VS_ / PS_]", MB_OK);
-		}
-		std::string path = "Assets/Shader/";
-		path += In_ShaderFiles[i];
-		path += ".cso";
-		if (shader && FAILED(shader->Load(path.c_str())))
-		{
-			MessageBoxA(NULL, In_ShaderFiles[i], "Shader Error", MB_OK);
-		}
-	}
-
 	// 表示オブジェクト作成
 	for (int i = 0; i < In_ModelNum; ++i)
 	{

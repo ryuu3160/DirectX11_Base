@@ -10,6 +10,7 @@
 // ==============================
 #include "Material.hpp"
 #include "TextureManager.hpp"
+#include "ShaderManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -30,6 +31,8 @@ Material::Material()
 	, m_pPS(nullptr)
 	, m_strMaterialName("")
 {
+	m_strDirectory.clear();
+
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
 		MakeDefaultShader();
@@ -41,10 +44,15 @@ Material::Material()
 	{
 		itr = nullptr; // テクスチャの初期化
 	}
+
+	m_strVSName.clear();
+	m_strPSName.clear();
 }
 
 Material::~Material()
 {
+	// マテリアル情報を保存
+	SaveMaterialShaderInfo(m_strDirectory); // マテリアルシェーダー情報を保存
 }
 
 void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In_File, _In_ const std::string In_MaterialName) noexcept
@@ -58,6 +66,7 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 	// ファイルの探索
 	std::string dir = std::string(In_File);
 	dir = dir.substr(0, dir.find_last_of('/') + 1);
+	m_strDirectory = dir; // ディレクトリの保存
 	// マテリアル
 	aiColor3D color(0.0f, 0.0f, 0.0f);
 	DirectX::XMFLOAT4 diffuse(1.0f, 1.0f, 1.0f, 1.0f);
@@ -100,6 +109,16 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 			ErrorMsg += path.C_Str();
 		Error(ErrorMsg);
 	}
+
+	// シェーダーの取得
+	if (LoadShaderName(dir))
+	{
+		auto &ShaderM = ShaderManager::GetInstance();
+		if (!m_strVSName.empty())
+			m_pVS = reinterpret_cast<VertexShader *>(ShaderM.GetShader(m_strVSName));
+		if(!m_strPSName.empty())
+			m_pPS = reinterpret_cast<PixelShader *>(ShaderM.GetShader(m_strPSName));
+	}
 }
 
 std::shared_ptr<Texture> Material::GetTexture(_In_ const ResourceSetting::TextureType &In_Type) const noexcept
@@ -129,4 +148,112 @@ void Material::MakeDefaultShader()
 	m_defVS->Load("Assets/Shader/VS_Model.cso");
 	m_defPS = std::make_shared<PixelShader>();
 	m_defPS->Load("Assets/Shader/PS_Model.cso");
+}
+
+bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcept
+{
+	std::fstream file;
+	std::string FbxName = ResourceSetting::ExtractFbxNameFromMaterialName(m_strMaterialName, true);
+
+	std::string path = std::string(In_Directory) + FbxName + "_MaterialShaderInfo.csv";
+	file.open(path, std::ios::in);
+	if (!file.is_open())
+	{
+		Error("Failed to open file for loading material shader info: " + path);
+		return "";
+	}
+
+	std::string line;
+	std::string name;
+	for (; std::getline(file, line);)
+	{
+		name = line.substr(0, line.find(','));
+		if (name == m_strMaterialName)
+			break;
+	}
+	if (!file.good())
+	{
+		file.close();
+		return false; // ファイルの読み込みに失敗した場合はfalseを返す
+	}
+
+	file.close();// ファイルを閉じる
+
+	// 1つ目のデータはマテリアル名なのでスキップ
+	size_t pos = line.find(',');
+	size_t nextPos = line.find(',', pos + 1);
+	size_t length = nextPos - (pos + 1);
+	std::string ShaderName;
+	for (nextPos; pos != std::string::npos;pos = line.find(',',pos + 1))
+	{
+		// シェーダー名を抽出
+		ShaderName = line.substr(pos + 1, length);
+
+		// シェーダー名の設定
+		if(ShaderName.find("VS_") != std::string::npos)
+		{
+			m_strVSName = ShaderName;
+		}
+		else if (ShaderName.find("PS_") != std::string::npos)
+		{
+			m_strPSName = ShaderName;
+		}
+
+		// 次のカンマの位置を探す
+		if(nextPos != std::string::npos)
+			nextPos = line.find(',', nextPos + 1);
+
+		// 次のカンマが見つからない場合は行の終わりまでの長さを計算
+		if (nextPos == std::string::npos)
+		{
+			length = line.length() - (pos + length); // 行の終わりまでの長さを計算
+			continue; // ループを続ける
+		}
+
+		length = nextPos - pos; // 次のカンマまでの長さを計算
+	}
+
+	if(m_strVSName.empty() && m_strPSName.empty())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory) const noexcept
+{
+	std::fstream file;
+	std::string FbxName = ResourceSetting::ExtractFbxNameFromMaterialName(m_strMaterialName, true);
+
+	std::string path = std::string(In_Directory) + FbxName + "_MaterialShaderInfo.csv";
+
+	// ファイルを開く
+	file.open(path, std::ios::in);
+	if (file.is_open())
+	{
+		// 同じマテリアル名の行が存在する場合はスキップ
+		std::string line;
+		for (; std::getline(file, line);)
+		{
+			if (line.find(m_strMaterialName) != std::string::npos)
+			{
+				file.close(); // ファイルを閉じる
+				return; // 既に存在する場合は何もしない
+			}
+		}
+		file.close(); // ファイルを閉じる
+	}
+
+	// ファイルを開く（追記モード）
+	file.open(path, std::ios::out | std::ios::app);
+
+	if (!file.is_open())
+	{
+		Error("Failed to open file for saving material shader info: " + path);
+		return;
+	}
+
+	file << m_strMaterialName << "," << m_strVSName << "," << m_strPSName << "\n";
+	file.close();
 }

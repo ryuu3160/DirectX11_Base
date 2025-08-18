@@ -48,4 +48,19 @@ namespace ResourceSetting
 		}
 	}
 
+	/// <summary>
+	/// マテリアル名を生成する関数
+	/// </summary>
+	/// <param name="[In_FilePath]">fbxファイルへのパス</param>
+	/// <param name="[In_pMaterial]">マテリアルオブジェクトへのポインタ</param>
+	/// <returns>マテリアル名</returns>
+	std::string CreateMaterialName(_In_ const FilePath &In_FilePath, _In_ const aiMaterial *In_pMaterial) noexcept;
+
+	/// <summary>
+	/// FBXのマテリアル名から、FBXの名前を抽出する関数
+	/// </summary>
+	/// <param name="[In_MaterialName]">マテリアル名</param>
+	/// <param name="[In_RemoveExtension]">拡張子を削除するかどうか</param>
+	/// <returns>FBX名</returns>
+	std::string ExtractFbxNameFromMaterialName(_In_ const std::string &In_MaterialName,_In_ const bool &In_RemoveExtension) noexcept;
 }

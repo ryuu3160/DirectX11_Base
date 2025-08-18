@@ -13,6 +13,7 @@
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
+#include "DirectX11/Resource/ShaderManager.hpp"
 
 // ==============================
 //  定数
@@ -30,20 +31,17 @@ void SceneRoot::Init()
 	// オブジェクトの作成
 	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
 
+	Setup(2);
 
-	const char *file[] = {
-		"VS_Object",
-		"PS_TexColor",	// テクスチャ貼っただけ
-	};
-	Setup(file, _countof(file), 2);
+	auto &ShaderM = ShaderManager::GetInstance();
 
 	// オブジェクトの設定
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
 	Component1->SetAssetPath("Assets/Model/spot/spot.fbx");
 	Component1->SetCamera(pCamera);
-	Component1->SetVertexShader(GetObject<Shader>("VS_Object"));
-	Component1->SetPixelShader(GetObject<Shader>("PS_TexColor"));
+	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
+	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	
 	pModel->SetPos({ 0.0f, 1.0f, 0.0f });
 
@@ -51,8 +49,8 @@ void SceneRoot::Init()
 	auto comp = child->AddComponent<ModelRenderer>();
 	comp->SetAssetPath("Assets/Model/spot/spot.fbx");
 	comp->SetCamera(pCamera);
-	comp->SetVertexShader(GetObject<Shader>("VS_Object"));
-	comp->SetPixelShader(GetObject<Shader>("PS_TexColor"));
+	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
+	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	child->SetPos({ 1.0f, 0.0f, 0.0f });
 
 	// F15Eのモデルを読み込む
@@ -60,8 +58,9 @@ void SceneRoot::Init()
 	auto Component2 = pModel2->GetComponent<ModelRenderer>();
 	Component2->SetAssetPath("Assets/Model/F15E.fbx");
 	Component2->SetCamera(pCamera);
-	Component2->SetVertexShader(GetObject<Shader>("VS_Object"));
-	Component2->SetPixelShader(GetObject<Shader>("PS_TexColor"));
+	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
+	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
 	pModel2->SetPos({ -1.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 0.01f, 0.01f, 0.01f });

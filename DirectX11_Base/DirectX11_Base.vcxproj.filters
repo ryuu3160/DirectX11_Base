@@ -229,6 +229,9 @@
     <ClCompile Include="Source\DirectX11\Resource\ShaderManager.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">

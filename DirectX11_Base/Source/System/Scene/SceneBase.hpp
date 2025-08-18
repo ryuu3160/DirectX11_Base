@@ -137,12 +137,10 @@ public:
 
 protected:
 	/// <summary>
-	/// シェーダーファイルとモデル数を指定してセットアップを行います。
+	/// モデル数を指定してセットアップを行います。
 	/// </summary>
-	/// <param name="[In_ShaderFiles]">シェーダーファイル名の配列へのポインタ。</param>
-	/// <param name="[In_ShaderNum]">シェーダーファイルの数への参照。</param>
 	/// <param name="[In_ModelNum]">モデルの数への参照。</param>
-	void Setup(_In_ const char **In_ShaderFiles, _In_ const int &In_ShaderNum, _In_ const int &In_ModelNum) noexcept;
+	void Setup(_In_ const int &In_ModelNum) noexcept;
 
 private:
 	static Objects m_Objects;
