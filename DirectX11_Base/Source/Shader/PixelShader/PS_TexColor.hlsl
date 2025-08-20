@@ -17,12 +17,6 @@ Texture2D tex : register(t0);
 // テクスチャの拡縮方法、繰り返し設定のデータ
 SamplerState samp : register(s0);
 
-cbuffer time : register(b0)
-{
-    float1 time;
-}
-
-
 // ピクセルシェーダー
 // 画面の1pixelごとにどんな色を表示するか計算する
 // 戻り値のfloat4はそれぞれ、R,G,B,Aを示す
@@ -33,37 +27,6 @@ float4 main(PS_IN pin) : SV_TARGET
 
     // テクスチャの色情報を取得
     color = tex.Sample(samp,pin.uv);
-    float1 work1;
-    float1 work2;
-    float1 work3;
-    
-    work1 = color.r * color.r;
-    work2 = color.b / 2.0f;
-    work3 = color.g % 0.3f;
-    
-    if(time >= 0.8f)
-    {
-        color.r = color.b / 2.0f;
-        color.b = color.g % 0.3f;
-        color.g = work1;
-    }
-    else
-    {
-        if (color.r > work2)
-            color.r -= time;
-        else if (color.r < work2)
-            color.r += time;
-    
-        if (color.g > work1)
-            color.g -= time;
-        else if (color.g < work1)
-            color.g += time;
-    
-        if (color.b > work3)
-            color.b -= time;
-        else if (color.b < work3)
-            color.b += time;
-    }
 
     return color;
 }
