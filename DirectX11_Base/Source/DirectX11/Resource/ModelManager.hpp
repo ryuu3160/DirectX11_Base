@@ -24,8 +24,22 @@ class ModelManager : public Singleton<ModelManager>
 	friend class Singleton<ModelManager>;
 public:
 
-	std::shared_ptr<Mesh> GetMesh(_In_ const std::string_view &In_File) noexcept;
+	/// <summary>
+	/// 指定されたファイルからメッシュを取得します。
+	/// </summary>
+	/// <param name="[In_MeshName]">メッシュの固有名</param>
+	/// <returns>取得したメッシュを保持する std::shared_ptr<Mesh> オブジェクト。</returns>
+	std::shared_ptr<Mesh> GetMesh(_In_ const std::string_view &In_MeshName) noexcept;
 
+	/// <summary>
+	/// メッシュを作成する
+	/// </summary>
+	/// <param name="[In_Mesh]">メッシュデータのソースとなる aiMesh オブジェクトへのポインタ。</param>
+	/// <param name="[In_File]">メッシュの作成元ファイルのパス。</param>
+	/// <param name="[In_Scale]">メッシュのスケール値。</param>
+	/// <param name="[In_MeshIndex]">ファイル内のメッシュインデックス。</param>
+	/// <param name="[In_Material]">メッシュに適用する Material オブジェクトへの共有ポインタ。</param>
+	/// <returns>作成されたメッシュへの共有ポインタ。</returns>
 	std::shared_ptr<Mesh> CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const int In_MeshIndex, _In_ std::shared_ptr<Material> In_Material);
 
 private:

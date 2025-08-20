@@ -69,16 +69,17 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 	m_strDirectory = dir; // ディレクトリの保存
 	// マテリアル
 	aiColor3D color(0.0f, 0.0f, 0.0f);
+	aiColor4D color4(0.0f, 0.0f, 0.0f, 1.0f);
 	DirectX::XMFLOAT4 diffuse(1.0f, 1.0f, 1.0f, 1.0f);
 	DirectX::XMFLOAT4 ambient(0.3f, 0.3f, 0.3f, 1.0f);
 	// 各種パラメーター
 	float shininess;
 	// 色情報
-	m_fDiffuse = In_pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS ?
-		DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f) : diffuse;
+	m_fDiffuse = In_pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color4) == AI_SUCCESS ?
+		DirectX::XMFLOAT4(color4.r, color4.g, color4.b, color4.a) : diffuse;
 	// 環境光の色
 	m_fAmbient = In_pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS ?
-		DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f) : ambient;
+		DirectX::XMFLOAT4(color4.r, color4.g, color4.b, color4.a) : ambient;
 	// 鏡面反射の色
 	shininess = In_pMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS ? shininess : 0.0f;
 	m_fSpecular = In_pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS ?

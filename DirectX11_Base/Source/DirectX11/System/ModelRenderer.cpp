@@ -164,25 +164,31 @@ void ModelRenderer::Draw() noexcept
 				pVS->Bind();
 			}
 			if (pPS)
+			{
 				pPS->Bind();
+			}
 		}
 
+		// 設定されているテクスチャをシェーダーに設定
 		if (itr->GetMaterial()->GetTextureNum() > 0)
 		{
 			const auto &Textures = itr->GetMaterial()->GetTextures();
 			for(int i = 0; i < ResourceSetting::TextureType_Max; ++i)
 			{
-				if (Textures[i])
+				// テクスチャが設定されていない場合はスキップ
+				if (!Textures[i])
+					continue;
+
+				// 使用するシェーダーがマテリアルのシェーダーかどうかを判定
+				if (m_bUseMaterialShader)
 				{
-					if (m_bUseMaterialShader)
-					{
-						// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーにテクスチャを設定
-						itr->GetMaterial()->GetPixelShader()->SetTexture(i, Textures[i].get());
-					}
-					{
-						// モデル全体のシェーダーを使用する場合は、モデルのピクセルシェーダーにテクスチャを設定
-						m_pPS->SetTexture(i, Textures[i].get());
-					}
+					// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーにテクスチャを設定
+					itr->GetMaterial()->GetPixelShader()->SetTexture(i, Textures[i].get());
+				}
+				else
+				{
+					// モデル全体のシェーダーを使用する場合は、モデルのピクセルシェーダーにテクスチャを設定
+					m_pPS->SetTexture(i, Textures[i].get());
 				}
 			}
 		}
