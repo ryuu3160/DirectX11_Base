@@ -199,10 +199,10 @@ HRESULT DX11_Initialize::Init()
 	};
 	for (int i = 0; i < BLEND_MAX; i++)
 	{
-		auto BlendState = m_cpBlendState[i].Get();
+		auto BlendState = m_cpBlendState[i].GetAddressOf();
 		BlendDesc.RenderTarget[0].SrcBlend = Blend[i][0];
 		BlendDesc.RenderTarget[0].DestBlend = Blend[i][1];
-		m_hr = m_cpDevice->CreateBlendState(&BlendDesc, &BlendState);
+		m_hr = m_cpDevice->CreateBlendState(&BlendDesc, BlendState);
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetBlendMode(BLEND_ALPHA);
