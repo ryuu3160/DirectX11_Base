@@ -62,8 +62,8 @@ void SceneRoot::Init()
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
-	pModel2->SetPos({ -1.0f, 0.0f, 0.0f });
-	pModel2->SetScale({ 0.01f, 0.01f, 0.01f });
+	pModel2->SetPos({ -2.0f, 0.0f, 0.0f });
+	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
 
 	// スプライトの作成
 	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
