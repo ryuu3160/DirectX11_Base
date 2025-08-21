@@ -48,6 +48,12 @@ public:
 	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値。</param>
 	inline void IsUseMaterialShader(_In_ const bool &In_IsUse) noexcept { m_bUseMaterialShader = In_IsUse; }
 
+	/// <summary>
+	/// モデル全体のピクセルシェーダーにカメラ情報を書き込むかどうかを設定します。
+	/// </summary>
+	/// <param name="[In_IsEnable]">カメラ情報を書き込むかどうかを示す真偽値。</param>
+	inline void IsEnablePS_WriteCamera(_In_ const bool &In_IsEnable) noexcept { m_bEnablePS_WriteCamera = In_IsEnable; }
+
     /// <summary>
     /// データアクセサーを使用して読み書きを行います。
     /// </summary>
@@ -111,6 +117,11 @@ private:
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;
 
+	// モデル全体のPixelシェーダーに書き込むもの
+	std::vector<DirectX::XMFLOAT4> m_vecLightParam; // ライトパラメータ
+	std::vector<DirectX::XMFLOAT4> m_vecCameraParam; // カメラパラメータ
+
     float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
+	bool m_bEnablePS_WriteCamera; // モデル全体のピクセルシェーダーでカメラ情報を書き込むかどうか
 };

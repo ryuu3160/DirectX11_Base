@@ -104,4 +104,91 @@ namespace ResourceSetting
 	/// <param name="[In_RemoveExtension]">拡張子を削除するかどうか</param>
 	/// <returns>FBX名</returns>
 	std::string ExtractFbxNameFromMaterialName(_In_ const std::string &In_MaterialName,_In_ const bool &In_RemoveExtension) noexcept;
+
+	enum ShaderParamType : unsigned int
+	{
+		ShaderParam_Camera,				// カメラパラメーター
+		ShaderParam_Light,				// 標準ライト
+		ShaderParam_PointLight,			// ポイントライト
+		ShaderParam_DirectionalLight,	// 平行光源(リムライトや太陽光など)
+		ShaderParam_SpotLight,			// スポットライト
+		ShaderParam_PBR,				// PBRマテリアル用パラメーター
+		ShaderParam_POM,				// 視差遮蔽マップ用パラメーター
+
+		ShaderParam_MAX, // 最大値（配列のサイズ取得用）
+		ShaderParam_Unknown = 0xFFFFFFFF // 未知のパラメータータイプ
+	};
+
+	// ライトのパラメーター構造体
+	struct LightParam
+	{
+		DirectX::XMFLOAT3 Direction; // ライトの方向
+		float Dummy;
+		DirectX::XMFLOAT4 Diffuse; // 拡散光の色
+		DirectX::XMFLOAT4 Specular; // 鏡面反射光の色
+	};
+	// ポイントライトのパラメーター構造体
+	struct PointLightParam
+	{
+		DirectX::XMFLOAT3 Pos;		// ライトの位置
+		float Range;				// ライトの範囲
+		DirectX::XMFLOAT4 Color;	// 光源の色
+	};
+	// 平行光源のパラメーター構造体
+	struct DirectionalLightParam
+	{
+		DirectX::XMFLOAT3 Direction; // ライトの方向
+		float Dummy;
+		DirectX::XMFLOAT4 Diffuse; // 色
+	};
+	// スポットライトのパラメーター構造体
+	struct SpotLightParam
+	{
+		DirectX::XMFLOAT3 Pos;		// ライトの位置
+		float Range;				// ライトの範囲
+		DirectX::XMFLOAT4 Color;	// 光源の色
+		DirectX::XMFLOAT3 Direction; // ライトの方向
+		float Angle;				// スポットライトの照射角度
+	};
+	// PBRマテリアルのパラメーター構造体
+	struct PBR_Param
+	{
+		float Metallic;
+		float Smooth;
+		DirectX::XMFLOAT2 dummy;
+	};
+
+	struct POM_Param
+	{
+		float HeightScale;			// 高さスケール
+		int NumSteps;
+		DirectX::XMFLOAT2 dummy;
+	};
+
+
+	// シェーダーに渡すパラメーターの基底クラス
+	class ShaderParam
+	{
+	public:
+		ShaderParam(ShaderParamType In_Type)
+		{
+			m_Type = In_Type; // パラメーターのタイプを設定
+		}
+		~ShaderParam() = default;
+
+		/// <summary>
+		/// パラメータを取得する
+		/// </summary>
+		/// <returns>パラメータへのポインタを返します。</returns>
+		virtual void *GetParam() noexcept = 0;
+
+		/// <summary>
+		/// m_Type を unsigned int 型に変換して、スロット番号を取得します。
+		/// </summary>
+		/// <returns>m_Type を unsigned int 型にキャストした値（スロット番号）。</returns>
+		inline const unsigned int GetSlotNum() const noexcept { return static_cast<unsigned int>(m_Type); }
+
+	protected:
+		ShaderParamType m_Type; // パラメーターのタイプ
+	};
 }

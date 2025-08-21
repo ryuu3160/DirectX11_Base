@@ -30,6 +30,7 @@ ModelRenderer::ModelRenderer()
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
+	, m_bEnablePS_WriteCamera(false)
 {
 	if (!m_defVS && !m_defPS) // ‚Ç‚¿‚ç‚ànullptr
 	{
@@ -148,6 +149,12 @@ void ModelRenderer::Draw() noexcept
 		m_pVS->WriteBuffer(0, mat);
 
 		m_pVS->Bind();
+		// ƒJƒƒ‰î•ñ‚ð‘‚«ž‚Þ‚©‚Ç‚¤‚©‚ð”»’è
+		if (m_bEnablePS_WriteCamera)
+		{
+			DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
+			m_pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
+		}
 		m_pPS->Bind();
 	}
 

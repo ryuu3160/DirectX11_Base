@@ -41,6 +41,11 @@ private:
 	ShaderManager();
 	~ShaderManager() override;
 
+	/// <summary>
+	/// シェーダーを作成する
+	/// </summary>
+	/// <param name="[In_FileName]">シェーダーファイル名</param>
+	/// <returns>作成したシェーダーへのポインタ</returns>
 	template<typename T, typename = std::enable_if_t<std::is_base_of<Shader, T>::value>>
 	T *CreateShader(_In_ const FilePath &In_FileName)
 	{

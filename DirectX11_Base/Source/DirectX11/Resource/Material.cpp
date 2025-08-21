@@ -79,7 +79,7 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 		DirectX::XMFLOAT4(color4.r, color4.g, color4.b, color4.a) : diffuse;
 	// ŠÂ‹«Œõ‚ÌF
 	m_fAmbient = In_pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS ?
-		DirectX::XMFLOAT4(color4.r, color4.g, color4.b, color4.a) : ambient;
+		DirectX::XMFLOAT4(color.r, color.g, color.b, 1.0f) : ambient;
 	// ‹¾–Ê”½ŽË‚ÌF
 	shininess = In_pMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS ? shininess : 0.0f;
 	m_fSpecular = In_pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS ?
