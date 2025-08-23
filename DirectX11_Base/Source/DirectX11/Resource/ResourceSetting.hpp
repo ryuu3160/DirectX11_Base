@@ -214,4 +214,50 @@ namespace ResourceSetting
 
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<LightParam *>(m_pParam)); }
 	};
+
+	class ShaderParamPointLight : public ShaderParam
+	{
+		public:
+		ShaderParamPointLight(PointLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PointLight)
+		{
+			m_pParam = In_Param;
+		}
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PointLightParam *>(m_pParam)); }
+	};
+	class ShaderParamDirectionalLight : public ShaderParam
+	{
+		public:
+		ShaderParamDirectionalLight(DirectionalLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_DirectionalLight)
+		{
+			m_pParam = In_Param;
+		}
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<DirectionalLightParam *>(m_pParam)); }
+	};
+	class ShaderParamSpotLight : public ShaderParam
+	{
+		public:
+		ShaderParamSpotLight(SpotLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_SpotLight)
+		{
+			m_pParam = In_Param;
+		}
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<SpotLightParam *>(m_pParam)); }
+	};
+	class ShaderParamPBR : public ShaderParam
+	{
+		public:
+		ShaderParamPBR(PBR_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PBR)
+		{
+			m_pParam = In_Param;
+		}
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PBR_Param *>(m_pParam)); }
+	};
+	class ShaderParamPOM : public ShaderParam
+	{
+		public:
+		ShaderParamPOM(POM_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_POM)
+		{
+			m_pParam = In_Param;
+		}
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<POM_Param *>(m_pParam)); }
+	};
 }

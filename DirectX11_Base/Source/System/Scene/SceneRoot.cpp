@@ -98,6 +98,19 @@ void SceneRoot::Uninit()
 
 void SceneRoot::Update()
 {
+	ResourceSetting::LightParam light;
+	light.Direction = { 0.0f, -1.0f, 0.0f };
+	light.Dummy = 0.0f;
+	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+	light.Specular = { 1.0f, 1.0f, 1.0f, 1.0f };
+	ResourceSetting::LightParam lights[] = { 
+		light 
+	};
+	ResourceSetting::ShaderParamLight *LightParam = new ResourceSetting::ShaderParamLight(lights);
+
+	auto pModel = GetObject<GameObject>("RootModel1");
+	auto Component = pModel->GetComponent<ModelRenderer>();
+	Component->SetWriteParam(LightParam);
 }
 
 void SceneRoot::Draw()

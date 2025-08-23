@@ -43,7 +43,7 @@ public:
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
-	template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>>
+	template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type * = nullptr>
 	void SetWriteParam(_In_ T *In_Param);
 
 	/// <summary>
@@ -140,7 +140,7 @@ private:
 	std::array<ResourceSetting::ShaderParam *, ResourceSetting::ShaderParam_MAX> m_pShaderParams; // シェーダーパラメータ
 };
 
-template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>>
+template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type*>
 inline void ModelRenderer::SetWriteParam(T *In_Param)
 {
 	if(In_Param)
