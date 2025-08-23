@@ -15,7 +15,7 @@
 2Dテクスチャを受け取る際、"Texture2D tex : register(t0);"のように記述すると思いますが、
 tの後ろの番号は以下の表を参照して決めてください
 	
-テクスチャタイプごとのレジスタ番号
+テクスチャタイプごとのレジスタ番号表
 	マップタイプ	 :	番号
 	DiffuseMap		 :	0
 	SpecularMap		 :	1
@@ -40,9 +40,19 @@ cbuffer Camera : register(b0)
     float3 eyePos;
     float camDummy;
 }
-のように記述すると思いますが、bの後ろの番号は以下のルールに従って決めてください
-	・カメラの情報は、必ず0番を使用すること
-	・
+のように記述すると思いますが、bの後ろの番号は以下の表を参照して決めてください
+※書き込む情報はResourceSettingヘッダにある○○Paramという名前の構造体を利用し、
+　シェーダー側でも同じ構造で設計してください。
+　
+書き込み情報ごとのバッファ番号表
+	パラメータタイプ :	番号
+	Camera			 :	0
+	Light			 :	1
+	PointLight		 :	2
+	DirectionalLight :	3
+	SpotLight		 :	4
+	PBR_Param		 :	5
+	POM_Param		 :	6
 	
 フレームワークに組み込まれている、スプライトマネージャーの起動コマンド
 	(Left_Shift + Space + U_key) + I_key　これらの同時押し
