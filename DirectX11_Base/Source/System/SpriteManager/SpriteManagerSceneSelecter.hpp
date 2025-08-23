@@ -30,5 +30,5 @@ public:
 	void Draw(_In_ std::map<std::string, HoldFilePath> In_Scenes, _Inout_ int *Inout_Index) noexcept;
 
 private:
-
+	char m_NewSceneName[cx_MaxStringLength];
 };

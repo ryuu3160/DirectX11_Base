@@ -15,6 +15,7 @@ SpriteManagerSceneSelecter::SpriteManagerSceneSelecter()
 	: SpriteManagerWindow("SceneSelecter")
 {
 	m_WindowType = SceneSelecter;
+	m_NewSceneName[0] = '\0';
 }
 
 SpriteManagerSceneSelecter::~SpriteManagerSceneSelecter()
@@ -36,5 +37,15 @@ void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, HoldFilePath> I
 	if (ImGui::ListBox("Scenes", Inout_Index, scenes, static_cast<int>(In_Scenes.size())))
 	{
 		SpriteManager::GetInstance().ChangeScene();
+	}
+
+	for(int i = 0; i < 3;++i)
+		ImGui::Spacing();
+
+	ImGui::InputText("NewSceneName", m_NewSceneName, cx_MaxStringLength);
+
+	if (ImGui::Button("AddScene") && m_NewSceneName[0] != '\0')
+	{
+		SpriteManager::GetInstance().CreateScene(m_NewSceneName);
 	}
 }

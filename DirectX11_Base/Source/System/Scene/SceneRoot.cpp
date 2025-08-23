@@ -30,6 +30,11 @@ void SceneRoot::Init()
 {
 	// オブジェクトの作成
 	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
+	auto pCameraComp = pCamera->GetComponent<Camera>();
+
+	// スプライトマネージャーにカメラを設定
+	SpriteManager::GetInstance().SetCamera(pCameraComp);
+	SpriteManager::GetInstance().SetCameraObject(pCamera);
 
 	Setup(2);
 

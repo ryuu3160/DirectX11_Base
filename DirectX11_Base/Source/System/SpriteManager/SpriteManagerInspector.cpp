@@ -13,8 +13,8 @@
 
 SpriteManagerInspector::SpriteManagerInspector()
 	: SpriteManagerWindow("Inspector")
-	, m_Pos2D(0.0f, 0.0f, 0.0f), m_Scale2D(1.0f, 1.0f, 1.0f), m_Rotation2D(0.0f, 0.0f, 0.0f)
-	, m_Pos3D(0.0f, 0.0f, 0.0f), m_Scale3D(1.0f, 1.0f, 1.0f), m_Rotation3D(0.0f, 0.0f, 0.0f)
+	, m_Pos2D(0.0f, 0.0f, 0.0f), m_Scale2D(1.0f, 1.0f, 1.0f), m_Rotation2D(0.0f, 0.0f, 0.0f), m_Layer2D(0)
+	, m_Pos3D(0.0f, 0.0f, 0.0f), m_Scale3D(1.0f, 1.0f, 1.0f), m_Rotation3D(0.0f, 0.0f, 0.0f), m_Layer3D(0)
 	, m_bIsBillBoard(false)
 {
 	m_WindowType = Inspector;
@@ -35,6 +35,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 		m_Pos2D = In_2DSprite->GetPosition();
 		m_Scale2D = In_2DSprite->GetScale();
 		m_Rotation2D = In_2DSprite->GetRotation();
+		m_Layer2D = In_2DSprite->GetLayer();
 		strcpy_s(m_cFilePath2D, In_2DSprite->GetFilePath().c_str()); // ファイルパスを取得
 
 		if (ImGui::CollapsingHeader(In_2DSprite->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
@@ -42,6 +43,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 			ImGui::InputFloat3("Position", &m_Pos2D.x, "%.2f");
 			ImGui::InputFloat3("Scale", &m_Scale2D.x, "%.2f");
 			ImGui::InputFloat3("Rotation", &m_Rotation2D.x, "%.2f");
+			ImGui::InputInt("Layer", &m_Layer2D);
 			ImGui::InputText("2DTexturePath", m_cFilePath2D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
 
 			if (ImGui::Button("Convert to 3D"))
@@ -52,6 +54,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 		In_2DSprite->SetPosition(m_Pos2D);
 		In_2DSprite->SetScale(m_Scale2D);
 		In_2DSprite->SetRotation(m_Rotation2D);
+		In_2DSprite->SetLayer(m_Layer2D);
 	}
 
 	// 3Dスプライトの情報を表示
@@ -60,6 +63,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 		m_Pos3D = In_3DSprite->GetPosition();
 		m_Scale3D = In_3DSprite->GetScale();
 		m_Rotation3D = In_3DSprite->GetRotation();
+		m_Layer3D = In_3DSprite->GetLayer();
 		m_bIsBillBoard = In_3DSprite->GetIsBillBoard();
 		strcpy_s(m_cFilePath3D, In_3DSprite->GetFilePath().c_str()); // ファイルパスを取得
 
@@ -68,6 +72,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 			ImGui::InputFloat3("3DPosition", &m_Pos3D.x, "%.2f");
 			ImGui::InputFloat3("3DScale", &m_Scale3D.x, "%.2f");
 			ImGui::InputFloat3("3DRotation", &m_Rotation3D.x, "%.2f");
+			ImGui::InputInt("3DLayer", &m_Layer3D);
 			ImGui::Checkbox("Is BillBoard", &m_bIsBillBoard);
 			ImGui::InputText("3DTexturePath", m_cFilePath3D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
 
@@ -81,6 +86,7 @@ void SpriteManagerInspector::Draw(_In_opt_ Sprite *In_2DSprite = nullptr, _In_op
 		In_3DSprite->SetPosition(m_Pos3D);
 		In_3DSprite->SetScale(m_Scale3D);
 		In_3DSprite->SetRotation(m_Rotation3D);
+		In_3DSprite->SetLayer(m_Layer3D);
 		In_3DSprite->SetBillBoard(m_bIsBillBoard);
 	}
 }

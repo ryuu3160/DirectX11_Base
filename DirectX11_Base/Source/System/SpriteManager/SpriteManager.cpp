@@ -67,6 +67,9 @@ void SpriteManager::Update() noexcept
 	if (MENU_OPEN_KEY)
 		m_bIsOpen = !m_bIsOpen;
 
+	if (m_pCamera == nullptr || m_pCameraObj == nullptr)
+		return;
+
 	UpdateViewAndProjection();
 
 	SpriteController();

@@ -38,11 +38,13 @@ private:
 	DirectX::XMFLOAT3 m_Pos2D;
 	DirectX::XMFLOAT3 m_Scale2D;
 	DirectX::XMFLOAT3 m_Rotation2D;
+	int m_Layer2D;
 	char m_cFilePath2D[cx_MaxStringLength]; // ファイルパス
 
 	DirectX::XMFLOAT3 m_Pos3D;
 	DirectX::XMFLOAT3 m_Scale3D;
 	DirectX::XMFLOAT3 m_Rotation3D;
+	int m_Layer3D;
 	bool m_bIsBillBoard; // ビルボードスプライトかどうか
 	char m_cFilePath3D[cx_MaxStringLength]; // ファイルパス
 };

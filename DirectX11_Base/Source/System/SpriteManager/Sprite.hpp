@@ -136,6 +136,8 @@ public:
 
    inline void SetFilePath(_In_ const HoldFilePath &In_FilePath) noexcept { m_FilePath = In_FilePath; }
 
+   inline void SetLayer(_In_ const int &In_Layer) noexcept { m_Layer = In_Layer; }
+
    /// <summary>
    /// 指定されたサイズでオブジェクトのサイズを設定します。
    /// </summary>

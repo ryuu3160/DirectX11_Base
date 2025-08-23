@@ -106,6 +106,9 @@ void Main::Draw()
 
 	g_pScene->RootDraw();
 
+	// スプライトマネージャーの3D描画
+	SpriteManager::GetInstance().Draw3D();
+
 	Change2D_Draw(); // 2D描画の設定
 	SpriteManager::GetInstance().Draw2D();
 	Change3D_Draw(); // 3D描画の設定
