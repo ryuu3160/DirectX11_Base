@@ -63,6 +63,18 @@ public:
 	inline VertexShader *GetVertexShader() const noexcept { return m_pVS; }
 	inline PixelShader *GetPixelShader() const noexcept { return m_pPS; }
 
+	/// <summary>
+	/// カメラをPSに書き込むかどうかを取得します。
+	/// </summary>
+	/// <returns>PSWriteカメラである場合は true への参照、そうでない場合は false への参照を返します。</returns>
+	inline const bool &IsPSWriteCamera() const noexcept { return m_bIsPSWriteCamera; }
+
+	/// <summary>
+	/// シェーダーパラメータのリストを取得します。
+	/// </summary>
+	/// <returns>ResourceSetting::ShaderParamType 型の std::vector への定数参照。</returns>
+	inline const std::vector<ResourceSetting::ShaderParamType> &GetShaderParamList() const noexcept { return m_vecShaderParamList; }
+
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成
@@ -70,11 +82,17 @@ private:
 	void MakeDefaultShader();
 
 	/// <summary>
-	/// MaterialShaderInfoファイルからシェーダー名を読み込みます。
+	/// MaterialShaderInfoファイルからシェーダー情報を読み込みます。
 	/// </summary>
 	/// <param name="[In_Directory]">シェーダー名を検索するディレクトリへの参照。</param>
 	/// <returns>読み取りが成功したかどうか</returns>
-	bool LoadShaderName(_In_ const std::string_view &In_Directory) noexcept;
+	bool LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcept;
+
+	/// <summary>
+	/// 書き込みパラメータを読み込みます。
+	/// </summary>
+	/// <param name="[In_WriteParam]">読み込む書き込みパラメータを表す文字列ビュー。</param>
+	void LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexcept;
 
 	/// <summary>
 	/// マテリアルシェーダー情報を保存します。
@@ -88,6 +106,9 @@ private:
 	DirectX::XMFLOAT4 m_fSpecular;
 	std::array<std::shared_ptr<Texture>,ResourceSetting::TextureType_Max> m_spTextures;
 	std::string m_strDirectory; // マテリアルのディレクトリパス
+
+	std::vector<ResourceSetting::ShaderParamType> m_vecShaderParamList; // PixelShaderに書き込む情報リスト
+	bool m_bIsPSWriteCamera; // カメラ情報をPixelShaderに書き込むかどうか
 
 	VertexShader *m_pVS;
 	PixelShader *m_pPS;

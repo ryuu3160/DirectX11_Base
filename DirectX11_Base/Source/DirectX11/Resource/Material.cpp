@@ -30,6 +30,7 @@ Material::Material()
 	, m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_strMaterialName("")
+	, m_bIsPSWriteCamera(false)
 {
 	m_strDirectory.clear();
 
@@ -47,6 +48,7 @@ Material::Material()
 
 	m_strVSName.clear();
 	m_strPSName.clear();
+	m_vecShaderParamList.clear();
 }
 
 Material::~Material()
@@ -112,7 +114,7 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 	}
 
 	// シェーダーの取得
-	if (LoadShaderName(dir))
+	if (LoadShaderInfo(dir))
 	{
 		auto &ShaderM = ShaderManager::GetInstance();
 		if (!m_strVSName.empty())
@@ -151,11 +153,12 @@ void Material::MakeDefaultShader()
 	m_defPS->Load("Assets/Shader/PS_Model.cso");
 }
 
-bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcept
+bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcept
 {
 	std::fstream file;
 	std::string FbxName = ResourceSetting::ExtractFbxNameFromMaterialName(m_strMaterialName, true);
 
+	// ファイルを開く
 	std::string path = std::string(In_Directory) + FbxName + "_MaterialShaderInfo.csv";
 	file.open(path, std::ios::in);
 	if (!file.is_open())
@@ -164,6 +167,7 @@ bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcep
 		return "";
 	}
 
+	// ファイルを1行ずつ読み込み、マテリアル名を検索
 	std::string line;
 	std::string name;
 	for (; std::getline(file, line);)
@@ -172,6 +176,7 @@ bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcep
 		if (name == m_strMaterialName)
 			break;
 	}
+	// ファイルの終端に達した場合はマテリアル名が見つからなかったことを示す
 	if (!file.good())
 	{
 		file.close();
@@ -184,34 +189,40 @@ bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcep
 	size_t pos = line.find(',');
 	size_t nextPos = line.find(',', pos + 1);
 	size_t length = nextPos - (pos + 1);
-	std::string ShaderName;
+	std::string Info;
 	for (nextPos; pos != std::string::npos;pos = line.find(',',pos + 1))
 	{
-		// シェーダー名を抽出
-		ShaderName = line.substr(pos + 1, length);
+		// カンマの位置から次のカンマの位置までの長さを計算
+		// 次のカンマが見つからない場合は行の終わりまでの長さを計算
+		if (nextPos == std::string::npos)
+			length = line.length() - (pos); // 行の終わりまでの長さを計算
+		else
+			length = nextPos - (pos + 1);
+		
+		// マテリアル情報の抽出
+		Info = line.substr(pos + 1, length);
 
 		// シェーダー名の設定
-		if(ShaderName.find("VS_") != std::string::npos)
+		if(Info.find("VS_") != std::string::npos)
 		{
-			m_strVSName = ShaderName;
+			m_strVSName = Info;
 		}
-		else if (ShaderName.find("PS_") != std::string::npos)
+		else if (Info.find("PS_") != std::string::npos)
 		{
-			m_strPSName = ShaderName;
+			m_strPSName = Info;
+		}
+		else if (Info == "PSWriteCamera") // PixelShaderにカメラ情報を書き込むフラグ
+		{
+			m_bIsPSWriteCamera = true;
+		}
+		else if (Info.find("PSWriteInfo:") != std::string::npos)
+		{
+			LoadWriteParam(Info);
 		}
 
 		// 次のカンマの位置を探す
 		if(nextPos != std::string::npos)
 			nextPos = line.find(',', nextPos + 1);
-
-		// 次のカンマが見つからない場合は行の終わりまでの長さを計算
-		if (nextPos == std::string::npos)
-		{
-			length = line.length() - (pos + length); // 行の終わりまでの長さを計算
-			continue; // ループを続ける
-		}
-
-		length = nextPos - pos; // 次のカンマまでの長さを計算
 	}
 
 	if(m_strVSName.empty() && m_strPSName.empty())
@@ -220,6 +231,34 @@ bool Material::LoadShaderName(_In_ const std::string_view &In_Directory) noexcep
 	}
 
 	return true;
+}
+
+void Material::LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexcept
+{
+	std::string WriteParam = std::string(In_WriteParam);
+
+	WriteParam = WriteParam.substr(WriteParam.find(':') + 1);
+
+	size_t pos = WriteParam.find('*');
+	for (; pos != std::string::npos;pos = WriteParam.find('*'))
+	{
+		std::string ParamStr = WriteParam.substr(0, pos);
+		ResourceSetting::ShaderParamType type = static_cast<ResourceSetting::ShaderParamType>(std::stoi(ParamStr));
+		if (type >= ResourceSetting::ShaderParam_MAX)
+		{
+			Error("Invalid ShaderParamType in material: " + m_strMaterialName);
+			return;
+		}
+		if (type == ResourceSetting::ShaderParam_Camera) // カメラの場合は別フラグ
+		{
+			m_bIsPSWriteCamera = true;// カメラ情報を書き込むフラグ
+			WriteParam = WriteParam.substr(pos + 1);
+			continue;
+		}
+
+		m_vecShaderParamList.push_back(type);
+		WriteParam = WriteParam.substr(pos + 1);
+	}
 }
 
 void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory) const noexcept
@@ -255,6 +294,21 @@ void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory)
 		return;
 	}
 
-	file << m_strMaterialName << "," << m_strVSName << "," << m_strPSName << "\n";
+	// シェーダー名を書き込む
+	file << m_strMaterialName << "," << m_strVSName << "," << m_strPSName;
+
+	// PSに書き込む情報がある場合はそれも書き込む
+	if (m_bIsPSWriteCamera)
+		file << "," << "PSWriteCamera";
+	if (!m_vecShaderParamList.empty())
+	{
+		file << ",PSWriteInfo:";
+		for (auto &itr : m_vecShaderParamList)
+		{
+			file << itr << "*";
+		}
+	}
+
+	file << "\n";
 	file.close();
 }

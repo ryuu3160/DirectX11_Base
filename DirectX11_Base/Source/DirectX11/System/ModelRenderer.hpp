@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
+#include "DirectX11/Resource/ResourceSetting.hpp"
 
 // ==============================
 //	前方宣言
@@ -42,6 +43,9 @@ public:
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
+	template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>>
+	void SetWriteParam(_In_ T *In_Param);
+
 	/// <summary>
 	/// マテリアルシェーダーの使用状態を設定します。
 	/// </summary>
@@ -53,6 +57,13 @@ public:
 	/// </summary>
 	/// <param name="[In_IsEnable]">カメラ情報を書き込むかどうかを示す真偽値。</param>
 	inline void IsEnablePS_WriteCamera(_In_ const bool &In_IsEnable) noexcept { m_bEnablePS_WriteCamera = In_IsEnable; }
+
+	/// <summary>
+	/// モデル全体のピクセルシェーダーに書き込む情報を設定する
+	/// </summary>
+	/// <param name="[In_Type]">設定するタイプ</param>
+	/// <param name="[In_Enable]">書き込むかどうかの真偽値</param>
+	void IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable);
 
     /// <summary>
     /// データアクセサーを使用して読み書きを行います。
@@ -124,4 +135,14 @@ private:
     float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 	bool m_bEnablePS_WriteCamera; // モデル全体のピクセルシェーダーでカメラ情報を書き込むかどうか
+	std::array<bool, ResourceSetting::ShaderParam_MAX> m_bEnablePS_WriteParamList; // モデル全体のピクセルシェーダーでパラメーターを書き込むかの真偽値リスト
+
+	std::array<ResourceSetting::ShaderParam *, ResourceSetting::ShaderParam_MAX> m_pShaderParams; // シェーダーパラメータ
 };
+
+template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>>
+inline void ModelRenderer::SetWriteParam(T *In_Param)
+{
+	if(In_Param)
+		m_pShaderParams[In_Param->GetSlotNum()] = In_Param;
+}

@@ -31,6 +31,8 @@ ModelRenderer::ModelRenderer()
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
 	, m_bEnablePS_WriteCamera(false)
+	, m_bEnablePS_WriteParamList{}
+	, m_pShaderParams{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
@@ -40,6 +42,11 @@ ModelRenderer::ModelRenderer()
 	m_pPS = m_defPS.get();
 
 	m_vecMeshes.clear();
+
+	for (auto &itr : m_pShaderParams)
+		itr = nullptr;
+	for (auto &itr : m_bEnablePS_WriteParamList)
+		itr = false;
 }
 
 ModelRenderer::~ModelRenderer()
@@ -52,6 +59,19 @@ void ModelRenderer::ExecuteUpdate() noexcept
 	if (!m_vecMeshes.empty()) return;
 
 	this->Load(m_AssetPath, m_fScale);
+}
+
+void ModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable)
+{
+	if (In_Type >= ResourceSetting::ShaderParam_MAX)
+		return;// 値が最大値よりも大きい場合はエラー
+
+	// タイプがカメラの場合は専用のフラグに設定
+	if (In_Type == ResourceSetting::ShaderParam_Camera)
+		m_bEnablePS_WriteCamera = In_Enable;
+
+	// フラグを設定
+	m_bEnablePS_WriteParamList[In_Type] = In_Enable;
 }
 
 void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
@@ -155,6 +175,15 @@ void ModelRenderer::Draw() noexcept
 			DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
 			m_pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
 		}
+
+		// 各パラメーターを書き込むかどうかを判定
+		for (unsigned int i = 0; i < ResourceSetting::ShaderParam_MAX;++i)
+		{
+			if(m_bEnablePS_WriteParamList[i] && m_pShaderParams[i])
+			{
+				m_pPS->WriteBuffer(i, m_pShaderParams[i]->GetParam());
+			}
+		}
 		m_pPS->Bind();
 	}
 
@@ -172,6 +201,19 @@ void ModelRenderer::Draw() noexcept
 			}
 			if (pPS)
 			{
+				// カメラ情報を書き込むかどうかを判定
+				if (itr->GetMaterial()->IsPSWriteCamera())
+				{
+					DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
+					pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
+				}
+				// マテリアルごとのシェーダーにパラメーターを書き込む
+				for (auto &type : itr->GetMaterial()->GetShaderParamList())
+				{
+					if(m_pShaderParams[type])
+						pPS->WriteBuffer(type, m_pShaderParams[type]->GetParam());
+				}
+
 				pPS->Bind();
 			}
 		}

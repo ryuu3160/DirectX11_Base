@@ -119,8 +119,13 @@ namespace ResourceSetting
 		ShaderParam_Unknown = 0xFFFFFFFF // 未知のパラメータータイプ
 	};
 
+	// パラメーターのベース構造体
+	struct BaseParam
+	{
+	};
+
 	// ライトのパラメーター構造体
-	struct LightParam
+	struct LightParam : public BaseParam
 	{
 		DirectX::XMFLOAT3 Direction; // ライトの方向
 		float Dummy;
@@ -128,21 +133,21 @@ namespace ResourceSetting
 		DirectX::XMFLOAT4 Specular; // 鏡面反射光の色
 	};
 	// ポイントライトのパラメーター構造体
-	struct PointLightParam
+	struct PointLightParam : public BaseParam
 	{
 		DirectX::XMFLOAT3 Pos;		// ライトの位置
 		float Range;				// ライトの範囲
 		DirectX::XMFLOAT4 Color;	// 光源の色
 	};
 	// 平行光源のパラメーター構造体
-	struct DirectionalLightParam
+	struct DirectionalLightParam : public BaseParam
 	{
 		DirectX::XMFLOAT3 Direction; // ライトの方向
 		float Dummy;
 		DirectX::XMFLOAT4 Diffuse; // 色
 	};
 	// スポットライトのパラメーター構造体
-	struct SpotLightParam
+	struct SpotLightParam : public BaseParam
 	{
 		DirectX::XMFLOAT3 Pos;		// ライトの位置
 		float Range;				// ライトの範囲
@@ -151,30 +156,36 @@ namespace ResourceSetting
 		float Angle;				// スポットライトの照射角度
 	};
 	// PBRマテリアルのパラメーター構造体
-	struct PBR_Param
+	struct PBR_Param : public BaseParam
 	{
 		float Metallic;
 		float Smooth;
 		DirectX::XMFLOAT2 dummy;
 	};
 
-	struct POM_Param
+	struct POM_Param : public BaseParam
 	{
 		float HeightScale;			// 高さスケール
 		int NumSteps;
 		DirectX::XMFLOAT2 dummy;
 	};
 
-
 	// シェーダーに渡すパラメーターの基底クラス
 	class ShaderParam
 	{
 	public:
-		ShaderParam(ShaderParamType In_Type)
+		ShaderParam(ShaderParamType In_Type) : m_pParam(nullptr)
 		{
 			m_Type = In_Type; // パラメーターのタイプを設定
 		}
-		~ShaderParam() = default;
+		~ShaderParam()
+		{
+			if (m_pParam)
+			{
+				delete m_pParam;
+				m_pParam = nullptr;
+			}
+		}
 
 		/// <summary>
 		/// パラメータを取得する
@@ -190,5 +201,17 @@ namespace ResourceSetting
 
 	protected:
 		ShaderParamType m_Type; // パラメーターのタイプ
+		BaseParam *m_pParam;
+	};
+
+	class ShaderParamLight : public ShaderParam
+	{
+	public:
+		ShaderParamLight(LightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_Light)
+		{
+			m_pParam = In_Param;
+		}
+
+		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<LightParam *>(m_pParam)); }
 	};
 }
