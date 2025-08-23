@@ -297,6 +297,12 @@ namespace ResourceSetting
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<POM_Param *>(m_pParam)); }
 	};
 
+	/// <summary>
+	/// ShaderParamの生成関数
+	/// </summary>
+	/// <param name="[In_pParam]">パラメーター構造体へのポインタ(配列も可)</param>
+	/// <param name="[In_ArraySize]">与えるパラメーター構造体の数</param>
+	/// <returns></returns>
 	template<typename T>
 	inline ShaderParam *CreateShaderParam(T In_pParam, size_t In_ArraySize)
 	{
