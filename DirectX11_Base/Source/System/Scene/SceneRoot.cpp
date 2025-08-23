@@ -166,25 +166,6 @@ void SceneRoot::Draw()
 	geometory.DrawLines();
 
 #endif
-
-	//// カメラオブジェクトの取得
-	//GameObject *pCameraObj2 = GetObject<GameObject>("Camera");
-	//// カメラコンポーネントの取得
-	//Camera *pCamera2 = pCameraObj2->GetComponent<Camera>();
-
-	//// todo: スプライトクラスをもっと使いやすく改造
-	//
-	//// 2D描画の準備
-	//Main::Change2D_Draw();
-
-	//pCamera2->Set3D(false);
-	//SpriteManager::GetInstance().SetCameraViewAndCameraProj(pCamera2);
-	//SpriteManager::GetInstance().GetSprite("TestSprite")->SetPosition({ 5.0f,0.0f,0.0f });
-	//SpriteManager::GetInstance().GetSprite("TestSprite2")->SetRotation({ 0.0f,0.0f,90.0f });
-	//SpriteManager::GetInstance().Draw();
-
-	//pCamera2->Set3D(true);
-	//Main::Change3D_Draw();
 }
 
 void SceneRoot::ChangeScene()
