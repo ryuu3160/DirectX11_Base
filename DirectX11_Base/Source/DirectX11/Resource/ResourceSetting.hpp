@@ -207,9 +207,15 @@ namespace ResourceSetting
 	class ShaderParamLight : public ShaderParam
 	{
 	public:
-		ShaderParamLight(LightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_Light)
+		ShaderParamLight(LightParam *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_Light)
 		{
-			m_pParam = new(In_Param) LightParam;
+			auto work = new LightParam[In_ArraySize];
+
+			for(size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<LightParam *>(m_pParam)); }
@@ -218,46 +224,110 @@ namespace ResourceSetting
 	class ShaderParamPointLight : public ShaderParam
 	{
 		public:
-		ShaderParamPointLight(PointLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PointLight)
+		ShaderParamPointLight(PointLightParam *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_PointLight)
 		{
-			m_pParam = new(In_Param) PointLightParam;
+			auto work = new PointLightParam[In_ArraySize];
+
+			for (size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PointLightParam *>(m_pParam)); }
 	};
 	class ShaderParamDirectionalLight : public ShaderParam
 	{
 		public:
-		ShaderParamDirectionalLight(DirectionalLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_DirectionalLight)
+		ShaderParamDirectionalLight(DirectionalLightParam *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_DirectionalLight)
 		{
-			m_pParam = new(In_Param) DirectionalLightParam;
+			auto work = new DirectionalLightParam[In_ArraySize];
+
+			for (size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<DirectionalLightParam *>(m_pParam)); }
 	};
 	class ShaderParamSpotLight : public ShaderParam
 	{
 		public:
-		ShaderParamSpotLight(SpotLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_SpotLight)
+		ShaderParamSpotLight(SpotLightParam *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_SpotLight)
 		{
-			m_pParam = new(In_Param) SpotLightParam;
+			auto work = new SpotLightParam[In_ArraySize];
+
+			for (size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<SpotLightParam *>(m_pParam)); }
 	};
 	class ShaderParamPBR : public ShaderParam
 	{
 		public:
-		ShaderParamPBR(PBR_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PBR)
+		ShaderParamPBR(PBR_Param *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_PBR)
 		{
-			m_pParam = new(In_Param) PBR_Param;
+			auto work = new PBR_Param[In_ArraySize];
+
+			for (size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PBR_Param *>(m_pParam)); }
 	};
 	class ShaderParamPOM : public ShaderParam
 	{
 		public:
-		ShaderParamPOM(POM_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_POM)
+		ShaderParamPOM(POM_Param *In_Param, size_t In_ArraySize) : ShaderParam(ShaderParamType::ShaderParam_POM)
 		{
-			m_pParam = new(In_Param) POM_Param;
+			auto work = new POM_Param[In_ArraySize];
+
+			for (size_t i = 0; i < In_ArraySize; ++i)
+			{
+				work[i] = In_Param[i];
+			}
+			m_pParam = work;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<POM_Param *>(m_pParam)); }
 	};
+
+	template<typename T>
+	inline ShaderParam *CreateShaderParam(T In_pParam, size_t In_ArraySize)
+	{
+		if(!In_pParam || In_ArraySize == 0)
+			return nullptr;
+
+		if(std::is_same<T, LightParam*>::value)
+		{
+			return new ShaderParamLight(reinterpret_cast<LightParam *>(In_pParam), In_ArraySize);
+		}
+		else if (std::is_same<T, PointLightParam *>::value)
+		{
+			return new ShaderParamPointLight(reinterpret_cast<PointLightParam *>(In_pParam), In_ArraySize);
+		}
+		else if (std::is_same<T, DirectionalLightParam *>::value)
+		{
+			return new ShaderParamDirectionalLight(reinterpret_cast<DirectionalLightParam *>(In_pParam), In_ArraySize);
+		}
+		else if (std::is_same<T, SpotLightParam *>::value)
+		{
+			return new ShaderParamSpotLight(reinterpret_cast<SpotLightParam *>(In_pParam), In_ArraySize);
+		}
+		else if (std::is_same<T, PBR_Param *>::value)
+		{
+			return new ShaderParamPBR(reinterpret_cast<PBR_Param *>(In_pParam), In_ArraySize);
+		}
+		else if (std::is_same<T, POM_Param *>::value)
+		{
+			return new ShaderParamPOM(reinterpret_cast<POM_Param *>(In_pParam), In_ArraySize);
+		}
+
+		return nullptr;
+	}
 }

@@ -111,7 +111,7 @@ void SceneRoot::Update()
 	ResourceSetting::LightParam lights[] = { 
 		light 
 	};
-	ResourceSetting::ShaderParamLight *LightParam = new ResourceSetting::ShaderParamLight(lights);
+	auto *LightParam = ResourceSetting::CreateShaderParam(lights,_countof(lights));
 
 	auto pModel = GetObject<GameObject>("RootModel1");
 	auto Component = pModel->GetComponent<ModelRenderer>();
