@@ -51,6 +51,15 @@ ModelRenderer::ModelRenderer()
 
 ModelRenderer::~ModelRenderer()
 {
+	for (auto &itr : m_pShaderParams)
+	{
+		if (itr)
+		{
+			delete itr;
+			itr = nullptr;
+		}
+	}
+	m_vecMeshes.clear();
 }
 
 void ModelRenderer::ExecuteUpdate() noexcept
@@ -182,6 +191,9 @@ void ModelRenderer::Draw() noexcept
 			if(m_bEnablePS_WriteParamList[i] && m_pShaderParams[i])
 			{
 				m_pPS->WriteBuffer(i, m_pShaderParams[i]->GetParam());
+				// パラメーターの解放
+				delete m_pShaderParams[i];
+				m_pShaderParams[i] = nullptr;
 			}
 		}
 		m_pPS->Bind();
@@ -210,8 +222,13 @@ void ModelRenderer::Draw() noexcept
 				// マテリアルごとのシェーダーにパラメーターを書き込む
 				for (auto &type : itr->GetMaterial()->GetShaderParamList())
 				{
-					if(m_pShaderParams[type])
+					if (m_pShaderParams[type])
+					{
 						pPS->WriteBuffer(type, m_pShaderParams[type]->GetParam());
+						// パラメーターの解放
+						delete m_pShaderParams[type];
+						m_pShaderParams[type] = nullptr;
+					}
 				}
 
 				pPS->Bind();
