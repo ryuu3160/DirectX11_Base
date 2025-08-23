@@ -209,7 +209,7 @@ namespace ResourceSetting
 	public:
 		ShaderParamLight(LightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_Light)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) LightParam;
 		}
 
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<LightParam *>(m_pParam)); }
@@ -220,7 +220,7 @@ namespace ResourceSetting
 		public:
 		ShaderParamPointLight(PointLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PointLight)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) PointLightParam;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PointLightParam *>(m_pParam)); }
 	};
@@ -229,7 +229,7 @@ namespace ResourceSetting
 		public:
 		ShaderParamDirectionalLight(DirectionalLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_DirectionalLight)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) DirectionalLightParam;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<DirectionalLightParam *>(m_pParam)); }
 	};
@@ -238,7 +238,7 @@ namespace ResourceSetting
 		public:
 		ShaderParamSpotLight(SpotLightParam *In_Param) : ShaderParam(ShaderParamType::ShaderParam_SpotLight)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) SpotLightParam;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<SpotLightParam *>(m_pParam)); }
 	};
@@ -247,7 +247,7 @@ namespace ResourceSetting
 		public:
 		ShaderParamPBR(PBR_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_PBR)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) PBR_Param;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<PBR_Param *>(m_pParam)); }
 	};
@@ -256,7 +256,7 @@ namespace ResourceSetting
 		public:
 		ShaderParamPOM(POM_Param *In_Param) : ShaderParam(ShaderParamType::ShaderParam_POM)
 		{
-			m_pParam = In_Param;
+			m_pParam = new(In_Param) POM_Param;
 		}
 		void *GetParam() noexcept override { return static_cast<void *>(reinterpret_cast<POM_Param *>(m_pParam)); }
 	};
