@@ -48,4 +48,6 @@ void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, HoldFilePath> I
 	{
 		SpriteManager::GetInstance().CreateScene(m_NewSceneName);
 	}
+	else
+		m_NewSceneName[0] = '\0';
 }
