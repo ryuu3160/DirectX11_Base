@@ -103,7 +103,7 @@ void SceneBase::RootDraw() noexcept
 	Draw();
 	// サブシーンの描画
 	if (m_pSubScene)
-		m_pSubScene->Draw();
+		m_pSubScene->RootDraw();
 
 	// 全ての描画
 	m_RenderManager.DrawAll();
