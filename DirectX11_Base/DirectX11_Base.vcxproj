@@ -157,10 +157,12 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\App\GameObject\Character\Player.cpp" />
     <ClCompile Include="Source\App\Main.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneGame.cpp" />
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -263,10 +265,12 @@
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\App\GameObject\Character\Player.hpp" />
     <ClInclude Include="Source\App\Main.hpp">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneGame.hpp" />
     <ClInclude Include="Source\Defines.hpp">
       <SubType>
       </SubType>

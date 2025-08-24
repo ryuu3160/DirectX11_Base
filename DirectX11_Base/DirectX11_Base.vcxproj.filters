@@ -86,6 +86,12 @@
     <Filter Include="Source\DirectX11\Resource">
       <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\App\GameObject">
+      <UniqueIdentifier>{c4fc00b9-bce7-4ae6-9350-f89b0a2acfeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\App\GameObject\Character">
+      <UniqueIdentifier>{a7be8e62-7ff3-4447-aa93-05e808eea4f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -231,6 +237,12 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneGame.cpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\App\GameObject\Character\Player.cpp">
+      <Filter>Source\App\GameObject\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,6 +404,12 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\ShaderManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneGame.hpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\GameObject\Character\Player.hpp">
+      <Filter>Source\App\GameObject\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

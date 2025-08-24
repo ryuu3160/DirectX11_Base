@@ -16,6 +16,9 @@
 #include "System/Scene/SceneRoot.hpp"
 #include "System/ImGui/imgui_impl_win32.h"
 
+// シーン
+#include "App/Scene/SceneGame.hpp"
+
 // ==============================
 //  グローバル変数
 // ==============================
@@ -55,6 +58,8 @@ HRESULT Main::Init()
 	SceneBase::Initialize();
 	g_pScene = std::make_shared<SceneRoot>();
 	g_pScene->Init();
+
+	g_pScene->AddSubScene<SceneGame>();
 
 	// 初期リソース作成
 	auto rtv = g_pScene->CreateObject<RenderTarget>("RTV");
