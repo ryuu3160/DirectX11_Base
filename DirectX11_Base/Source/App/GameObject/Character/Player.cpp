@@ -33,19 +33,19 @@ void Player::Update()
 {
 	if(GetAsyncKeyState('A') & 0x8000)
 	{
-		m_Rotation.y += 1000.0f;
+		m_Rotation.y += 0.01f;
 	}
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-		m_Rotation.y -= 1.0f;
+		m_Rotation.y -= 0.01f;
 	}
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
-		m_Rotation.x += 1.0f;
+		m_Rotation.z += 0.01f;
 	}
 	if (GetAsyncKeyState('S') & 0x8000)
 	{
-		m_Rotation.x -= 1.0f;
+		m_Rotation.z -= 0.01f;
 	}
 	GameObject::Update();
 }
