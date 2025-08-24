@@ -90,6 +90,9 @@ private:
 	// コンポーネント追加時に型に関係なく呼び出す処理
 	void _addComponent(_In_ Component *In_pComponent);
 
+	// 回転情報の同期
+	void AngleSynchronization();
+
 private:
 	// コンポーネントリスト
 	using Components = std::vector<Component *>;
@@ -107,6 +110,7 @@ private:
 	ChildObjects		m_ChildObjects;	// 子オブジェクトの一覧
 	Datas				m_Datas;		// 保存データ
 	std::string			m_Name;			// オブジェクト名
+	DirectX::XMFLOAT3	m_PrevRotation; // 前回の回転値
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
