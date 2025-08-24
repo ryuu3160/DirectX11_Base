@@ -111,6 +111,9 @@ GameObject::~GameObject()
 
 void GameObject::ExecuteUpdate() noexcept
 {
+	// 角度データの同期
+	AngleSynchronization();
+
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
@@ -291,4 +294,28 @@ void GameObject::_addComponent(_In_ Component *In_pComponent)
 	// 保存されている情報を設定
 	Component::DataAccessor accessor(it->value);
 	In_pComponent->ReadWrite(&accessor);
+}
+
+void GameObject::AngleSynchronization()
+{
+	// クォータニオンを正データとして扱う
+
+	// オイラー角が前回の値から変化しているか
+	if (m_PrevRotation != m_Rotation)
+	{
+		// 変化している場合は、クォータニオンに変換
+		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+		m_PrevRotation = m_Rotation; // 前回の値を更新
+		return;
+	}
+	
+	// クォータニオンからオイラー角に変換
+	DirectX::XMFLOAT3 rot = QuaternionToRollPitchYaw(m_Quat);
+
+	if(m_Rotation != rot)
+	{
+		// オイラー角が変化している場合、オイラー角を正データとして扱う
+		m_Rotation = rot;
+		m_PrevRotation = m_Rotation; // 前回の値を更新
+	}
 }
