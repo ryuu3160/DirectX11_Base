@@ -306,14 +306,14 @@ static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMF
 	if (std::cosf(euler.y) != 0.0f)
 	{
 		euler.x = std::atanf(-((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
-			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f))));
+			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f)));
 		euler.z = std::atanf(-((2.0f * In_Quat.x * In_Quat.y - 2.0f * In_Quat.z * In_Quat.w) /
-			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.x, 2.0f) - 1.0f))));
+			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.x, 2.0f) - 1.0f)));
 	}
 	else
 	{
 		euler.x = std::atanf(((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
-			(2.0f * (std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f))));
+			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f)));
 		euler.z = 0.0f;
 	}
 
