@@ -36,40 +36,6 @@ void SceneRoot::Init()
 	SpriteManager::GetInstance().SetCamera(pCameraComp);
 	SpriteManager::GetInstance().SetCameraObject(pCamera);
 
-	Setup(2);
-
-	auto &ShaderM = ShaderManager::GetInstance();
-
-	// オブジェクトの設定
-	GameObject *pModel = GetObject<GameObject>("RootModel0");
-	auto Component1 = pModel->GetComponent<ModelRenderer>();
-	Component1->SetAssetPath("Assets/Model/spot/spot.fbx");
-	Component1->SetCamera(pCamera);
-	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
-	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	
-	pModel->SetPos({ 0.0f, 1.0f, 0.0f });
-
-	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
-	auto comp = child->AddComponent<ModelRenderer>();
-	comp->SetAssetPath("Assets/Model/spot/spot.fbx");
-	comp->SetCamera(pCamera);
-	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
-	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	child->SetPos({ 1.0f, 0.0f, 0.0f });
-
-	// F15Eのモデルを読み込む
-	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
-	auto Component2 = pModel2->GetComponent<ModelRenderer>();
-	Component2->SetAssetPath("Assets/Model/F15E.fbx");
-	Component2->SetCamera(pCamera);
-	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
-	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
-
-	pModel2->SetPos({ -2.0f, 0.0f, 0.0f });
-	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
-
 	// スプライトの作成
 	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
 	auto SpriteComp1 = pSpriteObj1->AddComponent<SpriteRenderer>();
@@ -86,14 +52,6 @@ void SceneRoot::Init()
 	SpriteComp2->SetCamera(pCamera);
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
-
-	//auto &Instance = SpriteManager::GetInstance();
-	//auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
-	//sprite->Set3D(true);
-	//sprite->SetBillBoard(true);
-
-	//auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
-	//sprite2->Set3D(false);
 }
 
 void SceneRoot::Uninit()
@@ -113,9 +71,9 @@ void SceneRoot::Update()
 	};
 	auto *LightParam = ResourceSetting::CreateShaderParam(lights,_countof(lights));
 
-	auto pModel = GetObject<GameObject>("RootModel1");
-	auto Component = pModel->GetComponent<ModelRenderer>();
-	Component->SetWriteParam(LightParam);
+	//auto pModel = GetObject<GameObject>("RootModel0");
+	//auto Component = pModel->GetComponent<ModelRenderer>();
+	//Component->SetWriteParam(LightParam);
 }
 
 void SceneRoot::Draw()
