@@ -12,6 +12,11 @@
 #include "System/Component/Camera.hpp"
 #include "GameObject.hpp"
 
+// ==============================
+//  ëOï˚êÈåæ
+// ==============================
+class Player;
+
 /// <summary>
 /// CameraDCCÉNÉâÉX
 /// </summary>
@@ -37,6 +42,8 @@ public:
 	/// </summary>
 	void Update() final;
 
+	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
+
 private:
 	void UpdateState() noexcept;
 	void UpdateOrbit(Argument &In_arg) noexcept;
@@ -48,6 +55,7 @@ private:
 	int m_nState;
 	POINT m_OldPos;
 	Camera *m_pComponent;
+	Player *m_pPlayer;
 #ifdef _DEBUG
 	char m_cMode[256];
 #endif

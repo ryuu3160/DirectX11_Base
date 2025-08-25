@@ -24,6 +24,7 @@ CameraDCC::CameraDCC()
 	, m_nState(CAM_DCC_NONE)
 	, m_OldPos{ 0, 0 }
 	, m_pComponent(AddComponent<Camera>())
+	, m_pPlayer(nullptr)
 {
 #ifdef _DEBUG
 	sprintf_s(m_cMode, "None");
@@ -81,6 +82,11 @@ void CameraDCC::Update()
 	case CAM_DCC_DOLLY:		UpdateDolly(arg);	break;
 	case CAM_DCC_FLIGHT:	UpdateFlight(arg);	break;
 	}
+}
+
+void CameraDCC::SetTargetPlayer(_In_ Player *In_pPlayer) noexcept
+{
+	m_pPlayer = In_pPlayer;
 }
 
 void CameraDCC::UpdateState() noexcept

@@ -12,6 +12,7 @@
 #include "Source/App/Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
+#include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 
@@ -29,8 +30,13 @@ namespace
 void SceneRoot::Init()
 {
 	// オブジェクトの作成
+	// カメラオブジェクトの生成
+#ifdef _DEBUG
 	CameraDCC *pCamera = CreateObject<CameraDCC>("Camera");
-	auto pCameraComp = pCamera->GetComponent<Camera>();
+#else
+	MainCamera *pCamera = CreateObject<MainCamera>("Camera");
+#endif
+	Camera *pCameraComp = pCamera->GetComponent<Camera>();
 
 	// スプライトマネージャーにカメラを設定
 	SpriteManager::GetInstance().SetCamera(pCameraComp);

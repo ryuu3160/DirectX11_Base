@@ -10,3 +10,23 @@
 // ==============================
 #include "MainCamera.hpp"
 
+MainCamera::MainCamera()
+	: GameObject("MainCamera")
+	, m_pComponent(AddComponent<Camera>())
+	, m_pPlayer(nullptr)
+{
+
+}
+
+MainCamera::~MainCamera()
+{
+}
+
+void MainCamera::Update()
+{
+}
+
+void MainCamera::SetTargetPlayer(Player *In_pPlayer) noexcept
+{
+	m_pPlayer = In_pPlayer;
+}

@@ -11,6 +11,7 @@
 #include "SceneGame.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
+#include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "App/GameObject/Character/Player.hpp"
@@ -18,8 +19,15 @@
 void SceneGame::Init()
 {
 	// オブジェクトの作成
+
+	// カメラをメインシーンから取得
+#ifdef _DEBUG
 	CameraDCC *pCamera = Main::GetScene().GetObject<CameraDCC>("Camera");
-	auto pCameraComp = pCamera->GetComponent<Camera>();
+#else
+	MainCamera *pCamera = Main::GetScene().GetObject<MainCamera>("Camera");
+#endif
+
+	Camera *pCameraComp = pCamera->GetComponent<Camera>();
 
 	// スプライトマネージャーにカメラを設定
 	SpriteManager::GetInstance().SetCamera(pCameraComp);
@@ -28,6 +36,8 @@ void SceneGame::Init()
 	auto player = CreateObject<Player>("Player");
 	auto playerModel = player->GetComponent<ModelRenderer>();
 	playerModel->SetCamera(pCamera);
+
+
 }
 
 void SceneGame::Uninit()

@@ -11,6 +11,12 @@
 // ==============================
 #include "System/Component/Camera.hpp"
 #include "System/Object/GameObject.hpp"
+
+// ==============================
+//  前方宣言
+// ==============================
+class Player;
+
 // ==============================
 //	定数定義
 // ==============================
@@ -28,22 +34,18 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	MainCamera() = default;
+	MainCamera();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~MainCamera() = default;
+	~MainCamera();
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	void Update() override final;
 
-
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
 
 private:
+	Player *m_pPlayer;
 	Camera *m_pComponent;
 };
