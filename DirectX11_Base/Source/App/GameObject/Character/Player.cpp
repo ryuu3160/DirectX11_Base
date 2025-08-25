@@ -12,6 +12,14 @@
 #include "DirectX11/System/ModelRenderer.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 
+// ==============================
+//	íËêîíËã`
+// ==============================
+namespace
+{
+	const inline constexpr float MOVE_SPEED_SCALE = 0.01f; // à⁄ìÆë¨ìxÇÃî{ó¶
+}
+
 Player::Player()
 	: GameObject("Player")
 {
@@ -31,7 +39,16 @@ Player::~Player()
 
 void Player::Update()
 {
-	if(GetAsyncKeyState('A') & 0x8000)
+	UpdateMovement();
+
+	
+
+	GameObject::Update();
+}
+
+void Player::UpdateMovement()
+{
+	if (GetAsyncKeyState('A') & 0x8000)
 	{
 		m_Rotation.y += 0.01f;
 	}
@@ -39,13 +56,21 @@ void Player::Update()
 	{
 		m_Rotation.y -= 0.01f;
 	}
-	if (GetAsyncKeyState('W') & 0x8000)
+	if (GetAsyncKeyState('Q') & 0x8000)
 	{
 		m_Rotation.z += 0.01f;
 	}
-	if (GetAsyncKeyState('S') & 0x8000)
+	if (GetAsyncKeyState('E') & 0x8000)
 	{
 		m_Rotation.z -= 0.01f;
 	}
-	GameObject::Update();
+
+	DirectX::XMFLOAT3 front = GetFront();
+
+	m_Pos += (front * MOVE_SPEED_SCALE);
+
+}
+
+void Player::UpdateShoot()
+{
 }

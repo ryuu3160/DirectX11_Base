@@ -244,6 +244,9 @@
     <ClCompile Include="Source\App\GameObject\Character\Player.cpp">
       <Filter>Source\App\GameObject\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\GameObject\MainCamera.cpp">
+      <Filter>Source\App\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -410,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="Source\App\GameObject\Character\Player.hpp">
       <Filter>Source\App\GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\GameObject\MainCamera.hpp">
+      <Filter>Source\App\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

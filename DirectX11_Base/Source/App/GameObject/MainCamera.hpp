@@ -1,14 +1,15 @@
 /*+===================================================================
-	File: Player.hpp
+	File: MainCamera.hpp
 	Summary: （このファイルで何をするか記載する）
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/8/25 Mon AM 04:04:37 初回作成
+	Date: 2025/8/25 Mon AM 11:28:47 初回作成
 ===================================================================+*/
 #pragma once
 
 // ==============================
 //	include
 // ==============================
+#include "System/Component/Camera.hpp"
 #include "System/Object/GameObject.hpp"
 // ==============================
 //	定数定義
@@ -19,27 +20,30 @@ namespace
 }
 
 /// <summary>
-/// Playerクラス
+/// MainCameraクラス
 /// </summary>
-class Player : public GameObject
+class MainCamera : public GameObject
 {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Player();
+	MainCamera() = default;
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player();
+	~MainCamera() = default;
 
-	void Update() override;
+	// ------------------------------
+	//  Getter
+	// ------------------------------
+
+
+	// ------------------------------
+	//  Setter
+	// ------------------------------
 
 private:
-
-	void UpdateMovement();
-
-	void UpdateShoot();
-
+	Camera *m_pComponent;
 };

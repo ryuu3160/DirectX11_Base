@@ -158,6 +158,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\App\GameObject\Character\Player.cpp" />
+    <ClCompile Include="Source\App\GameObject\MainCamera.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\App\Main.cpp">
       <SubType>
       </SubType>
@@ -266,6 +270,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\GameObject\Character\Player.hpp" />
+    <ClInclude Include="Source\App\GameObject\MainCamera.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\App\Main.hpp">
       <SubType>
       </SubType>
