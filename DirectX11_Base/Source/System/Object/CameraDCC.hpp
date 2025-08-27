@@ -51,6 +51,9 @@ private:
 	void UpdateDolly(Argument &In_arg) noexcept;
 	void UpdateFlight(Argument &In_arg) noexcept;
 
+	// 3人称視点カメラの更新
+	void UpdateThirdPerson() noexcept;
+
 private:
 	int m_nState;
 	POINT m_OldPos;

@@ -37,7 +37,8 @@ void SceneGame::Init()
 	auto playerModel = player->GetComponent<ModelRenderer>();
 	playerModel->SetCamera(pCamera);
 
-
+	// カメラにプレイヤーを設定
+	pCamera->SetTargetPlayer(player);
 }
 
 void SceneGame::Uninit()

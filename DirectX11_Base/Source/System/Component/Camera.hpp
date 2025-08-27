@@ -11,6 +11,16 @@
 // ==============================
 #include "Component.hpp"
 
+// ==============================
+//  定数
+// ==============================
+namespace
+{
+	const inline constexpr DirectX::XMFLOAT3 cx_ThirdPerson_TargetOffset = { 0.0f,2.0f,0.0f }; // 3人称視点カメラの注視点オフセット
+	const inline constexpr DirectX::XMFLOAT3 cx_ThirdPerson_Offset = { 0.0f,4.0f,0.0f }; // 3人称視点カメラのオフセット
+	const inline constexpr float cx_ThirdPerson_Distance = 5.0f; // 3人称視点カメラの注視点からカメラまでの距離
+}
+
 /// <summary>
 /// Cameraクラス
 /// </summary>

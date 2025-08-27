@@ -46,6 +46,10 @@ public:
 	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
 
 private:
+	// 3人称視点カメラの更新
+	void UpdateThirdPerson() noexcept;
+
+private:
 	Player *m_pPlayer;
 	Camera *m_pComponent;
 };
