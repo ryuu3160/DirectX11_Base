@@ -69,7 +69,7 @@ public:
 	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_Scale; }
 	inline const bool &IsChild() const noexcept { return m_bIsChild; }
 
-	DirectX::XMFLOAT3 GetFront() const noexcept;
+	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
 	DirectX::XMFLOAT3 GetRight() const noexcept;
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;

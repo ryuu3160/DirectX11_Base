@@ -154,7 +154,7 @@ std::map<std::string,GameObject *> GameObject::GetChildObjects() const noexcept
 	return m_ChildObjects;
 }
 
-DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
+DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
 {
 	// 前方ベクトルを取得
 	DirectX::XMVECTOR vFront = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
@@ -163,7 +163,10 @@ DirectX::XMFLOAT3 GameObject::GetFront() const noexcept
 	vFront = DirectX::XMVector3Rotate(vFront, qRotate);
 	DirectX::XMFLOAT3 dir;
 	// 正規化してXMFLOAT3に変換
-	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vFront));
+	if (Is_Normalize)
+		DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vFront));
+	else
+		DirectX::XMStoreFloat3(&dir, vFront);
 	return dir;
 }
 
