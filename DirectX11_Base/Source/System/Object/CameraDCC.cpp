@@ -26,10 +26,12 @@ CameraDCC::CameraDCC()
 	, m_OldPos{ 0, 0 }
 	, m_pComponent(AddComponent<Camera>())
 	, m_pPlayer(nullptr)
+	, m_bIsFreeCamera(false)
 {
 #ifdef _DEBUG
 	sprintf_s(m_cMode, "None");
 #endif
+	m_pComponent->SetIsLockZ(m_bIsFreeCamera);
 }
 
 CameraDCC::~CameraDCC()
@@ -38,9 +40,17 @@ CameraDCC::~CameraDCC()
 
 void CameraDCC::Update()
 {
-	if (m_pPlayer)
+	if (Input::IsKeyTrigger('P'))
 	{
-		UpdateThirdPerson();
+		m_bIsFreeCamera = !m_bIsFreeCamera;
+		m_pComponent->SetIsLockZ(m_bIsFreeCamera);
+	}
+
+	if (m_pPlayer && !m_bIsFreeCamera)
+	{
+		//UpdateThirdPerson();
+		UpdateFirstPerson();
+		return;
 	}
 
 	Argument arg{};
@@ -246,4 +256,18 @@ void CameraDCC::UpdateThirdPerson() noexcept
 
 	// カメラの位置調整
 	m_Pos = (PlayerPosition - PlayerForward * cx_ThirdPerson_Distance) + PlayerUp * cx_ThirdPerson_UpDistanceRate;
+}
+
+void CameraDCC::UpdateFirstPerson() noexcept
+{
+	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPos();		// プレイヤーオブジェクトの位置を取得
+	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
+	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
+	m_Quat = m_pPlayer->GetQuat(); // プレイヤーの回転と同期
+
+	// 焦点距離を設定
+	m_pComponent->SetFocus(cx_FirstPerson_Distance);
+
+	// カメラの位置調整
+	m_Pos = (PlayerPosition + PlayerForward * cx_FirstPerson_Distance) + PlayerUp * cx_FirstPerson_UpDistance;
 }

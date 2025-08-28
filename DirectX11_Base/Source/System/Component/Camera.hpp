@@ -16,10 +16,10 @@
 // ==============================
 namespace
 {
-	const inline constexpr DirectX::XMFLOAT3 cx_ThirdPerson_TargetOffset = { 0.0f,2.0f,0.0f }; // 3人称視点カメラの注視点オフセット
-	const inline constexpr DirectX::XMFLOAT3 cx_ThirdPerson_Offset = { 0.0f,3.0f,0.0f }; // 3人称視点カメラのオフセット
 	const inline constexpr float cx_ThirdPerson_Distance = 7.5f; // 3人称視点カメラの注視点からカメラまでの距離
-	const inline constexpr float cx_ThirdPerson_UpDistanceRate = 3.0f
+	const inline constexpr float cx_ThirdPerson_UpDistanceRate = 3.0f;
+	const inline constexpr float cx_FirstPerson_Distance = 2.5f;
+	const inline constexpr float cx_FirstPerson_UpDistance = 1.7f;
 }
 
 /// <summary>

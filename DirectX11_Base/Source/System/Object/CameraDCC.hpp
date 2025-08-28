@@ -53,12 +53,15 @@ private:
 
 	// 3人称視点カメラの更新
 	void UpdateThirdPerson() noexcept;
+	// 1人称視点カメラの更新
+	void UpdateFirstPerson() noexcept;
 
 private:
 	int m_nState;
 	POINT m_OldPos;
 	Camera *m_pComponent;
 	Player *m_pPlayer;
+	bool m_bIsFreeCamera;
 #ifdef _DEBUG
 	char m_cMode[256];
 #endif

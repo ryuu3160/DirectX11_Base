@@ -122,10 +122,11 @@ void Player::UpdateMovement()
 	// 回転の更新
 	DirectX::XMStoreFloat4(&m_Quat, qRotate);
 
+	// 前方ベクトル取得
 	DirectX::XMFLOAT3 front = GetFront();
 
+	// 移動
 	m_Pos += ((front * MOVE_SPEED_SCALE) * m_fSpeed);
-
 }
 
 void Player::UpdateShoot()
