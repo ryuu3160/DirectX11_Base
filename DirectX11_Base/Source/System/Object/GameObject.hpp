@@ -33,6 +33,11 @@ public:
 	void ExecuteUpdate() noexcept;
 
 	/// <summary>
+	/// 遅延更新処理
+	/// </summary>
+	void ExecuteLateUpdate() noexcept;
+
+	/// <summary>
 	/// 描画処理
 	/// </summary>
 	void ExecuteDraw() noexcept;
@@ -82,6 +87,9 @@ public:
 protected:
 	// 継承先のクラスでオブジェクト別の更新処理を実装する場合、上書きすること。
 	virtual void Update() {}
+
+	// 継承先のクラスでオブジェクト別の遅延更新処理を実装する場合、上書きすること。
+	virtual void LateUpdate() {}
 
 	// 継承先のクラスでオブジェクト別の描画処理を実装する場合、上書きすること。
 	virtual void Draw() {}

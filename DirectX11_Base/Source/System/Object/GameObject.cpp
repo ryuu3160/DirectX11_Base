@@ -16,6 +16,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
 	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
+	, m_PrevRotation(m_Rotation)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
@@ -126,6 +127,29 @@ void GameObject::ExecuteUpdate() noexcept
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
 		itr.second->ExecuteUpdate();
+	}
+
+	// 角度データの同期
+	AngleSynchronization();
+}
+
+void GameObject::ExecuteLateUpdate() noexcept
+{
+	// コンポーネントの処理
+	for (auto &itr : m_Components)
+	{
+		itr->ExecuteLateUpdate();
+	}
+	// 継承先オブジェクトの遅延処理
+	LateUpdate();
+
+	// 子オブジェクトの処理
+	for (auto &itr : m_ChildObjects)
+	{
+		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
+		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
+		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
+		itr.second->ExecuteLateUpdate();
 	}
 
 	// 角度データの同期

@@ -18,6 +18,10 @@ void Component::ExecuteUpdate() noexcept
 {
 }
 
+void Component::ExecuteLateUpdate() noexcept
+{
+}
+
 void Component::ExecuteDraw() noexcept
 {
 }

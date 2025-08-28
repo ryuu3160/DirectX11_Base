@@ -83,6 +83,18 @@ void SceneBase::RootUpdate() noexcept
 	// サブシーンの更新
 	if (m_pSubScene)
 		m_pSubScene->RootUpdate();
+
+	// シーンが所持しているオブジェクトの遅延更新
+	for (auto &itr : m_Items)
+	{
+		auto objItr = m_Objects.find(itr);
+		// 型チェック
+		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
+		{
+			GameObject *obj = reinterpret_cast<GameObject *>(objItr->second->m_pObject);
+			obj->ExecuteLateUpdate();
+		}
+	}
 }
 
 void SceneBase::RootDraw() noexcept
