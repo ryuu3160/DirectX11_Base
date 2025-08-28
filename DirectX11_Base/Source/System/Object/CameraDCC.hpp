@@ -42,6 +42,8 @@ public:
 	/// </summary>
 	void Update() final;
 
+	void LateUpdate() override final;
+
 	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
 
 private:

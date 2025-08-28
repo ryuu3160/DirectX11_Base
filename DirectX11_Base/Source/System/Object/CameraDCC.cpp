@@ -47,11 +47,7 @@ void CameraDCC::Update()
 	}
 
 	if (m_pPlayer && !m_bIsFreeCamera)
-	{
-		//UpdateThirdPerson();
-		UpdateFirstPerson();
 		return;
-	}
 
 	Argument arg{};
 #ifdef _DEBUG
@@ -97,6 +93,15 @@ void CameraDCC::Update()
 	case CAM_DCC_TRACK:		UpdateTrack(arg);	break;
 	case CAM_DCC_DOLLY:		UpdateDolly(arg);	break;
 	case CAM_DCC_FLIGHT:	UpdateFlight(arg);	break;
+	}
+}
+
+void CameraDCC::LateUpdate()
+{
+	if (m_pPlayer && !m_bIsFreeCamera)
+	{
+		//UpdateThirdPerson();
+		UpdateFirstPerson();
 	}
 }
 
