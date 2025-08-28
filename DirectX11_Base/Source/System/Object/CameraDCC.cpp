@@ -235,19 +235,15 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 
 void CameraDCC::UpdateThirdPerson() noexcept
 {
-	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPos();
-	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();
+	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPos();		// プレイヤーオブジェクトの位置を取得
+	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
+	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
 
-	// サードパーソンビュー
+	m_Quat = m_pPlayer->GetQuat(); // プレイヤーの回転と同期
+
+	// 焦点距離を設定
 	m_pComponent->SetFocus(cx_ThirdPerson_Distance);
-	/*m_Target = PlayerPosition;
-	m_Target.x += CAMERA_TARGET_OFFSET.x;
-	m_Target.y += CAMERA_TARGET_OFFSET.y;
-	m_Target.z += CAMERA_TARGET_OFFSET.z;*/
 
-	m_Pos.x = PlayerPosition.x - PlayerForward.x * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.x;
-	m_Pos.y = PlayerPosition.y - PlayerForward.y * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.y;
-	m_Pos.z = PlayerPosition.z - PlayerForward.z * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.z;
-	
-	m_Quat = m_pPlayer->GetQuat();
+	// カメラの位置調整
+	m_Pos = (PlayerPosition - PlayerForward * cx_ThirdPerson_Distance) + PlayerUp * cx_ThirdPerson_UpDistanceRate;
 }

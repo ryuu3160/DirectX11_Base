@@ -30,7 +30,7 @@ Player::Player()
 	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
 	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
-	SetPos({ 2.0f, 0.0f, 0.0f });
+	SetPos({ 0.0f, 0.0f, 0.0f });
 	SetScale({ 0.005f, 0.005f, 0.005f });
 }
 
