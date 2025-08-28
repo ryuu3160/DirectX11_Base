@@ -248,4 +248,6 @@ void CameraDCC::UpdateThirdPerson() noexcept
 	m_Pos.x = PlayerPosition.x - PlayerForward.x * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.x;
 	m_Pos.y = PlayerPosition.y - PlayerForward.y * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.y;
 	m_Pos.z = PlayerPosition.z - PlayerForward.z * cx_ThirdPerson_Distance + cx_ThirdPerson_Offset.z;
+	
+	m_Quat = m_pPlayer->GetQuat();
 }

@@ -59,7 +59,7 @@ DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
 {
 	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
 	DirectX::XMFLOAT3 look = GetLook();
-	DirectX::XMFLOAT3 up(0.0f, 1.0f, 0.0f);
+	DirectX::XMFLOAT3 up = m_pTransform->GetUp();
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 	DirectX::XMVECTOR vLook = DirectX::XMLoadFloat3(&look);
 	DirectX::XMVECTOR vUp = DirectX::XMLoadFloat3(&up);

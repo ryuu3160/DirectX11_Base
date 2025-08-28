@@ -21,7 +21,7 @@
 // ==============================
 namespace
 {
-	constexpr const float cx_fGridSize = 20.0f; // グリッドのサイズ
+	constexpr const float cx_fGridSize = 200.0f; // グリッドのサイズ
 	constexpr const float cx_fGridMargin = 1.0f; // グリッドの間隔
 	constexpr const DirectX::XMFLOAT4 cx_GridColor = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f); // グリッドの色
 	constexpr const bool cx_bGridAxis = true; // グリッドの軸を表示するかどうか

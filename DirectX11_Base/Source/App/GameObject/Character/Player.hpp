@@ -42,4 +42,6 @@ private:
 
 	void UpdateShoot();
 
+private:
+	float m_fSpeed;
 };

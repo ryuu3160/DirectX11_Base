@@ -22,6 +22,7 @@ namespace
 
 Player::Player()
 	: GameObject("Player")
+	, m_fSpeed(1.0f)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/F15E.fbx");
@@ -48,26 +49,82 @@ void Player::Update()
 
 void Player::UpdateMovement()
 {
-	if (GetAsyncKeyState('A') & 0x8000)
+	// ----- 旋回処理 -----
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	DirectX::XMVECTOR quat;
+
+	// ヨー
+	if (Input::IsKeyPress('Q'))
 	{
-		m_Rotation.y += 0.01f;
+		// 左ヨー
+		DirectX::XMFLOAT3 up = GetUp();
+		quat = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&up), -0.01f);
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (Input::IsKeyPress('E'))
 	{
-		m_Rotation.y -= 0.01f;
+		// 右ヨー
+		DirectX::XMFLOAT3 up = GetUp();
+		quat = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&up), 0.01f);
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
-	if (GetAsyncKeyState('Q') & 0x8000)
+
+	// ロール
+	if (Input::IsKeyPress('A'))
 	{
-		m_Rotation.z += 0.01f;
+		// 左ロール
+		DirectX::XMVECTOR vAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+		vAxis = DirectX::XMVector3Rotate(vAxis, qRotate);
+		quat = DirectX::XMQuaternionRotationAxis(vAxis, DirectX::XMConvertToRadians(1.0f));
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
-	if (GetAsyncKeyState('E') & 0x8000)
+	if (Input::IsKeyPress('D'))
 	{
-		m_Rotation.z -= 0.01f;
+		// 右ロール
+		DirectX::XMVECTOR vAxis = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+		vAxis = DirectX::XMVector3Rotate(vAxis, qRotate);
+		quat = DirectX::XMQuaternionRotationAxis(vAxis, DirectX::XMConvertToRadians(-1.0f));
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
+
+	// ピッチ
+	if (Input::IsKeyPress(VK_SPACE))
+	{
+		// ピッチUP
+		DirectX::XMVECTOR vAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		vAxis = DirectX::XMVector3Rotate(vAxis, qRotate);
+		quat = DirectX::XMQuaternionRotationAxis(vAxis, DirectX::XMConvertToRadians(-1.0f));
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
+	}
+	if (Input::IsKeyPress(VK_LSHIFT))
+	{
+		// ピッチDown
+		DirectX::XMVECTOR vAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+		vAxis = DirectX::XMVector3Rotate(vAxis, qRotate);
+		quat = DirectX::XMQuaternionRotationAxis(vAxis, DirectX::XMConvertToRadians(1.0f));
+		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
+	}
+
+	// ----- 速度処理 -----
+
+	if (Input::IsKeyPress('W'))
+	{
+		m_fSpeed += 0.1f;
+	}
+	if (Input::IsKeyPress('S'))
+	{
+		m_fSpeed -= 0.1f;
+
+		if (m_fSpeed < 0.0f)
+			m_fSpeed = 0.0f;
+	}
+
+	// 回転の更新
+	DirectX::XMStoreFloat4(&m_Quat, qRotate);
 
 	DirectX::XMFLOAT3 front = GetFront();
 
-	m_Pos += (front * MOVE_SPEED_SCALE);
+	m_Pos += ((front * MOVE_SPEED_SCALE) * m_fSpeed);
 
 }
 
