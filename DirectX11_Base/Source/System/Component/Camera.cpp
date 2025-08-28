@@ -13,7 +13,7 @@
 #include "System/Object/GameObject.hpp"
 
 Camera::Camera()
-	: m_bIs3D(true)
+	: m_bIs3D(true), m_bIsLockZ(true)
 	, m_fFovy(60.0f), m_fWidth(20.0f)
 	, m_fAspect(16.0f / 9.0f), m_fNear(0.2f), m_fFar(1000.0f)
 	, m_fFocus(1.0f)
@@ -59,7 +59,11 @@ DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
 {
 	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
 	DirectX::XMFLOAT3 look = GetLook();
-	DirectX::XMFLOAT3 up = m_pTransform->GetUp();
+	DirectX::XMFLOAT3 up;
+	if (m_bIsLockZ)
+		up = { 0.0f, 1.0f, 0.0f };
+	else
+		up = m_pTransform->GetUp();
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 	DirectX::XMVECTOR vLook = DirectX::XMLoadFloat3(&look);
 	DirectX::XMVECTOR vUp = DirectX::XMLoadFloat3(&up);

@@ -44,6 +44,12 @@ public:
 	/// </summary>
 	/// <returns>3Dかどうかのフラグ</returns>
 	inline const bool &Is3D() const noexcept { return m_bIs3D; }
+
+	/// <summary>
+	/// Z軸を固定しているかどうかを取得
+	/// </summary>
+	/// <returns>Z軸が固定されているかのフラグ</returns>
+	inline const bool &IsLockZ() const noexcept { return m_bIsLockZ; }
 	
 	/// <summary>
 	/// カメラの視野角を取得
@@ -90,8 +96,15 @@ public:
 
 	inline void Set3D(_In_ const bool &In_bIs3D) noexcept { m_bIs3D = In_bIs3D; }
 
+	/// <summary>
+	/// Z軸を固定するかどうか
+	/// </summary>
+	/// <param name="[In_bIsLock]">固定するかどうかの真偽値</param>
+	inline void SetIsLockZ(_In_ const bool &In_bIsLock) noexcept { m_bIsLockZ = In_bIsLock; }
+
 private:
 	bool m_bIs3D;
+	bool m_bIsLockZ;
 	float m_fFovy;
 	float m_fWidth;
 	float m_fAspect, m_fNear, m_fFar;
