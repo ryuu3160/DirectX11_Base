@@ -84,6 +84,7 @@ public:
 	Component();
 	virtual  ~Component() = default;
 	virtual void ExecuteUpdate() noexcept;
+	virtual void ExecuteLateUpdate() noexcept;
 	virtual void ExecuteDraw() noexcept;
 	virtual void ReadWrite(_In_ DataAccessor *In_Data);
 
