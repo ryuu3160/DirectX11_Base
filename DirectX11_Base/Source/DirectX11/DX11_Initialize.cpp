@@ -162,18 +162,23 @@ HRESULT DX11_Initialize::Init()
 	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
 	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
 	dsDesc.BackFace = dsDesc.FrontFace;
-	bool enablePattern[] = { true, true, false };
-	D3D11_DEPTH_WRITE_MASK maskPattern[] = {
+	bool enablePattern[DEPTH_MAX] = { true, true, false };
+	D3D11_DEPTH_WRITE_MASK maskPattern[DEPTH_MAX] = {
 		D3D11_DEPTH_WRITE_MASK_ALL,
 		D3D11_DEPTH_WRITE_MASK_ZERO,
 		D3D11_DEPTH_WRITE_MASK_ZERO,
 	};
+	D3D11_COMPARISON_FUNC DepthFunc[DEPTH_MAX] = {
+		D3D11_COMPARISON_LESS_EQUAL,
+		D3D11_COMPARISON_LESS_EQUAL,
+		D3D11_COMPARISON_ALWAYS,
+	};
 	for (int i = 0; i < DEPTH_MAX; ++i)
 	{
-		auto DepthStencilState = m_cpDepthStencilState[i].GetAddressOf();
 		dsDesc.DepthEnable = dsDesc.StencilEnable = enablePattern[i];
 		dsDesc.DepthWriteMask = maskPattern[i];
-		m_hr = m_cpDevice->CreateDepthStencilState(&dsDesc, DepthStencilState);
+		dsDesc.DepthFunc = dsDesc.FrontFace.StencilFunc = DepthFunc[i];
+		m_hr = m_cpDevice->CreateDepthStencilState(&dsDesc, m_cpDepthStencilState[i].GetAddressOf());
 		if (FAILED(m_hr)) { return m_hr; }
 	}
 	SetDepthTest(DEPTH_ENABLE_WRITE_TEST);
