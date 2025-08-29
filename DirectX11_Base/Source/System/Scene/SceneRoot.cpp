@@ -11,9 +11,10 @@
 #include "SceneRoot.hpp"
 #include "Source/App/Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
-#include "System/Object/CameraDCC.hpp"
-#include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
+#include "System/Object/CameraDCC.hpp"
+#include "System/Object/SkyBoxObj.hpp"
+#include "System/SpriteManager/SpriteManager.hpp"
 
 // ==============================
 //  定数
@@ -87,13 +88,9 @@ void SceneRoot::Init()
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
 
-	//auto &Instance = SpriteManager::GetInstance();
-	//auto sprite = Instance.CreateSprite("TestSprite", "Assets/Texture/TestTexture.png");
-	//sprite->Set3D(true);
-	//sprite->SetBillBoard(true);
-
-	//auto sprite2 = Instance.CreateSprite("TestSprite2", "Assets/Texture/TestTexture.png");
-	//sprite2->Set3D(false);
+	// スカイボックスを作成
+	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	pSkyBox->SetCamera(pCamera);
 }
 
 void SceneRoot::Uninit()
