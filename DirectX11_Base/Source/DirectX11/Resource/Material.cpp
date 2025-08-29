@@ -163,8 +163,9 @@ bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcep
 	file.open(path, std::ios::in);
 	if (!file.is_open())
 	{
-		Error("Failed to open file for loading material shader info: " + path);
-		return "";
+		// ファイルが存在しない場合はデフォルトシェーダーを使用
+		SaveMaterialShaderInfo(In_Directory); // マテリアルシェーダー情報を保存
+		return false; // ファイルが開けなかった場合はfalseを返す
 	}
 
 	// ファイルを1行ずつ読み込み、マテリアル名を検索

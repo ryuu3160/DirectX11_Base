@@ -162,18 +162,23 @@ HRESULT DX11_Initialize::Init()
 	dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
 	dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
 	dsDesc.BackFace = dsDesc.FrontFace;
-	bool enablePattern[] = { true, true, false };
-	D3D11_DEPTH_WRITE_MASK maskPattern[] = {
+	bool enablePattern[DEPTH_MAX] = { true, true, false };
+	D3D11_DEPTH_WRITE_MASK maskPattern[DEPTH_MAX] = {
 		D3D11_DEPTH_WRITE_MASK_ALL,
 		D3D11_DEPTH_WRITE_MASK_ZERO,
 		D3D11_DEPTH_WRITE_MASK_ZERO,
 	};
+	D3D11_COMPARISON_FUNC DepthFunc[DEPTH_MAX] = {
+		D3D11_COMPARISON_LESS_EQUAL,
+		D3D11_COMPARISON_LESS_EQUAL,
+		D3D11_COMPARISON_ALWAYS,
+	};
 	for (int i = 0; i < DEPTH_MAX; ++i)
 	{
-		auto DepthStencilState = m_cpDepthStencilState[i].Get();
 		dsDesc.DepthEnable = dsDesc.StencilEnable = enablePattern[i];
 		dsDesc.DepthWriteMask = maskPattern[i];
-		m_hr = m_cpDevice->CreateDepthStencilState(&dsDesc, &DepthStencilState);
+		dsDesc.DepthFunc = dsDesc.FrontFace.StencilFunc = DepthFunc[i];
+		m_hr = m_cpDevice->CreateDepthStencilState(&dsDesc, m_cpDepthStencilState[i].GetAddressOf());
 		if (FAILED(m_hr)) { return m_hr; }
 	}
 	SetDepthTest(DEPTH_ENABLE_WRITE_TEST);
@@ -248,6 +253,20 @@ void DX11_Initialize::Swap()
 	m_cpSwapChain->Present(0, 0);
 }
 
+DepthState DX11_Initialize::GetNowDepthState() const noexcept
+{
+	ID3D11DepthStencilState *pCurrentState = nullptr;
+	UINT stencilRef = 0;
+	m_cpContext->OMGetDepthStencilState(&pCurrentState, &stencilRef);
+	for (int i = 0; i < DEPTH_MAX; ++i)
+	{
+		if (pCurrentState == m_cpDepthStencilState[i].Get())
+		{
+			return static_cast<DepthState>(i);
+		}
+	}
+}
+
 void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
 {
 	m_WindowColor[0] = In_fR;
@@ -264,7 +283,7 @@ void DX11_Initialize::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) n
 	m_WindowColor[3] = In_arrRgba.w;
 }
 
-void DX11_Initialize::SetWindowColor_R(const float &In_fR) noexcept
+void DX11_Initialize::SetWindowColor_R(_In_ const float &In_fR) noexcept
 {
 	m_WindowColor[0] = In_fR;
 }
@@ -363,7 +382,7 @@ void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull) noexcept
 
 void DX11_Initialize::SetDepthTest(DepthState In_State) noexcept
 {
-	m_cpContext->OMSetDepthStencilState(m_cpDepthStencilState[In_State].Get(),0);
+	m_cpContext->OMSetDepthStencilState(m_cpDepthStencilState[In_State].Get(), 0);
 }
 
 void DX11_Initialize::SetBlendMode(BlendMode In_Blend) noexcept

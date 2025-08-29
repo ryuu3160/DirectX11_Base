@@ -48,6 +48,8 @@ HRESULT Main::Init()
 	std::vector<std::string> shaders = {
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ
+		"VS_Sprite",
+		"PS_Sprite",
 	};
 	ShaderManager::GetInstance().SetupShaders(shaders);
 
