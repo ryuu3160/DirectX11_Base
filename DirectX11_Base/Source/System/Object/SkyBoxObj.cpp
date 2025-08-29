@@ -45,7 +45,7 @@ void SkyBoxObj::SetCamera(_In_ GameObject * In_Cam) noexcept
 	}
 }
 
-void SkyBoxObj::Update()
+void SkyBoxObj::LateUpdate()
 {
 	if (NullCheck(m_pCameraObj, NCMode::OUTPUT, "error: SkyBoxObj Error, CameraObj is nullptr"))
 		return;
