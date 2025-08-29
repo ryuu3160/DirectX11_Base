@@ -20,6 +20,15 @@
 class Camera;
 class RenderManager;
 
+// ==============================
+//  列挙型
+// ==============================
+enum RenderLayer : int
+{
+	RenderLayer_SkyBox = -100,	// スカイボックス
+	RenderLayer_Default = 0,	// 通常オブジェクト
+};
+
 /// <summary>
 /// RenderComponentクラス
 /// </summary>
@@ -54,9 +63,9 @@ public:
 	/// <param name="[In_Path]">設定するファイルパス。</param>
 	inline void SetAssetPath(_In_ const FilePath &In_Path) noexcept { m_AssetPath = In_Path; }
 
-	void ExecuteUpdate() noexcept override;
+	virtual void ExecuteUpdate() noexcept override;
 
-	void ExecuteDraw() noexcept override;
+	virtual void ExecuteDraw() noexcept override;
 
 	/// <summary>
 	/// データアクセサーを使用して読み書きを行います。
