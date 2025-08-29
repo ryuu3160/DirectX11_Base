@@ -13,7 +13,6 @@
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "System/Object/CameraDCC.hpp"
-#include "System/Object/SkyBoxObj.hpp"
 #include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 

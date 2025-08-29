@@ -11,6 +11,7 @@
 #include "SceneGame.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/Object/CameraDCC.hpp"
+#include "System/Object/SkyBoxObj.hpp"
 #include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
@@ -36,9 +37,12 @@ void SceneGame::Init()
 	auto player = CreateObject<Player>("Player");
 	auto playerModel = player->GetComponent<ModelRenderer>();
 	playerModel->SetCamera(pCamera);
-
 	// カメラにプレイヤーを設定
 	pCamera->SetTargetPlayer(player);
+
+	// スカイドームを作成
+	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	pSkyBox->SetCamera(pCamera);
 }
 
 void SceneGame::Uninit()
