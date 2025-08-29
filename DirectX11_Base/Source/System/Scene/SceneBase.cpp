@@ -65,36 +65,8 @@ void SceneBase::Initialize() noexcept
 
 void SceneBase::RootUpdate() noexcept
 {
-	// シーンが所持しているオブジェクトの更新
-	for (auto &itr :m_Items)
-	{
-		auto objIt = m_Objects.find(itr);
-		// 型チェック
-		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
-		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
-			obj->ExecuteUpdate();
-		}
-	}
-
-	// シーン自体の更新(クリア判定など
-	Update();
-
-	// サブシーンの更新
-	if (m_pSubScene)
-		m_pSubScene->RootUpdate();
-
-	// シーンが所持しているオブジェクトの遅延更新
-	for (auto &itr : m_Items)
-	{
-		auto objItr = m_Objects.find(itr);
-		// 型チェック
-		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
-		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objItr->second->m_pObject);
-			obj->ExecuteLateUpdate();
-		}
-	}
+	_RootUpdateMain();
+	_RootUpdateLate();
 }
 
 void SceneBase::RootDraw() noexcept
@@ -178,4 +150,48 @@ void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 		GameObject *obj = CreateObject<GameObject>(name.c_str());
 		ModelRenderer *renderer = obj->AddComponent<ModelRenderer>();
 	}
+}
+
+void SceneBase::_RootUpdateMain() noexcept
+{
+	// シーンが所持しているオブジェクトの更新
+	for (auto &itr : m_Items)
+	{
+		auto objIt = m_Objects.find(itr);
+		// 型チェック
+		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
+		{
+			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
+			obj->ExecuteUpdate();
+		}
+	}
+
+	// シーン自体の更新(クリア判定など
+	Update();
+
+	// サブシーンの更新
+	if (m_pSubScene)
+		m_pSubScene->_RootUpdateMain();
+}
+
+void SceneBase::_RootUpdateLate() noexcept
+{
+	// シーンが所持しているオブジェクトの遅延更新
+	for (auto &itr : m_Items)
+	{
+		auto objItr = m_Objects.find(itr);
+		// 型チェック
+		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
+		{
+			GameObject *obj = reinterpret_cast<GameObject *>(objItr->second->m_pObject);
+			obj->ExecuteLateUpdate();
+		}
+	}
+
+	// シーン自体の遅延更新
+	LateUpdate();
+
+	// サブシーンの遅延更新
+	if (m_pSubScene)
+		m_pSubScene->_RootUpdateLate();
 }

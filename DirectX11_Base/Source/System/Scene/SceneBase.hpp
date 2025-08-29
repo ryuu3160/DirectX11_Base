@@ -133,6 +133,7 @@ public:
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
 	virtual void Update() = 0;
+	virtual void LateUpdate() {};
 	virtual void Draw() = 0;
 
 protected:
@@ -141,6 +142,16 @@ protected:
 	/// </summary>
 	/// <param name="[In_ModelNum]">モデルの数への参照。</param>
 	void Setup(_In_ const int &In_ModelNum) noexcept;
+
+private:
+	/// <summary>
+	/// ルートのメイン更新処理を実行します。
+	/// </summary>
+	void _RootUpdateMain() noexcept;
+	/// <summary>
+	/// ルートオブジェクトの遅延更新処理を実行します。
+	/// </summary>
+	void _RootUpdateLate() noexcept;
 
 private:
 	static Objects m_Objects;
