@@ -248,6 +248,20 @@ void DX11_Initialize::Swap()
 	m_cpSwapChain->Present(0, 0);
 }
 
+DepthState DX11_Initialize::GetNowDepthState() const noexcept
+{
+	ID3D11DepthStencilState *pCurrentState = nullptr;
+	UINT stencilRef = 0;
+	m_cpContext->OMGetDepthStencilState(&pCurrentState, &stencilRef);
+	for (int i = 0; i < DEPTH_MAX; ++i)
+	{
+		if (pCurrentState == m_cpDepthStencilState[i].Get())
+		{
+			return static_cast<DepthState>(i);
+		}
+	}
+}
+
 void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
 {
 	m_WindowColor[0] = In_fR;

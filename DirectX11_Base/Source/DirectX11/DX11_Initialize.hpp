@@ -121,6 +121,12 @@ public:
 	inline const UINT &GetHeight() const noexcept { return m_Height; }
 
 	/// <summary>
+	/// 現在の深度状態を取得します。
+	/// </summary>
+	/// <returns>現在の深度状態を表す DepthState オブジェクト。</returns>
+	DepthState GetNowDepthState() const noexcept;
+
+	/// <summary>
 	/// WindowColorをセットする
 	/// </summary>
 	/// <param name="[In_fR]">レッド</param>
