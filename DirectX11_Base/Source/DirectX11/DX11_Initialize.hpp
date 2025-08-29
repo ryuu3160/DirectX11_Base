@@ -211,7 +211,7 @@ public:
 	/// <summary>
 	/// DepthTestの設定
 	/// </summary>
-	/// <param name="[In_State]">有効にするか否か</param>
+	/// <param name="[In_State]">深度テストのモード</param>
 	void SetDepthTest(DepthState In_State) noexcept;
 	/// <summary>
 	/// BlendModeの設定
