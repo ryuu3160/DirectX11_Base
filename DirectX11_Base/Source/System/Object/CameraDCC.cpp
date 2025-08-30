@@ -100,8 +100,8 @@ void CameraDCC::LateUpdate()
 {
 	if (m_pPlayer && !m_bIsFreeCamera)
 	{
-		//UpdateThirdPerson();
-		UpdateFirstPerson();
+		UpdateThirdPerson();
+		//UpdateFirstPerson();
 	}
 }
 
