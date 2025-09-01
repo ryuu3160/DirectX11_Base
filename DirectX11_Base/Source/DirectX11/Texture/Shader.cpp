@@ -246,7 +246,7 @@ HRESULT VertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) 
 
 //----------
 // インスタンシング頂点シェーダ
-InstancingVertexShader::InstancingVertexShader()
+InstancedVertexShader::InstancedVertexShader()
 	: Shader(Shader::InstancedVertex)
 	, m_pVS(nullptr)
 	, m_pInputLayout(nullptr)
@@ -254,14 +254,14 @@ InstancingVertexShader::InstancingVertexShader()
 {
 }
 
-InstancingVertexShader::~InstancingVertexShader()
+InstancedVertexShader::~InstancedVertexShader()
 {
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
 	m_pVS = nullptr;
 	m_pInstanceSRV = nullptr;
 }
 
-void InstancingVertexShader::Bind(void)
+void InstancedVertexShader::Bind(void)
 {
 	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
 	pContext->VSSetShader(m_pVS.Get(), NULL, 0);
@@ -275,7 +275,7 @@ void InstancingVertexShader::Bind(void)
 	}
 }
 
-HRESULT InstancingVertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
+HRESULT InstancedVertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept
 {
 	HRESULT hr;
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();

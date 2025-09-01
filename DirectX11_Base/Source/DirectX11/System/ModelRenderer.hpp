@@ -140,6 +140,11 @@ private:
 	std::array<ResourceSetting::ShaderParam *, ResourceSetting::ShaderParam_MAX> m_pShaderParams; // シェーダーパラメータ
 };
 
+/// <summary>
+/// 指定されたシェーダーパラメータをスロット番号に基づいて設定します。
+/// </summary>
+/// <typeparam name="[T]">ResourceSetting::ShaderParamを継承した型。</typeparam>
+/// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ。</param>
 template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type*>
 inline void ModelRenderer::SetWriteParam(T *In_Param)
 {

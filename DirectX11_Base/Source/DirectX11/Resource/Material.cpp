@@ -31,6 +31,7 @@ Material::Material()
 	, m_pPS(nullptr)
 	, m_strMaterialName("")
 	, m_bIsPSWriteCamera(false)
+	, m_bIsInstancedVertexShader(false)
 {
 	m_strDirectory.clear();
 

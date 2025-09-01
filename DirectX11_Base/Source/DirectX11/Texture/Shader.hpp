@@ -104,17 +104,17 @@ private:
 
 //----------
 // インスタンシング頂点シェーダ
-class InstancingVertexShader : public Shader
+class InstancedVertexShader : public Shader
 {
 public:
-	InstancingVertexShader();
-	~InstancingVertexShader();
+	InstancedVertexShader();
+	~InstancedVertexShader();
 	void Bind(void);
 	/// <summary>
 	/// インスタンスのシェーダーリソースビューを設定します。
 	/// </summary>
 	/// <param name="[In_pSRV]">設定する ID3D11ShaderResourceView の ComPtr。</param>
-	void SetInstanceSRV(_In_ ComPtr<ID3D11ShaderResourceView> In_pSRV) noexcept { m_pInstanceSRV = In_pSRV; }
+	void SetInstanceSRV(_In_ ID3D11ShaderResourceView* In_pSRV) noexcept { m_pInstanceSRV = In_pSRV; }
 protected:
 	/// <summary>
 	/// 頂点シェーダーを作成します。
@@ -127,7 +127,7 @@ protected:
 private:
 	ComPtr<ID3D11VertexShader> m_pVS;
 	ComPtr<ID3D11InputLayout> m_pInputLayout;
-	ComPtr<ID3D11ShaderResourceView> m_pInstanceSRV;
+	ID3D11ShaderResourceView* m_pInstanceSRV;
 };
 
 //----------

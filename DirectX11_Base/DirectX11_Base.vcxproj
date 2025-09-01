@@ -168,6 +168,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
       <SubType>
       </SubType>
@@ -293,6 +297,10 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
     <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -441,7 +449,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_InstancedObject.hlsl">
+    <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

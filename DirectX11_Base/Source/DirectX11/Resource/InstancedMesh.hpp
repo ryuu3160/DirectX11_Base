@@ -44,9 +44,25 @@ public:
 		DirectX::XMFLOAT3 scale;
 		float dummy2; // 16バイトアラインメントのためのダミー
 		DirectX::XMFLOAT4 quaternion;
-		DirectX::XMFLOAT4 color;
 	};
 
+	/// <summary>
+	/// インスタンシングオブジェクトを整列させて配置する際に使用するデータ構造体
+	/// </summary>
+	struct AlignInstanceData
+	{
+		int CountX;
+		int CountY;
+		int CountZ;
+		DirectX::XMFLOAT3 StartPos;
+		DirectX::XMFLOAT3 Scale;
+		DirectX::XMFLOAT4 Quaternion;
+		bool IsWrite;
+
+		DirectX::XMFLOAT3 ShiftPosOffset;
+	};
+
+public:
 	InstancedMesh();
 	~InstancedMesh();
 
@@ -55,8 +71,9 @@ public:
 	/// </summary>
 	/// <param name="[In_Mesh]">ロードする対象の aiMesh オブジェクトへのポインタ。</param>
 	/// <param name="[In_Scale]">メッシュに適用するスケール値。</param>
+	/// <param name="[In_pInstanceData]">インスタンスデータを整列させる用のデータ</param>
 	/// <param name="[In_Material]">メッシュに関連付ける Material オブジェクトの共有ポインタ。</param>
-	void Load(_In_ const aiMesh *In_Mesh, _In_ const float &In_Scale, _In_ std::shared_ptr<Material> In_Material) noexcept;
+	void Load(_In_ const aiMesh *In_Mesh, _In_ const float &In_Scale, _In_ const AlignInstanceData &In_InstanceData, _In_ std::shared_ptr<Material> In_Material) noexcept;
 
 	/// <summary>
 	/// メッシュバッファへの共有ポインタを取得します。
@@ -74,7 +91,7 @@ public:
 	/// 指定された MeshBuffer で現在のメッシュバッファを置き換えます。
 	/// </summary>
 	/// <param name="In_MeshBuffer">置き換えに使用する MeshBuffer への共有ポインタ。</param>
-	void ReplaceMeshBuffer(_In_ std::shared_ptr<MeshBuffer> In_MeshBuffer) noexcept;
+	void ReplaceMeshBuffer(_In_ std::shared_ptr<InstancedMeshBuffer> In_MeshBuffer) noexcept;
 
 private:
 	std::shared_ptr<InstancedMeshBuffer> m_spMeshBuffer; // メッシュバッファ

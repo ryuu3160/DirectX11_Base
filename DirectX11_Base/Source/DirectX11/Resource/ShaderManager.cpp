@@ -20,7 +20,11 @@ void ShaderManager::SetupShaders(_In_ const std::vector<std::string> &In_FileNam
 		{
 			shader = CreateShader<PixelShader>(itr);
 		}
-		else if (itr.find("VS_") != std::string::npos)
+		else if (itr.find("IVS_") != std::string::npos)
+		{
+			shader = CreateShader<InstancedVertexShader>(itr);
+		}
+		else if(itr.find("VS_") != std::string::npos)
 		{
 			shader = CreateShader<VertexShader>(itr);
 		}

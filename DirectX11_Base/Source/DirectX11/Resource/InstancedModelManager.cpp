@@ -1,14 +1,14 @@
 /*+===================================================================
-	File: ModelManager.cpp
-	Summary: メッシュを管理するクラス
+	File: InstancedModelManager.cpp
+	Summary: インスタンシング用のメッシュを管理するクラス
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/08/14 Thu PM 05:04:02 初回作成
+	Date: 2025/09/01 Mon PM 03:59:20 初回作成
 ===================================================================+*/
 
 // ==============================
 //	include
 // ==============================
-#include "ModelManager.hpp"
+#include "InstancedModelManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -21,7 +21,7 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
 
-std::shared_ptr<Mesh> ModelManager::GetMesh(_In_ const std::string_view &In_MeshName) noexcept
+std::shared_ptr<InstancedMesh> InstancedModelManager::GetMesh(_In_ const std::string_view &In_MeshName) noexcept
 {
 	auto itr = m_mapMeshes.find(In_MeshName.data());
 
@@ -31,7 +31,7 @@ std::shared_ptr<Mesh> ModelManager::GetMesh(_In_ const std::string_view &In_Mesh
 	return nullptr;
 }
 
-std::shared_ptr<Mesh> ModelManager::CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const int In_MeshIndex, _In_ std::shared_ptr<Material> In_Material)
+std::shared_ptr<InstancedMesh> InstancedModelManager::CreateMesh(_In_ const aiMesh *In_Mesh, _In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const int In_MeshIndex, _In_ std::shared_ptr<Material> In_Material)
 {
 	std::string MeshName;
 	std::string MatName;
@@ -39,14 +39,14 @@ std::shared_ptr<Mesh> ModelManager::CreateMesh(_In_ const aiMesh *In_Mesh, _In_ 
 	FbxName = FbxName.substr(FbxName.find_last_of('/') + 1);
 	MatName = In_Material->GetMaterialName();
 	MatName = MatName.substr(MatName.find_first_of('_') + 1); // マテリアル名からFBX名を除去
-	MeshName = FbxName + "_" + MatName + "_" + std::to_string(In_MeshIndex);
+	MeshName = FbxName + "_" + MatName + "_" + std::to_string(In_InstanceData.CountX * In_InstanceData.CountZ * In_InstanceData.CountY) + "_" + std::to_string(In_MeshIndex);
 
-	std::shared_ptr<Mesh> mesh = GetMesh(MeshName);
+	std::shared_ptr<InstancedMesh> mesh = GetMesh(MeshName);
 
 	if (mesh == nullptr)
 	{
-		mesh = std::make_shared<Mesh>();
-		mesh->Load(In_Mesh, In_Scale, In_Material);
+		mesh = std::make_shared<InstancedMesh>();
+		mesh->Load(In_Mesh, In_Scale, In_InstanceData, In_Material);
 		m_mapMeshes[MeshName] = mesh;
 	}
 

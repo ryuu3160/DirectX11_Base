@@ -14,6 +14,7 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"
+#include "DirectX11/System/InstancedModelRenderer.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 
 // ==============================
@@ -88,9 +89,31 @@ void SceneRoot::Init()
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
 
-	// スカイボックスを作成
-	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	pSkyBox->SetCamera(pCamera);
+	//// スカイボックスを作成
+	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	//pSkyBox->SetCamera(pCamera);
+
+	// インスタンシングテスト
+	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
+	pInstanced->SetPos({ 0.0f,0.0f,0.0f });
+	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
+	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
+	InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
+	InstancedComp->SetCamera(pCamera);
+	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
+	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	InstancedMesh::AlignInstanceData instanceData;
+	instanceData.CountX = 10;
+	instanceData.CountZ = 10;
+	instanceData.CountY = 10;
+	instanceData.StartPos = pInstanced->GetPos();
+	instanceData.Scale = pInstanced->GetScale();
+	instanceData.Quaternion = pInstanced->GetQuat();
+	instanceData.IsWrite = true;
+	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
+
+	InstancedComp->SetAlignInstanceData(instanceData);
 }
 
 void SceneRoot::Uninit()

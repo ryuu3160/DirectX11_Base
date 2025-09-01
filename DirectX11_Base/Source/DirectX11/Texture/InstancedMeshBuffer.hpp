@@ -63,6 +63,12 @@ public:
 	/// </summary>
 	/// <returns>頂点及びインデックスバッファの情報を格納したDescription構造体。</returns>
 	inline InstancingDesc GetDesc() const noexcept { return m_Desc; }
+
+	/// <summary>
+	/// インスタンスのシェーダーリソースビュー (SRV) を取得します。
+	/// </summary>
+	/// <returns>インスタンスの ID3D11ShaderResourceView への ComPtr を返します。</returns>
+	inline ID3D11ShaderResourceView* GetInstanceSRV() const noexcept { return m_pInstanceSRV.Get(); }
 private:
 
 	/// <summary>

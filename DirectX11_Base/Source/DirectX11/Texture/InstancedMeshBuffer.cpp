@@ -170,10 +170,14 @@ HRESULT InstancedMeshBuffer::CreateInstanceBuffer(_In_ const void *In_pInstance,
 	bd_instance.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	bd_instance.StructureByteStride = In_Size;
 
+	//--- バッファの初期値を設定
+	D3D11_SUBRESOURCE_DATA subResource = {};
+	subResource.pSysMem = In_pInstance;
+
 	// インスタンスデータ用バッファの作成
 	HRESULT hr;
 	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
-	hr = pDevice->CreateBuffer(&bd_instance, NULL, &m_pInstanceBuffer);
+	hr = pDevice->CreateBuffer(&bd_instance, &subResource, &m_pInstanceBuffer);
 
 	return hr;
 }

@@ -45,7 +45,7 @@ HRESULT Main::Init()
 	std::vector<std::string> shaders = {
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ
-		"VS_InstancedObject", // インスタンシング用
+		"IVS_InstancedObject", // インスタンシング用
 		"VS_Sprite",
 		"PS_Sprite",
 	};

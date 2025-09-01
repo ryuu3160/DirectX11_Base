@@ -11,12 +11,12 @@
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
 #include "DirectX11/Resource/ResourceSetting.hpp"
+#include "DirectX11/Resource/InstancedMesh.hpp"
 
 // ==============================
 //	前方宣言
 // ==============================
 class Material;
-class InstancedMesh;
 
 /// <summary>
 /// InstancedModelRendererクラス
@@ -34,6 +34,12 @@ public:
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
+
+	/// <summary>
+	/// InstancedMesh::AlignInstanceData型のデータを設定します。
+	/// </summary>
+	/// <param name="[In_Data]">設定するAlignInstanceDataの参照。</param>
+	void SetAlignInstanceData(_In_ const InstancedMesh::AlignInstanceData &In_Data) noexcept { m_AlignInstanceData = In_Data; }
 
 	template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type * = nullptr>
 	void SetWriteParam(_In_ T *In_Param);
@@ -91,7 +97,7 @@ public:
 	/// <param name="[In_Scale]">適用するスケール係数（デフォルトは1.0f）。</param>
 	/// <param name="[In_IsFlip]">ファイルを反転して読み込むかどうか（デフォルトはfalse）。</param>
 	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します。</returns>
-	bool Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
+	bool Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
 
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
@@ -106,8 +112,9 @@ private:
 
 private:
 	Meshes m_vecMeshes;
-	InstancingVertexShader *m_pVS;
+	InstancedVertexShader *m_pVS;
 	PixelShader *m_pPS;
+	InstancedMesh::AlignInstanceData m_AlignInstanceData;
 
 	// モデル全体のPixelシェーダーに書き込むもの
 	std::vector<DirectX::XMFLOAT4> m_vecLightParam; // ライトパラメータ
