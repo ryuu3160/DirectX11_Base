@@ -10,3 +10,21 @@
 // ==============================
 #include "InstancedModelRenderer.hpp"
 
+InstancedModelRenderer::InstancedModelRenderer()
+	: m_pVS(nullptr)
+	, m_pPS(nullptr)
+	, m_fScale(1.0f)
+	, m_bUseMaterialShader(false)
+	, m_bEnablePS_WriteCamera(false)
+	, m_bEnablePS_WriteParamList{}
+	, m_pShaderParams{}
+{
+}
+
+InstancedModelRenderer::~InstancedModelRenderer()
+{
+}
+
+void InstancedModelRenderer::Draw() noexcept
+{
+}

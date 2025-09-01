@@ -35,7 +35,7 @@ SkyBoxRenderer::SkyBoxRenderer()
 	{
 		MakeDefaultShader();
 	}
-	m_pVS = m_defVS.get();
+	m_pVS = reinterpret_cast<VertexShader*>(m_defVS.get());
 	m_pPS = m_defPS.get();
 
 	m_vecMeshes.clear();

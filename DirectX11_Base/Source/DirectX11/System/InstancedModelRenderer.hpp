@@ -106,7 +106,7 @@ private:
 
 private:
 	Meshes m_vecMeshes;
-	VertexShader *m_pVS;
+	InstancingVertexShader *m_pVS;
 	PixelShader *m_pPS;
 
 	// モデル全体のPixelシェーダーに書き込むもの
