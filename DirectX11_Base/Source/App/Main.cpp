@@ -46,6 +46,7 @@ HRESULT Main::Init()
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ
 		"IVS_InstancedObject", // インスタンシング用
+		"PS_POM",
 		"VS_Sprite",
 		"PS_Sprite",
 	};

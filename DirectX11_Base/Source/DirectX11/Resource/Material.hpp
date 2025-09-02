@@ -79,6 +79,13 @@ public:
 	inline PixelShader *GetPixelShader() const noexcept { return m_pPS; }
 
 	/// <summary>
+	/// テクスチャを設定します。
+	/// </summary>
+	/// <param name="[In_Type]">設定するテクスチャの種類。</param>
+	/// <param name="[In_pTexture]">設定するテクスチャへのポインタ。</param>
+	void SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_ std::shared_ptr<Texture> In_pTexture) noexcept;
+
+	/// <summary>
 	/// カメラをPSに書き込むかどうかを取得します。
 	/// </summary>
 	/// <returns>PSWriteカメラである場合は true への参照、そうでない場合は false への参照を返します。</returns>

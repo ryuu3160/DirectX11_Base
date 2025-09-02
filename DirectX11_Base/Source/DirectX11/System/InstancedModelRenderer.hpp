@@ -26,6 +26,18 @@ class InstancedModelRenderer : public RenderComponent
 public:
 	using Meshes = std::vector<std::shared_ptr<InstancedMesh>>;
 
+	/// <summary>
+	/// 頂点とインデックスデータの情報を格納する構造体
+	/// </summary>
+	struct RemakeInfo
+	{
+		UINT vtxNum;
+		void *dest;
+		const void *source;
+		UINT idxNum;
+		const void *idx;
+	};
+
 public:
 	InstancedModelRenderer();
 	~InstancedModelRenderer();
@@ -103,6 +115,13 @@ public:
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
 	void Draw() noexcept override final;
+
+	/// <summary>
+	/// 頂点データを再生成するための関数を呼び出します。
+	/// </summary>
+	/// <param name="[In_VtxSize]">再生成する頂点データのサイズ。</param>
+	/// <param name="[In_Func]">RemakeInfo 構造体への参照を受け取り、頂点データの再生成処理を行うコールバック関数。</param>
+	void RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func);
 
 private:
 	/// <summary>

@@ -461,5 +461,8 @@
     <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
       <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_POM.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

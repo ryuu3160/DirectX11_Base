@@ -94,6 +94,105 @@ void SceneRoot::Init()
 	//pSkyBox->SetCamera(pCamera);
 
 	// インスタンシングテスト
+
+	struct TangentVtx {
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMFLOAT2 uv;
+		DirectX::XMFLOAT3 tangent; // ワールド空間上でテクスチャを張る際の方向
+	};
+	// モデルに接ベクトルを追加する処理
+	auto calcTangent = [](InstancedModelRenderer::RemakeInfo &In_Data)
+		{
+			// 既存データ(接ベクトル以外)は共通なので値のコピーを行う
+			TangentVtx *destVtx = reinterpret_cast<TangentVtx *>(In_Data.dest);
+			const Model::Vertex *srcVtx = reinterpret_cast<const Model::Vertex *>(In_Data.source);
+			for (UINT i = 0; i < In_Data.vtxNum; ++i)
+			{
+				destVtx[i].pos = srcVtx[i].pos;
+				destVtx[i].uv = srcVtx[i].uv;
+				destVtx[i].normal = srcVtx[i].normal;
+				destVtx[i].tangent = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			}
+
+			// --- 接ベクトルの計算
+			// 計算途中では1頂点に接ベクトルが複数含まれる
+			using TanVecAry = std::vector<DirectX::XMFLOAT3>;
+			// それが、頂点数分必要
+			std::vector<TanVecAry> tangentVtx;
+			tangentVtx.resize(In_Data.vtxNum);
+			// 接ベクトルの計算単位は三角形
+			// 三角形を構成するインデックスを取得
+			const UINT *idx = reinterpret_cast<const UINT *>(In_Data.idx);
+
+			// 1面(三頂点、三角形)ずつ処理
+			for (UINT i = 0; i < In_Data.idxNum; i += 3)
+			{
+				// 三角形を構成する頂点情報の取得
+				UINT idx0 = idx[i + 0];
+				UINT idx1 = idx[i + 1];
+				UINT idx2 = idx[i + 2];
+				// 頂点
+				DirectX::XMFLOAT3 p[] = {
+					destVtx[idx0].pos,
+					destVtx[idx1].pos,
+					destVtx[idx2].pos
+				};
+				// UV
+				DirectX::XMFLOAT2 uv[] = {
+					destVtx[idx0].uv,
+					destVtx[idx1].uv,
+					destVtx[idx2].uv
+				};
+				// 頂点同士を結ぶベクトル
+				DirectX::XMFLOAT3 V[] = {
+					{p[1].x - p[0].x, p[1].y - p[0].y, p[1].z - p[0].z},
+					{p[2].x - p[0].x, p[2].y - p[0].y, p[2].z - p[0].z}
+				};
+				// UV同士を結ぶベクトル
+				DirectX::XMFLOAT2 ST[] = {
+					{uv[1].x - uv[0].x, uv[1].y - uv[0].y},
+					{uv[2].x - uv[0].x, uv[2].y - uv[0].y}
+				};
+
+				// --- 接ベクトルの計算
+				float factor = ST[0].x * ST[1].y - ST[0].y * ST[1].x;
+				DirectX::XMFLOAT3 T(
+					(ST[1].y * V[0].x - ST[0].y * V[1].x) / factor,
+					(ST[1].y * V[0].y - ST[0].y * V[1].y) / factor,
+					(ST[1].y * V[0].z - ST[0].y * V[1].z) / factor
+				);
+
+				// 接ベクトルの正規化
+				float length = sqrtf(T.x * T.x + T.y * T.y + T.z * T.z);
+				T.x /= length;
+				T.y /= length;
+				T.z /= length;
+				// 頂点に接ベクトルの情報を追加
+				tangentVtx[idx0].push_back(T);
+				tangentVtx[idx1].push_back(T);
+				tangentVtx[idx2].push_back(T);
+			}
+
+			// 頂点に割り当てられた接ベクトルの平均を求める
+			for (UINT i = 0; i < In_Data.vtxNum; ++i)
+			{
+				DirectX::XMFLOAT3 total(0.0f, 0.0f, 0.0f);
+				for (const auto &itr : tangentVtx[i])
+				{
+					total.x += itr.x;
+					total.y += itr.y;
+					total.z += itr.z;
+				}
+				// 合計から平均を求める
+				total.x /= tangentVtx[i].size();
+				total.y /= tangentVtx[i].size();
+				total.z /= tangentVtx[i].size();
+				// 平均結果を該当頂点接ベクトルとする
+				destVtx[i].tangent = total;
+			}
+		};
+
 	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
 	pInstanced->SetPos({ 0.0f,0.0f,0.0f });
 	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
@@ -102,11 +201,11 @@ void SceneRoot::Init()
 	InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
 	InstancedComp->SetCamera(pCamera);
 	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
-	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_POM"));
 	InstancedMesh::AlignInstanceData instanceData;
-	instanceData.CountX = 10;
-	instanceData.CountZ = 10;
-	instanceData.CountY = 10;
+	instanceData.CountX = 100;
+	instanceData.CountZ = 100;
+	instanceData.CountY = 1;
 	instanceData.StartPos = pInstanced->GetPos();
 	instanceData.Scale = pInstanced->GetScale();
 	instanceData.Quaternion = pInstanced->GetQuat();
@@ -114,6 +213,22 @@ void SceneRoot::Init()
 	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
 
 	InstancedComp->SetAlignInstanceData(instanceData);
+	InstancedComp->IsEnablePS_WriteCamera(true);
+	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_Light, true);
+	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_PBR, true);
+	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_POM, true);
+
+	InstancedComp->ExecuteUpdate();
+
+	pInstanced-
+
+	// テクスチャの設定
+	Texture *normal = CreateObject<Texture>("Normal");
+	normal->Create("Assets/Model/plane/normal.png");
+	Texture *height = CreateObject<Texture>("Height");
+	height->Create("Assets/Model/plane/height.png");
+	InstancedComp->GetMesh(0)->GetMaterial()->SetTexture(ResourceSetting::TextureType_Normal, std::shared_ptr<Texture>(normal));
+	InstancedComp->GetMesh(0)->GetMaterial()->SetTexture(ResourceSetting::TextureType_Height, std::shared_ptr<Texture>(height));
 }
 
 void SceneRoot::Uninit()
@@ -128,14 +243,32 @@ void SceneRoot::Update()
 	light.Dummy = 0.0f;
 	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 	light.Specular = { 1.0f, 1.0f, 1.0f, 1.0f };
+	ResourceSetting::PBR_Param pbr;
+	pbr.Metallic = 0.5f;
+	pbr.Smooth = 0.5f;
+	pbr.dummy = { 0.0f,0.0f };
+	ResourceSetting::POM_Param pom;
+	pom.HeightScale = 0.01;
+	pom.NumSteps = 100;
+	pom.dummy = { 0.0f,0.0f };
 	ResourceSetting::LightParam lights[] = { 
 		light 
 	};
+	ResourceSetting::PBR_Param pbrs[] = {
+		pbr
+	};
+	ResourceSetting::POM_Param poms[] = {
+		pom
+	};
 	auto *LightParam = ResourceSetting::CreateShaderParam(lights,_countof(lights));
+	auto *PBRParam = ResourceSetting::CreateShaderParam(pbrs, _countof(pbrs));
+	auto *POMParam = ResourceSetting::CreateShaderParam(poms, _countof(poms));
 
-	auto pModel = GetObject<GameObject>("RootModel1");
-	auto Component = pModel->GetComponent<ModelRenderer>();
+	auto pModel = GetObject<GameObject>("Instanced");
+	auto Component = pModel->GetComponent<InstancedModelRenderer>();
 	Component->SetWriteParam(LightParam);
+	Component->SetWriteParam(PBRParam);
+	Component->SetWriteParam(POMParam);
 }
 
 void SceneRoot::Draw()

@@ -146,6 +146,12 @@ int Material::GetTextureNum() const noexcept
 	return count; // テクスチャの数を返す
 }
 
+void Material::SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_ std::shared_ptr<Texture> In_pTexture) noexcept
+{
+	if (In_Type >= ResourceSetting::TextureType_Max) return; // 範囲外の値の場合は何もしない
+	m_spTextures[In_Type] = In_pTexture;
+}
+
 void Material::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<VertexShader>();
