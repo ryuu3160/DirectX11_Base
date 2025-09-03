@@ -40,7 +40,7 @@ InstancedMeshBuffer::~InstancedMeshBuffer()
 {
 	delete[] m_Desc.pIdx;
 	delete[] m_Desc.pVtx;
-	delete[] m_Desc.pInstance;
+	//delete[] m_Desc.pInstance;
 
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
 	m_pIdxBuffer = nullptr;

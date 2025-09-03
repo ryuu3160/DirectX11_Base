@@ -46,6 +46,31 @@ public:
 		DirectX::XMFLOAT4 quaternion;
 	};
 
+	enum class AnchorX : unsigned int
+	{
+		Left = 0,
+		Center,
+		Right
+	};
+	enum class AnchorY : unsigned int
+	{
+		Top = 0,
+		Center,
+		Bottom
+	};
+	enum class AnchorZ : unsigned int
+	{
+		Front = 0,
+		Center,
+		Back
+	};
+	struct Anchor
+	{
+		AnchorX x;
+		AnchorY y;
+		AnchorZ z;
+	};
+
 	/// <summary>
 	/// インスタンシングオブジェクトを整列させて配置する際に使用するデータ構造体
 	/// </summary>
@@ -57,6 +82,7 @@ public:
 		DirectX::XMFLOAT3 StartPos;
 		DirectX::XMFLOAT3 Scale;
 		DirectX::XMFLOAT4 Quaternion;
+		Anchor AnchorPoint;
 		bool IsWrite;
 
 		DirectX::XMFLOAT3 ShiftPosOffset;
@@ -92,6 +118,15 @@ public:
 	/// </summary>
 	/// <param name="In_MeshBuffer">置き換えに使用する MeshBuffer への共有ポインタ。</param>
 	void ReplaceMeshBuffer(_In_ std::shared_ptr<InstancedMeshBuffer> In_MeshBuffer) noexcept;
+
+private:
+
+	/// <summary>
+	/// 指定されたAlignInstanceDataからPerInstanceDataのベクターを作成します。
+	/// </summary>
+	/// <param name="In_InstanceData">基準となるAlignInstanceDataオブジェクト。</param>
+	/// <returns>作成されたPerInstanceDataオブジェクトのstd::vector。</returns>
+	std::vector<PerInstanceData> CreateAlignInstanceData(_In_ const AlignInstanceData &In_InstanceData) const noexcept;
 
 private:
 	std::shared_ptr<InstancedMeshBuffer> m_spMeshBuffer; // メッシュバッファ

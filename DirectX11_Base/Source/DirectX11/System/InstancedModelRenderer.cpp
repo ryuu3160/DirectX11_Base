@@ -254,6 +254,36 @@ void InstancedModelRenderer::Draw() noexcept
 	}
 }
 
+void InstancedModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func)
+{
+	for (auto &itr : m_vecMeshes)
+	{
+		// メッシュの頂点バッファの情報を取得
+		InstancedMeshBuffer::InstancingDesc desc = itr->GetMesh()->GetDesc();
+
+		// 新しい頂点バッファのメモリを確保
+		char *newVtx = new char[In_VtxSize * desc.vtxCount];
+
+		// 新しい頂点バッファの情報を設定
+		RemakeInfo data = {};
+		data.vtxNum = desc.vtxCount;
+		data.dest = newVtx;
+		data.source = desc.pVtx;
+		data.idxNum = desc.idxCount;
+		data.idx = desc.pIdx;
+		// 頂点データの再生成
+		In_Func(data);
+
+		// 既存の頂点バッファを置き換え
+		desc.pVtx = newVtx;
+		desc.vtxSize = In_VtxSize;
+		itr->ReplaceMeshBuffer(std::make_shared<InstancedMeshBuffer>(desc));
+
+		// 使用したメモリを解放
+		delete[] newVtx;
+	}
+}
+
 void InstancedModelRenderer::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<InstancedVertexShader>();

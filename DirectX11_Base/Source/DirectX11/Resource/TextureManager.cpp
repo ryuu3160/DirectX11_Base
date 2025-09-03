@@ -101,6 +101,20 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 	}
 }
 
+std::shared_ptr<Texture> TextureManager::LoadTexture(_In_ const FilePath &In_FilePath) noexcept
+{
+	HRESULT hr;
+	auto Tex = std::make_shared<Texture>();
+	hr = Tex->Create(In_FilePath.data());
+	if (SUCCEEDED(hr))
+	{
+		// ¬Œ÷‚µ‚½ê‡‚Íƒ}ƒbƒv‚É’Ç‰Á
+		m_mapTextures.insert({ HoldFilePath(In_FilePath), Tex });
+		return Tex;
+	}
+	return nullptr; // ¸”s‚µ‚½ê‡‚Ínullptr‚ğ•Ô‚·
+}
+
 TextureManager::TextureManager()
 {
 }
