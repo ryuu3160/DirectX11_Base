@@ -19,6 +19,7 @@ protected:
 	enum Kind
 	{
 		Vertex,
+		InstancedVertex,
 		Geometry,
 		Hull,
 		Domain,
@@ -99,6 +100,34 @@ protected:
 private:
 	ComPtr<ID3D11VertexShader> m_pVS;
 	ComPtr<ID3D11InputLayout> m_pInputLayout;
+};
+
+//----------
+// インスタンシング頂点シェーダ
+class InstancedVertexShader : public Shader
+{
+public:
+	InstancedVertexShader();
+	~InstancedVertexShader();
+	void Bind(void);
+	/// <summary>
+	/// インスタンスのシェーダーリソースビューを設定します。
+	/// </summary>
+	/// <param name="[In_pSRV]">設定する ID3D11ShaderResourceView の ComPtr。</param>
+	void SetInstanceSRV(_In_ ID3D11ShaderResourceView* In_pSRV) noexcept { m_pInstanceSRV = In_pSRV; }
+protected:
+	/// <summary>
+	/// 頂点シェーダーを作成します。
+	/// </summary>
+	/// <param name="[In_pData]">シェーダー作成に使用するデータへのポインタ。</param>
+	/// <param name="[In_Size]">データのサイズ（バイト単位）。</param>
+	/// <returns>操作の成功または失敗を示すHRESULT値。</returns>
+	HRESULT MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) noexcept;
+
+private:
+	ComPtr<ID3D11VertexShader> m_pVS;
+	ComPtr<ID3D11InputLayout> m_pInputLayout;
+	ID3D11ShaderResourceView* m_pInstanceSRV;
 };
 
 //----------

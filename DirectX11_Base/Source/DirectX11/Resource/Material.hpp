@@ -60,8 +60,30 @@ public:
 	/// <returns>マテリアル名を表す std::string への参照。</returns>
 	inline const std::string &GetMaterialName() const noexcept { return m_strMaterialName; }
 
-	inline VertexShader *GetVertexShader() const noexcept { return m_pVS; }
+	inline VertexShader *GetVertexShader() const noexcept
+	{
+		if(!m_bIsInstancedVertexShader)
+			return reinterpret_cast<VertexShader *>(m_pVS);
+		else
+			return nullptr;
+	}
+
+	inline InstancedVertexShader *GetInstancedVertexShader() const noexcept
+	{
+		if (m_bIsInstancedVertexShader)
+			return reinterpret_cast<InstancedVertexShader *>(m_pVS);
+		else
+			return nullptr;
+	}
+
 	inline PixelShader *GetPixelShader() const noexcept { return m_pPS; }
+
+	/// <summary>
+	/// テクスチャを設定します。
+	/// </summary>
+	/// <param name="[In_Type]">設定するテクスチャの種類。</param>
+	/// <param name="[In_pTexture]">設定するテクスチャへのポインタ。</param>
+	void SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_ std::shared_ptr<Texture> In_pTexture) noexcept;
 
 	/// <summary>
 	/// カメラをPSに書き込むかどうかを取得します。
@@ -74,6 +96,12 @@ public:
 	/// </summary>
 	/// <returns>ResourceSetting::ShaderParamType 型の std::vector への定数参照。</returns>
 	inline const std::vector<ResourceSetting::ShaderParamType> &GetShaderParamList() const noexcept { return m_vecShaderParamList; }
+
+	/// <summary>
+	/// インスタンスト頂点シェーダーかどうかの状態を設定します。
+	/// </summary>
+	/// <param name="In_IsInstanced">インスタンスト頂点シェーダーであるかどうかを示す真偽値。</param>
+	inline void SetIsInstancedVertexShader(_In_ const bool &In_IsInstanced) noexcept { m_bIsInstancedVertexShader = In_IsInstanced; }
 
 private:
 	/// <summary>
@@ -110,11 +138,13 @@ private:
 	std::vector<ResourceSetting::ShaderParamType> m_vecShaderParamList; // PixelShaderに書き込む情報リスト
 	bool m_bIsPSWriteCamera; // カメラ情報をPixelShaderに書き込むかどうか
 
-	VertexShader *m_pVS;
+	bool m_bIsInstancedVertexShader; // インスタンシング用の頂点シェーダーかどうか
+
+	Shader *m_pVS;
 	PixelShader *m_pPS;
 	std::string m_strVSName;
 	std::string m_strPSName;
 
-	std::shared_ptr<VertexShader> m_defVS;
+	std::shared_ptr<Shader> m_defVS;
 	std::shared_ptr<PixelShader> m_defPS;
 };

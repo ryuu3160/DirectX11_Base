@@ -244,6 +244,18 @@
     <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
       <Filter>Source\System\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\InstancedMesh.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\InstancedMeshBuffer.cpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\InstancedModelRenderer.cpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
     <ClCompile Include="Source\App\Scene\SceneGame.cpp">
       <Filter>Source\App\Scene</Filter>
     </ClCompile>
@@ -420,6 +432,18 @@
     <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
       <Filter>Source\System\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\InstancedMeshBuffer.hpp">
+      <Filter>Source\DirectX11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\InstancedModelRenderer.hpp">
+      <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneGame.hpp">
       <Filter>Source\App\Scene</Filter>
     </ClInclude>
@@ -457,6 +481,18 @@
     </FxCompile>
     <FxCompile Include="Source\Shader\PixelShader\PS_TexColor.hlsl">
       <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_POM.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\IVS_Bumpmap.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -40,6 +40,13 @@ public:
 	/// <param name="[In_File]">テクスチャファイルのパスを指定する FilePath オブジェクト</param>
 	void LoadTextures(_In_ const aiScene *In_Scene,_In_ const FilePath &In_File) noexcept;
 
+	/// <summary>
+	/// 指定されたファイルパスからテクスチャを読み込みます。
+	/// </summary>
+	/// <param name="In_FilePath">読み込むテクスチャファイルのパス。</param>
+	/// <returns>読み込まれたテクスチャへの共有ポインタ。失敗した場合は nullptr を返します。</returns>
+	std::shared_ptr<Texture> LoadTexture(_In_ const FilePath &In_FilePath) noexcept;
+
 private:
 	TextureManager();
 	~TextureManager() override;

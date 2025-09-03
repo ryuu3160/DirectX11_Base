@@ -1,8 +1,8 @@
 /*+===================================================================
-	File: ModelRenderer.hpp
-	Summary: モデルレンダラー 佐々木先生のコードを参考に実装
+	File: InstancedModelRenderer.hpp
+	Summary: インスタンシング用のモデルレンダラークラス
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/07/01 Tue AM 10:45:12 初回作成
+	Date: 2025/9/1 Mon AM 05:05:58 初回作成
 ===================================================================+*/
 #pragma once
 
@@ -11,17 +11,20 @@
 // ==============================
 #include "DirectX11/System/RenderComponent.hpp"
 #include "DirectX11/Resource/ResourceSetting.hpp"
+#include "DirectX11/Resource/InstancedMesh.hpp"
 
 // ==============================
 //	前方宣言
 // ==============================
 class Material;
-class Mesh;
 
-class ModelRenderer : public RenderComponent
+/// <summary>
+/// InstancedModelRendererクラス
+/// </summary>
+class InstancedModelRenderer : public RenderComponent
 {
 public:
-	using Meshes = std::vector<std::shared_ptr<Mesh>>;
+	using Meshes = std::vector<std::shared_ptr<InstancedMesh>>;
 
 	/// <summary>
 	/// 頂点とインデックスデータの情報を格納する構造体
@@ -36,12 +39,19 @@ public:
 	};
 
 public:
-    ModelRenderer();
-    ~ModelRenderer();
-    void ExecuteUpdate() noexcept final;
+	InstancedModelRenderer();
+	~InstancedModelRenderer();
+
+	void ExecuteUpdate() noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
+
+	/// <summary>
+	/// InstancedMesh::AlignInstanceData型のデータを設定します。
+	/// </summary>
+	/// <param name="[In_Data]">設定するAlignInstanceDataの参照。</param>
+	void SetAlignInstanceData(_In_ const InstancedMesh::AlignInstanceData &In_Data) noexcept { m_AlignInstanceData = In_Data; }
 
 	template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type * = nullptr>
 	void SetWriteParam(_In_ T *In_Param);
@@ -65,18 +75,18 @@ public:
 	/// <param name="[In_Enable]">書き込むかどうかの真偽値</param>
 	void IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable);
 
-    /// <summary>
-    /// データアクセサーを使用して読み書きを行います。
-    /// </summary>
-    /// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
-    void ReadWrite(_In_ DataAccessor *In_Data) override final;
+	/// <summary>
+	/// データアクセサーを使用して読み書きを行います。
+	/// </summary>
+	/// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
+	void ReadWrite(_In_ DataAccessor *In_Data) override final;
 
 	/// <summary>
 	/// 指定されたインデックスのメッシュを取得します。
 	/// </summary>
 	/// <param name="[In_Index]">取得したいメッシュのインデックス。</param>
 	/// <returns>インデックスが有効な場合は対応するMeshオブジェクトへのポインタ。無効な場合はnullptrを返します。</returns>
-	inline const std::shared_ptr<Mesh> GetMesh(_In_ const unsigned int &In_Index) const noexcept
+	inline const std::shared_ptr<InstancedMesh> GetMesh(_In_ const unsigned int &In_Index) const noexcept
 	{
 		if (In_Index < 0 || m_vecMeshes.size() <= In_Index)
 		{
@@ -99,7 +109,7 @@ public:
 	/// <param name="[In_Scale]">適用するスケール係数（デフォルトは1.0f）。</param>
 	/// <param name="[In_IsFlip]">ファイルを反転して読み込むかどうか（デフォルトはfalse）。</param>
 	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します。</returns>
-	bool Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
+	bool Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
 
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
@@ -113,10 +123,6 @@ public:
 	/// <param name="[In_Func]">RemakeInfo 構造体への参照を受け取り、頂点データの再生成処理を行うコールバック関数。</param>
 	void RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func);
 
-//#if _DEBUG
-//    void Debug(debug::Window *window) final;
-//#endif
-
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成
@@ -125,14 +131,15 @@ private:
 
 private:
 	Meshes m_vecMeshes;
-	VertexShader *m_pVS;
+	InstancedVertexShader *m_pVS;
 	PixelShader *m_pPS;
+	InstancedMesh::AlignInstanceData m_AlignInstanceData;
 
 	// モデル全体のPixelシェーダーに書き込むもの
 	std::vector<DirectX::XMFLOAT4> m_vecLightParam; // ライトパラメータ
 	std::vector<DirectX::XMFLOAT4> m_vecCameraParam; // カメラパラメータ
 
-    float m_fScale;
+	float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 	bool m_bEnablePS_WriteCamera; // モデル全体のピクセルシェーダーでカメラ情報を書き込むかどうか
 	std::array<bool, ResourceSetting::ShaderParam_MAX> m_bEnablePS_WriteParamList; // モデル全体のピクセルシェーダーでパラメーターを書き込むかの真偽値リスト
@@ -140,14 +147,9 @@ private:
 	std::array<ResourceSetting::ShaderParam *, ResourceSetting::ShaderParam_MAX> m_pShaderParams; // シェーダーパラメータ
 };
 
-/// <summary>
-/// 指定されたシェーダーパラメータをスロット番号に基づいて設定します。
-/// </summary>
-/// <typeparam name="[T]">ResourceSetting::ShaderParamを継承した型。</typeparam>
-/// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ。</param>
-template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type*>
-inline void ModelRenderer::SetWriteParam(T *In_Param)
+template<typename T, typename std::enable_if<std::is_base_of<ResourceSetting::ShaderParam, T>::value>::type *>
+inline void InstancedModelRenderer::SetWriteParam(T *In_Param)
 {
-	if(In_Param)
+	if (In_Param)
 		m_pShaderParams[In_Param->GetSlotNum()] = In_Param;
 }

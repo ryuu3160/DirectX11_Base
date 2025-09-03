@@ -130,7 +130,7 @@ namespace ResourceSetting
 		DirectX::XMFLOAT3 Direction; // ライトの方向
 		float Dummy;
 		DirectX::XMFLOAT4 Diffuse; // 拡散光の色
-		DirectX::XMFLOAT4 Specular; // 鏡面反射光の色
+		DirectX::XMFLOAT4 Ambient; // 環境光
 	};
 	// ポイントライトのパラメーター構造体
 	struct PointLightParam : public BaseParam

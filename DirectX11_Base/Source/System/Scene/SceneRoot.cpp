@@ -12,9 +12,13 @@
 #include "Source/App/Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
+#include "DirectX11/Resource/TextureManager.hpp"
 #include "System/Object/CameraDCC.hpp"
+#include "System/Object/SkyBoxObj.hpp"
+#include "DirectX11/System/InstancedModelRenderer.hpp"
 #include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
+#include "DirectX11/Resource/Mesh.hpp"
 
 // ==============================
 //  定数
@@ -58,6 +62,33 @@ void SceneRoot::Init()
 	SpriteComp2->SetCamera(pCamera);
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
+
+	//// スカイボックスを作成
+	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	//pSkyBox->SetCamera(pCamera);
+
+	// インスタンシングテスト
+	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
+	pInstanced->SetPos({ 0.0f,0.0f,0.0f });
+	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
+	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
+	InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
+	InstancedComp->SetCamera(pCamera);
+	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
+	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	InstancedMesh::AlignInstanceData instanceData;
+	instanceData.CountX = 1000;
+	instanceData.CountZ = 1000;
+	instanceData.CountY = 1;
+	instanceData.StartPos = pInstanced->GetPos();
+	instanceData.Scale = pInstanced->GetScale();
+	instanceData.Quaternion = pInstanced->GetQuat();
+	instanceData.IsWrite = true;
+	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
+	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
+
+	InstancedComp->SetAlignInstanceData(instanceData);
 }
 
 void SceneRoot::Uninit()
@@ -68,15 +99,37 @@ void SceneRoot::Uninit()
 void SceneRoot::Update()
 {
 	ResourceSetting::LightParam light;
-	light.Direction = { 0.0f, -1.0f, 0.0f };
+	light.Direction = GetObject<CameraDCC>("Camera")->GetFront();
 	light.Dummy = 0.0f;
 	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-	light.Specular = { 1.0f, 1.0f, 1.0f, 1.0f };
+	light.Ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	ResourceSetting::PBR_Param pbr;
+	pbr.Metallic = 0.8f;
+	pbr.Smooth = 0.3f;
+	pbr.dummy = { 0.0f,0.0f };
+	ResourceSetting::POM_Param pom;
+	pom.HeightScale = 0.1f;
+	pom.NumSteps = 100;
+	pom.dummy = {};
 	ResourceSetting::LightParam lights[] = { 
 		light 
 	};
-	auto *LightParam = ResourceSetting::CreateShaderParam(lights,_countof(lights));
+	ResourceSetting::PBR_Param pbrs[] = {
+		pbr
+	};
+	ResourceSetting::POM_Param poms[] = {
+		pom
+	};
+	auto *LightParam = ResourceSetting::CreateShaderParam(lights,std::size(lights));
+	auto *PBRParam = ResourceSetting::CreateShaderParam(pbrs, std::size(pbrs));
+	auto *POMParam = ResourceSetting::CreateShaderParam(poms, std::size(poms));
 
+	auto pModel = GetObject<GameObject>("Instanced");
+	/*auto Component = pModel->GetComponent<InstancedModelRenderer>();
+	Component->SetWriteParam(LightParam);
+	Component->SetWriteParam(PBRParam);
+	Component->SetWriteParam(POMParam);*/
+	//pModel->SetPos(pModel->GetPos() + DirectX::XMFLOAT3(0.0f, 0.0f, 0.01f));
 	//auto pModel = GetObject<GameObject>("RootModel0");
 	//auto Component = pModel->GetComponent<ModelRenderer>();
 	//Component->SetWriteParam(LightParam);

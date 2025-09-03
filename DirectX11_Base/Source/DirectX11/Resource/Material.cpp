@@ -31,6 +31,7 @@ Material::Material()
 	, m_pPS(nullptr)
 	, m_strMaterialName("")
 	, m_bIsPSWriteCamera(false)
+	, m_bIsInstancedVertexShader(false)
 {
 	m_strDirectory.clear();
 
@@ -143,6 +144,12 @@ int Material::GetTextureNum() const noexcept
 			++count; // テクスチャが存在する場合はカウント
 	}
 	return count; // テクスチャの数を返す
+}
+
+void Material::SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_ std::shared_ptr<Texture> In_pTexture) noexcept
+{
+	if (In_Type >= ResourceSetting::TextureType_Max) return; // 範囲外の値の場合は何もしない
+	m_spTextures[In_Type] = In_pTexture;
 }
 
 void Material::MakeDefaultShader()

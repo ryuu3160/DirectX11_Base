@@ -84,7 +84,7 @@ protected:
 	GameObject *m_pCameraObj;				// カメラオブジェクトへのポインタ
 	Camera *m_pViewCamera;					// ビューカメラ
 
-	std::shared_ptr<VertexShader> m_defVS;	// デフォルトの頂点シェーダー
+	std::shared_ptr<Shader> m_defVS;	// デフォルトの頂点シェーダー
 	std::shared_ptr<PixelShader> m_defPS;	// デフォルトのピクセルシェーダー
 
 private:

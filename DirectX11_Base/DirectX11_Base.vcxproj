@@ -170,6 +170,14 @@
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\InstancedMesh.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
       <SubType>
       </SubType>
@@ -199,6 +207,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
+    <ClCompile Include="Source\DirectX11\System\InstancedModelRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
       <SubType>
       </SubType>
@@ -213,6 +225,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Texture\InstancedMeshBuffer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -292,6 +308,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
       <SubType>
       </SubType>
@@ -325,6 +349,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
+    <ClInclude Include="Source\DirectX11\System\InstancedModelRenderer.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
       <SubType>
       </SubType>
@@ -339,6 +367,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Texture\InstancedMeshBuffer.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -425,9 +457,31 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_POM.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Source\Shader\PixelShader\PS_TexColor.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\IVS_Bumpmap.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Source\Shader\VertexShader\VS_Object.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

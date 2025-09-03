@@ -1,18 +1,18 @@
 /*+===================================================================
-	File: ModelRenderer.cpp
-	Summary: モデルレンダラー 佐々木先生のコードを参考に実装
+	File: InstancedModelRenderer.cpp
+	Summary: インスタンシング用のモデルレンダラークラス
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/07/01 Tue AM 10:45:21 初回作成
+	Date: 2025/9/1 Mon AM 05:06:05 初回作成
 ===================================================================+*/
 
 // ==============================
 //	include
 // ==============================
-#include "ModelRenderer.hpp"
+#include "InstancedModelRenderer.hpp"
 #include "System/Component/Camera.hpp"
 #include "DirectX11/Resource/MaterialManager.hpp"
 #include "DirectX11/Resource/TextureManager.hpp"
-#include "DirectX11/Resource/ModelManager.hpp"
+#include "DirectX11/Resource/InstancedModelManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -25,7 +25,7 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
 
-ModelRenderer::ModelRenderer()
+InstancedModelRenderer::InstancedModelRenderer()
 	: m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
@@ -33,12 +33,13 @@ ModelRenderer::ModelRenderer()
 	, m_bEnablePS_WriteCamera(false)
 	, m_bEnablePS_WriteParamList{}
 	, m_pShaderParams{}
+	, m_AlignInstanceData{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
 		MakeDefaultShader();
 	}
-	m_pVS = reinterpret_cast<VertexShader*>(m_defVS.get());
+	m_pVS = reinterpret_cast<InstancedVertexShader *>(m_defVS.get());
 	m_pPS = m_defPS.get();
 
 	m_vecMeshes.clear();
@@ -49,28 +50,38 @@ ModelRenderer::ModelRenderer()
 		itr = false;
 }
 
-ModelRenderer::~ModelRenderer()
+InstancedModelRenderer::~InstancedModelRenderer()
 {
-	for (auto &itr : m_pShaderParams)
-	{
-		if (itr)
-		{
-			delete itr;
-			itr = nullptr;
-		}
-	}
-	m_vecMeshes.clear();
 }
 
-void ModelRenderer::ExecuteUpdate() noexcept
+void InstancedModelRenderer::ExecuteUpdate() noexcept
 {
 	// 既にメッシュが読み込まれている場合は何もしない
 	if (!m_vecMeshes.empty()) return;
 
-	this->Load(m_AssetPath, m_fScale);
+	this->Load(m_AssetPath,m_AlignInstanceData, m_fScale);
 }
 
-void ModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable)
+void InstancedModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
+{
+	In_Data->Access<FilePath>(&m_AssetPath);
+}
+
+void InstancedModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
+{
+	InstancedVertexShader *cast = reinterpret_cast<InstancedVertexShader *>(In_Vs);
+	if (cast)
+		m_pVS = cast;
+}
+
+void InstancedModelRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
+{
+	PixelShader *cast = reinterpret_cast<PixelShader *>(In_pShader);
+	if (cast)
+		m_pPS = cast;
+}
+
+void InstancedModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable)
 {
 	if (In_Type >= ResourceSetting::ShaderParam_MAX)
 		return;// 値が最大値よりも大きい場合はエラー
@@ -83,26 +94,7 @@ void ModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderPara
 	m_bEnablePS_WriteParamList[In_Type] = In_Enable;
 }
 
-void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
-{
-	In_Data->Access<FilePath>(&m_AssetPath);
-}
-
-void ModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
-{
-	VertexShader *cast = reinterpret_cast<VertexShader *>(In_Vs);
-	if (cast)
-		m_pVS = cast;
-}
-
-void ModelRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
-{
-	PixelShader *cast = reinterpret_cast<PixelShader *>(In_pShader);
-	if (cast)
-		m_pPS = cast;
-}
-
-bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
+bool InstancedModelRenderer::Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
 {
 	// assimpの設定
 	Assimp::Importer importer;
@@ -140,11 +132,12 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 		aiMesh *aiMesh = pScene->mMeshes[i];
 
 		// このメッシュが参照するマテリアルを取得
-		aiMaterial* aiMat = pScene->mMaterials[aiMesh->mMaterialIndex];
+		aiMaterial *aiMat = pScene->mMaterials[aiMesh->mMaterialIndex];
 		auto material = MaterialManager::GetInstance().GetMaterial(aiMat, In_File);
+		material->SetIsInstancedVertexShader(true);
 
 		// モデルの作成
-		auto Mesh = ModelManager::GetInstance().CreateMesh(aiMesh, In_File, In_Scale,i,material);
+		auto Mesh = InstancedModelManager::GetInstance().CreateMesh(aiMesh, In_File, In_Scale, In_InstanceData, i, material);
 
 		// メッシュ追加
 		m_vecMeshes.push_back(Mesh);
@@ -153,7 +146,7 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 	return true;
 }
 
-void ModelRenderer::Draw() noexcept
+void InstancedModelRenderer::Draw() noexcept
 {
 	// 定数バッファに渡す行列の情報を作成
 	DirectX::XMFLOAT4X4 mat[3];
@@ -170,45 +163,17 @@ void ModelRenderer::Draw() noexcept
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);
 
-	// マテリアルのシェーダーを使用しない場合は、デフォルトのシェーダーを使用
-	if (!m_bUseMaterialShader)
-	{
-		// メモリ上の行列をグラフィックスメモリへコピー
-		// 1つ目の引数はバッファの番号
-		m_pVS->WriteBuffer(0, mat);
-
-		m_pVS->Bind();
-		// カメラ情報を書き込むかどうかを判定
-		if (m_bEnablePS_WriteCamera)
-		{
-			DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
-			m_pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
-		}
-
-		// 各パラメーターを書き込むかどうかを判定
-		for (unsigned int i = 0; i < ResourceSetting::ShaderParam_MAX;++i)
-		{
-			if(m_bEnablePS_WriteParamList[i] && m_pShaderParams[i])
-			{
-				m_pPS->WriteBuffer(i, m_pShaderParams[i]->GetParam());
-				// パラメーターの解放
-				delete m_pShaderParams[i];
-				m_pShaderParams[i] = nullptr;
-			}
-		}
-		m_pPS->Bind();
-	}
-
 	for (auto &itr : m_vecMeshes)
 	{
 		// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーをバインド
 		if (m_bUseMaterialShader)
 		{
-			VertexShader *pVS = itr->GetMaterial()->GetVertexShader();
+			InstancedVertexShader *pVS = itr->GetMaterial()->GetInstancedVertexShader();
 			PixelShader *pPS = itr->GetMaterial()->GetPixelShader();
 			if (pVS)
 			{
 				pVS->WriteBuffer(0, mat);
+				pVS->SetInstanceSRV(itr->GetMesh()->GetInstanceSRV());
 				pVS->Bind();
 			}
 			if (pPS)
@@ -234,12 +199,39 @@ void ModelRenderer::Draw() noexcept
 				pPS->Bind();
 			}
 		}
+		else
+		{
+			// メモリ上の行列をグラフィックスメモリへコピー
+			// 1つ目の引数はバッファの番号
+			m_pVS->WriteBuffer(0, mat);
+			m_pVS->SetInstanceSRV(itr->GetMesh()->GetInstanceSRV());
+			m_pVS->Bind();
+			// カメラ情報を書き込むかどうかを判定
+			if (m_bEnablePS_WriteCamera)
+			{
+				DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
+				m_pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
+			}
+
+			// 各パラメーターを書き込むかどうかを判定
+			for (unsigned int i = 0; i < ResourceSetting::ShaderParam_MAX; ++i)
+			{
+				if (m_bEnablePS_WriteParamList[i] && m_pShaderParams[i])
+				{
+					m_pPS->WriteBuffer(i, m_pShaderParams[i]->GetParam());
+					// パラメーターの解放
+					delete m_pShaderParams[i];
+					m_pShaderParams[i] = nullptr;
+				}
+			}
+			m_pPS->Bind();
+		}
 
 		// 設定されているテクスチャをシェーダーに設定
 		if (itr->GetMaterial()->GetTextureNum() > 0)
 		{
 			const auto &Textures = itr->GetMaterial()->GetTextures();
-			for(int i = 0; i < ResourceSetting::TextureType_Max; ++i)
+			for (int i = 0; i < ResourceSetting::TextureType_Max; ++i)
 			{
 				// テクスチャが設定されていない場合はスキップ
 				if (!Textures[i])
@@ -262,12 +254,12 @@ void ModelRenderer::Draw() noexcept
 	}
 }
 
-void ModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func)
+void InstancedModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func)
 {
 	for (auto &itr : m_vecMeshes)
 	{
 		// メッシュの頂点バッファの情報を取得
-		MeshBuffer::Description desc = itr->GetMesh()->GetDesc();
+		InstancedMeshBuffer::InstancingDesc desc = itr->GetMesh()->GetDesc();
 
 		// 新しい頂点バッファのメモリを確保
 		char *newVtx = new char[In_VtxSize * desc.vtxCount];
@@ -285,17 +277,17 @@ void ModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<
 		// 既存の頂点バッファを置き換え
 		desc.pVtx = newVtx;
 		desc.vtxSize = In_VtxSize;
-		itr->ReplaceMeshBuffer(std::make_shared<MeshBuffer>(desc));
+		itr->ReplaceMeshBuffer(std::make_shared<InstancedMeshBuffer>(desc));
 
 		// 使用したメモリを解放
 		delete[] newVtx;
 	}
 }
 
-void ModelRenderer::MakeDefaultShader()
+void InstancedModelRenderer::MakeDefaultShader()
 {
-	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Assets/Shader/VS_Model.cso");
+	m_defVS = std::make_shared<InstancedVertexShader>();
+	m_defVS->Load("Assets/Shader/IVS_InstancedObject.cso");
 	m_defPS = std::make_shared<PixelShader>();
 	m_defPS->Load("Assets/Shader/PS_Model.cso");
 }
