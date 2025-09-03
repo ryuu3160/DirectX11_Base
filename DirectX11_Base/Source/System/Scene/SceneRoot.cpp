@@ -117,18 +117,6 @@ void SceneRoot::Init()
 	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
 	InstancedComp->SetAlignInstanceData(instanceData);
-	InstancedComp->IsEnablePS_WriteCamera(true);
-	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_Light, true);
-	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_PBR, true);
-	InstancedComp->IsEnablePS_WriteParam(ResourceSetting::ShaderParam_POM, true);
-
-	InstancedComp->ExecuteUpdate();
-
-	// テクスチャの設定
-	auto normal = TextureManager::GetInstance().LoadTexture("Assets/Model/plane/normal.png");
-	auto height = TextureManager::GetInstance().LoadTexture("Assets/Model/plane/height.png");
-	InstancedComp->GetMesh(0)->GetMaterial()->SetTexture(ResourceSetting::TextureType_Normal, std::shared_ptr<Texture>(normal));
-	InstancedComp->GetMesh(0)->GetMaterial()->SetTexture(ResourceSetting::TextureType_Height, std::shared_ptr<Texture>(height));
 }
 
 void SceneRoot::Uninit()
