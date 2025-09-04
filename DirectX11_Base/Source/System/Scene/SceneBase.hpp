@@ -100,6 +100,9 @@ public:
 	template <class T>
 	T *CreateObject(_In_ const std::string &In_Name) noexcept;
 
+	template <typename T, typename ...Args>
+	T *CreateObject(_In_ const std::string &In_Name, Args&&... args) noexcept;
+
 	/// <summary>
 	/// 指定された名前でGameObjectを作成します。
 	/// </summary>
@@ -207,6 +210,31 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 
 	// オブジェクト生成
 	T *ptr = new T();
+	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
+	m_Items.push_back(In_Name);
+	return ptr;
+}
+
+template<typename T, typename ...Args>
+inline T *SceneBase::CreateObject(const std::string &In_Name, Args && ...args) noexcept
+{
+#ifdef _DEBUG
+	// デバッグ中のみ、名称ダブりがないかチェック
+	Objects::iterator it = m_Objects.find(In_Name);
+	if (it != m_Objects.end())
+	{
+		std::string buf = "Failed to create object." + In_Name;
+		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+		return nullptr;
+	}
+
+	// ヒエラルキーに追加
+	//hierarchy->AddListItem(name);
+
+#endif // _DEBUG
+
+	// オブジェクト生成
+	T *ptr = new T(args...);
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
 	return ptr;

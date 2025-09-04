@@ -8,6 +8,7 @@
 // ==============================
 //	include
 // ==============================
+#include "cstring"
 #include "GameObject.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
@@ -16,7 +17,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
 	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
-	, m_PrevRotation(m_Rotation)
+	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
@@ -35,10 +36,14 @@ GameObject::GameObject(_In_ std::string In_Name)
 		file.close();
 
 		// ゲームオブジェクト内のデータの読み込み
-		std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
-		std::memcpy(&m_Quat, ptr += sizeof(m_Pos), sizeof(m_Quat));
-		std::memcpy(&m_Scale, ptr += sizeof(m_Quat), sizeof(m_Scale));
-		ptr += sizeof(m_Scale);
+        // ファイルサイズが十分かどうかをチェックしてからmemcpyを実行
+		if (fileSize >= sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale))
+		{
+			std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
+			std::memcpy(&m_Quat, ptr + sizeof(m_Pos), sizeof(m_Quat));
+			std::memcpy(&m_Scale, ptr + sizeof(m_Pos) + sizeof(m_Quat), sizeof(m_Scale));
+			ptr += sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale);
+		}
 		size_t size;
 		// データのキーと値が保存されている個所へのポインタを取得
 		for (;ptr - m_Datas[0].value < fileSize;ptr += size)
