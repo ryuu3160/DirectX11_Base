@@ -109,7 +109,14 @@ public:
 	/// <param name="[In_Scale]">適用するスケール係数（デフォルトは1.0f）。</param>
 	/// <param name="[In_IsFlip]">ファイルを反転して読み込むかどうか（デフォルトはfalse）。</param>
 	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します。</returns>
-	bool Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
+	bool Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false) noexcept;
+
+	/// <summary>
+	/// 既に設定されているアセットパス、インスタンシングデータを使用してモデルをロードします。
+	/// </summary>
+	/// <param name="[In_IsFlip]">ロード時にアセットを反転するかどうかを指定します。デフォルトは false です。</param>
+	/// <returns>ロードが成功した場合は true、失敗した場合は false を返します。</returns>
+	bool Load(_In_ const bool &In_IsFlip = false) noexcept { return Load(m_AssetPath, m_AlignInstanceData, m_fScale, In_IsFlip); }
 
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。

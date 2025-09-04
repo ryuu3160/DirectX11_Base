@@ -94,7 +94,7 @@ void InstancedModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::S
 	m_bEnablePS_WriteParamList[In_Type] = In_Enable;
 }
 
-bool InstancedModelRenderer::Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
+bool InstancedModelRenderer::Load(_In_ const FilePath &In_File, _In_ const InstancedMesh::AlignInstanceData &In_InstanceData, _In_ const float &In_Scale, _In_ const bool &In_IsFlip) noexcept
 {
 	// assimpÇÃê›íË
 	Assimp::Importer importer;
