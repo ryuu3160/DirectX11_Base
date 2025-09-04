@@ -67,28 +67,29 @@ void SceneRoot::Init()
 	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
 	//pSkyBox->SetCamera(pCamera);
 
-	// インスタンシングテスト
-	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
-	pInstanced->SetPos({ 0.0f,0.0f,0.0f });
-	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
-	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
-	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
-	InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
-	InstancedComp->SetCamera(pCamera);
-	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
-	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	InstancedMesh::AlignInstanceData instanceData;
-	instanceData.CountX = 1000;
-	instanceData.CountZ = 1000;
-	instanceData.CountY = 1;
-	instanceData.StartPos = pInstanced->GetPos();
-	instanceData.Scale = pInstanced->GetScale();
-	instanceData.Quaternion = pInstanced->GetQuat();
-	instanceData.IsWrite = true;
-	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
-	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
+	//// インスタンシングテスト
+	//auto &ShaderM = ShaderManager::GetInstance();
+	//GameObject *pInstanced = CreateObject<GameObject>("Instanced");
+	//pInstanced->SetPos({ 0.0f,0.0f,0.0f });
+	//pInstanced->SetScale({ 1.0f,1.0f,1.0f });
+	//pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+	//auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
+	//InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
+	//InstancedComp->SetCamera(pCamera);
+	//InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
+	//InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	//InstancedMesh::AlignInstanceData instanceData;
+	//instanceData.CountX = 1000;
+	//instanceData.CountZ = 1000;
+	//instanceData.CountY = 1;
+	//instanceData.StartPos = pInstanced->GetPos();
+	//instanceData.Scale = pInstanced->GetScale();
+	//instanceData.Quaternion = pInstanced->GetQuat();
+	//instanceData.IsWrite = true;
+	//instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
+	//instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
-	InstancedComp->SetAlignInstanceData(instanceData);
+	//InstancedComp->SetAlignInstanceData(instanceData);
 }
 
 void SceneRoot::Uninit()

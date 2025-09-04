@@ -26,6 +26,7 @@ class RenderManager;
 enum RenderLayer : int
 {
 	RenderLayer_SkyBox = -100,	// スカイボックス
+	RenderLayer_Ground = -50,
 	RenderLayer_Default = 0,	// 通常オブジェクト
 };
 

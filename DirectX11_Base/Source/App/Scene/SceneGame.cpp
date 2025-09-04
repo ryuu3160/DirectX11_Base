@@ -16,6 +16,7 @@
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "App/GameObject/Character/Player.hpp"
+#include "App/GameObject/Environment/SeaLevel.hpp"
 
 void SceneGame::Init()
 {
@@ -40,9 +41,14 @@ void SceneGame::Init()
 	// カメラにプレイヤーを設定
 	pCamera->SetTargetPlayer(player);
 
-	// スカイドームを作成
-	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	pSkyBox->SetCamera(pCamera);
+	// 海面オブジェクトの生成
+	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel");
+	pSeaLevel->SetCamera(pCamera);
+	pSeaLevel->SetPlayer(player);
+
+	//// スカイドームを作成
+	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	//pSkyBox->SetCamera(pCamera);
 }
 
 void SceneGame::Uninit()
