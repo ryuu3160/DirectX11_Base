@@ -163,7 +163,7 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 		MaxX = 1;
 		break;
 	}
-	int IdxY, IdxZ, IdxX;
+	int IdxY = 0, IdxZ = 0, IdxX = 0;
 	for (int y = StartY,IdxY = 0; y < MaxY; ++y,++IdxY)
 	{
 		for (int z = StartZ,IdxZ = 0; z < MaxZ; ++z, ++IdxZ)

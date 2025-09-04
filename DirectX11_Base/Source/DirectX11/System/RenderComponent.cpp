@@ -20,6 +20,10 @@ RenderComponent::RenderComponent()
 
 RenderComponent::~RenderComponent()
 {
+	m_pViewCamera = nullptr;
+	m_pCameraObj = nullptr;
+	m_defVS = nullptr;
+	m_defPS = nullptr;
 }
 
 void RenderComponent::SetCamera(_In_ GameObject *In_Camera) noexcept

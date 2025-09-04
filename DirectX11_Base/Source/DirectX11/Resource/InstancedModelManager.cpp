@@ -52,3 +52,8 @@ std::shared_ptr<InstancedMesh> InstancedModelManager::CreateMesh(_In_ const aiMe
 
 	return mesh;
 }
+
+InstancedModelManager::~InstancedModelManager()
+{
+	m_mapMeshes.clear();
+}

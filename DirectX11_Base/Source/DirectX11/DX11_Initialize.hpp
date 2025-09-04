@@ -69,7 +69,8 @@ enum DepthState
 	DEPTH_ENABLE_WRITE_TEST,
 	DEPTH_ENABLE_TEST,
 	DEPTH_DISABLE,
-	DEPTH_MAX
+	DEPTH_MAX,
+	DEPTH_ERROR = -1
 };
 
 /// <summary>
@@ -84,10 +85,6 @@ public:
 	/// </summary>
 	/// <returns>FAILEDマクロで判定</returns>
 	HRESULT Init();
-	/// <summary>
-	/// DirectX終了処理
-	/// </summary>
-	void Uninit();
 	/// <summary>
 	/// 描画終了処理
 	/// </summary>

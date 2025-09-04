@@ -27,6 +27,7 @@ SkyBoxObj::SkyBoxObj()
 
 SkyBoxObj::~SkyBoxObj()
 {
+	m_pCameraObj = nullptr;
 	m_pRenderComponent = nullptr;
 }
 

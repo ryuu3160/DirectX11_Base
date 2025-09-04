@@ -22,6 +22,13 @@ Shader::Shader(Kind kind)
 }
 Shader::~Shader()
 {
+	// バッファの解放
+	for (auto buf : m_pBuffers)
+	{
+		if (buf) { buf->Release(); }
+	}
+	m_pBuffers.clear();
+	m_pTextures.clear();
 }
 HRESULT Shader::Load(_In_ const FilePath &In_FileName) noexcept
 {
@@ -146,6 +153,7 @@ VertexShader::~VertexShader()
 {
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
 	m_pVS = nullptr;
+	m_pInputLayout = nullptr;
 }
 
 void VertexShader::Bind(void)
@@ -241,6 +249,7 @@ HRESULT VertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) 
 	);
 
 	delete[] pInputDesc;
+	pInputDesc = nullptr;
 	return hr;
 }
 

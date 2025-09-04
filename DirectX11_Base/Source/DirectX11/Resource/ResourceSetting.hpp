@@ -178,7 +178,7 @@ namespace ResourceSetting
 		{
 			m_Type = In_Type; // パラメーターのタイプを設定
 		}
-		~ShaderParam()
+		virtual ~ShaderParam()
 		{
 			if (m_pParam)
 			{

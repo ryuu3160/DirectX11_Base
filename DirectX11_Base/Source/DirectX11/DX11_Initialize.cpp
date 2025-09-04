@@ -63,9 +63,6 @@ DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_B
 DX11_Initialize::~DX11_Initialize()
 {
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
-	m_cpDevice = nullptr;
-	m_cpContext = nullptr;
-	m_cpSwapChain = nullptr;
 	for (int i = 0; i < 3; ++i)
 	{
 		m_cpRasterizerState[i] = nullptr;
@@ -82,6 +79,15 @@ DX11_Initialize::~DX11_Initialize()
 	{
 		m_cpDepthStencilState[i] = nullptr;
 	}
+
+	if (m_cpContext)
+		m_cpContext->ClearState();
+	if (m_cpSwapChain)
+		m_cpSwapChain->SetFullscreenState(false, NULL);
+
+	m_cpDevice = nullptr;
+	m_cpContext = nullptr;
+	m_cpSwapChain = nullptr;
 }
 
 HRESULT DX11_Initialize::Init()
@@ -232,21 +238,6 @@ HRESULT DX11_Initialize::Init()
 	return m_hr;
 }
 
-void DX11_Initialize::Uninit()
-{
-	for (int i = 0; i < SAMPLER_MAX; i++)
-		m_cpSamplerState[i] = nullptr;
-	for (int i = 0; i < BLEND_MAX; i++)
-		m_cpBlendState[i] = nullptr;
-	for (int i = 0;i < 3; i++)
-		m_cpRasterizerState[i] = nullptr;
-
-	if(m_cpContext)
-		m_cpContext->ClearState();
-	if(m_cpSwapChain)
-		m_cpSwapChain->SetFullscreenState(false, NULL);
-}
-
 void DX11_Initialize::Swap()
 {
 	// 描画完了時に画面へ出力
@@ -262,9 +253,12 @@ DepthState DX11_Initialize::GetNowDepthState() const noexcept
 	{
 		if (pCurrentState == m_cpDepthStencilState[i].Get())
 		{
+			if (pCurrentState) pCurrentState->Release();
 			return static_cast<DepthState>(i);
 		}
 	}
+	if (pCurrentState) pCurrentState->Release();
+	return DEPTH_ERROR;
 }
 
 void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept

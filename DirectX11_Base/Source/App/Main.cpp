@@ -85,8 +85,6 @@ void Main::Uninit()
 	
 	// 各種機能の終了処理
 	Input::Uninit();
-	Geometory::GetInstance().Uninit();
-	DX11_Initialize::GetInstance().Uninit();
 }
 
 void Main::Update()
