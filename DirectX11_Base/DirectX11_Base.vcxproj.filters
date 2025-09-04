@@ -268,7 +268,9 @@
     <ClCompile Include="Source\App\GameObject\MainCamera.cpp">
       <Filter>Source\App\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\App\GameObject\Environment\SeaLevel.cpp" />
+    <ClCompile Include="Source\App\GameObject\Environment\SeaLevel.cpp">
+      <Filter>Source\App\GameObject\Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -457,7 +459,9 @@
     <ClInclude Include="Source\App\GameObject\MainCamera.hpp">
       <Filter>Source\App\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\App\GameObject\Environment\SeaLevel.hpp" />
+    <ClInclude Include="Source\App\GameObject\Environment\SeaLevel.hpp">
+      <Filter>Source\App\GameObject\Environment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -499,6 +503,8 @@
     <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
       <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl" />
+    <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
