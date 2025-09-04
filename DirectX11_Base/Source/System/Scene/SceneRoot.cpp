@@ -99,7 +99,7 @@ void SceneRoot::Uninit()
 
 void SceneRoot::Update()
 {
-	ResourceSetting::LightParam light;
+	/*ResourceSetting::LightParam light;
 	light.Direction = GetObject<CameraDCC>("Camera")->GetFront();
 	light.Dummy = 0.0f;
 	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -125,7 +125,7 @@ void SceneRoot::Update()
 	auto *PBRParam = ResourceSetting::CreateShaderParam(pbrs, std::size(pbrs));
 	auto *POMParam = ResourceSetting::CreateShaderParam(poms, std::size(poms));
 
-	auto pModel = GetObject<GameObject>("Instanced");
+	auto pModel = GetObject<GameObject>("Instanced");*/
 	/*auto Component = pModel->GetComponent<InstancedModelRenderer>();
 	Component->SetWriteParam(LightParam);
 	Component->SetWriteParam(PBRParam);

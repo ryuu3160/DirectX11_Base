@@ -44,7 +44,7 @@ public:
 
 private:
 	InstancedModelManager() = default;
-	~InstancedModelManager() = default;
+	~InstancedModelManager();
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<InstancedMesh>> m_mapMeshes; // ƒ‚ƒfƒ‹‚ÌƒŠƒXƒg

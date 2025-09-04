@@ -82,7 +82,7 @@ public:
 
 public:
 	Component();
-	virtual  ~Component() = default;
+	virtual  ~Component();
 	virtual void ExecuteUpdate() noexcept;
 	virtual void ExecuteLateUpdate() noexcept;
 	virtual void ExecuteDraw() noexcept;

@@ -19,7 +19,6 @@ class Geometory : public Singleton<Geometory>
 	friend class Singleton<Geometory>;
 public:
 	void Init();
-	void Uninit();
 
 	void SetVertexShader(_In_ VertexShader* In_Vs) noexcept;
 	void SetPixelShader(_In_ PixelShader* In_Ps) noexcept;
@@ -67,4 +66,8 @@ private:
 		std::shared_ptr<MeshBuffer> sphereMesh;
 	};
 	Data m_Data;
+
+private:
+	Geometory() = default;
+	~Geometory();
 };

@@ -44,6 +44,8 @@ SkyBoxRenderer::SkyBoxRenderer()
 
 SkyBoxRenderer::~SkyBoxRenderer()
 {
+	m_pPS = nullptr;
+	m_pVS = nullptr;
 	m_vecMeshes.clear();
 }
 

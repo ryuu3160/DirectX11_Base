@@ -14,6 +14,11 @@ Component::Component() : m_pTransform(nullptr)
 {
 }
 
+Component::~Component()
+{
+	m_pTransform = nullptr;
+}
+
 void Component::ExecuteUpdate() noexcept
 {
 }

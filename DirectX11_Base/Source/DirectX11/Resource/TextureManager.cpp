@@ -120,4 +120,9 @@ TextureManager::TextureManager()
 }
 TextureManager::~TextureManager()
 {
+	for(auto &itr : m_mapTextures)
+	{
+		itr.second = nullptr;
+	}
+	m_mapTextures.clear();
 }

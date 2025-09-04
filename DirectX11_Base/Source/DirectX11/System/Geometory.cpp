@@ -19,14 +19,6 @@ void Geometory::Init()
 	MakeBox();
 	MakeSphere();
 }
-void Geometory::Uninit()
-{
-	m_Data.sphereMesh.reset();
-	m_Data.boxMesh.reset();
-	m_Data.lineMesh.reset();
-	m_Data.defPS.reset();
-	m_Data.defVS.reset();
-}
 
 void Geometory::SetVertexShader(_In_ VertexShader *In_Vs) noexcept
 {
@@ -265,4 +257,13 @@ void Geometory::MakeSphere() noexcept
 	desc.idxCount = static_cast<UINT>(idx.size());
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_Data.sphereMesh = std::make_shared<MeshBuffer>(desc);
+}
+
+Geometory::~Geometory()
+{
+	m_Data.sphereMesh.reset();
+	m_Data.boxMesh.reset();
+	m_Data.lineMesh.reset();
+	m_Data.defPS.reset();
+	m_Data.defVS.reset();
 }
