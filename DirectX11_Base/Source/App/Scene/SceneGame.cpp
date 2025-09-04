@@ -46,9 +46,9 @@ void SceneGame::Init()
 	pSeaLevel->SetCamera(pCamera);
 	pSeaLevel->SetPlayer(player);
 
-	//// スカイドームを作成
-	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	//pSkyBox->SetCamera(pCamera);
+	// スカイドームを作成
+	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	pSkyBox->SetCamera(pCamera);
 }
 
 void SceneGame::Uninit()
