@@ -20,6 +20,7 @@ SamplerState samp : register(s0);
 cbuffer ObjectParam : register(b0)
 {
     float2 uvScale;
+    float2 dummy; // 16byteの倍数にするためのダミー
 }
 
 // ピクセルシェーダー
