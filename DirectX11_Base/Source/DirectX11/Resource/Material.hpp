@@ -24,6 +24,13 @@ struct aiMaterial;
 /// </summary>
 class Material
 {
+private:
+	struct ShaderParamInfo
+	{
+		std::string ParamName;
+		int SlotNum;
+	};
+
 public:
 	Material();
 	~Material();
@@ -86,16 +93,10 @@ public:
 	void SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_ std::shared_ptr<Texture> In_pTexture) noexcept;
 
 	/// <summary>
-	/// カメラをPSに書き込むかどうかを取得します。
-	/// </summary>
-	/// <returns>PSWriteカメラである場合は true への参照、そうでない場合は false への参照を返します。</returns>
-	inline const bool &IsPSWriteCamera() const noexcept { return m_bIsPSWriteCamera; }
-
-	/// <summary>
 	/// シェーダーパラメータのリストを取得します。
 	/// </summary>
 	/// <returns>ResourceSetting::ShaderParamType 型の std::vector への定数参照。</returns>
-	inline const std::vector<ResourceSetting::ShaderParamType> &GetShaderParamList() const noexcept { return m_vecShaderParamList; }
+	inline const std::vector<ShaderParamInfo> &GetShaderParamList() const noexcept { return m_vecShaderParamList; }
 
 	/// <summary>
 	/// インスタンスト頂点シェーダーかどうかの状態を設定します。
@@ -135,8 +136,7 @@ private:
 	std::array<std::shared_ptr<Texture>,ResourceSetting::TextureType_Max> m_spTextures;
 	std::string m_strDirectory; // マテリアルのディレクトリパス
 
-	std::vector<ResourceSetting::ShaderParamType> m_vecShaderParamList; // PixelShaderに書き込む情報リスト
-	bool m_bIsPSWriteCamera; // カメラ情報をPixelShaderに書き込むかどうか
+	std::vector<ShaderParamInfo> m_vecShaderParamList; // PixelShaderに書き込む情報リスト
 
 	bool m_bIsInstancedVertexShader; // インスタンシング用の頂点シェーダーかどうか
 
