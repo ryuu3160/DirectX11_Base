@@ -179,6 +179,7 @@ void ModelRenderer::Draw() noexcept
 				itr = nullptr;
 			}
 		}
+		m_pShaderParams.clear();
 		m_pPS->Bind();
 	}
 

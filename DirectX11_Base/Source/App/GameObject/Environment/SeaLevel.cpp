@@ -12,6 +12,7 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "DirectX11/Resource/TextureManager.hpp"
 #include "DirectX11/Resource/Mesh.hpp"
+#include "DirectX11/Resource/ShaderParam.hpp"
 
 SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	: GameObject("SeaLevelObject")
@@ -94,6 +95,15 @@ void SeaLevel::LateUpdate()
 
 	if (m_pRenderComponent && !m_IsInstance)
 	{
-		//reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParam()
+		struct PaternScaleParam
+		{
+			DirectX::XMFLOAT2 scale;
+			DirectX::XMFLOAT2 dummy;
+		};
+		PaternScaleParam param;
+		param.scale = { 1000.0f,1000.0f };
+		param.dummy = { 0.0f,0.0f };
+		ShaderParam *PSParam = new ShaderParam("PatternScale", 0, &param, 1);
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParam(PSParam);
 	}
 }
