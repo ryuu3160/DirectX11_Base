@@ -30,8 +30,6 @@ ModelRenderer::ModelRenderer()
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
-	, m_bEnablePS_WriteCamera(false)
-	, m_bEnablePS_WriteParamList{}
 	, m_pShaderParams{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
@@ -44,9 +42,13 @@ ModelRenderer::ModelRenderer()
 	m_vecMeshes.clear();
 
 	for (auto &itr : m_pShaderParams)
-		itr = nullptr;
-	for (auto &itr : m_bEnablePS_WriteParamList)
-		itr = false;
+	{
+		if(itr)
+		{
+			delete itr;
+			itr = nullptr;
+		}
+	}
 }
 
 ModelRenderer::~ModelRenderer()
@@ -68,19 +70,6 @@ void ModelRenderer::ExecuteUpdate() noexcept
 	if (!m_vecMeshes.empty()) return;
 
 	this->Load(m_AssetPath, m_fScale);
-}
-
-void ModelRenderer::IsEnablePS_WriteParam(_In_ const ResourceSetting::ShaderParamType In_Type, _In_ const bool &In_Enable)
-{
-	if (In_Type >= ResourceSetting::ShaderParam_MAX)
-		return;// 値が最大値よりも大きい場合はエラー
-
-	// タイプがカメラの場合は専用のフラグに設定
-	if (In_Type == ResourceSetting::ShaderParam_Camera)
-		m_bEnablePS_WriteCamera = In_Enable;
-
-	// フラグを設定
-	m_bEnablePS_WriteParamList[In_Type] = In_Enable;
 }
 
 void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
@@ -178,22 +167,16 @@ void ModelRenderer::Draw() noexcept
 		m_pVS->WriteBuffer(0, mat);
 
 		m_pVS->Bind();
-		// カメラ情報を書き込むかどうかを判定
-		if (m_bEnablePS_WriteCamera)
-		{
-			DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
-			m_pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
-		}
 
-		// 各パラメーターを書き込むかどうかを判定
-		for (unsigned int i = 0; i < ResourceSetting::ShaderParam_MAX;++i)
+		// 設定されたパラメーターをPSに書き込む
+		for (auto &itr : m_pShaderParams)
 		{
-			if(m_bEnablePS_WriteParamList[i] && m_pShaderParams[i])
+			if (itr)
 			{
-				m_pPS->WriteBuffer(i, m_pShaderParams[i]->GetParam());
+				m_pPS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
 				// パラメーターの解放
-				delete m_pShaderParams[i];
-				m_pShaderParams[i] = nullptr;
+				delete itr;
+				itr = nullptr;
 			}
 		}
 		m_pPS->Bind();
@@ -213,21 +196,22 @@ void ModelRenderer::Draw() noexcept
 			}
 			if (pPS)
 			{
-				// カメラ情報を書き込むかどうかを判定
-				if (itr->GetMaterial()->IsPSWriteCamera())
-				{
-					DirectX::XMFLOAT4 CamParam = { CamPos.x, CamPos.y, CamPos.z, 0.0f };
-					pPS->WriteBuffer(ResourceSetting::ShaderParam_Camera, &CamParam);
-				}
 				// マテリアルごとのシェーダーにパラメーターを書き込む
-				for (auto &type : itr->GetMaterial()->GetShaderParamList())
+				for (auto &PsPara : m_pShaderParams)
 				{
-					if (m_pShaderParams[type])
+					std::string_view name = PsPara->GetParamName();
+					int slot = PsPara->GetSlotNum();
+					for (auto &info : itr->GetMaterial()->GetShaderParamList())
 					{
-						pPS->WriteBuffer(type, m_pShaderParams[type]->GetParam());
-						// パラメーターの解放
-						delete m_pShaderParams[type];
-						m_pShaderParams[type] = nullptr;
+						// パラメーター名とスロット番号が一致したら書き込み
+						if (name == info.ParamName && slot == info.SlotNum)
+						{
+							pPS->WriteBuffer(slot, PsPara->GetParam());
+							// パラメーターの解放
+							delete PsPara;
+							PsPara = nullptr;
+							break;
+						}
 					}
 				}
 
