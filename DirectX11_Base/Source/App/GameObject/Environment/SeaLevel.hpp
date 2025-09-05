@@ -11,6 +11,7 @@
 // ==============================
 #include "System/Object/GameObject.hpp"
 #include "DirectX11/System/InstancedModelRenderer.hpp"
+#include "DirectX11/System/ModelRenderer.hpp"
 
 /// <summary>
 /// SeaLevelクラス
@@ -18,7 +19,7 @@
 class SeaLevel : public GameObject
 {
 public:
-	SeaLevel();
+	SeaLevel(_In_ const bool &In_IsInstance);
 	~SeaLevel();
 
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
@@ -30,5 +31,6 @@ public:
 private:
 	GameObject *m_pPlayer;
 	GameObject *m_pCameraObj; // カメラオブジェクト
-	InstancedModelRenderer *m_pRenderComponent;
+	RenderComponent *m_pRenderComponent;
+	bool m_IsInstance; // インスタンシングを使用するかどうか
 };

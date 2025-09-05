@@ -10,37 +10,52 @@
 // ==============================
 #include "SeaLevel.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
+#include "DirectX11/Resource/TextureManager.hpp"
+#include "DirectX11/Resource/Mesh.hpp"
 
-SeaLevel::SeaLevel()
+SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	: GameObject("SeaLevelObject")
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)
 	, m_pPlayer(nullptr)
+	, m_IsInstance(In_IsInstance)
 {
 	SetPos({ 0.0f,0.0f,0.0f });
 	SetScale({ 1.0f,1.0f,1.0f });
 	SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 
 	// レンダーコンポーネントの設定
-	m_pRenderComponent = AddComponent<InstancedModelRenderer>();
-	m_pRenderComponent->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-	m_pRenderComponent->SetVertexShader(ShaderManager::GetInstance().GetShader("IVS_InstancedObject"));
-	m_pRenderComponent->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-	m_pRenderComponent->SetLayer(RenderLayer_Ground); // レイヤーの設定
+	if (m_IsInstance)
+	{
+		// インスタンシング
+		m_pRenderComponent = AddComponent<InstancedModelRenderer>();
+		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
+		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("IVS_InstancedObject"));
+		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
+		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetLayer(RenderLayer_Ground); // レイヤーの設定
 
-	// インスタンシングの設定
-	InstancedMesh::AlignInstanceData instanceData;
-	instanceData.CountX = 200;
-	instanceData.CountZ = 200;
-	instanceData.CountY = 1;
-	instanceData.StartPos = GetPos();
-	instanceData.Scale = GetScale();
-	instanceData.Quaternion = GetQuat();
-	instanceData.IsWrite = true;
-	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
-	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
+		// インスタンシングの設定
+		InstancedMesh::AlignInstanceData instanceData;
+		instanceData.CountX = 200;
+		instanceData.CountZ = 200;
+		instanceData.CountY = 1;
+		instanceData.StartPos = GetPos();
+		instanceData.Scale = GetScale();
+		instanceData.Quaternion = GetQuat();
+		instanceData.IsWrite = true;
+		instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
+		instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
-	m_pRenderComponent->SetAlignInstanceData(instanceData);
+		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetAlignInstanceData(instanceData);
+	}
+	else
+	{
+		m_pRenderComponent = AddComponent<ModelRenderer>();
+		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
+		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
+		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_PatternScale"));
+		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetLayer(RenderLayer_Ground); // レイヤーの設定
+	}
 }
 
 SeaLevel::~SeaLevel()
@@ -75,5 +90,10 @@ void SeaLevel::LateUpdate()
 		auto pos = m_pPlayer->GetPos();
 		pos.y = GetPos().y;
 		SetPos(pos);
+	}
+
+	if (m_pRenderComponent && !m_IsInstance)
+	{
+		//reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParam()
 	}
 }

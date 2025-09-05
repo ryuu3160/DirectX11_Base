@@ -93,7 +93,7 @@
       <UniqueIdentifier>{a7be8e62-7ff3-4447-aa93-05e808eea4f5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\App\GameObject\Environment">
-      <UniqueIdentifier>{eae897f4-19c6-47a2-bf59-0f17f27ef813}</UniqueIdentifier>
+      <UniqueIdentifier>{bd6f6831-eed8-4e64-9ee2-8f0cc09e7f06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
