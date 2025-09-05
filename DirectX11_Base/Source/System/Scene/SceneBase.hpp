@@ -195,8 +195,8 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator it = m_Objects.find(In_Name);
-	if (it != m_Objects.end())
+	Objects::iterator itr = m_Objects.find(In_Name);
+	if (itr != m_Objects.end())
 	{
 		std::string buf = "Failed to create object." + In_Name;
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
@@ -220,8 +220,8 @@ inline T *SceneBase::CreateObject(const std::string &In_Name, Args && ...args) n
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator it = m_Objects.find(In_Name);
-	if (it != m_Objects.end())
+	Objects::iterator itr = m_Objects.find(In_Name);
+	if (itr != m_Objects.end())
 	{
 		std::string buf = "Failed to create object." + In_Name;
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
@@ -250,10 +250,10 @@ template<class T>
 T *SceneBase::GetObject(_In_ const std::string_view &In_Name) noexcept
 {
 	// オブジェクトの探索
-	Objects::iterator it = m_Objects.find(In_Name.data());
-	if (it == m_Objects.end()) return nullptr;
+	Objects::iterator itr = m_Objects.find(In_Name.data());
+	if (itr == m_Objects.end()) return nullptr;
 
 	// 型変換
-	T *ptr = reinterpret_cast<T *>(it->second->m_pObject);
+	T *ptr = reinterpret_cast<T *>(itr->second->m_pObject);
 	return ptr;
 }
