@@ -45,6 +45,7 @@ HRESULT Main::Init()
 	std::vector<std::string> shaders = {
 		"VS_Object",
 		"PS_TexColor",	// テクスチャ貼っただけ
+		"PS_PatternScale", // パターンスケール
 		"IVS_InstancedObject", // インスタンシング用
 		"IVS_Bumpmap", // インスタンシング用バンプマップ
 		"VS_Bumpmap",

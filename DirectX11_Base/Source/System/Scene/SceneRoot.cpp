@@ -118,6 +118,16 @@ void SceneRoot::Init()
 	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
 	InstancedComp->SetAlignInstanceData(instanceData);
+
+	// パターンスケールテスト
+	GameObject *pPatternScale = CreateObject<GameObject>("PatternScale");
+	auto PatternScaleComp = pPatternScale->AddComponent<ModelRenderer>();
+	PatternScaleComp->SetAssetPath("Assets/Model/plane/plane.fbx");
+	PatternScaleComp->SetCamera(pCamera);
+	PatternScaleComp->SetVertexShader(ShaderM.GetShader("VS_Object"));
+	PatternScaleComp->SetPixelShader(ShaderM.GetShader("PS_PatternScale"));
+	pPatternScale->SetPos({ 0.0f, -0.5f, 0.0f });
+	pPatternScale->SetScale({ 1000.0f, 1.0f, 1000.0f });
 }
 
 void SceneRoot::Uninit()
@@ -127,17 +137,18 @@ void SceneRoot::Uninit()
 
 void SceneRoot::Update()
 {
-	ResourceSetting::LightParam light;
-	light.Direction = GetObject<CameraDCC>("Camera")->GetFront();
-	light.Dummy = 0.0f;
-	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
-	light.Ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
-	ResourceSetting::LightParam lights[] = { 
-		light 
+	struct PaternScale
+	{
+		DirectX::XMFLOAT2 scale;
+		DirectX::XMFLOAT2 dummy;
 	};
-	ShaderParam *LightParam = new ShaderParam("Light", 0, lights, std::size(lights));
-	auto pF15E = GetObject<GameObject>("RootModel1");
-	pF15E->GetComponent<ModelRenderer>()->SetWriteParam(LightParam);
+	PaternScale ps;
+	ps.scale = { 1000.0f,1000.0f };
+	ps.dummy = { 0.0f,0.0f };
+	ShaderParam *pPatternScaleParam = new ShaderParam("PatternScale", 0, &ps, 1);
+	auto pPatternScale = GetObject<GameObject>("PatternScale");
+	auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
+	PatternScaleComp->SetWriteParam(pPatternScaleParam);
 
 	//ResourceSetting::PBR_Param pbr;
 	//pbr.Metallic = 0.8f;
