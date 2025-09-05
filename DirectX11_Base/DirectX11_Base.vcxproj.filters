@@ -259,6 +259,9 @@
     <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
     <ClCompile Include="Source\App\Scene\SceneGame.cpp">
       <Filter>Source\App\Scene</Filter>
     </ClCompile>
@@ -448,6 +451,9 @@
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneGame.hpp">

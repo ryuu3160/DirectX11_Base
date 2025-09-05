@@ -19,6 +19,7 @@
 #include "App/GameObject/MainCamera.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/Mesh.hpp"
+#include "DirectX11/Resource/ShaderParam.hpp"
 
 // ==============================
 //  íËêî
@@ -99,33 +100,37 @@ void SceneRoot::Uninit()
 
 void SceneRoot::Update()
 {
-	/*ResourceSetting::LightParam light;
+	ResourceSetting::LightParam light;
 	light.Direction = GetObject<CameraDCC>("Camera")->GetFront();
 	light.Dummy = 0.0f;
 	light.Diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 	light.Ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
-	ResourceSetting::PBR_Param pbr;
-	pbr.Metallic = 0.8f;
-	pbr.Smooth = 0.3f;
-	pbr.dummy = { 0.0f,0.0f };
-	ResourceSetting::POM_Param pom;
-	pom.HeightScale = 0.1f;
-	pom.NumSteps = 100;
-	pom.dummy = {};
 	ResourceSetting::LightParam lights[] = { 
 		light 
 	};
-	ResourceSetting::PBR_Param pbrs[] = {
-		pbr
-	};
-	ResourceSetting::POM_Param poms[] = {
-		pom
-	};
-	auto *LightParam = ResourceSetting::CreateShaderParam(lights,std::size(lights));
-	auto *PBRParam = ResourceSetting::CreateShaderParam(pbrs, std::size(pbrs));
-	auto *POMParam = ResourceSetting::CreateShaderParam(poms, std::size(poms));
+	ShaderParam *LightParam = new ShaderParam("Light", 0, lights, std::size(lights));
+	auto pF15E = GetObject<GameObject>("RootModel1");
+	pF15E->GetComponent<ModelRenderer>()->SetWriteParam(LightParam);
 
-	auto pModel = GetObject<GameObject>("Instanced");*/
+	//ResourceSetting::PBR_Param pbr;
+	//pbr.Metallic = 0.8f;
+	//pbr.Smooth = 0.3f;
+	//pbr.dummy = { 0.0f,0.0f };
+	//ResourceSetting::POM_Param pom;
+	//pom.HeightScale = 0.1f;
+	//pom.NumSteps = 100;
+	//pom.dummy = {};
+	//ResourceSetting::PBR_Param pbrs[] = {
+	//	pbr
+	//};
+	//ResourceSetting::POM_Param poms[] = {
+	//	pom
+	//};
+	//auto *LightParam = ResourceSetting::CreateShaderParam(lights,std::size(lights));
+	//auto *PBRParam = ResourceSetting::CreateShaderParam(pbrs, std::size(pbrs));
+	//auto *POMParam = ResourceSetting::CreateShaderParam(poms, std::size(poms));
+
+	auto pModel = GetObject<GameObject>("Instanced");
 	/*auto Component = pModel->GetComponent<InstancedModelRenderer>();
 	Component->SetWriteParam(LightParam);
 	Component->SetWriteParam(PBRParam);

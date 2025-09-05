@@ -30,7 +30,6 @@ Material::Material()
 	, m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_strMaterialName("")
-	, m_bIsPSWriteCamera(false)
 	, m_bIsInstancedVertexShader(false)
 {
 	m_strDirectory.clear();
@@ -219,10 +218,6 @@ bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcep
 		{
 			m_strPSName = Info;
 		}
-		else if (Info == "PSWriteCamera") // PixelShaderにカメラ情報を書き込むフラグ
-		{
-			m_bIsPSWriteCamera = true;
-		}
 		else if (Info.find("PSWriteInfo:") != std::string::npos)
 		{
 			LoadWriteParam(Info);
@@ -246,26 +241,24 @@ void Material::LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexce
 	std::string WriteParam = std::string(In_WriteParam);
 
 	WriteParam = WriteParam.substr(WriteParam.find(':') + 1);
+	WriteParam = WriteParam.substr(WriteParam.find('{') + 1); // 最初の{以降を取得
 
-	size_t pos = WriteParam.find('*');
-	for (; pos != std::string::npos;pos = WriteParam.find('*'))
+	size_t pos = WriteParam.find('}');
+	for (; pos != std::string::npos;pos = WriteParam.find('}'))
 	{
+		// }の位置までを取得
 		std::string ParamStr = WriteParam.substr(0, pos);
-		ResourceSetting::ShaderParamType type = static_cast<ResourceSetting::ShaderParamType>(std::stoi(ParamStr));
-		if (type >= ResourceSetting::ShaderParam_MAX)
-		{
-			Error("Invalid ShaderParamType in material: " + m_strMaterialName);
-			return;
-		}
-		if (type == ResourceSetting::ShaderParam_Camera) // カメラの場合は別フラグ
-		{
-			m_bIsPSWriteCamera = true;// カメラ情報を書き込むフラグ
-			WriteParam = WriteParam.substr(pos + 1);
-			continue;
-		}
+		ShaderParamInfo Info{};
+		// -の位置で分割してパラメータ名とスロット番号を取得
+		Info.ParamName = ParamStr.substr(0, ParamStr.find('-'));
+		Info.SlotNum = std::stoi(ParamStr.substr(ParamStr.find('-') + 1));
 
-		m_vecShaderParamList.push_back(type);
+		// リストに追加
+		m_vecShaderParamList.push_back(Info);
+
+		// 次の{以降を取得
 		WriteParam = WriteParam.substr(pos + 1);
+		WriteParam = WriteParam.substr(WriteParam.find('{') + 1);
 	}
 }
 
@@ -277,19 +270,64 @@ void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory)
 	std::string path = std::string(In_Directory) + FbxName + "_MaterialShaderInfo.csv";
 
 	// ファイルを開く
-	file.open(path, std::ios::in);
+	file.open(path, std::ios::out | std::ios::in | std::ios::ate);
 	if (file.is_open())
 	{
-		// 同じマテリアル名の行が存在する場合はスキップ
+		file.seekp(0, std::ios::beg); // 先頭にシーク
+
+		// 同じマテリアル名の行が存在する場合はそのマテリアル行のみを更新する
 		std::string line;
-		for (; std::getline(file, line);)
+		bool found = false;
+		auto pos = file.tellg(); // 初めの位置を取得
+		for (; std::getline(file, line);pos = file.tellg())
 		{
 			if (line.find(m_strMaterialName) != std::string::npos)
 			{
-				file.close(); // ファイルを閉じる
-				return; // 既に存在する場合は何もしない
+				found = true; // マテリアル名がヒットした
+				break;
 			}
 		}
+
+		// マテリアル名がヒットした場合はその行を上書き
+		if (found)
+		{
+			std::vector<std::string> lines; // 以降の行を保存するためのベクター
+			// ファイルの終端に達していない場合のみ
+			if (file.good())
+			{
+				// マテリアル名がヒットした場合は以降の行を保存
+				for (; std::getline(file, line);)
+				{
+					lines.push_back(line); // 以降の行を保存
+				}
+			}
+
+			// 上書き実行
+			file.seekp(pos, std::ios::beg); // マテリアル名の行に書き込みポインタを移動
+
+			// シェーダー名を書き込む
+			file << m_strMaterialName << "," << m_strVSName << "," << m_strPSName;
+			// PSに書き込む情報がある場合はそれも書き込む
+			if (!m_vecShaderParamList.empty())
+			{
+				file << ",PSWriteInfo:";
+				for (auto &itr : m_vecShaderParamList)
+				{
+					file << "{" << itr.ParamName << "-" << itr.SlotNum << "}";
+				}
+			}
+			file << "\n"; // 改行
+
+			// 以降の行を書き戻す
+			for (auto &itr : lines)
+			{
+				file << itr << "\n";
+			}
+			file.close(); // ファイルを閉じる
+			return; // 上書きが完了したので終了
+		}
+
+		// マテリアル名がヒットしなかった場合は新規追加
 		file.close(); // ファイルを閉じる
 	}
 
@@ -306,14 +344,12 @@ void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory)
 	file << m_strMaterialName << "," << m_strVSName << "," << m_strPSName;
 
 	// PSに書き込む情報がある場合はそれも書き込む
-	if (m_bIsPSWriteCamera)
-		file << "," << "PSWriteCamera";
 	if (!m_vecShaderParamList.empty())
 	{
 		file << ",PSWriteInfo:";
 		for (auto &itr : m_vecShaderParamList)
 		{
-			file << itr << "*";
+			file << "{" << itr.ParamName << "-" << itr.SlotNum << "}";
 		}
 	}
 

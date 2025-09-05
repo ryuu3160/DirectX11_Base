@@ -113,8 +113,8 @@ template<> GameObject
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator it = m_Objects.find(In_Name);
-	if (it != m_Objects.end())
+	Objects::iterator itr = m_Objects.find(In_Name);
+	if (itr != m_Objects.end())
 	{
 		std::string buf = "Failed to create object." + In_Name;
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
