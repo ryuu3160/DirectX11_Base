@@ -142,5 +142,5 @@ template<typename T, typename std::enable_if<std::is_same<ShaderParam, T>::value
 inline void ModelRenderer::SetWriteParam(T *In_Param)
 {
 	if(In_Param)
-		m_pShaderParams[In_Param->GetSlotNum()] = In_Param;
+		m_pShaderParams.push_back(In_Param);
 }
