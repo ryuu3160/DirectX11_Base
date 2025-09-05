@@ -250,6 +250,9 @@
     <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -429,6 +432,9 @@
     <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -470,5 +476,6 @@
     <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
       <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl" />
   </ItemGroup>
 </Project>

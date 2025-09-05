@@ -196,6 +196,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\TextureManager.cpp">
       <SubType>
       </SubType>
@@ -325,6 +329,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\ShaderManager.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
       <SubType>
       </SubType>
     </ClInclude>
