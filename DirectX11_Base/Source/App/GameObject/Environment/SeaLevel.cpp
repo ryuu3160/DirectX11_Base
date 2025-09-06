@@ -20,6 +20,7 @@ SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	, m_pCameraObj(nullptr)
 	, m_pPlayer(nullptr)
 	, m_IsInstance(In_IsInstance)
+	, m_PatternScale({ 1.0f,1.0f })
 {
 	SetPos({ 0.0f,0.0f,0.0f });
 	SetScale({ 1.0f,1.0f,1.0f });
@@ -84,15 +85,8 @@ void SeaLevel::SetPlayer(_In_ GameObject *In_Player) noexcept
 	m_pPlayer = In_Player;
 }
 
-void SeaLevel::LateUpdate()
+void SeaLevel::Update()
 {
-	if (m_pPlayer)
-	{
-		auto pos = m_pPlayer->GetPos();
-		pos.y = GetPos().y;
-		SetPos(pos);
-	}
-
 	if (m_pRenderComponent && !m_IsInstance)
 	{
 		struct PaternScaleParam
@@ -101,9 +95,20 @@ void SeaLevel::LateUpdate()
 			DirectX::XMFLOAT2 dummy;
 		};
 		PaternScaleParam param;
-		param.scale = { 1000.0f,1000.0f };
+		param.scale = m_PatternScale;
 		param.dummy = { 0.0f,0.0f };
-		ShaderParam *PSParam = new ShaderParam("PatternScale", 0, &param, 1);
+		PaternScaleParam params[] = { param };
+		ShaderParam *PSParam = new ShaderParam("PatternScale", 0, params, std::size(params));
 		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParam(PSParam);
+	}
+}
+
+void SeaLevel::LateUpdate()
+{
+	if (m_pPlayer && m_IsInstance)
+	{
+		auto pos = m_pPlayer->GetPos();
+		pos.y = GetPos().y;
+		SetPos(pos);
 	}
 }
