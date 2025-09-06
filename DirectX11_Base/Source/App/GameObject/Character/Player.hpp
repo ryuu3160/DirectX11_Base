@@ -42,6 +42,8 @@ private:
 
 	void UpdateShoot();
 
+	float GetSharpPitch();
+
 private:
 	float m_fSpeed;
 };
