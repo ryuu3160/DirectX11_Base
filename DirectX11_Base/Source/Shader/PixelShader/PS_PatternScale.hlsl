@@ -4,6 +4,7 @@ struct PS_IN
     float4 pos : SV_Position; // 画面の位置
     float2 uv : TEXCOORD0; // テクスチャから読み取るUV座標
     float3 normal : NORMAL0;
+    float3 worldPos : POSITION0;
 };
 
 

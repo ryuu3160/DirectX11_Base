@@ -43,13 +43,14 @@ void SceneGame::Init()
 
 	// 海面オブジェクトの生成
 	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",false);
-	SeaLevel *pSeaLevelInstance = CreateObject<SeaLevel>("SeaLevelInstance", true);
 	pSeaLevel->SetCamera(pCamera);
 	pSeaLevel->SetPlayer(player);
-	pSeaLevel->SetScale({ 1000.0f,1.0f,1000.0f });
-	pSeaLevel->SetPos({ 0.0f,-0.5f,0.0f });
-	pSeaLevelInstance->SetCamera(pCamera);
-	pSeaLevelInstance->SetPlayer(player);
+	pSeaLevel->SetScale({ 100000.0f,1.0f,100000.0f });
+	pSeaLevel->SetPatternScale({ 5000.0f,5000.0f });
+	pSeaLevel->SetPos({ 0.0f,0.1f,0.0f });
+	//SeaLevel *pSeaLevelInstance = CreateObject<SeaLevel>("SeaLevelInstance", true);
+	/*pSeaLevelInstance->SetCamera(pCamera);
+	pSeaLevelInstance->SetPlayer(player);*/
 
 	// スカイドームを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
