@@ -16,7 +16,8 @@
 // ==============================
 namespace
 {
-
+	// ミサイル関連
+	const inline constexpr int cx_MissileMax = 4; // ミサイルの最大数
 }
 
 /// <summary>
@@ -37,14 +38,22 @@ public:
 
 	void Update() override;
 
+	void SetCamera(_In_ GameObject *In_Camera) noexcept;
+
 private:
 
 	void UpdateMovement();
 
 	void UpdateShoot();
 
+	void UpdateReload();
+
 	float GetSharpPitch();
 
 private:
+	GameObject *m_pCamera;
 	float m_fSpeed;
+	int m_MissileIndex;
+
+	std::vector<std::pair<int, float>> m_ReloadTimer; // リロードタイマー
 };

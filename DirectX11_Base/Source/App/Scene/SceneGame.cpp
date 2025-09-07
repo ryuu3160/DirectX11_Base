@@ -36,8 +36,8 @@ void SceneGame::Init()
 	SpriteManager::GetInstance().SetCameraObject(pCamera);
 
 	auto player = CreateObject<Player>("Player");
-	auto playerModel = player->GetComponent<ModelRenderer>();
-	playerModel->SetCamera(pCamera);
+	player->SetCamera(pCamera);
+
 	// カメラにプレイヤーを設定
 	pCamera->SetTargetPlayer(player);
 

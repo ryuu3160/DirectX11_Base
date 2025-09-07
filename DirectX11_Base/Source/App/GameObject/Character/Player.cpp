@@ -17,6 +17,7 @@
 // ==============================
 namespace
 {
+	// 移動関連
 	const inline constexpr float MOVE_SPEED_SCALE = 0.01f; // 移動速度の倍率
 	const inline constexpr float cx_SpeedAdd = 0.5f;		// 速度増減量
 	const inline constexpr float cx_SpeedMinus = 0.2f;	// 速度増減量
@@ -41,7 +42,7 @@ namespace
 
 Player::Player()
 	: GameObject("Player")
-	, m_fSpeed(1.0f)
+	, m_fSpeed(1.0f), m_MissileIndex(0)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/F15E.fbx");
@@ -60,10 +61,16 @@ Player::~Player()
 void Player::Update()
 {
 	UpdateMovement();
-
+	UpdateShoot();
 	
 
 	GameObject::Update();
+}
+
+void Player::SetCamera(_In_ GameObject *In_Camera) noexcept
+{
+	m_pCamera = In_Camera;
+	GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 }
 
 void Player::UpdateMovement()
@@ -164,6 +171,65 @@ void Player::UpdateMovement()
 
 void Player::UpdateShoot()
 {
+	// 撃てるミサイルが無ければ処理しない
+	if (m_MissileIndex == 0)
+		return;
+
+	if (Input::IsKeyTrigger(ShootKey))
+	{
+		--m_MissileIndex; // ミサイルを1発減らす
+
+		auto obj = GetScene()->CreateObject<Missile>("Missile" + std::to_string(m_MissileIndex));
+		obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
+
+		// ミサイルの初期位置を設定
+		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndex))->GetPos();
+
+		obj->SetPos(pos);
+
+		++m_MissileIndex;
+	}
+}
+
+void Player::UpdateReload()
+{
+	// 1発でもミサイルが打たれたらリロード開始
+	if (m_MissileIndex < cx_MissileMax)
+	{
+		auto itr = m_ReloadTimer.begin();
+		for (;itr != m_ReloadTimer.end();)
+		{
+			(*itr).second -= 1.0f / 60.0f; // 1フレーム分減少
+			if ((*itr).second <= 0.0f)
+			{
+				++m_MissileIndex; // ミサイルを1発増やす
+				auto obj = AddChildObject<Missile>("Missile" + std::to_string((*itr).first));
+				// ミサイルの初期位置を設定
+				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
+				pos -= GetFront() * 0.5f; // 少し後方にオフセット
+				switch ((*itr).first)
+				{
+				case 0:
+					pos += GetRight() * 1.68f; // 右側
+					break;
+				case 1:
+					pos += GetRight() * 1.26f; // 右側
+					break;
+				case 2:
+					pos -= GetRight() * 1.4f; // 左側
+					break;
+				case 3:
+					pos -= GetRight() * 1.8f; // 左側
+					break;
+				}
+				obj->SetPos(pos);
+				itr = m_ReloadTimer.erase(itr);
+			}
+			else
+				++itr;
+		}
+		
+	}
 }
 
 float Player::GetSharpPitch()
