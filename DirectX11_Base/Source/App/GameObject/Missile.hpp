@@ -36,6 +36,8 @@ public:
 
 	void Update() override;
 
-private:
+	void SetSpeed(_In_ const float &In_Speed) noexcept { m_Speed = In_Speed; }
 
+private:
+	float m_Speed;
 };

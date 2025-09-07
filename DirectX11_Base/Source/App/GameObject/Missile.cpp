@@ -13,7 +13,7 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 
 Missile::Missile()
-	: GameObject("Missile")
+	: GameObject("Missile"), m_Speed(0.0f)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Weapon/AIM-120.fbx");

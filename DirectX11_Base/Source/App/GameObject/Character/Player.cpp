@@ -42,7 +42,7 @@ namespace
 
 Player::Player()
 	: GameObject("Player")
-	, m_fSpeed(1.0f), m_MissileIndex(0)
+	, m_fSpeed(1.0f), m_MissileIndex(0), m_pCamera(nullptr)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/F15E.fbx");
@@ -52,6 +52,12 @@ Player::Player()
 
 	SetPos({ 0.0f, 0.0f, 0.0f });
 	SetScale({ 0.005f, 0.005f, 0.005f });
+
+	// ミサイルのリロードタイマーをセット
+	for(int i = 0; i < 4; ++i)
+	{
+		m_ReloadTimer.push_back({ i, 0.0f });
+	}
 }
 
 Player::~Player()
@@ -61,6 +67,7 @@ Player::~Player()
 void Player::Update()
 {
 	UpdateMovement();
+	UpdateReload();
 	UpdateShoot();
 	
 
@@ -184,8 +191,11 @@ void Player::UpdateShoot()
 
 		// ミサイルの初期位置を設定
 		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndex))->GetPos();
-
 		obj->SetPos(pos);
+		obj->SetSpeed(m_fSpeed + 2.0f); // 自機の速度に+2.0fした速度で発射
+
+		// 子オブジェクトを削除
+		DestroyChildObject<Missile>("Missile" + std::to_string(m_MissileIndex));
 
 		++m_MissileIndex;
 	}
@@ -204,6 +214,7 @@ void Player::UpdateReload()
 			{
 				++m_MissileIndex; // ミサイルを1発増やす
 				auto obj = AddChildObject<Missile>("Missile" + std::to_string((*itr).first));
+				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 				// ミサイルの初期位置を設定
 				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
 				pos -= GetFront() * 0.5f; // 少し後方にオフセット
