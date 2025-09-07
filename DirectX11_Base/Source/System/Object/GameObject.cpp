@@ -18,7 +18,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
 	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
 	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
-	, m_ChildPos{ 0.0f, 0.0f, 0.0f }, m_ChildRotation{ 0.0f, 0.0f, 0.0f }, m_ChildQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ChildScale{ 0.0f, 0.0f, 0.0f }
+	, m_ChildPos{ 0.0f, 0.0f, 0.0f }, m_ChildRotation{ 0.0f, 0.0f, 0.0f }, m_ChildQuat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_ChildScale{ 0.0f, 0.0f, 0.0f }
 	, m_pScene(nullptr)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
@@ -359,6 +359,7 @@ void GameObject::UpdateChildTransform()
 		m_Pos = m_ParentPos + m_ChildPos;
 		// 回転
 		m_Quat = QuaternionMultiply(m_ParentQuat, m_ChildQuat);
+		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
 		// 拡縮
 		m_Scale = m_ParentScale * m_ChildScale;
 	}
