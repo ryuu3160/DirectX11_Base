@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "System/Scene/SceneBase.hpp"
 // ==============================
 //  前方宣言
 // ==============================
@@ -71,7 +71,7 @@ public:
 	/// 自身が所属しているシーンを取得します。
 	/// </summary>
 	/// <returns>所属しているシーンへの静的ポインタ。</returns>
-	inline const SceneBase *GetScene() const noexcept { return m_pScene; }
+	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
 	inline DirectX::XMFLOAT3 GetRotation() const noexcept { return m_Rotation; }
