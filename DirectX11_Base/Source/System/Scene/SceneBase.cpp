@@ -125,6 +125,7 @@ template<> GameObject
 #endif // _DEBUG
 
 	GameObject *ptr = new GameObject(In_Name);
+	ptr->m_pScene = this; // Š‘®ƒV[ƒ“‚ğİ’è
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<GameObject>(ptr)));
 	m_Items.push_back(In_Name);
 	return ptr;

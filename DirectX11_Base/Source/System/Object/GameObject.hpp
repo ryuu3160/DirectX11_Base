@@ -20,6 +20,7 @@ class Component;
 /// </summary>
 class GameObject
 {
+	friend class SceneBase;
 private:
 	// 子オブジェクトリスト
 	using ChildObjects = std::map<std::string, GameObject *>;
@@ -65,6 +66,12 @@ public:
 	/// </summary>
 	/// <returns>子オブジェクトへのポインタを格納した std::map を返します。</returns>
 	ChildObjects GetChildObjects() const noexcept;
+
+	/// <summary>
+	/// 自身が所属しているシーンを取得します。
+	/// </summary>
+	/// <returns>所属しているシーンへの静的ポインタ。</returns>
+	inline const SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
 	inline DirectX::XMFLOAT3 GetRotation() const noexcept { return m_Rotation; }
@@ -119,6 +126,7 @@ private:
 	Datas				m_Datas;		// 保存データ
 	std::string			m_Name;			// オブジェクト名
 	DirectX::XMFLOAT3	m_PrevRotation; // 前回の回転値
+	SceneBase			*m_pScene;		// 所属しているシーンへのポインタ
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
