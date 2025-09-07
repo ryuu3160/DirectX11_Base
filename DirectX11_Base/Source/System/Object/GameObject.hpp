@@ -67,6 +67,9 @@ public:
 	/// <returns>子オブジェクトへのポインタを格納した std::map を返します。</returns>
 	ChildObjects GetChildObjects() const noexcept;
 
+	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
+	void DestroyChildObject(_In_ const std::string &In_Name);
+
 	/// <summary>
 	/// 自身が所属しているシーンを取得します。
 	/// </summary>
@@ -265,4 +268,15 @@ inline T *GameObject::GetChildObject(const std::string &In_Name)
 	}
 
 	return nullptr;
+}
+
+template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+inline void GameObject::DestroyChildObject(const std::string &In_Name)
+{
+	auto itr = m_ChildObjects.find(In_Name);
+	if (itr != m_ChildObjects.end())
+	{
+		delete itr->second;
+		m_ChildObjects.erase(itr);
+	}
 }
