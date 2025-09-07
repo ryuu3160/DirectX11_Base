@@ -413,6 +413,22 @@ static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMF
 }
 
 /// <summary>
+/// クォータニオン同士の乗算を行います。
+/// </summary>
+/// <param name="[In_Q1]">掛ける値</param>
+/// <param name="[In_Q2]">掛けられる値</param>
+/// <returns>クォータニオン(DirectX::XMFLOAT4型)</returns>
+static inline DirectX::XMFLOAT4 QuaternionMultiply(_In_ const DirectX::XMFLOAT4 &In_Q1, _In_ const DirectX::XMFLOAT4 &In_Q2)
+{
+	DirectX::XMFLOAT4 result;
+	result.w = In_Q1.w * In_Q2.w - In_Q1.x * In_Q2.x - In_Q1.y * In_Q2.y - In_Q1.z * In_Q2.z;
+	result.x = In_Q1.w * In_Q2.x + In_Q1.x * In_Q2.w + In_Q1.y * In_Q2.z - In_Q1.z * In_Q2.y;
+	result.y = In_Q1.w * In_Q2.y - In_Q1.x * In_Q2.z + In_Q1.y * In_Q2.w + In_Q1.z * In_Q2.x;
+	result.z = In_Q1.w * In_Q2.z + In_Q1.x * In_Q2.y - In_Q1.y * In_Q2.x + In_Q1.z * In_Q2.w;
+	return result;
+}
+
+/// <summary>
 /// スクリーン座標をワールド座標に変換します。
 /// </summary>
 /// <param name="[In_ScreenPos]">変換するスクリーン座標（POINTS構造体）。</param>

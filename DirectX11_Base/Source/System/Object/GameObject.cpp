@@ -18,6 +18,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
 	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
 	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
+	, m_ChildPos{ 0.0f, 0.0f, 0.0f }, m_ChildRotation{ 0.0f, 0.0f, 0.0f }, m_ChildQuat{ 0.0f, 0.0f, 0.0f, 0.0f }, m_ChildScale{ 0.0f, 0.0f, 0.0f }
 	, m_pScene(nullptr)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
@@ -132,6 +133,7 @@ void GameObject::ExecuteUpdate() noexcept
 		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
+		itr.second->UpdateChildTransform(); // 子オブジェクトの変換情報を更新
 		itr.second->ExecuteUpdate();
 	}
 
@@ -356,8 +358,7 @@ void GameObject::UpdateChildTransform()
 		// 座標
 		m_Pos = m_ParentPos + m_ChildPos;
 		// 回転
-		m_Rotation = m_ParentRotation + m_ChildRotation;
-		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+		m_Quat = QuaternionMultiply(m_ParentQuat, m_ChildQuat);
 		// 拡縮
 		m_Scale = m_ParentScale * m_ChildScale;
 	}
