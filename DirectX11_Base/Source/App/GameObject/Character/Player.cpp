@@ -49,7 +49,7 @@ Player::Player()
 	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
 {
 	auto Model = AddComponent<ModelRenderer>();
-	Model->SetAssetPath("Assets/Model/Character/F15E.fbx");
+	Model->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
 	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
 	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
 	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
