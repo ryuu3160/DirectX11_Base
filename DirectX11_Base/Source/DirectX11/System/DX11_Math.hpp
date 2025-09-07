@@ -48,19 +48,50 @@ inline DirectX::XMFLOAT2 operator*(_In_ const DirectX::XMFLOAT2 &In_Value, _In_ 
 {
 	return DirectX::XMFLOAT2(In_Value.x * In_Float, In_Value.y * In_Float);
 }
+inline DirectX::XMFLOAT2 operator*(_In_ const float &In_Float, _In_ const DirectX::XMFLOAT2 &In_Value)
+{
+	return DirectX::XMFLOAT2(In_Value.x * In_Float, In_Value.y * In_Float);
+}
+inline DirectX::XMFLOAT2 operator*(_In_ const DirectX::XMFLOAT2 &In_Value1, _In_ const DirectX::XMFLOAT2 &In_Value2)
+{
+	return DirectX::XMFLOAT2(In_Value1.x * In_Value2.x, In_Value1.y * In_Value2.y);
+}
 inline void operator*=(_In_ DirectX::XMFLOAT2 &In_Value, _In_ const float &In_Float)
 {
 	In_Value.x *= In_Float;
 	In_Value.y *= In_Float;
 }
+inline void operator*=(_In_ const float &In_Float, _Inout_ DirectX::XMFLOAT2 &In_Value)
+{
+	In_Value.x *= In_Float;
+	In_Value.y *= In_Float;
+}
+inline void operator*=(_Inout_ DirectX::XMFLOAT2 &In_Value, _In_ const DirectX::XMFLOAT2 &In_Value2)
+{
+	In_Value.x *= In_Value2.x;
+	In_Value.y *= In_Value2.y;
+}
 inline DirectX::XMFLOAT2 operator/(_In_ const DirectX::XMFLOAT2 &In_Value, _In_ const float &In_Float)
 {
 	return DirectX::XMFLOAT2(In_Value.x / In_Float, In_Value.y / In_Float);
+}
+inline DirectX::XMFLOAT2 operator/(_In_ const float &In_Float, _In_ const DirectX::XMFLOAT2 &In_Value)
+{
+	return DirectX::XMFLOAT2(In_Value.x / In_Float, In_Value.y / In_Float);
+}
+inline DirectX::XMFLOAT2 operator/(_In_ const DirectX::XMFLOAT2 &In_Value1, _In_ const DirectX::XMFLOAT2 &In_Value2)
+{
+	return DirectX::XMFLOAT2(In_Value1.x / In_Value2.x, In_Value1.y / In_Value2.y);
 }
 inline void operator/=(_In_ DirectX::XMFLOAT2 &In_Value, _In_ const float &In_Float)
 {
 	In_Value.x /= In_Float;
 	In_Value.y /= In_Float;
+}
+inline void operator/=(_In_ DirectX::XMFLOAT2 &In_Value, _In_ const DirectX::XMFLOAT2 &In_Value2)
+{
+	In_Value.x /= In_Value2.x;
+	In_Value.y /= In_Value2.y;
 }
 inline bool operator==(_In_ const DirectX::XMFLOAT2 &In_Value1, _In_ const DirectX::XMFLOAT2 &In_Value2)
 {
@@ -103,21 +134,51 @@ inline DirectX::XMFLOAT3 operator*(_In_ const DirectX::XMFLOAT3 &In_Value, _In_ 
 {
 	return DirectX::XMFLOAT3(In_Value.x * In_Float,In_Value.y * In_Float,In_Value.z * In_Float);
 }
+inline DirectX::XMFLOAT3 operator*(_In_ const float &In_Float, _In_ const DirectX::XMFLOAT3 &In_Value)
+{
+	return DirectX::XMFLOAT3(In_Value.x * In_Float,In_Value.y * In_Float,In_Value.z * In_Float);
+}
+inline DirectX::XMFLOAT3 operator*(_In_ const DirectX::XMFLOAT3 &In_Value1, _In_ const DirectX::XMFLOAT3 &In_Value2)
+{
+	return DirectX::XMFLOAT3(In_Value1.x * In_Value2.x,In_Value1.y * In_Value2.y,In_Value1.z * In_Value2.z);
+}
 inline void operator*=(_Inout_ DirectX::XMFLOAT3 &In_Value, _In_ const float &In_Float)
 {
 	In_Value.x *= In_Float;
 	In_Value.y *= In_Float;
 	In_Value.z *= In_Float;
 }
+inline void operator*=(_In_ const float &In_Float, _Inout_ DirectX::XMFLOAT3 &In_Value)
+{
+	In_Value.x *= In_Float;
+	In_Value.y *= In_Float;
+	In_Value.z *= In_Float;
+}
+inline void operator*=(_Inout_ DirectX::XMFLOAT3 &In_Value, _In_ const DirectX::XMFLOAT3 &In_Value2)
+{
+	In_Value.x *= In_Value2.x;
+	In_Value.y *= In_Value2.y;
+	In_Value.z *= In_Value2.z;
+}
 inline DirectX::XMFLOAT3 operator/(_In_ const DirectX::XMFLOAT3 &In_Value, _In_ const float &In_Float)
 {
 	return DirectX::XMFLOAT3(In_Value.x / In_Float,In_Value.y / In_Float,In_Value.z / In_Float);
+}
+inline DirectX::XMFLOAT3 operator/(_In_ const DirectX::XMFLOAT3 &In_Value1, _In_ const DirectX::XMFLOAT3 &In_Value2)
+{
+	return DirectX::XMFLOAT3(In_Value1.x / In_Value2.x,In_Value1.y / In_Value2.y,In_Value1.z / In_Value2.z);
 }
 inline void operator/=(_Inout_ DirectX::XMFLOAT3 &In_Value, _In_ const float &In_Float)
 {
 	In_Value.x /= In_Float;
 	In_Value.y /= In_Float;
 	In_Value.z /= In_Float;
+}
+inline void operator/=(_Inout_ DirectX::XMFLOAT3 &In_Value, _In_ const DirectX::XMFLOAT3 &In_Value2)
+{
+	In_Value.x /= In_Value2.x;
+	In_Value.y /= In_Value2.y;
+	In_Value.z /= In_Value2.z;
 }
 inline bool operator==(_In_ const DirectX::XMFLOAT3 &In_Value1, _In_ const DirectX::XMFLOAT3 &In_Value2)
 {
@@ -158,10 +219,17 @@ inline void operator-=(_Inout_ DirectX::XMFLOAT4 &Inout_Value, _In_ const Direct
 	Inout_Value.w -= In_Value.w;
 }
 
-// スカラー倍
 inline DirectX::XMFLOAT4 operator*(_In_ const DirectX::XMFLOAT4 &In_Value, _In_ const float &In_Float)
 {
 	return DirectX::XMFLOAT4(In_Value.x * In_Float,In_Value.y * In_Float,In_Value.z * In_Float,In_Value.w * In_Float);
+}
+inline DirectX::XMFLOAT4 operator*(_In_ const float &In_Float, _In_ const DirectX::XMFLOAT4 &In_Value)
+{
+	return DirectX::XMFLOAT4(In_Value.x * In_Float,In_Value.y * In_Float,In_Value.z * In_Float,In_Value.w * In_Float);
+}
+inline DirectX::XMFLOAT4 operator*(_In_ const DirectX::XMFLOAT4 &In_Value1, _In_ const DirectX::XMFLOAT4 &In_Value2)
+{
+	return DirectX::XMFLOAT4(In_Value1.x * In_Value2.x,In_Value1.y * In_Value2.y,In_Value1.z * In_Value2.z,In_Value1.w * In_Value2.w);
 }
 inline void operator*=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const float &In_Float)
 {
@@ -170,11 +238,28 @@ inline void operator*=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const float &In
 	In_Value.z *= In_Float;
 	In_Value.w *= In_Float;
 }
+inline void operator*=(_In_ const float &In_Float, _Inout_ DirectX::XMFLOAT4 &In_Value)
+{
+	In_Value.x *= In_Float;
+	In_Value.y *= In_Float;
+	In_Value.z *= In_Float;
+	In_Value.w *= In_Float;
+}
+inline void operator*=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const DirectX::XMFLOAT4 &In_Value2)
+{
+	In_Value.x *= In_Value2.x;
+	In_Value.y *= In_Value2.y;
+	In_Value.z *= In_Value2.z;
+	In_Value.w *= In_Value2.w;
+}
 
-// スカラー除算
 inline DirectX::XMFLOAT4 operator/(_In_ const DirectX::XMFLOAT4 &In_Value, _In_ const float &In_Float)
 {
 	return DirectX::XMFLOAT4(In_Value.x / In_Float,In_Value.y / In_Float,In_Value.z / In_Float,In_Value.w / In_Float);
+}
+inline DirectX::XMFLOAT4 operator/(_In_ const DirectX::XMFLOAT4 &In_Value1, _In_ const DirectX::XMFLOAT4 &In_Value2)
+{
+	return DirectX::XMFLOAT4(In_Value1.x / In_Value2.x,In_Value1.y / In_Value2.y,In_Value1.z / In_Value2.z,In_Value1.w / In_Value2.w);
 }
 inline void operator/=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const float &In_Float)
 {
@@ -182,6 +267,13 @@ inline void operator/=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const float &In
 	In_Value.y /= In_Float;
 	In_Value.z /= In_Float;
 	In_Value.w /= In_Float;
+}
+inline void operator/=(_Inout_ DirectX::XMFLOAT4 &In_Value, _In_ const DirectX::XMFLOAT4 &In_Value2)
+{
+	In_Value.x /= In_Value2.x;
+	In_Value.y /= In_Value2.y;
+	In_Value.z /= In_Value2.z;
+	In_Value.w /= In_Value2.w;
 }
 inline bool operator==(_In_ const DirectX::XMFLOAT4 &In_Value1, _In_ const DirectX::XMFLOAT4 &In_Value2)
 {

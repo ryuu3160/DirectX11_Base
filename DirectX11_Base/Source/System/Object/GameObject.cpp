@@ -250,15 +250,9 @@ DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcep
 void GameObject::SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
 	if(m_bIsChild)
-	{
-		// 子オブジェクトの場合、親の座標を基準にする
-		m_Pos = {m_ParentPos.x + In_Pos.x, m_ParentPos.y + In_Pos.y, m_ParentPos.z + In_Pos.z };
-	}
+		m_ChildPos = In_Pos; // 子オブジェクトの座標を保存(親からの相対座標)
 	else
-	{
-		// 座標を設定
-		m_Pos = In_Pos;
-	}
+		m_Pos = In_Pos; // 座標を設定
 }
 
 void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
@@ -266,9 +260,9 @@ void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 	if (m_bIsChild)
 	{
 		// 子オブジェクトの場合、親の回転を基準にする
-		m_Rotation = m_ParentRotation + ToRad(In_Rotation);
+		m_ChildRotation = ToRad(In_Rotation);
 		// クォータニオンに変換
-		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+		DirectX::XMStoreFloat4(&m_ChildQuat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
 	}
 	else
 	{
@@ -284,7 +278,7 @@ void GameObject::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 	if (m_bIsChild)
 	{
 		// 子オブジェクトの場合、親の拡縮を基準にする
-		m_Scale = m_ParentScale + In_Scale;
+		m_ChildScale = In_Scale;
 	}
 	else
 	{
@@ -298,9 +292,9 @@ void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 	if (m_bIsChild)
 	{
 		// 子オブジェクトの場合、親のクォータニオンを基準にする
-		m_Quat = m_ParentQuat + In_Quat;
+		m_ChildQuat = In_Quat;
 		// オイラー角に変換
-		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
+		m_ChildRotation = QuaternionToRollPitchYaw(m_Quat);
 	}
 	else
 	{
@@ -360,11 +354,11 @@ void GameObject::UpdateChildTransform()
 	if (m_bIsChild)
 	{
 		// 座標
-		m_Pos = { m_ParentPos.x + m_Pos.x, m_ParentPos.y + m_Pos.y, m_ParentPos.z + m_Pos.z };
+		m_Pos = m_ParentPos + m_ChildPos;
 		// 回転
-		m_Rotation = m_ParentRotation + m_Rotation;
+		m_Rotation = m_ParentRotation + m_ChildRotation;
 		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
 		// 拡縮
-		m_Scale = m_ParentScale + m_Scale;
+		m_Scale = m_ParentScale * m_ChildScale;
 	}
 }
