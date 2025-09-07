@@ -68,6 +68,7 @@ void Player::Update()
 {
 	UpdateMovement();
 	UpdateReload();
+	UpdateChildMissile();
 	UpdateShoot();
 	
 
@@ -215,6 +216,7 @@ void Player::UpdateReload()
 				++m_MissileIndex; // ミサイルを1発増やす
 				auto obj = AddChildObject<Missile>("Missile" + std::to_string((*itr).first));
 				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
+				obj->SetScale({ 1.4f,1.4f,1.4f });
 				// ミサイルの初期位置を設定
 				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
 				pos -= GetFront() * 0.5f; // 少し後方にオフセット
@@ -240,6 +242,34 @@ void Player::UpdateReload()
 				++itr;
 		}
 		
+	}
+}
+
+void Player::UpdateChildMissile()
+{
+	auto missiles = GetChildObjects();
+	for (auto &itr : missiles)
+	{
+		// 位置更新
+		DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
+		pos -= GetFront() * 0.5f; // 少し後方にオフセット
+		int num = std::stoi(itr.first.substr(7)); // "Missile"の7文字目以降を数値に変換
+		switch (num)
+		{
+		case 0:
+			pos += GetRight() * 1.68f; // 右側
+			break;
+		case 1:
+			pos += GetRight() * 1.26f; // 右側
+			break;
+		case 2:
+			pos -= GetRight() * 1.4f; // 左側
+			break;
+		case 3:
+			pos -= GetRight() * 1.8f; // 左側
+			break;
+		}
+		itr.second->SetPos(pos);
 	}
 }
 

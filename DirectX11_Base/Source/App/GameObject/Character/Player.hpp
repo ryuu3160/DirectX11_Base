@@ -48,6 +48,8 @@ private:
 
 	void UpdateReload();
 
+	void UpdateChildMissile();
+
 	float GetSharpPitch();
 
 private:
