@@ -166,6 +166,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\App\GameObject\Missile.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\App\Main.cpp">
       <SubType>
       </SubType>
@@ -307,6 +311,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\App\GameObject\MainCamera.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\App\GameObject\Missile.hpp">
       <SubType>
       </SubType>
     </ClInclude>

@@ -55,6 +55,14 @@ void SceneGame::Init()
 	// スカイドームを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
 	pSkyBox->SetCamera(pCamera);
+
+	// Missileテスト
+	auto missile = CreateObject<Missile>("MissileTest");
+	auto MissileModel = missile->GetComponent<ModelRenderer>();
+	MissileModel->SetCamera(pCamera);
+	missile->SetPos({ -2.0f,1.0f,0.0f });
+	missile->SetScale({ 0.007f,0.007f,0.007f });
+	player->SetPos({ 0.0f,1.0f,0.0f });
 }
 
 void SceneGame::Uninit()

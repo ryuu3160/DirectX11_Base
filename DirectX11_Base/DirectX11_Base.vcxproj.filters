@@ -274,6 +274,9 @@
     <ClCompile Include="Source\App\GameObject\Environment\SeaLevel.cpp">
       <Filter>Source\App\GameObject\Environment</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\GameObject\Missile.cpp">
+      <Filter>Source\App\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="Source\App\GameObject\Environment\SeaLevel.hpp">
       <Filter>Source\App\GameObject\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\GameObject\Missile.hpp">
+      <Filter>Source\App\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

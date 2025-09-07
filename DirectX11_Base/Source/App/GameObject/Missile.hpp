@@ -1,8 +1,8 @@
 /*+===================================================================
-	File: Player.hpp
+	File: Missile.hpp
 	Summary: （このファイルで何をするか記載する）
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/8/25 Mon AM 04:04:37 初回作成
+	Date: 2025/9/8 Mon AM 12:44:37 初回作成
 ===================================================================+*/
 #pragma once
 
@@ -10,41 +10,32 @@
 //	include
 // ==============================
 #include "System/Object/GameObject.hpp"
-#include "App/GameObject/Missile.hpp"
 // ==============================
 //	定数定義
 // ==============================
 namespace
 {
-
+	const inline constexpr float MissileScale = 0.007f; // ミサイルのスケール
 }
 
 /// <summary>
-/// Playerクラス
+/// Missileクラス
 /// </summary>
-class Player : public GameObject
+class Missile : public GameObject
 {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Player();
+	Missile();
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~Player();
+	~Missile();
 
 	void Update() override;
 
 private:
 
-	void UpdateMovement();
-
-	void UpdateShoot();
-
-	float GetSharpPitch();
-
-private:
-	float m_fSpeed;
 };
