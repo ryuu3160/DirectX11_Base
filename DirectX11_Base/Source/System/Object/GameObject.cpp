@@ -155,6 +155,7 @@ void GameObject::ExecuteLateUpdate() noexcept
 		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
+		itr.second->UpdateChildTransform(); // 子オブジェクトの変換情報を更新
 		itr.second->ExecuteLateUpdate();
 	}
 
@@ -351,4 +352,19 @@ void GameObject::AngleSynchronization()
 	//	m_Rotation = rot;
 	//	m_PrevRotation = m_Rotation; // 前回の値を更新
 	//}
+}
+
+void GameObject::UpdateChildTransform()
+{
+	// 親の変換情報を基準に子オブジェクトの変換情報を更新
+	if (m_bIsChild)
+	{
+		// 座標
+		m_Pos = { m_ParentPos.x + m_Pos.x, m_ParentPos.y + m_Pos.y, m_ParentPos.z + m_Pos.z };
+		// 回転
+		m_Rotation = m_ParentRotation + m_Rotation;
+		DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
+		// 拡縮
+		m_Scale = m_ParentScale + m_Scale;
+	}
 }

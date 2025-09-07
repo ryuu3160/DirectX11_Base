@@ -111,6 +111,9 @@ private:
 	// 回転情報の同期
 	void AngleSynchronization();
 
+	// 子オブジェクトの変換情報を更新
+	void UpdateChildTransform();
+
 private:
 	// コンポーネントリスト
 	using Components = std::vector<Component *>;
