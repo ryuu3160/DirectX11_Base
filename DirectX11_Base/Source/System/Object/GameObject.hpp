@@ -144,6 +144,11 @@ protected:
 	DirectX::XMFLOAT3	m_ParentRotation;	// 親オブジェクトの回転(オイラー角)
 	DirectX::XMFLOAT4	m_ParentQuat;	// 親オブジェクトの回転(クォータニオン)
 	DirectX::XMFLOAT3	m_ParentScale;	// 親オブジェクトの拡縮
+
+	DirectX::XMFLOAT3	m_ChildPos; // 子オブジェクトの座標
+	DirectX::XMFLOAT3	m_ChildRotation; // 子オブジェクトの回転(オイラー角)
+	DirectX::XMFLOAT4	m_ChildQuat; // 子オブジェクトの回転(クォータニオン)
+	DirectX::XMFLOAT3	m_ChildScale; // 子オブジェクトの拡縮
 };
 
 template<class T>
