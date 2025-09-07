@@ -15,7 +15,7 @@
 // ==============================
 namespace
 {
-	const inline constexpr float MissileScale = 1.0f; // ミサイルのスケール
+	const inline constexpr float MissileScale = 0.007f; // ミサイルのスケール
 }
 
 /// <summary>

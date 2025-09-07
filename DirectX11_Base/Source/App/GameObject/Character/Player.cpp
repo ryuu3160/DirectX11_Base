@@ -38,11 +38,15 @@ namespace
 	const inline constexpr char SpeedDownKey = 'K';	// 速度Down
 	const inline constexpr char BrakeKey = 'U';	// 急ブレーキ
 	const inline constexpr char ShootKey = VK_SPACE;	// 射撃
+
+	// ミサイル関連
+	const inline constexpr float cx_MissileScale = 1.4f; // ミサイルの相対スケール
+	const inline constexpr float cx_MissileReloadTime = 5.0f; // ミサイルのリロード時間
 }
 
 Player::Player()
 	: GameObject("Player")
-	, m_fSpeed(1.0f), m_MissileIndex(0), m_pCamera(nullptr)
+	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/F15E.fbx");
@@ -180,32 +184,33 @@ void Player::UpdateMovement()
 void Player::UpdateShoot()
 {
 	// 撃てるミサイルが無ければ処理しない
-	if (m_MissileIndex == 0)
+	if (m_MissileIndices.empty())
 		return;
 
 	if (Input::IsKeyTrigger(ShootKey))
 	{
-		--m_MissileIndex; // ミサイルを1発減らす
-
-		auto obj = GetScene()->CreateObject<Missile>("Missile" + std::to_string(m_MissileIndex));
+		auto obj = GetScene()->CreateObject<Missile>("Missile" + std::to_string(m_ShotMissileNum));
 		obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
+		++m_ShotMissileNum; // 発射したミサイルの番号をインクリメント
 
 		// ミサイルの初期位置を設定
-		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndex))->GetPos();
+		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]))->GetPos();
 		obj->SetPos(pos);
 		obj->SetSpeed(m_fSpeed + 2.0f); // 自機の速度に+2.0fした速度で発射
 
 		// 子オブジェクトを削除
-		DestroyChildObject<Missile>("Missile" + std::to_string(m_MissileIndex));
-
-		++m_MissileIndex;
+		DestroyChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]));
+		
+		// リロードタイマーをセット
+		m_ReloadTimer.push_back({ m_MissileIndices[0], cx_MissileReloadTime });
+		m_MissileIndices.erase(m_MissileIndices.begin()); // 先頭のミサイルインデックスを削除
 	}
 }
 
 void Player::UpdateReload()
 {
 	// 1発でもミサイルが打たれたらリロード開始
-	if (m_MissileIndex < cx_MissileMax)
+	if (m_MissileIndices.size() < cx_MissileMax)
 	{
 		auto itr = m_ReloadTimer.begin();
 		for (;itr != m_ReloadTimer.end();)
@@ -213,10 +218,10 @@ void Player::UpdateReload()
 			(*itr).second -= 1.0f / 60.0f; // 1フレーム分減少
 			if ((*itr).second <= 0.0f)
 			{
-				++m_MissileIndex; // ミサイルを1発増やす
+				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				auto obj = AddChildObject<Missile>("Missile" + std::to_string((*itr).first));
 				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
-				obj->SetScale({ 1.4f,1.4f,1.4f });
+				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
 				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
 				pos -= GetFront() * 0.5f; // 少し後方にオフセット

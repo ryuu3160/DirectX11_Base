@@ -55,7 +55,8 @@ private:
 private:
 	GameObject *m_pCamera;
 	float m_fSpeed;
-	int m_MissileIndex;
+	int m_ShotMissileNum; // 発射したミサイルの番号
 
+	std::vector<int> m_MissileIndices; // ミサイルのインデックスリスト
 	std::vector<std::pair<int, float>> m_ReloadTimer; // リロードタイマー
 };
