@@ -196,6 +196,7 @@ void Player::UpdateShoot()
 		// ミサイルの初期位置を設定
 		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]))->GetPos();
 		obj->SetPos(pos);
+		obj->SetQuat(GetQuat());
 		obj->SetSpeed(m_fSpeed + 2.0f); // 自機の速度に+2.0fした速度で発射
 
 		// 子オブジェクトを削除
