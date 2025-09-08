@@ -37,9 +37,9 @@ Missile::~Missile()
 
 void Missile::Update()
 {
-	//// 前方ベクトル取得
-	//DirectX::XMFLOAT3 front = GetFront();
-	//// 移動
-	//m_Pos += ((front * cx_MoveSpeedScale) * m_Speed);
-	//GameObject::Update();
+	// 前方ベクトル取得
+	DirectX::XMFLOAT3 front = GetFront();
+	// 移動
+	m_Pos += ((front * cx_MoveSpeedScale) * m_Speed);
+	GameObject::Update();
 }

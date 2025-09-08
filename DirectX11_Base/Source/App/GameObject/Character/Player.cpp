@@ -42,6 +42,7 @@ namespace
 	// ミサイル関連
 	const inline constexpr float cx_MissileScale = 1.4f; // ミサイルの相対スケール
 	const inline constexpr float cx_MissileReloadTime = 5.0f; // ミサイルのリロード時間
+	const inline constexpr float cx_MissileSpeed = 500.0f; // ミサイルの速度
 }
 
 Player::Player()
@@ -197,7 +198,7 @@ void Player::UpdateShoot()
 		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]))->GetPos();
 		obj->SetPos(pos);
 		obj->SetQuat(GetQuat());
-		obj->SetSpeed(m_fSpeed + 2.0f); // 自機の速度に+2.0fした速度で発射
+		obj->SetSpeed(cx_MissileSpeed); // 自機の速度に+2.0fした速度で発射
 
 		// 子オブジェクトを削除
 		DestroyChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]));
