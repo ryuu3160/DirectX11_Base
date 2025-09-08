@@ -26,6 +26,10 @@ namespace
 	const inline constexpr float cx_SharpPitch = 2.5f;		// 鋭いピッチ時のオフセット値
 	const inline constexpr float cx_YawSpeed = 0.01f;		// ヨー速度
 	const inline constexpr float cx_RollSpeed = 0.9f;		// ロール速度
+	const inline constexpr float cx_MaxSpeed_ms = 737.71f; // 最大速度（m/s）=マッハ2.5(60fps換算)
+
+	// 機体スペック関連
+	const inline constexpr float cx_MaximumAscentAltitude = 15000.0f; // 最大上昇高度
 
 	// キー定義
 	const inline constexpr char LeftYawKey = 'Q';		// 左ヨー
@@ -42,7 +46,7 @@ namespace
 	// ミサイル関連
 	const inline constexpr float cx_MissileScale = 1.4f; // ミサイルの相対スケール
 	const inline constexpr float cx_MissileReloadTime = 5.0f; // ミサイルのリロード時間
-	const inline constexpr float cx_MissileSpeed = 500.0f; // ミサイルの速度
+	const inline constexpr float cx_MissileSpeed = 1180.4f; // ミサイルの速度
 }
 
 Player::Player()
@@ -162,6 +166,8 @@ void Player::UpdateMovement()
 	else if (Input::IsKeyPress(SpeedUpKey)) // 急ブレーキ中は速度UPしない
 	{
 		m_fSpeed += cx_SpeedAdd;
+		if(m_fSpeed > cx_MaxSpeed_ms)
+			m_fSpeed = cx_MaxSpeed_ms;
 	}
 
 	if (Input::IsKeyPress(SpeedDownKey))
