@@ -391,25 +391,31 @@ static inline DirectX::XMFLOAT4 ToDeg(_In_ DirectX::XMFLOAT4 In_Rad)
 /// <returns>変換されたDirectX::XMFLOAT3型のロール・ピッチ・ヨー（オイラー角）。</returns>
 static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMFLOAT4 &In_Quat)
 {
-	DirectX::XMFLOAT3 euler;
+	// 各成分用意
+	float ysqr = In_Quat.y * In_Quat.y;
 
-	euler.y = std::asinf(2.0f * In_Quat.x * In_Quat.z + 2.0f * In_Quat.y * In_Quat.w); // Y軸の回転(ピッチ)
+	// ロール（X軸回転）
+	float t0 = 2.0f * (In_Quat.w * In_Quat.x + In_Quat.y * In_Quat.z);
+	float t1 = 1.0f - 2.0f * (In_Quat.x * In_Quat.x + ysqr);
+	float roll = std::atan2(t0, t1);
 
-	if (std::cosf(euler.y) != 0.0f)
-	{
-		euler.x = std::atanf(-((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
-			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f)));
-		euler.z = std::atanf(-((2.0f * In_Quat.x * In_Quat.y - 2.0f * In_Quat.z * In_Quat.w) /
-			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.x, 2.0f) - 1.0f)));
-	}
-	else
-	{
-		euler.x = std::atanf(((2.0f * In_Quat.y * In_Quat.z - 2.0f * In_Quat.x * In_Quat.w) /
-			(2.0f * std::powf(In_Quat.w, 2.0f) + 2.0f * std::powf(In_Quat.y, 2.0f) - 1.0f)));
-		euler.z = 0.0f;
-	}
+	// クォータニオンの成分
+	float x = In_Quat.x, y = In_Quat.y, z = In_Quat.z, w = In_Quat.w;
 
-	return euler;
+	// 回転行列の要素
+	float m21 = 2.0f * (x * z + y * w);      // 行列[2][1]
+	float m22 = 1.0f - 2.0f * (y * y + z * z); // 行列[2][2]
+	float m20 = -2.0f * (x * y - z * w);     // 行列[2][0]
+
+	// ピッチ（Y軸） = atan2(-m20, sqrt(m21*m21 + m22*m22))
+	float pitch = std::atan2(-m20, std::sqrt(m21 * m21 + m22 * m22));
+
+	// ヨー（Z軸回転）
+	float t3 = 2.0f * (In_Quat.w * In_Quat.z + In_Quat.x * In_Quat.y);
+	float t4 = 1.0f - 2.0f * (ysqr + In_Quat.z * In_Quat.z);
+	float yaw = std::atan2(t3, t4);
+
+	return DirectX::XMFLOAT3(roll, pitch, yaw);
 }
 
 /// <summary>

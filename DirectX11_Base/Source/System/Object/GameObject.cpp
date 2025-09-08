@@ -270,6 +270,7 @@ void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 	{
 		// 回転を設定
 		m_Rotation = ToRad(In_Rotation);
+		m_PrevRotation = m_Rotation; // 前回の値を更新
 		// クォータニオンに変換
 		DirectX::XMStoreFloat4(&m_Quat,DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
 	}
@@ -304,6 +305,7 @@ void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 		m_Quat = In_Quat;
 		// オイラー角に変換
 		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
+		m_PrevRotation = m_Rotation; // 前回の値を更新
 	}
 }
 
@@ -360,6 +362,7 @@ void GameObject::UpdateChildTransform()
 		// 回転
 		m_Quat = QuaternionMultiply(m_ParentQuat, m_ChildQuat);
 		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
+		m_PrevRotation = m_ChildRotation = m_Rotation; // 前回の値を更新
 		// 拡縮
 		m_Scale = m_ParentScale * m_ChildScale;
 	}
