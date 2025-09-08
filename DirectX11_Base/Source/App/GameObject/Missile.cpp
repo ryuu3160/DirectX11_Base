@@ -12,6 +12,14 @@
 #include "DirectX11/System/ModelRenderer.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 
+// ==============================
+//	定数定義
+// ==============================
+namespace
+{
+	const inline constexpr float cx_MoveSpeedScale = 0.01f; // 移動速度の倍率
+}
+
 Missile::Missile()
 	: GameObject("Missile"), m_Speed(0.0f)
 {
@@ -29,4 +37,9 @@ Missile::~Missile()
 
 void Missile::Update()
 {
+	//// 前方ベクトル取得
+	//DirectX::XMFLOAT3 front = GetFront();
+	//// 移動
+	//m_Pos += ((front * cx_MoveSpeedScale) * m_Speed);
+	//GameObject::Update();
 }
