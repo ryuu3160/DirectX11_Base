@@ -37,6 +37,7 @@ HRESULT Main::Init()
 		return hr;
 
 	// Šeí‹@”\‚Ì‰Šú‰»
+	auto &Sound = SoundManager::GetInstance();
 	Geometory::GetInstance().Init();
 	SpriteManager::GetInstance().Init();
 	Input::Init();
