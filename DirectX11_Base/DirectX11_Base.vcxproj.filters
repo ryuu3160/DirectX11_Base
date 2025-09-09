@@ -86,6 +86,9 @@
     <Filter Include="Source\DirectX11\Resource">
       <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\Sound">
+      <UniqueIdentifier>{14d532be-f130-4ce5-b08a-af5c3012c022}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\App\GameObject">
       <UniqueIdentifier>{c4fc00b9-bce7-4ae6-9350-f89b0a2acfeb}</UniqueIdentifier>
     </Filter>
@@ -261,6 +264,9 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Sound\SoundManager.cpp">
+      <Filter>Source\System\Sound</Filter>
     </ClCompile>
     <ClCompile Include="Source\App\Scene\SceneGame.cpp">
       <Filter>Source\App\Scene</Filter>
@@ -458,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Sound\SoundManager.hpp">
+      <Filter>Source\System\Sound</Filter>
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneGame.hpp">
       <Filter>Source\App\Scene</Filter>

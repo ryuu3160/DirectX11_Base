@@ -28,12 +28,12 @@ RenderComponent::~RenderComponent()
 
 void RenderComponent::SetCamera(_In_ GameObject *In_Camera) noexcept
 {
-	if (NullCheck(In_Camera, NCMode::OUTPUT, "Camera is null in RenderComponent::SetCamera."))
+	if (NullCheck(In_Camera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::SetCamera."))
 		return;
 
 	m_pViewCamera = In_Camera->GetComponent<Camera>();
 
-	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "Camera component is null in RenderComponent::SetCamera."))
+	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera component is null in RenderComponent::SetCamera."))
 		return;
 
 	m_pCameraObj = In_Camera;
@@ -45,7 +45,7 @@ void RenderComponent::ExecuteUpdate() noexcept
 
 void RenderComponent::ExecuteDraw() noexcept
 {
-	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "Camera is null in RenderComponent::ExecuteDraw."))
+	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::ExecuteDraw."))
 		return;
 
 	m_RenderManager.AddRenderComponent(this, m_nLayer);
