@@ -159,10 +159,10 @@ private:
 	// ------------------------------
 	const BYTE CMP_MATCH;	// 定数
 	using SoundKey = std::pair<std::string, SoundData>;	// サウンドキー
-	using SoundMap = std::map<std::string, SoundData>;	// サウンドマップ
+	using SoundMap = std::unordered_map<std::string, SoundData>;	// サウンドマップ
 	ComPtr<IXAudio2> m_pXAudio;
 	IXAudio2MasteringVoice *m_pMasterVoice;
-	SoundMap m_soundMap;
+	SoundMap m_mapSound;
 	float m_fBGMVolume;
 	float m_fSEVolume;
 
@@ -188,7 +188,7 @@ private:
 	/// <param name="[In_hFile]">ファイルポインタ</param>
 	/// <param name="[In_pFormat]">ファイルフォーマット</param>
 	/// <returns>データサイズ</returns>
-	DWORD ReadMP3Format(_In_ HANDLE In_hFile, _In_ MP3FormatInfo *In_pFormat) noexcept;
+	DWORD ReadMP3Format(_In_ HANDLE In_hFile, _In_ MP3FormatInfo *In_pFormat) const noexcept;
 
 	/// <summary>
 	/// MP3サウンドフレームヘッダ読み込み
@@ -197,7 +197,7 @@ private:
 	/// <param name="[In_dwSeek]">フレーム読み込み位置</param>
 	/// <param name="[In_pFrame]">フレーム情報</param>
 	/// <returns>読み込みサイズ</returns>
-	DWORD ReadMP3FrameHeader(_In_ HANDLE In_hFile, _In_ DWORD In_dwSeek, _In_ MP3FrameInfo *In_pFrame) noexcept;
+	DWORD ReadMP3FrameHeader(_In_ HANDLE In_hFile, _In_ DWORD In_dwSeek, _In_ MP3FrameInfo *Out_pFrame) noexcept;
 
 	/// <summary>
 	/// MP3サウンドデータ読み込み

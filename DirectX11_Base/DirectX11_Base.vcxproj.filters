@@ -86,6 +86,9 @@
     <Filter Include="Source\DirectX11\Resource">
       <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\Sound">
+      <UniqueIdentifier>{14d532be-f130-4ce5-b08a-af5c3012c022}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -252,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Sound\SoundManager.cpp">
+      <Filter>Source\System\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -434,6 +440,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Sound\SoundManager.hpp">
+      <Filter>Source\System\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
