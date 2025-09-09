@@ -257,6 +257,22 @@ SoundManager::SoundManager() noexcept
 
 SoundManager::~SoundManager()
 {
+	// サウンドデータの削除
+	SoundMap::iterator itr = m_mapSound.begin();
+	for (; itr != m_mapSound.end(); ++itr)
+	{
+		itr->second.data.pBuffer = nullptr;
+	}
+
+	// XAudio2のオブジェクトを削除
+	if (m_pMasterVoice != nullptr)
+	{
+		m_pMasterVoice->DestroyVoice();
+		m_pMasterVoice = nullptr;
+	}
+
+	m_pXAudio = nullptr;
+	m_mapSound.clear();
 }
 
 HRESULT SoundManager::LoadWav(_In_ const char *In_c_cpFile, _In_ SoundData *In_pData) noexcept
