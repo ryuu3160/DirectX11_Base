@@ -67,6 +67,9 @@ Player::Player()
 	{
 		m_ReloadTimer.push_back({ i, 0.0f });
 	}
+
+	// SE追加
+	SoundManager::GetInstance().Load("Missile", "Assets/Sound/SE/Missile.wav", true, false);
 }
 
 Player::~Player()
@@ -196,6 +199,9 @@ void Player::UpdateShoot()
 
 	if (Input::IsKeyTrigger(ShootKey))
 	{
+		// ミサイル発射SE
+		SoundManager::GetInstance().Play("Missile");
+
 		auto obj = GetScene()->CreateObject<Missile>("Missile" + std::to_string(m_ShotMissileNum));
 		obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 		++m_ShotMissileNum; // 発射したミサイルの番号をインクリメント
