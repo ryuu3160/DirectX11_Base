@@ -283,6 +283,9 @@
     <ClCompile Include="Source\App\GameObject\Missile.cpp">
       <Filter>Source\App\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneTitle.cpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -482,6 +485,9 @@
     </ClInclude>
     <ClInclude Include="Source\App\GameObject\Missile.hpp">
       <Filter>Source\App\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneTitle.hpp">
+      <Filter>Source\App\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
