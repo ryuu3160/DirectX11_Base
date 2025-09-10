@@ -127,6 +127,9 @@ private:
 	// 子オブジェクトの変換情報を更新
 	void UpdateChildTransform();
 
+	// 自身をシーンから破棄
+	void _destroySelf() noexcept;
+
 private:
 	// コンポーネントリスト
 	using Components = std::vector<Component *>;
@@ -146,6 +149,7 @@ private:
 	std::string			m_Name;			// オブジェクト名
 	DirectX::XMFLOAT3	m_PrevRotation; // 前回の回転値
 	SceneBase			*m_pScene;		// 所属しているシーンへのポインタ
+	bool m_IsDestroySelf; // 自身を破棄するかどうかのフラグ
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
