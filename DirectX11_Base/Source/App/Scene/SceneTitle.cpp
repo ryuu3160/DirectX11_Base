@@ -16,6 +16,7 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "App/GameObject/Character/Player.hpp"
 #include "App/GameObject/Environment/SeaLevel.hpp"
+#include "App/Scene/SceneGame.hpp"
 
 void SceneTitle::Init()
 {
@@ -40,6 +41,10 @@ void SceneTitle::Uninit()
 
 void SceneTitle::Update()
 {
+	if (Input::IsKeyTrigger(VK_SPACE))
+	{
+		Main::GetScene().AddSubScene<SceneGame>();
+	}
 }
 
 void SceneTitle::Draw()
