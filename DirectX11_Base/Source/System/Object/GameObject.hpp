@@ -71,6 +71,16 @@ public:
 	void DestroyChildObject(_In_ const std::string &In_Name);
 
 	/// <summary>
+	/// すべての子オブジェクトを破棄します。
+	/// </summary>
+	void DestroyAllChildObjects() noexcept;
+
+	/// <summary>
+	/// 自身を所属しているシーンから破棄します。
+	/// </summary>
+	void DestroySelf() noexcept;
+
+	/// <summary>
 	/// 自身が所属しているシーンを取得します。
 	/// </summary>
 	/// <returns>所属しているシーンへの静的ポインタ。</returns>
