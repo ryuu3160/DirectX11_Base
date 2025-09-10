@@ -187,6 +187,23 @@ std::map<std::string,GameObject *> GameObject::GetChildObjects() const noexcept
 	return m_ChildObjects;
 }
 
+void GameObject::DestroyAllChildObjects() noexcept
+{
+	for (auto &child : m_ChildObjects)
+	{
+		delete child.second; // 子オブジェクトの削除
+	}
+	m_ChildObjects.clear();
+}
+
+void GameObject::DestroySelf() noexcept
+{
+	DestroyAllChildObjects(); // まず子オブジェクトを削除
+
+	if (m_pScene)
+		m_pScene->DestroyObj(m_Name); // シーンから自身を削除
+}
+
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
 {
 	// 前方ベクトルを取得
