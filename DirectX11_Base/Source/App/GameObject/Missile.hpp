@@ -28,7 +28,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Missile();
+	Missile(_In_ const std::string &In_Name);
 
 	/// <summary>
 	/// デストラクタ
@@ -51,6 +51,7 @@ private:
 
 private:
 	float m_Speed;
+	std::string m_MissileName;
 	DirectX::XMFLOAT3 m_StartPos;
 	Ease::DataDuration m_EaseData;
 };

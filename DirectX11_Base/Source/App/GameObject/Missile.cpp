@@ -18,14 +18,14 @@
 namespace
 {
 	const inline constexpr float cx_MoveSpeedScale = 0.01f; // 移動速度の倍率
-	const inline constexpr float cx_MissileRange = 180000.0f; // ミサイルの射程距離(180km)
+	const inline constexpr float cx_MissileRange = 18000.0f; // ミサイルの射程距離(180km)
 
 	const inline constexpr float cx_SpeedDuration = 60.0f; // 速度変化にかかる時間
 	const inline constexpr float cx_StartDuration = 15.0f; // 開始時のイージング時間
 }
 
-Missile::Missile()
-	: GameObject("Missile"), m_Speed(0.0f), m_EaseData{}, m_StartPos{}
+Missile::Missile(_In_ const std::string &In_Name)
+	: GameObject(In_Name), m_Speed(0.0f), m_EaseData{}, m_StartPos{}
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Weapon/AIM-120.fbx");
@@ -41,6 +41,11 @@ Missile::~Missile()
 
 void Missile::Update()
 {
+	if(IsAutoDestroy())
+	{
+		return;
+	}
+
 	float speed;
 	if (m_EaseData.fNowTime < m_EaseData.fDuration)
 	{

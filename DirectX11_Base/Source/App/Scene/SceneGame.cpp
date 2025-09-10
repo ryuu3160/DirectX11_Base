@@ -57,7 +57,7 @@ void SceneGame::Init()
 	pSkyBox->SetCamera(pCamera);
 
 	// MissileƒeƒXƒg
-	auto missile = CreateObject<Missile>("MissileTest");
+	auto missile = CreateObject<Missile>("MissileTest","MissileTest");
 	auto MissileModel = missile->GetComponent<ModelRenderer>();
 	MissileModel->SetCamera(pCamera);
 	missile->SetPos({ -2.0f,1.0f,0.0f });
