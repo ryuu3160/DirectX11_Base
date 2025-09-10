@@ -26,19 +26,18 @@ namespace
 class Player : public GameObject
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
 	Player();
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
 	~Player();
 
 	void Update() override;
 
 	void SetCamera(_In_ GameObject *In_Camera) noexcept;
+
+	/// <summary>
+	/// 機体が破壊されたかどうか
+	/// </summary>
+	/// <returns>機体が破壊されている場合はtrueを返します</returns>
+	bool IsDestroyed() const noexcept { return m_IsDestroyed; }
 
 private:
 
@@ -54,9 +53,11 @@ private:
 
 private:
 	GameObject *m_pCamera;
-	float m_fSpeed;
-	int m_ShotMissileNum; // 発射したミサイルの番号
+	float m_fSpeed;			// 現在の速度
+	int m_ShotMissileNum;	// 発射したミサイルの番号
 
 	std::vector<int> m_MissileIndices; // ミサイルのインデックスリスト
 	std::vector<std::pair<int, float>> m_ReloadTimer; // リロードタイマー
+
+	bool m_IsDestroyed;		// 自機が破壊されたかどうか
 };

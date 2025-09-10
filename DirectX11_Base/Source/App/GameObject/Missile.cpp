@@ -18,10 +18,12 @@
 namespace
 {
 	const inline constexpr float cx_MoveSpeedScale = 0.01f; // 移動速度の倍率
+	const inline constexpr float cx_SpeedDuration = 60.0f; // 速度変化にかかる時間
+	const inline constexpr float cx_StartDuration = 15.0f; // 開始時のイージング時間
 }
 
 Missile::Missile()
-	: GameObject("Missile"), m_Speed(0.0f)
+	: GameObject("Missile"), m_Speed(0.0f), m_EaseData{}
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Weapon/AIM-120.fbx");
@@ -37,9 +39,29 @@ Missile::~Missile()
 
 void Missile::Update()
 {
+	float speed;
+	if (m_EaseData.fNowTime < m_EaseData.fDuration)
+	{
+		speed = Ease::OutExpo(m_EaseData);
+		m_EaseData.fNowTime += 1.0f;
+	}
+	else
+	{
+		speed = m_Speed;
+	}
+
 	// 前方ベクトル取得
 	DirectX::XMFLOAT3 front = GetFront();
 	// 移動
-	m_Pos += ((front * cx_MoveSpeedScale) * m_Speed);
+	m_Pos += ((front * cx_MoveSpeedScale) * speed);
 	GameObject::Update();
+}
+
+void Missile::SetSpeed(_In_ const float &In_Speed) noexcept
+{
+	m_Speed = In_Speed;
+	m_EaseData.fStart = 0.0f;
+	m_EaseData.fEnd = In_Speed;
+	m_EaseData.fNowTime = cx_StartDuration;
+	m_EaseData.fDuration = cx_SpeedDuration; // 目標速度に到達するまでの時間
 }

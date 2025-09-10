@@ -52,6 +52,7 @@ namespace
 Player::Player()
 	: GameObject("Player")
 	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
+	, m_IsDestroyed(false)
 {
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
@@ -203,7 +204,9 @@ void Player::UpdateShoot()
 		SoundManager::GetInstance().Play("Missile");
 
 		auto obj = GetScene()->CreateObject<Missile>("Missile" + std::to_string(m_ShotMissileNum));
-		obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
+		auto cmp = obj->GetComponent<ModelRenderer>();
+		cmp->SetCamera(m_pCamera);
+		cmp->SetLayer(-1); // キャノピー越しに見えるようにする
 		++m_ShotMissileNum; // 発射したミサイルの番号をインクリメント
 
 		// ミサイルの初期位置を設定
@@ -248,10 +251,10 @@ void Player::UpdateReload()
 					pos += GetRight() * 1.26f; // 右側
 					break;
 				case 2:
-					pos -= GetRight() * 1.4f; // 左側
+					pos -= GetRight() * 1.26f; // 左側
 					break;
 				case 3:
-					pos -= GetRight() * 1.8f; // 左側
+					pos -= GetRight() * 1.68f; // 左側
 					break;
 				}
 				obj->SetPos(pos);
@@ -282,10 +285,10 @@ void Player::UpdateChildMissile()
 			pos += GetRight() * 1.26f; // 右側
 			break;
 		case 2:
-			pos -= GetRight() * 1.4f; // 左側
+			pos -= GetRight() * 1.26f; // 左側
 			break;
 		case 3:
-			pos -= GetRight() * 1.8f; // 左側
+			pos -= GetRight() * 1.68f; // 左側
 			break;
 		}
 		itr.second->SetPos(pos);

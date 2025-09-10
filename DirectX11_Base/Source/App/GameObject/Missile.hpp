@@ -9,6 +9,7 @@
 // ==============================
 //	include
 // ==============================
+#include "sal.h"
 #include "System/Object/GameObject.hpp"
 // ==============================
 //	’è”’è‹`
@@ -36,8 +37,9 @@ public:
 
 	void Update() override;
 
-	void SetSpeed(_In_ const float &In_Speed) noexcept { m_Speed = In_Speed; }
+	void SetSpeed(_In_ const float &In_Speed) noexcept;
 
 private:
 	float m_Speed;
+	Ease::DataDuration m_EaseData;
 };
