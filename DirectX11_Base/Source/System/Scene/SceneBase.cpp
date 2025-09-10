@@ -31,10 +31,16 @@ SceneBase::~SceneBase()
 	RemoveSubScene();
 
 	// 削除
-	while (!m_Items.empty())
+	for (auto &itr : m_Items)
 	{
-		DestroyObj(m_Items.begin()->c_str());
+		DestroyObj(itr.c_str());
 	}
+	// 破棄予定のオブジェクトを削除
+	for (auto &name : m_DeadItems)
+	{
+		m_Items.remove(name);
+	}
+	m_DeadItems.clear();
 	m_Items.clear();
 
 	// 親の参照を削除
@@ -131,7 +137,7 @@ template<> GameObject
 	return ptr;
 }
 
-void SceneBase::DestroyObj(_In_ const std::string &In_Name) noexcept
+void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
 {
 	auto obj = m_Objects.find(In_Name);
 	if (obj == m_Objects.end()) return;
@@ -139,7 +145,7 @@ void SceneBase::DestroyObj(_In_ const std::string &In_Name) noexcept
 	delete obj->second;
 	m_Objects.erase(obj);
 
-	m_Items.remove(In_Name);
+	m_DeadItems.push_back(In_Name);
 }
 
 void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
@@ -173,6 +179,13 @@ void SceneBase::_RootUpdateMain() noexcept
 	// サブシーンの更新
 	if (m_pSubScene)
 		m_pSubScene->_RootUpdateMain();
+
+	// 破棄されたオブジェクトの削除
+	for (auto &name : m_DeadItems)
+	{
+		m_Items.remove(name);
+	}
+	m_DeadItems.clear();
 }
 
 void SceneBase::_RootUpdateLate() noexcept
@@ -195,4 +208,11 @@ void SceneBase::_RootUpdateLate() noexcept
 	// サブシーンの遅延更新
 	if (m_pSubScene)
 		m_pSubScene->_RootUpdateLate();
+
+	// 破棄予定のオブジェクトを削除
+	for (auto &name : m_DeadItems)
+	{
+		m_Items.remove(name);
+	}
+	m_DeadItems.clear();
 }
