@@ -39,7 +39,18 @@ public:
 
 	void SetSpeed(_In_ const float &In_Speed) noexcept;
 
+	void SetStartPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_StartPos = In_Pos; }
+
+private:
+	
+	/// <summary>
+	/// 開始地点からの距離が一定以上になったら自動で消滅させる
+	/// </summary>
+	/// <returns>自動消滅させたらtrueを返す</returns>
+	bool IsAutoDestroy() noexcept;
+
 private:
 	float m_Speed;
+	DirectX::XMFLOAT3 m_StartPos;
 	Ease::DataDuration m_EaseData;
 };
