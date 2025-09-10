@@ -54,6 +54,9 @@ public:
 	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
 	T *AddChildObject(_In_ const std::string &In_Name);
 
+	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
+	T *AddChildObject(_In_ const std::string &In_Name, Args&&... args);
+
 	template<>
 	GameObject *AddChildObject(_In_ const std::string &In_Name);
 
@@ -230,6 +233,36 @@ inline T *GameObject::AddChildObject(const std::string &In_Name)
 	ptr->m_ParentPos = m_Pos; // 親の座標を設定
 	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
 	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
+	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
+	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
+	return ptr;
+}
+
+template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+inline T *GameObject::AddChildObject(const std::string &In_Name, Args && ...args)
+{
+#ifdef _DEBUG
+	// デバッグ中のみ、名称ダブりがないかチェック
+	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
+	if (itr != m_ChildObjects.end())
+	{
+		std::string buf = "Failed to create object." + In_Name;
+		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+		return nullptr;
+	}
+
+	// ヒエラルキーに追加
+	//hierarchy->AddListItem(name);
+
+#endif // _DEBUG
+
+	// オブジェクト生成
+	T *ptr = new T(args...);
+	reinterpret_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	ptr->m_ParentPos = m_Pos; // 親の座標を設定
+	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
+	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
+	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
@@ -255,6 +288,7 @@ inline GameObject *GameObject::AddChildObject(const std::string &In_Name)
 	ptr->m_ParentPos = m_Pos; // 親の座標を設定
 	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
 	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
+	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
