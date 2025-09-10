@@ -70,7 +70,11 @@ void SpriteManager::Update() noexcept
 	if (m_pCamera == nullptr || m_pCameraObj == nullptr)
 		return;
 
-	UpdateViewAndProjection();
+	UpdateViewAndProjection(); // カメラのビュー行列と射影行列を更新
+
+	// ウィンドウが開いていなければ処理しない
+	if (!m_bIsOpen)
+		return;
 
 	SpriteController();
 }
