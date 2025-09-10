@@ -19,7 +19,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
 	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
 	, m_ChildPos{ 0.0f, 0.0f, 0.0f }, m_ChildRotation{ 0.0f, 0.0f, 0.0f }, m_ChildQuat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_ChildScale{ 0.0f, 0.0f, 0.0f }
-	, m_pScene(nullptr)
+	, m_pScene(nullptr), m_IsDestroySelf(false)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
@@ -139,6 +139,10 @@ void GameObject::ExecuteUpdate() noexcept
 
 	// 角度データの同期
 	AngleSynchronization();
+
+	// 自身の破棄
+	if (m_IsDestroySelf)
+		_destroySelf();
 }
 
 void GameObject::ExecuteLateUpdate() noexcept
@@ -163,6 +167,10 @@ void GameObject::ExecuteLateUpdate() noexcept
 
 	// 角度データの同期
 	AngleSynchronization();
+
+	// 自身の破棄
+	if (m_IsDestroySelf)
+		_destroySelf();
 }
 
 void GameObject::ExecuteDraw() noexcept
@@ -198,10 +206,7 @@ void GameObject::DestroyAllChildObjects() noexcept
 
 void GameObject::DestroySelf() noexcept
 {
-	DestroyAllChildObjects(); // まず子オブジェクトを削除
-
-	if (m_pScene)
-		m_pScene->DestroyObj(m_Name); // シーンから自身を削除
+	m_IsDestroySelf = true;
 }
 
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
@@ -383,4 +388,12 @@ void GameObject::UpdateChildTransform()
 		// 拡縮
 		m_Scale = m_ParentScale * m_ChildScale;
 	}
+}
+
+void GameObject::_destroySelf() noexcept
+{
+	DestroyAllChildObjects(); // まず子オブジェクトを削除
+
+	if (m_pScene)
+		m_pScene->DestroyObj(m_Name); // シーンから自身を削除
 }
