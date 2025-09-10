@@ -175,6 +175,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\App\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\App\Scene\SceneTitle.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -327,6 +331,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneGame.hpp" />
+    <ClInclude Include="Source\App\Scene\SceneTitle.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\Defines.hpp">
       <SubType>
       </SubType>
