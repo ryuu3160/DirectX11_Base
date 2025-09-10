@@ -20,6 +20,8 @@ namespace
 	const inline constexpr float cx_ThirdPerson_UpDistanceRate = 3.0f;
 	const inline constexpr float cx_FirstPerson_Distance = 2.5f;
 	const inline constexpr float cx_FirstPerson_UpDistance = 1.7f;
+
+	const inline constexpr char cx_ChangeCameraKey = 'J'; // ƒJƒƒ‰Ø‚è‘Ö‚¦ƒL[
 }
 
 /// <summary>

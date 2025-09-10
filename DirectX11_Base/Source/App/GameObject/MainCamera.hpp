@@ -43,13 +43,18 @@ public:
 
 	void Update() override final;
 
+	void LateUpdate() override final;
+
 	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
 
 private:
 	// 3人称視点カメラの更新
 	void UpdateThirdPerson() noexcept;
+	// 1人称視点カメラの更新
+	void UpdateFirstPerson() noexcept;
 
 private:
 	Player *m_pPlayer;
 	Camera *m_pComponent;
+	int m_CameraMode;
 };

@@ -25,10 +25,25 @@ MainCamera::~MainCamera()
 
 void MainCamera::Update()
 {
+	if (Input::IsKeyTrigger(cx_ChangeCameraKey))
+	{
+		m_CameraMode = (m_CameraMode + 1) % 2;
+	}
+}
+
+void MainCamera::LateUpdate()
+{
 	if (m_pPlayer)
 	{
-		// 3人称視点カメラ
-		UpdateThirdPerson();
+		switch (m_CameraMode)
+		{
+		case 0:
+			UpdateThirdPerson();
+			break;
+		case 1:
+			UpdateFirstPerson();
+			break;
+		}
 	}
 }
 
@@ -50,4 +65,18 @@ void MainCamera::UpdateThirdPerson() noexcept
 
 	// カメラの位置調整
 	m_Pos = (PlayerPosition - PlayerForward * cx_ThirdPerson_Distance) + PlayerUp * cx_ThirdPerson_UpDistanceRate;
+}
+
+void MainCamera::UpdateFirstPerson() noexcept
+{
+	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPos();		// プレイヤーオブジェクトの位置を取得
+	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
+	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
+	m_Quat = m_pPlayer->GetQuat(); // プレイヤーの回転と同期
+
+	// 焦点距離を設定
+	m_pComponent->SetFocus(cx_FirstPerson_Distance);
+
+	// カメラの位置調整
+	m_Pos = (PlayerPosition + PlayerForward * cx_FirstPerson_Distance) + PlayerUp * cx_FirstPerson_UpDistance;
 }

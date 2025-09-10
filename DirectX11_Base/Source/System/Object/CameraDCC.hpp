@@ -60,6 +60,7 @@ private:
 
 private:
 	int m_nState;
+	int m_CameraMode;
 	POINT m_OldPos;
 	Camera *m_pComponent;
 	Player *m_pPlayer;

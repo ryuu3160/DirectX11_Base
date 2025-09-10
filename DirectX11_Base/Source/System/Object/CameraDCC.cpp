@@ -27,6 +27,7 @@ CameraDCC::CameraDCC()
 	, m_pComponent(AddComponent<Camera>())
 	, m_pPlayer(nullptr)
 	, m_bIsFreeCamera(false)
+	, m_CameraMode(0)
 {
 #ifdef _DEBUG
 	sprintf_s(m_cMode, "None");
@@ -44,6 +45,11 @@ void CameraDCC::Update()
 	{
 		m_bIsFreeCamera = !m_bIsFreeCamera;
 		m_pComponent->SetIsLockZ(m_bIsFreeCamera);
+	}
+
+	if (Input::IsKeyTrigger(cx_ChangeCameraKey))
+	{
+		m_CameraMode = (m_CameraMode + 1) % 2;
 	}
 
 	if (m_pPlayer && !m_bIsFreeCamera)
@@ -100,8 +106,15 @@ void CameraDCC::LateUpdate()
 {
 	if (m_pPlayer && !m_bIsFreeCamera)
 	{
-		UpdateThirdPerson();
-		//UpdateFirstPerson();
+		switch (m_CameraMode)
+		{
+		case 0:
+			UpdateThirdPerson();
+			break;
+		case 1:
+			UpdateFirstPerson();
+			break;
+		}
 	}
 }
 
