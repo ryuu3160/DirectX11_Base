@@ -11,6 +11,11 @@
 // ==============================
 #include "SceneBase.hpp"
 
+// ==============================
+//	前方宣言
+// ==============================
+class RenderManager;
+
 /// <summary>
 /// SceneManagerクラス
 /// </summary>
@@ -32,10 +37,31 @@ public:
 	std::shared_ptr<T> Init(_In_ Args&&... In_Args) noexcept;
 
 	/// <summary>
+	/// シーンのアップデート
+	/// </summary>
+	void RootUpdate() noexcept;
+
+	/// <summary>
+	/// シーンの描画
+	/// </summary>
+	void RootDraw() noexcept;
+
+	/// <summary>
 	/// <para>シーンの切り替えを行うアップデート</para>
 	/// <para>すべてのアップデートが終わった後に呼び出してください。</para>
 	/// </summary>
-	void Update() noexcept;
+	void UpdateSceneChange() noexcept;
+
+	/// <summary>
+	/// 指定された型のサブシーンを削除します。
+	/// </summary>
+	/// <param name="[In_Type]">削除するサブシーンの型情報を表す std::type_index への参照(typeidで取得)</param>
+	void RemoveSubScene(_In_ const std::type_index &In_Type) noexcept;
+
+	/// <summary>
+	/// すべてのサブシーンを削除します。
+	/// </summary>
+	void RemoveAllSubScene() noexcept;
 
 	/// <summary>
 	/// 現在のシーンを取得します。
@@ -50,10 +76,10 @@ public:
 	void LoadSceneAsync(_In_ Args&&... In_Args) noexcept;
 
 	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type * = nullptr>
-	void LoadSubScene(_In_ std::string In_SceneName,_In_ Args&&... In_Args) noexcept;
+	void LoadSubScene(_In_ Args&&... In_Args) noexcept;
 
 	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type * = nullptr>
-	void LoadSubSceneAsync(_In_ std::string In_SceneName, _In_ Args&&... In_Args) noexcept;
+	void LoadSubSceneAsync(_In_ Args&&... In_Args) noexcept;
 
 private:
 
@@ -62,14 +88,20 @@ private:
 	/// </summary>
 	void UnLoadCurrentScene() noexcept;
 
+	void _RootUpdateMain() noexcept;
+	void _RootUpdateLate() noexcept;
+
 private:
 
 	std::shared_ptr<SceneBase> m_pCurrentScene; // 現在のシーン
 	std::shared_ptr<SceneBase> m_pNextScene;    // 次にロードするシーン
 
-	std::unordered_map<std::string,std::shared_ptr<SceneBase>> m_NextSubScene; // 次にロードするサブシーン
+	std::vector<std::pair<std::type_index, std::shared_ptr<SceneBase>>> m_SubScene;		// 現在のサブシーン
+	std::vector<std::pair<std::type_index, std::shared_ptr<SceneBase>>> m_NextSubScene; // 次にロードするサブシーン
 
 	std::vector<std::future<void>> m_Futures; // 非同期ロード用のfuture
+
+	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
 };
 
 /// <summary>
@@ -142,40 +174,45 @@ inline void SceneManager::LoadSceneAsync(Args && ...In_Args) noexcept
 }
 
 template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type *>
-inline void SceneManager::LoadSubScene(_In_ std::string In_SceneName, Args && ...In_Args) noexcept
+inline void SceneManager::LoadSubScene(Args && ...In_Args) noexcept
 {
+	// サブシーンを作成
 	std::shared_ptr<T> newSubScene = std::make_shared<T>(In_Args...);
 	newSubScene->Init();
-	auto itr = m_NextSubScene.find(In_SceneName);
-	if (itr != m_NextSubScene.end())
+
+	// 既に同じ型のサブシーンがロードされている場合は追加しない
+	for (auto &itr : m_NextSubScene)
 	{
-		itr->second->Uninit();
-		itr->second.reset();
-		itr->second = newSubScene;
+		if (itr.first == typeid(T))
+		{
+			return;
+		}
 	}
-	else
-	{
-		m_NextSubScene.insert({ In_SceneName,newSubScene });
-	}
+
+	// 見つからなかった場合は追加
+	m_NextSubScene.push_back({ typeid(T),newSubScene });
 }
 
 template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type *>
-inline void SceneManager::LoadSubSceneAsync(_In_ std::string In_SceneName, Args && ...In_Args) noexcept
+inline void SceneManager::LoadSubSceneAsync(Args && ...In_Args) noexcept
 {
-	std::future<void> future = std::async(std::launch::async, [this, In_SceneName, In_Args...]() {
-		std::shared_ptr<SceneBase> newSubScene = std::make_shared<T>(In_Args...);
+	// サブシーン作成の非同期処理
+	std::future<void> future = std::async(std::launch::async, [this, In_Args...]() {
+		// サブシーンを作成
+		std::shared_ptr<T> newSubScene = std::make_shared<T>(In_Args...);
 		newSubScene->Init();
-		auto itr = m_NextSubScene.find(In_SceneName);
-		if (itr != m_NextSubScene.end())
+
+		// 既に同じ型のサブシーンがロードされている場合は追加しない
+		for(auto &itr : m_NextSubScene)
 		{
-			itr->second->Uninit();
-			itr->second.reset();
-			itr->second = newSubScene;
+			if (itr.first == typeid(T))
+			{
+				return;
+			}
 		}
-		else
-		{
-			m_NextSubScene.insert({ In_SceneName,newSubScene });
-		}
+
+		// 見つからなかった場合は追加
+		m_NextSubScene.push_back({ typeid(T),newSubScene });
 		});
 	m_Futures.push_back(future);
 }

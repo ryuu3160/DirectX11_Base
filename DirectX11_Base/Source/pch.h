@@ -32,6 +32,7 @@ using Microsoft::WRL::ComPtr;
 #include <cstring>
 #include <iostream>
 #include <iomanip>
+#include <typeindex>
 #include <memory>
 #include <algorithm>
 #include <functional>

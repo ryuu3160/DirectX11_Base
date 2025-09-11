@@ -90,7 +90,7 @@ void Main::Uninit()
 void Main::Update()
 {
 	Input::Update();
-	g_pScene->RootUpdate();
+	SceneManager::GetInstance().RootUpdate();
 	SpriteManager::GetInstance().Update();
 
 	// Inputの更新終了処理
@@ -108,7 +108,7 @@ void Main::Draw()
 	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
-	g_pScene->RootDraw();
+	SceneManager::GetInstance().RootDraw();
 
 	// スプライトマネージャーの3D描画
 	SpriteManager::GetInstance().Draw3D();

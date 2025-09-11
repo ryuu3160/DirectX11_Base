@@ -15,11 +15,6 @@
 #include "DirectX11/System/SpriteRenderer.hpp"
 
 // ==============================
-//  前方宣言
-// ==============================
-class RenderManager;
-
-// ==============================
 //  undefine
 // ==============================
 #undef GetObject
@@ -63,32 +58,6 @@ public:
 	/// <param name="[In_Name]">シーンの名前を表す文字列。</param>
 	SceneBase(_In_ const std::string &In_Name) noexcept;
 	virtual ~SceneBase();
-
-	/// <summary>
-	/// 大本のシーンの更新と描画を行います。
-	/// </summary>
-	void RootUpdate() noexcept;
-	void RootDraw() noexcept;
-
-	// サブシーン操作
-
-	/// <summary>
-	/// サブシーンを追加し、そのポインタを返します。
-	/// </summary>
-	/// <typeparam name="[T]">追加するサブシーンの型。デフォルトは SceneBase です。</typeparam>
-	/// <returns>追加されたサブシーンのポインタ。</returns>
-	template <class T = SceneBase>
-	T* AddSubScene() noexcept;
-	/// <summary>
-	/// サブシーンを削除します。
-	/// </summary>
-	void RemoveSubScene() noexcept;
-
-	/// <summary>
-	/// サブシーンへのポインタを取得します。
-	/// </summary>
-	/// <returns>サブシーンを指す SceneBase 型のポインタ。</returns>
-	std::shared_ptr<SceneBase> GetSubScene() noexcept { return m_pSubScene; }
 
 	// オブジェクト操作
 
@@ -154,6 +123,7 @@ protected:
 	void Setup(_In_ const int &In_ModelNum) noexcept;
 
 private:
+
 	/// <summary>
 	/// ルートのメイン更新処理を実行します。
 	/// </summary>
@@ -163,34 +133,19 @@ private:
 	/// </summary>
 	void _RootUpdateLate() noexcept;
 
+	/// <summary>
+	/// シーンの描画を行います。
+	/// </summary>
+	void _RootDraw() noexcept;
+
 private:
 	static Objects m_Objects;
 	std::string m_Name;
 
-	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
-
 protected:
-	SceneBase *m_pParent;		// 親シーン
-	std::shared_ptr<SceneBase> m_pSubScene;		// サブシーンへのポインタ
 	Items m_Items;
 	Items m_DeadItems; // 破棄するオブジェクトの名前リスト
 };
-
-/// <summary>
-/// サブシーンの追加
-/// </summary>
-/// <typeparam name="[T]">サブシーンの型</typeparam>
-/// <returns>生成したサブシーン</returns>
-template<class T>
-T *SceneBase::AddSubScene() noexcept
-{
-	RemoveSubScene();
-	T *pScene = new T;
-	m_pSubScene = pScene;
-	pScene->m_pParent = this;
-	pScene->Init();
-	return pScene;
-}
 
 /// <summary>
 /// オブジェクトの生成
