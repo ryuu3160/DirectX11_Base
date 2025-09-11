@@ -10,6 +10,7 @@
 // ==============================
 #include "SceneBase.hpp"
 #include "System/Object/GameObject.hpp"
+#include "System/Scene/SceneManager.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
@@ -18,6 +19,7 @@ SceneBase::Objects SceneBase::m_Objects;
 
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
+	, m_SceneManager(SceneManager::GetInstance())
 {
 }
 
