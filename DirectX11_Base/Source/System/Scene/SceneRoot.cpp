@@ -107,8 +107,8 @@ void SceneRoot::Init()
 	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
 	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	InstancedMesh::AlignInstanceData instanceData;
-	instanceData.CountX = 1000;
-	instanceData.CountZ = 1000;
+	instanceData.CountX = 200;
+	instanceData.CountZ = 200;
 	instanceData.CountY = 1;
 	instanceData.StartPos = pInstanced->GetPos();
 	instanceData.Scale = pInstanced->GetScale();

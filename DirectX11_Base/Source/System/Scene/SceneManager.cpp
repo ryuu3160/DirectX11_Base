@@ -20,11 +20,18 @@ SceneManager::~SceneManager()
 
 void SceneManager::Update() noexcept
 {
-	if (m_Future.valid())
+	if (!m_Futures.empty())
 	{
-		// 非同期ロードが完了している場合はロード
-		m_Future.get();
-		m_Future = std::future<void>();// futureを無効化
+		for (auto &itr : m_Futures)
+		{
+			if (itr.valid())
+			{
+				// 非同期ロードが完了している場合はロード
+				itr.get();
+				itr = std::future<void>();// futureを無効化
+			}
+		}
+		m_Futures.clear();
 	}
 
 	if (m_pNextScene && m_pCurrentScene)
@@ -34,8 +41,27 @@ void SceneManager::Update() noexcept
 		m_pNextScene.reset();
 		m_pNextScene = nullptr;
 	}
+
+	if (!m_NextSubScene.empty())
+	{
+		for (auto &itr : m_NextSubScene)
+		{
+			if (m_pCurrentScene->m_Name == itr.first)
+			{
+				m_pCurrentScene->RemoveSubScene();
+				m_pCurrentScene->m_pSubScene = itr.second;
+				itr.second->m_pParent = m_pCurrentScene.get();
+			}
+		}
+	}
 }
 
 void SceneManager::UnLoadCurrentScene() noexcept
 {
+	if (m_pCurrentScene)
+	{
+		m_pCurrentScene->Uninit();
+		m_pCurrentScene.reset();
+		m_pCurrentScene = nullptr;
+	}
 }

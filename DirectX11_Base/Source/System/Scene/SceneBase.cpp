@@ -110,7 +110,7 @@ void SceneBase::RemoveSubScene() noexcept
 	// 直下のサブシーンを削除
 	m_pSubScene->Uninit();
 
-	delete m_pSubScene;
+	m_pSubScene.reset();
 	m_pSubScene = nullptr;
 }
 

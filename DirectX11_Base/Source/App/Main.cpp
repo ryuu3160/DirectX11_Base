@@ -61,8 +61,7 @@ HRESULT Main::Init()
 
 	// シーンの初期化
 	SceneBase::Initialize();
-	g_pScene = std::make_shared<SceneRoot>();
-	g_pScene->Init();
+	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
 	// 初期リソース作成
 	auto rtv = g_pScene->CreateObject<RenderTarget>("RTV");
@@ -82,8 +81,7 @@ HRESULT Main::Init()
 
 void Main::Uninit()
 {
-	g_pScene->Uninit();
-	g_pScene.reset();
+	g_pScene = nullptr;
 	
 	// 各種機能の終了処理
 	Input::Uninit();

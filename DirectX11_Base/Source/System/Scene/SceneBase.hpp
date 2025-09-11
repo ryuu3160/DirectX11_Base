@@ -51,6 +51,7 @@ public:
 class SceneBase
 {
 private:
+	friend class SceneManager; // シーンマネージャーをフレンドクラスに登録
 	using Objects = std::map<std::string, SceneObjectBase *>;
 	using Items = std::list<std::string>;
 public:
@@ -87,7 +88,7 @@ public:
 	/// サブシーンへのポインタを取得します。
 	/// </summary>
 	/// <returns>サブシーンを指す SceneBase 型のポインタ。</returns>
-	SceneBase *GetSubScene() noexcept { return m_pSubScene; }
+	std::shared_ptr<SceneBase> GetSubScene() noexcept { return m_pSubScene; }
 
 	// オブジェクト操作
 
@@ -170,7 +171,7 @@ private:
 
 protected:
 	SceneBase *m_pParent;		// 親シーン
-	SceneBase *m_pSubScene;		// サブシーンへのポインタ
+	std::shared_ptr<SceneBase> m_pSubScene;		// サブシーンへのポインタ
 	Items m_Items;
 	Items m_DeadItems; // 破棄するオブジェクトの名前リスト
 };

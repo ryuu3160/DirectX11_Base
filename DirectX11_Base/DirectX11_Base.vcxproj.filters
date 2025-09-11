@@ -259,6 +259,9 @@
     <ClCompile Include="Source\System\Sound\SoundManager.cpp">
       <Filter>Source\System\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\Scene\SceneManager.cpp">
+      <Filter>Source\System\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -443,6 +446,9 @@
     </ClInclude>
     <ClInclude Include="Source\System\Sound\SoundManager.hpp">
       <Filter>Source\System\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Scene\SceneManager.hpp">
+      <Filter>Source\System\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
