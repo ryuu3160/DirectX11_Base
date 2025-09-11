@@ -67,7 +67,7 @@ HRESULT Main::Init()
 	SceneBase::Initialize();
 	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
-	g_pScene->AddSubScene<SceneTitle>();
+	SceneManager::GetInstance().LoadSubSceneAsync<SceneTitle>();
 
 	// ‰ŠúƒŠƒ\[ƒXì¬
 	auto rtv = g_pScene->CreateObject<RenderTarget>("RTV");
