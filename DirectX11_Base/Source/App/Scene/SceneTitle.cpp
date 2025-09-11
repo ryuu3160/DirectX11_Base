@@ -32,16 +32,16 @@ void SceneTitle::Init()
 	pCamera->SetRotation({ 0.0f,0.0f,0.0f });
 
 	SpriteManager::GetInstance().CreateScene("Title");
+	//SpriteManager::GetInstance().ChangeScene(0);
 }
 
 void SceneTitle::Uninit()
 {
-	SpriteManager::GetInstance().DeleteAll();
 }
 
 void SceneTitle::Update()
 {
-	if (Input::IsKeyTrigger(VK_SPACE))
+	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
 		m_SceneManager.RemoveSubScene<SceneTitle>();
 		m_SceneManager.LoadSubSceneAsync<SceneGame>();
