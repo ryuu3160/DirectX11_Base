@@ -43,9 +43,8 @@ void SceneTitle::Update()
 {
 	if (Input::IsKeyTrigger(VK_SPACE))
 	{
-		SceneManager::GetInstance().RemoveSubScene<SceneTitle>();
-		SceneManager::GetInstance().LoadSubSceneAsync<SceneGame>();
-		//Main::GetScene().AddSubScene<SceneGame>();
+		m_SceneManager.RemoveSubScene<SceneTitle>();
+		m_SceneManager.LoadSubSceneAsync<SceneGame>();
 	}
 }
 
