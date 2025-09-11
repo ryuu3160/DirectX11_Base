@@ -10,7 +10,6 @@
 // ==============================
 #include "SceneBase.hpp"
 #include "System/Object/GameObject.hpp"
-#include "DirectX11/System/RenderManager.hpp"
 
 // ==============================
 //  前方宣言
@@ -18,18 +17,12 @@
 SceneBase::Objects SceneBase::m_Objects;
 
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
-	: m_pParent(nullptr)
-	, m_pSubScene(nullptr)
-	, m_Name(In_Name)
-	, m_RenderManager(RenderManager::GetInstance())
+	: m_Name(In_Name)
 {
 }
 
 SceneBase::~SceneBase()
 {
-	// サブシーンを削除
-	RemoveSubScene();
-
 	// 削除
 	for (auto &itr : m_Items)
 	{
@@ -42,10 +35,6 @@ SceneBase::~SceneBase()
 	}
 	m_DeadItems.clear();
 	m_Items.clear();
-
-	// 親の参照を削除
-	if (m_pParent)
-		m_pParent->m_pSubScene = nullptr;
 }
 
 void SceneBase::Initialize() noexcept
@@ -69,50 +58,20 @@ void SceneBase::Initialize() noexcept
 #endif
 }
 
-void SceneBase::RootUpdate() noexcept
-{
-	_RootUpdateMain();
-	_RootUpdateLate();
-}
-
-void SceneBase::RootDraw() noexcept
-{
-	// シーンが所持しているオブジェクトの描画
-	for (auto &itr : m_Items)
-	{
-		auto objIt = m_Objects.find(itr);
-		// 型チェック
-		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
-		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
-			obj->ExecuteDraw();
-		}
-	}
-
-	// シーン自体の描画
-	Draw();
-	// サブシーンの描画
-	if (m_pSubScene)
-		m_pSubScene->RootDraw();
-
-	// 全ての描画
-	m_RenderManager.DrawAll();
-}
-
-void SceneBase::RemoveSubScene() noexcept
-{
-	// 削除するサブシーンが存在するか
-	if (!m_pSubScene) return;
-
-	// 階層内のサブシーンを優先して削除
-	m_pSubScene->RemoveSubScene();
-
-	// 直下のサブシーンを削除
-	m_pSubScene->Uninit();
-
-	delete m_pSubScene;
-	m_pSubScene = nullptr;
-}
+//void SceneBase::RemoveSubScene() noexcept
+//{
+//	// 削除するサブシーンが存在するか
+//	if (!m_pSubScene) return;
+//
+//	// 階層内のサブシーンを優先して削除
+//	m_pSubScene->RemoveSubScene();
+//
+//	// 直下のサブシーンを削除
+//	m_pSubScene->Uninit();
+//
+//	m_pSubScene.reset();
+//	m_pSubScene = nullptr;
+//}
 
 template<> GameObject
 *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
@@ -176,10 +135,6 @@ void SceneBase::_RootUpdateMain() noexcept
 	// シーン自体の更新(クリア判定など
 	Update();
 
-	// サブシーンの更新
-	if (m_pSubScene)
-		m_pSubScene->_RootUpdateMain();
-
 	// 破棄されたオブジェクトの削除
 	for (auto &name : m_DeadItems)
 	{
@@ -205,14 +160,28 @@ void SceneBase::_RootUpdateLate() noexcept
 	// シーン自体の遅延更新
 	LateUpdate();
 
-	// サブシーンの遅延更新
-	if (m_pSubScene)
-		m_pSubScene->_RootUpdateLate();
-
 	// 破棄予定のオブジェクトを削除
 	for (auto &name : m_DeadItems)
 	{
 		m_Items.remove(name);
 	}
 	m_DeadItems.clear();
+}
+
+void SceneBase::_RootDraw() noexcept
+{
+	// シーンが所持しているオブジェクトの描画
+	for (auto &itr : m_Items)
+	{
+		auto objIt = m_Objects.find(itr);
+		// 型チェック
+		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
+		{
+			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
+			obj->ExecuteDraw();
+		}
+	}
+
+	// シーン自体の描画
+	Draw();
 }

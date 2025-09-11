@@ -1,0 +1,182 @@
+/*+===================================================================
+	File: SceneManager.cpp
+	Summary: （このファイルで何をするか記載する）
+	Author: AT13C192 01 青木雄一郎
+	Date: 2025/9/11 Thu AM 05:31:17 初回作成
+===================================================================+*/
+
+// ==============================
+//	include
+// ==============================
+#include "SceneManager.hpp"
+#include "DirectX11/System/RenderManager.hpp"
+
+SceneManager::SceneManager() : m_RenderManager(RenderManager::GetInstance())
+{
+	m_pCurrentScene = nullptr;
+	m_pNextScene = nullptr;
+	m_SubScene.clear();
+	m_NextSubScene.clear();
+	m_Futures.clear();
+}
+
+SceneManager::~SceneManager()
+{
+	UnLoadCurrentScene();
+	m_pNextScene.reset();
+	m_pNextScene = nullptr;
+	for (auto &itr : m_NextSubScene)
+	{
+		itr.second.reset();
+		itr.second = nullptr;
+	}
+	m_NextSubScene.clear();
+	for (auto &itr : m_Futures)
+	{
+		if (itr.valid())
+			itr.get();
+	}
+	m_Futures.clear();
+}
+
+void SceneManager::RootUpdate() noexcept
+{
+	_RootUpdateMain();
+	_RootUpdateLate();
+}
+
+void SceneManager::RootDraw() noexcept
+{
+	if (m_pCurrentScene)
+		m_pCurrentScene->_RootDraw();
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_RootDraw();
+	}
+
+	// 全ての描画
+	m_RenderManager.DrawAll();
+}
+
+void SceneManager::UpdateSceneChange() noexcept
+{
+	// シーンの読み込みが無い場合は何もしない
+	if(!m_Futures.empty() && !m_pNextScene && m_NextSubScene.empty())
+		return;
+
+	// 非同期ロード
+	for (auto &itr : m_Futures)
+	{
+		if (itr.valid())
+		{
+			// 非同期ロードが完了している場合はロード
+			itr.get();
+			itr = std::future<void>();// futureを無効化
+		}
+	}
+	m_Futures.clear();
+
+	// シーンの切り替え
+	if (m_pNextScene && m_pCurrentScene)
+	{
+		UnLoadCurrentScene();
+		m_pCurrentScene.swap(m_pNextScene);
+		m_pNextScene.reset();
+		m_pNextScene = nullptr;
+	}
+
+	// サブシーンの切り替え&追加
+	for (auto &itr : m_NextSubScene)
+	{
+		for (auto &cur : m_SubScene)
+		{
+			// 同じ型のサブシーンがある場合は置き換え
+			if (cur.first == itr.first)
+			{
+				cur.second->Uninit();
+				cur.second.reset();
+				cur.second = itr.second;
+				continue;
+			}
+
+			// 見つからなかった場合は追加
+			m_SubScene.push_back({ itr.first,itr.second });
+			itr.second.reset();
+			itr.second = nullptr;
+		}
+	}
+	m_NextSubScene.clear();
+}
+
+void SceneManager::RemoveSubScene(_In_ const std::type_index &In_Type) noexcept
+{
+	for (auto itr = m_SubScene.begin(); itr != m_SubScene.end(); ++itr)
+	{
+		if (itr->first == In_Type)
+		{
+			if (itr->second)
+			{
+				itr->second->Uninit();
+				itr->second.reset();
+				itr->second = nullptr;
+			}
+			m_SubScene.erase(itr);
+			return;
+		}
+	}
+}
+
+void SceneManager::RemoveAllSubScene() noexcept
+{
+	for(auto &itr : m_SubScene)
+	{
+		if (itr.second)
+		{
+			itr.second->Uninit();
+			itr.second.reset();
+			itr.second = nullptr;
+		}
+	}
+	m_SubScene.clear();
+}
+
+void SceneManager::UnLoadCurrentScene() noexcept
+{
+	// 先にサブシーンを解放
+	RemoveAllSubScene();
+
+	// メインシーンを解放
+	if (m_pCurrentScene)
+	{
+		m_pCurrentScene->Uninit();
+		m_pCurrentScene.reset();
+		m_pCurrentScene = nullptr;
+	}
+}
+
+void SceneManager::_RootUpdateMain() noexcept
+{
+	// メインシーンの更新
+	if (m_pCurrentScene)
+		m_pCurrentScene->_RootUpdateMain();
+	// サブシーンの更新
+	for (auto &itr : m_SubScene)
+	{
+		if(itr.second)
+			itr.second->_RootUpdateMain();
+	}
+}
+
+void SceneManager::_RootUpdateLate() noexcept
+{
+	// メインシーンの更新
+	if (m_pCurrentScene)
+		m_pCurrentScene->_RootUpdateLate();
+	// サブシーンの更新
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_RootUpdateLate();
+	}
+}

@@ -65,8 +65,7 @@ HRESULT Main::Init()
 
 	// シーンの初期化
 	SceneBase::Initialize();
-	g_pScene = std::make_shared<SceneRoot>();
-	g_pScene->Init();
+	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
 	g_pScene->AddSubScene<SceneTitle>();
 
@@ -88,8 +87,7 @@ HRESULT Main::Init()
 
 void Main::Uninit()
 {
-	g_pScene->Uninit();
-	g_pScene.reset();
+	g_pScene = nullptr;
 	
 	// 各種機能の終了処理
 	Input::Uninit();
@@ -98,7 +96,7 @@ void Main::Uninit()
 void Main::Update()
 {
 	Input::Update();
-	g_pScene->RootUpdate();
+	SceneManager::GetInstance().RootUpdate();
 	SpriteManager::GetInstance().Update();
 
 	// Inputの更新終了処理
@@ -116,7 +114,7 @@ void Main::Draw()
 	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
-	g_pScene->RootDraw();
+	SceneManager::GetInstance().RootDraw();
 
 	// スプライトマネージャーの3D描画
 	SpriteManager::GetInstance().Draw3D();
