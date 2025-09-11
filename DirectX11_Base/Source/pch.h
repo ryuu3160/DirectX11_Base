@@ -80,4 +80,5 @@ using Microsoft::WRL::ComPtr;
 #include "System/Component/Component.hpp"
 #include "System/Input/Input.hpp"
 #include "DirectX11/System/DX11_Math.hpp"
+#include "System/Scene/SceneManager.hpp"
 #include "System/Sound/SoundManager.hpp"

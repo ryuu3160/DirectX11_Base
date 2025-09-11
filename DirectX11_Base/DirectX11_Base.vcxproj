@@ -278,6 +278,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\Scene\SceneManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
       <SubType>
       </SubType>
@@ -419,6 +423,10 @@
     <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp" />
     <ClInclude Include="Source\System\Scene\SceneBase.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Scene\SceneManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>
