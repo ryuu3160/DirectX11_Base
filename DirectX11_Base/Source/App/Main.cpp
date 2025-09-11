@@ -95,12 +95,13 @@ void Main::Uninit()
 
 void Main::Update()
 {
+	auto &SceneM = SceneManager::GetInstance();
 	Input::Update();
-	SceneManager::GetInstance().RootUpdate();
+	SceneM.RootUpdate();
 	SpriteManager::GetInstance().Update();
 
 	// シーン切り替えの更新
-	SceneManager::GetInstance().UpdateSceneChange();
+	SceneM.UpdateSceneChange();
 
 	// Inputの更新終了処理
 	Input::EndUpdate();

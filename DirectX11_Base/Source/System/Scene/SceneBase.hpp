@@ -19,6 +19,11 @@
 // ==============================
 #undef GetObject
 
+// ==============================
+//  前方宣言
+// ==============================
+class SceneManager;
+
 class SceneObjectBase
 {
 public:
@@ -145,6 +150,7 @@ private:
 protected:
 	Items m_Items;
 	Items m_DeadItems; // 破棄するオブジェクトの名前リスト
+	SceneManager &m_SceneManager;
 };
 
 /// <summary>
