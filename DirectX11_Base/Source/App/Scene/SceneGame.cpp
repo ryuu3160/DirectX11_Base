@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: SceneGame.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: ゲームシーン
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/8/25 Mon AM 03:57:10 初回作成
 ===================================================================+*/
@@ -17,11 +17,23 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "App/GameObject/Character/Player.hpp"
 #include "App/GameObject/Environment/SeaLevel.hpp"
+#include "App/Scene/SceneResult.hpp"
+
+// ===============================
+//  定数
+// ===============================
+namespace
+{
+	const inline constexpr float TIME_LIMIT = 60.0f; // 制限時間（秒）
+}
+
+SceneGame::SceneGame()
+	: SceneBase("Game"), m_FrameManager(FrameManager::GetInstance())
+{
+}
 
 void SceneGame::Init()
 {
-	// オブジェクトの作成
-
 	// カメラをメインシーンから取得
 #ifdef _DEBUG
 	CameraDCC *pCamera = Main::GetScene().GetObject<CameraDCC>("Camera");
@@ -44,9 +56,6 @@ void SceneGame::Init()
 	pSeaLevel->SetScale({ 100000.0f,1.0f,100000.0f });
 	pSeaLevel->SetPatternScale({ 5000.0f,5000.0f });
 	pSeaLevel->SetPos({ 0.0f,0.1f,0.0f });
-	//SeaLevel *pSeaLevelInstance = CreateObject<SeaLevel>("SeaLevelInstance", true);
-	/*pSeaLevelInstance->SetCamera(pCamera);
-	pSeaLevelInstance->SetPlayer(player);*/
 
 	// スカイドームを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
@@ -59,14 +68,30 @@ void SceneGame::Init()
 	missile->SetPos({ -2.0f,1.0f,0.0f });
 	missile->SetScale({ 0.007f,0.007f,0.007f });
 	player->SetPos({ 0.0f,1.0f,0.0f });
+	player->SetQuat({ 0.0f,0.0f,0.0f,1.0f });
+
+	// 制限時間のタイマー設定
+	m_FrameManager.AppendTimeCounter("GameTimer",true);
+
+	SpriteManager::GetInstance().CreateScene("Game");
+	SpriteManager::GetInstance().ChangeScene(1);
 }
 
 void SceneGame::Uninit()
 {
+	m_FrameManager.StopTimeCounter("GameTimer");
+	m_FrameManager.ResetTimeCounter("GameTimer");
 }
 
 void SceneGame::Update()
 {
+	m_FrameManager.UpdateTimeCounter("GameTimer");
+
+	if(m_FrameManager.GetTimeCountSecond("GameTimer") >= TIME_LIMIT)
+	{
+		SceneManager::GetInstance().RemoveSubScene<SceneGame>();
+		SceneManager::GetInstance().LoadSubSceneAsync<SceneResult>();
+	}
 }
 
 void SceneGame::Draw()

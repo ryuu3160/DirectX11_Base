@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: SceneGame.hpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: ゲームシーン
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/8/25 Mon AM 03:57:01 初回作成
 ===================================================================+*/
@@ -24,7 +24,7 @@ namespace
 class SceneGame : public SceneBase
 {
 public:
-	SceneGame() : SceneBase("Game") {}
+	SceneGame();
 	// シーンの初期化
 	void Init() override;
 	// シーンの解放
@@ -43,5 +43,5 @@ private:
 	DirectX::XMFLOAT3 m_CamLook{};
 	DirectX::XMFLOAT3 m_CamUp{};
 #endif
-
+	FrameManager &m_FrameManager;
 };

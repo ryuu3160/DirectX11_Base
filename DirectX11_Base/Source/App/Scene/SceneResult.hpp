@@ -1,8 +1,8 @@
 /*+===================================================================
-	File: SceneTitle.hpp
-	Summary: タイトルシーン
+	File: SceneResult.hpp
+	Summary: （このファイルで何をするか記載する）
 	Author: AT13C192 01 青木雄一郎
-	Date: 2025/9/11 Thu AM 02:24:51 初回作成
+	Date: 2025/9/12 Fri AM 07:12:17 初回作成
 ===================================================================+*/
 #pragma once
 
@@ -19,12 +19,12 @@ namespace
 }
 
 /// <summary>
-/// SceneTitleクラス
+/// SceneResultクラス
 /// </summary>
-class SceneTitle : public SceneBase
+class SceneResult : public SceneBase
 {
 public:
-	SceneTitle() : SceneBase("Title") {}
+	SceneResult() : SceneBase("Result") {}
 	// シーンの初期化
 	void Init() override;
 	// シーンの解放
@@ -35,7 +35,6 @@ public:
 	void Draw() override;
 private:
 
-	void ChangeScene();
 private:
 	int m_Index = 0;
 #ifdef _DEBUG
