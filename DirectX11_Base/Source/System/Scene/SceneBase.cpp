@@ -60,21 +60,6 @@ void SceneBase::Initialize() noexcept
 #endif
 }
 
-//void SceneBase::RemoveSubScene() noexcept
-//{
-//	// 削除するサブシーンが存在するか
-//	if (!m_pSubScene) return;
-//
-//	// 階層内のサブシーンを優先して削除
-//	m_pSubScene->RemoveSubScene();
-//
-//	// 直下のサブシーンを削除
-//	m_pSubScene->Uninit();
-//
-//	m_pSubScene.reset();
-//	m_pSubScene = nullptr;
-//}
-
 template<> GameObject
 *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 {
