@@ -34,6 +34,7 @@ using Microsoft::WRL::ComPtr;
 #include <iomanip>
 #include <typeindex>
 #include <memory>
+#include <xmemory>
 #include <algorithm>
 #include <functional>
 #include <any>

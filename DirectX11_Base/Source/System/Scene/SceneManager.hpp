@@ -189,7 +189,7 @@ inline void SceneManager::LoadSceneAsync(Args && ...In_Args) noexcept
 		}
 		m_NextSubScene.clear();
 		});
-	m_Futures.push_back(future);
+	m_Futures.push_back(std::move(future));
 }
 
 template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type *>
@@ -233,5 +233,5 @@ inline void SceneManager::LoadSubSceneAsync(Args && ...In_Args) noexcept
 		// Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í’Ç‰Á
 		m_NextSubScene.push_back({ typeid(T),newSubScene });
 		});
-	m_Futures.push_back(future);
+	m_Futures.push_back(std::move(future));
 }
