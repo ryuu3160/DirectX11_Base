@@ -52,11 +52,8 @@ public:
 	/// </summary>
 	void UpdateSceneChange() noexcept;
 
-	/// <summary>
-	/// 指定された型のサブシーンを削除します。
-	/// </summary>
-	/// <param name="[In_Type]">削除するサブシーンの型情報を表す std::type_index への参照(typeidで取得)</param>
-	void RemoveSubScene(_In_ const std::type_index &In_Type) noexcept;
+	template <typename T, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type * = nullptr>
+	void RemoveSubScene() noexcept;
 
 	/// <summary>
 	/// すべてのサブシーンを削除します。
@@ -91,6 +88,16 @@ private:
 	void _RootUpdateMain() noexcept;
 	void _RootUpdateLate() noexcept;
 
+	/// <summary>
+	/// 削除予約リストに追加されたサブシーンを削除します。
+	/// </summary>
+	void _RemoveSubScene() noexcept;
+
+	/// <summary>
+	/// サブシーンを変更し、追加します。
+	/// </summary>
+	void _ChangeAndAddSubScene() noexcept;
+
 private:
 
 	std::shared_ptr<SceneBase> m_pCurrentScene; // 現在のシーン
@@ -98,6 +105,7 @@ private:
 
 	std::vector<std::pair<std::type_index, std::shared_ptr<SceneBase>>> m_SubScene;		// 現在のサブシーン
 	std::vector<std::pair<std::type_index, std::shared_ptr<SceneBase>>> m_NextSubScene; // 次にロードするサブシーン
+	std::vector<std::type_index> m_RemoveSubScene; // 削除するサブシーンの型情報
 
 	std::vector<std::future<void>> m_Futures; // 非同期ロード用のfuture
 
@@ -119,6 +127,17 @@ inline std::shared_ptr<T> SceneManager::Init(_In_ Args&&... In_Args) noexcept
 	m_pCurrentScene = newScene;
 	m_pCurrentScene->Init();
 	return std::static_pointer_cast<T>(m_pCurrentScene);
+}
+
+/// <summary>
+/// SceneBaseを継承した型Tのサブシーンを削除予約リストに追加します。
+/// </summary>
+/// <typeparam name="T">SceneBaseを継承したサブシーンの型。</typeparam>
+template<typename T, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type *>
+inline void SceneManager::RemoveSubScene() noexcept
+{
+	// 削除予約リストに追加
+	m_RemoveSubScene.push_back(typeid(T));
 }
 
 /// <summary>
