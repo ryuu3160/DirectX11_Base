@@ -15,8 +15,9 @@ MainCamera::MainCamera()
 	: GameObject("MainCamera")
 	, m_pComponent(AddComponent<Camera>())
 	, m_pPlayer(nullptr)
+	, m_CameraMode(0)
 {
-
+	m_pComponent->SetIsLockZ(false);
 }
 
 MainCamera::~MainCamera()
