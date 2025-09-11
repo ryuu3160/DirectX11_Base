@@ -93,6 +93,9 @@ void Main::Update()
 	SceneManager::GetInstance().RootUpdate();
 	SpriteManager::GetInstance().Update();
 
+	// シーン切り替えの更新
+	SceneManager::GetInstance().UpdateSceneChange();
+
 	// Inputの更新終了処理
 	Input::EndUpdate();
 }
