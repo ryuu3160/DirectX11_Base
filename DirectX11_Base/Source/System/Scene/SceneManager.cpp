@@ -189,12 +189,11 @@ void SceneManager::_ChangeAndAddSubScene() noexcept
 				cur.second = itr.second;
 				continue;
 			}
-
-			// Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í’Ç‰Á
-			m_SubScene.push_back({ itr.first,itr.second });
-			itr.second.reset();
-			itr.second = nullptr;
 		}
+		// Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡‚Í’Ç‰Á
+		m_SubScene.push_back({ itr.first,itr.second });
+		itr.second.reset();
+		itr.second = nullptr;
 	}
 	m_NextSubScene.clear();
 }
