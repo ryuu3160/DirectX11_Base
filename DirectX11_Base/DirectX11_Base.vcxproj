@@ -247,6 +247,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\ImGui\imgui.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_impl_dx11.cpp" />
@@ -389,6 +393,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\FadeManager\FadeManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>

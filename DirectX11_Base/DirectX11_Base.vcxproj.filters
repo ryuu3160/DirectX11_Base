@@ -89,6 +89,9 @@
     <Filter Include="Source\System\Sound">
       <UniqueIdentifier>{14d532be-f130-4ce5-b08a-af5c3012c022}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\FadeManager">
+      <UniqueIdentifier>{f19bf3e2-fe69-421f-97d4-a704c3925f3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -261,6 +264,9 @@
     </ClCompile>
     <ClCompile Include="Source\System\Scene\SceneManager.cpp">
       <Filter>Source\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
+      <Filter>Source\System\FadeManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,6 +455,9 @@
     </ClInclude>
     <ClInclude Include="Source\System\Scene\SceneManager.hpp">
       <Filter>Source\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\FadeManager\FadeManager.hpp">
+      <Filter>Source\System\FadeManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
