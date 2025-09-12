@@ -1,3 +1,5 @@
-Title,
-Title,Assets\SpriteManager\Title.json
+Title
+Game,Assets\SpriteManager\Game.json
+Result,Assets\SpriteManager\Result.json
 RootScene,Assets\SpriteManager\RootScene.json
+Title,Assets\SpriteManager\Title.json

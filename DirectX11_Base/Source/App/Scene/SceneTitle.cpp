@@ -32,7 +32,7 @@ void SceneTitle::Init()
 	pCamera->SetRotation({ 0.0f,0.0f,0.0f });
 
 	SpriteManager::GetInstance().CreateScene("Title");
-	SpriteManager::GetInstance().ChangeScene(1);
+	SpriteManager::GetInstance().ChangeScene(3);
 }
 
 void SceneTitle::Uninit()
