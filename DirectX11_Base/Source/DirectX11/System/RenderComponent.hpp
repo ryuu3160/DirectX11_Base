@@ -27,6 +27,7 @@ enum RenderLayer : int
 {
 	RenderLayer_SkyBox = -100,	// スカイボックス
 	RenderLayer_Default = 0,	// 通常オブジェクト
+	RenderLayer_Fade = 100,	// フェード用オブジェクト
 };
 
 /// <summary>
