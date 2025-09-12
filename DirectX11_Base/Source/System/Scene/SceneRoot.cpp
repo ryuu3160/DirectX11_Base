@@ -50,7 +50,6 @@ void SceneRoot::Init()
 
 void SceneRoot::Uninit()
 {
-	SpriteManager::GetInstance().DeleteAll();
 }
 
 void SceneRoot::Update()
