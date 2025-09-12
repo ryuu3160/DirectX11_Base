@@ -23,14 +23,7 @@ class SceneManager : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
 	SceneManager();
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
 	~SceneManager();
 
 	template <typename T, typename ...Args, typename std::enable_if < std::is_base_of<SceneBase, T>::value>::type * = nullptr>

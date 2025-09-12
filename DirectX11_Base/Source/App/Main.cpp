@@ -131,6 +131,7 @@ void Main::Change2D_Draw() noexcept
 	// 2D描画の設定
 	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
 	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
+	Instance.SetDepthTest(DEPTH_DISABLE); // 深度テスト無効
 	Instance.SetRenderTargets(1, &pRTV, nullptr);
 }
 
@@ -141,6 +142,7 @@ void Main::Change3D_Draw() noexcept
 	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
 	auto pDSV = Main::GetScene().GetObject<DepthStencil>("DSV");
 	Instance.SetRenderTargets(1, &pRTV, pDSV);
+	Instance.SetDepthTest(DEPTH_ENABLE_WRITE_TEST); // 深度テスト有効
 }
 
 SceneBase &Main::GetScene() noexcept
