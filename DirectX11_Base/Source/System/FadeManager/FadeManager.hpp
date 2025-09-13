@@ -32,6 +32,7 @@ public:
 		bool IsAutoDelete;
 		bool IsStartFadeIn;
 		bool IsStartFadeOut;
+		bool IsFadeEnd;
 		Ease::EasingType EaseType;
 		FilePath TexturePath{};
 		FilePathHold PixelShaderName{};
@@ -88,6 +89,13 @@ public:
 	/// </summary>
 	/// <param name="[In_Name]">フェード名</param>
 	void DeleteFade(_In_ std::string_view In_Name) noexcept;
+
+	/// <summary>
+	/// 指定された名前のフェードが終了しているかどうかを確認します。
+	/// </summary>
+	/// <param name="[In_Name]">フェード名</param>
+	/// <returns>フェードが終了しているかの真偽値</returns>
+	bool IsFadeEnd(_In_ std::string_view In_Name) const noexcept;
 
 private:
 	FadeManager();
