@@ -58,6 +58,11 @@ public:
 	void Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f);
 
 	/// <summary>
+	/// 保存されているデータを使用し、2Dスプライトを生成する
+	/// </summary>
+	void Load() noexcept;
+
+	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
 	void Draw() noexcept override final;
@@ -106,7 +111,7 @@ public:
 	/// <param name="In_Offset">設定するDirectX::XMFLOAT2型のオフセット値。</param>
 	void SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept;
 	/// <summary>
-	/// 指定されたサイズでオブジェクトのサイズを設定します。
+	/// 指定されたサイズでオブジェクトのサイズを設定します。(単位はピクセル)
 	/// </summary>
 	/// <param name="In_Size">新しく設定するサイズを表す DirectX::XMFLOAT2 構造体への参照。</param>
 	void SetSize(_In_ const DirectX::XMFLOAT2 &In_Size) noexcept;
