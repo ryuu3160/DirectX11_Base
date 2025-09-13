@@ -221,7 +221,7 @@ private:
 	std::list<Sprite *> m_SpritePointerList[_MAX_RENDER_MODE]; // スプライトのポインタリスト
 	
 	// シーンセーブデータ
-	std::map<std::string, HoldFilePath> m_SceneSaveData;	// シーン名とパスのマップ
+	std::map<std::string, FilePathHold> m_SceneSaveData;	// シーン名とパスのマップ
 	std::string m_CurrentSceneName;							// 現在のシーン名
 	int m_CurrentSceneIndex;								// 現在のシーンのインデックス
 

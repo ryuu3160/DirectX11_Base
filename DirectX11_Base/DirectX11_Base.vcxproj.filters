@@ -89,6 +89,9 @@
     <Filter Include="Source\System\Sound">
       <UniqueIdentifier>{14d532be-f130-4ce5-b08a-af5c3012c022}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\FadeManager">
+      <UniqueIdentifier>{f19bf3e2-fe69-421f-97d4-a704c3925f3e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\App\GameObject">
       <UniqueIdentifier>{c4fc00b9-bce7-4ae6-9350-f89b0a2acfeb}</UniqueIdentifier>
     </Filter>
@@ -270,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="Source\System\Scene\SceneManager.cpp">
       <Filter>Source\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
+      <Filter>Source\System\FadeManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\App\Scene\SceneGame.cpp">
       <Filter>Source\App\Scene</Filter>
@@ -476,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="Source\System\Scene\SceneManager.hpp">
       <Filter>Source\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\FadeManager\FadeManager.hpp">
+      <Filter>Source\System\FadeManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneGame.hpp">
       <Filter>Source\App\Scene</Filter>

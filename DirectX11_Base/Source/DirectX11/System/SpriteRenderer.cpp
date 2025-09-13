@@ -105,6 +105,15 @@ void SpriteRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Sca
 	}
 }
 
+void SpriteRenderer::Load() noexcept
+{
+	// 既に読み込まれている場合は何もしない
+	if (m_bIsLoaded)
+		return;
+	this->Load(m_AssetPath, 1.0f); // デフォルトのスケール1.0fで読み込み
+	m_bIsLoaded = true; // 読み込み完了フラグを立てる
+}
+
 void SpriteRenderer::Draw() noexcept
 {
 	// 2D描画の準備
@@ -189,8 +198,8 @@ void SpriteRenderer::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept
 }
 void SpriteRenderer::SetSize(_In_ const DirectX::XMFLOAT2 &In_Size) noexcept
 {
-	m_SpriteData.param[0].z = In_Size.x;
-	m_SpriteData.param[0].w = In_Size.y;
+	m_SpriteData.param[0].z = In_Size.x / (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / 10.0f);
+	m_SpriteData.param[0].w = In_Size.y / (static_cast<float>(cx_nWINDOW_HEIGHT) / 2.0f / 5.6f);
 }
 
 void SpriteRenderer::SetUVPos(_In_ const DirectX::XMFLOAT2 &In_Pos) noexcept

@@ -11,7 +11,9 @@
 #include "SceneManager.hpp"
 #include "DirectX11/System/RenderManager.hpp"
 
-SceneManager::SceneManager() : m_RenderManager(RenderManager::GetInstance())
+SceneManager::SceneManager()
+	: m_RenderManager(RenderManager::GetInstance())
+	, m_FadeManager(FadeManager::GetInstance())
 {
 	m_pCurrentScene = nullptr;
 	m_pNextScene = nullptr;
@@ -43,6 +45,9 @@ void SceneManager::RootUpdate() noexcept
 {
 	_RootUpdateMain();
 	_RootUpdateLate();
+
+	// フェードの処理
+	m_FadeManager.Update();
 }
 
 void SceneManager::RootDraw() noexcept
@@ -54,6 +59,9 @@ void SceneManager::RootDraw() noexcept
 		if (itr.second)
 			itr.second->_RootDraw();
 	}
+
+	// フェードの描画
+	m_FadeManager.Draw();
 
 	// 全ての描画
 	m_RenderManager.DrawAll();

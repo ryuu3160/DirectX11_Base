@@ -126,7 +126,7 @@ public:
    /// ファイルパスを取得します。
    /// </summary>
    /// <returns>ファイルパスを表す std::string への参照。</returns>
-   inline const HoldFilePath &GetFilePath() const noexcept { return m_FilePath; }
+   inline const FilePathHold &GetFilePath() const noexcept { return m_FilePath; }
 
    /// <summary>
    /// 名前を設定します。
@@ -134,7 +134,7 @@ public:
    /// <param name="[In_Name]">設定する名前。</param>
    inline void SetName(_In_ const std::string &In_Name) noexcept { m_Name = In_Name; }
 
-   inline void SetFilePath(_In_ const HoldFilePath &In_FilePath) noexcept { m_FilePath = In_FilePath; }
+   inline void SetFilePath(_In_ const FilePathHold &In_FilePath) noexcept { m_FilePath = In_FilePath; }
 
    inline void SetLayer(_In_ const int &In_Layer) noexcept { m_Layer = In_Layer; }
 
@@ -236,7 +236,7 @@ private:
     DirectX::XMFLOAT3 m_Rotation;  // 回転
     int m_Layer; // レイヤー
 
-	HoldFilePath m_FilePath; // テクスチャのファイルパス
+	FilePathHold m_FilePath; // テクスチャのファイルパス
 
     std::shared_ptr<VertexShader> m_defVS;  
     std::shared_ptr<PixelShader> m_defPS;  

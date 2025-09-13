@@ -1,11 +1,11 @@
 /*+===================================================================
 	File: Easing.cpp
 	Summary: Easingのファイル
-	Author: AT13C 01 青木雄一郎
+	Author: ryuu3160
 	Date: 2025/1/23 23:04 初回作成
 				/24 02:06 Ease InOut関数追加
 
-	(C) 2025 AT13C 01 青木雄一郎. All rights reserved.
+	(C) 2025 ryuu3160. All rights reserved.
 ===================================================================+*/
 
 // ==============================
@@ -1019,6 +1019,240 @@ namespace Ease
 	{
 		float fRate = In_sData.fNowTime / In_sData.fDuration;
 		return Lerp(fRate < 0.5f ? (1.0f - OutBounce::OutBounce(1.0f - 2.0f * fRate)) / 2.0f : (1.0f + OutBounce::OutBounce(2.0f * fRate - 1.0f)) / 2.0f, In_sData.fStart, In_sData.fEnd);
+	}
+
+	float Easing(EasingType In_EasingType, DataRate &In_sData)
+	{
+		switch(In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return 0.0f; break;
+		}
+	}
+
+	Float2 Easing(EasingType In_EasingType, DataRate2 &In_sData)
+	{
+		switch (In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return Float2{}; break;
+		}
+	}
+
+	Float3 Easing(EasingType In_EasingType, DataRate3 &In_sData)
+	{
+		switch (In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return Float3{}; break;
+		}
+	}
+
+	float Easing(EasingType In_EasingType, DataDuration &In_sData)
+	{
+		switch (In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return 0.0f; break;
+		}
+	}
+
+	Float2 Easing(EasingType In_EasingType, DataDuration2 &In_sData)
+	{
+		switch (In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return Float2{}; break;
+		}
+	}
+
+	Float3 Easing(EasingType In_EasingType, DataDuration3 &In_sData)
+	{
+		switch (In_EasingType)
+		{
+		case EasingType::LERP: return Lerp(In_sData); break;
+		case EasingType::IN_SINE: return InSine(In_sData); break;
+		case EasingType::IN_QUAD: return InQuad(In_sData); break;
+		case EasingType::IN_CUBIC: return InCubic(In_sData); break;
+		case EasingType::IN_QUART: return InQuart(In_sData); break;
+		case EasingType::IN_QUINT: return InQuint(In_sData); break;
+		case EasingType::IN_EXPO: return InExpo(In_sData); break;
+		case EasingType::IN_CIRC: return InCirc(In_sData); break;
+		case EasingType::IN_BACK: return InBack(In_sData); break;
+		case EasingType::IN_ELASTIC: return InElastic(In_sData); break;
+		case EasingType::IN_BOUNCE: return InBounce(In_sData); break;
+		case EasingType::OUT_SINE: return OutSine(In_sData); break;
+		case EasingType::OUT_QUAD: return OutQuad(In_sData); break;
+		case EasingType::OUT_CUBIC: return OutCubic(In_sData); break;
+		case EasingType::OUT_QUART: return OutQuart(In_sData); break;
+		case EasingType::OUT_QUINT: return OutQuint(In_sData); break;
+		case EasingType::OUT_EXPO: return OutExpo(In_sData); break;
+		case EasingType::OUT_CIRC: return OutCirc(In_sData); break;
+		case EasingType::OUT_BACK: return OutBack(In_sData); break;
+		case EasingType::OUT_ELASTIC: return OutElastic(In_sData); break;
+		case EasingType::OUT_BOUNCE: return OutBounce(In_sData); break;
+		case EasingType::IN_OUT_SINE: return InOutSine(In_sData); break;
+		case EasingType::IN_OUT_QUAD: return InOutQuad(In_sData); break;
+		case EasingType::IN_OUT_CUBIC: return InOutCubic(In_sData); break;
+		case EasingType::IN_OUT_QUART: return InOutQuart(In_sData); break;
+		case EasingType::IN_OUT_QUINT: return InOutQuint(In_sData); break;
+		case EasingType::IN_OUT_EXPO: return InOutExpo(In_sData); break;
+		case EasingType::IN_OUT_CIRC: return InOutCirc(In_sData); break;
+		case EasingType::IN_OUT_BACK: return InOutBack(In_sData); break;
+		case EasingType::IN_OUT_ELASTIC: return InOutElastic(In_sData); break;
+		case EasingType::IN_OUT_BOUNCE: return InOutBounce(In_sData); break;
+		default: return Float3{}; break;
+		}
 	}
 
 } // namespace Ease
