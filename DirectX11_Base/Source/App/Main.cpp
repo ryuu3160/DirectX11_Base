@@ -40,6 +40,7 @@ HRESULT Main::Init()
 	auto &Sound = SoundManager::GetInstance();
 	Geometory::GetInstance().Init();
 	SpriteManager::GetInstance().Init();
+	FadeManager::GetInstance();
 	Input::Init();
 
 	// よく使うシェーダーの読み込み
