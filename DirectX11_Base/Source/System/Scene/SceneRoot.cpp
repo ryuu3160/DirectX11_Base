@@ -46,6 +46,9 @@ void SceneRoot::Init()
 	// スプライトマネージャーにカメラを設定
 	SpriteManager::GetInstance().SetCamera(pCameraComp);
 	SpriteManager::GetInstance().SetCameraObject(pCamera);
+
+	// フェード追加
+	FadeManager::GetInstance().AddFade("Fade", 3.0f, Ease::IN_OUT_SINE, false);
 }
 
 void SceneRoot::Uninit()

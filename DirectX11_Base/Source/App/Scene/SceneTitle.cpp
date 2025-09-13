@@ -43,8 +43,14 @@ void SceneTitle::Update()
 {
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
+		FadeManager::GetInstance().StartFadeIn("Fade");
+		m_IsChange = true;
+	}
+
+	if(m_IsChange && FadeManager::GetInstance().IsFadeEnd("Fade"))
+	{
 		m_SceneManager.RemoveSubScene<SceneTitle>();
-		m_SceneManager.LoadSubSceneAsync<SceneGame>();
+		m_SceneManager.LoadSubScene<SceneGame>();
 	}
 }
 

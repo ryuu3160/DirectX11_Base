@@ -295,6 +295,9 @@
     <ClCompile Include="Source\App\Scene\SceneTitle.cpp">
       <Filter>Source\App\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneResult.cpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -502,6 +505,9 @@
       <Filter>Source\App\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneTitle.hpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneResult.hpp">
       <Filter>Source\App\Scene</Filter>
     </ClInclude>
   </ItemGroup>
