@@ -35,15 +35,20 @@ void FadeManager::Update() noexcept
 
 	for(auto itr = m_mapFadeObj.begin(); itr != m_mapFadeObj.end(); )
 	{
-		// 自動削除フラグが立っていて、フェードが完了している場合は削除
+		// フェードが終了していない場合は時間を進めて次へ
+		if (itr->second.EaseData.fNowTime < itr->second.EaseData.fDuration)
+		{
+			itr->second.EaseData.fNowTime += 1.0f / 60.0f;
+			++itr;
+			continue;
+		}
+
+		// フェードが終了している場合はフラグを更新
+		itr->second.IsFadeEnd = true;
+
+		// 自動削除フラグが立っている場合は削除
 		if(itr->second.IsAutoDelete)
 		{
-			if(itr->second.EaseData.fNowTime < itr->second.EaseData.fDuration)
-			{
-				++itr;
-				continue;
-			}
-
 			// フェード用オブジェクトの破棄
 			if (itr->second.pFadeObj)
 			{
@@ -83,6 +88,7 @@ void FadeManager::AddFade(_In_ std::string_view In_Name, _In_ float In_FadeTime,
 	info.IsAutoDelete = In_IsAutoDelete;
 	info.IsStartFadeIn = false;
 	info.IsStartFadeOut = false;
+	info.IsFadeEnd = false;
 	info.PixelShaderName = In_PixcelShaderName;
 	info.VertexShaderName = In_VertexShaderName;
 	// テクスチャパスが指定されていない場合はデフォルトのテクスチャを使用
@@ -112,6 +118,7 @@ void FadeManager::AddFade(_In_ std::string_view In_Name, _In_ float In_FadeTime,
 	info.EaseData.fEnd = 1.0f;
 	info.IsStartFadeIn = false;
 	info.IsStartFadeOut = false;
+	info.IsFadeEnd = false;
 	// フェード用オブジェクトの作成
 	info.pFadeObj = CreateFadeObj(In_Name, In_FadeInfo);
 	m_mapFadeObj.insert({ std::string(In_Name), info });
@@ -119,25 +126,27 @@ void FadeManager::AddFade(_In_ std::string_view In_Name, _In_ float In_FadeTime,
 
 void FadeManager::StartFadeIn(_In_ std::string_view In_Name) noexcept
 {
-	auto it = m_mapFadeObj.find(std::string(In_Name));
-	if (it != m_mapFadeObj.end())
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
 	{
 		// フェードイン開始(フェードアウト中の場合はフェードインに切り替え)
-		it->second.IsStartFadeIn = true;
-		it->second.IsStartFadeOut = false;
-		it->second.EaseData.fNowTime = 0.0f;
+		itr->second.IsStartFadeIn = true;
+		itr->second.IsStartFadeOut = false;
+		itr->second.IsFadeEnd = false;
+		itr->second.EaseData.fNowTime = 0.0f;
 	}
 }
 
 void FadeManager::StartFadeOut(_In_ std::string_view In_Name) noexcept
 {
-	auto it = m_mapFadeObj.find(std::string(In_Name));
-	if (it != m_mapFadeObj.end())
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
 	{
 		// フェードアウト開始(フェードイン中の場合はフェードアウトに切り替え)
-		it->second.IsStartFadeIn = false;
-		it->second.IsStartFadeOut = true;
-		it->second.EaseData.fNowTime = 0.0f;
+		itr->second.IsStartFadeIn = false;
+		itr->second.IsStartFadeOut = true;
+		itr->second.IsFadeEnd = false;
+		itr->second.EaseData.fNowTime = 0.0f;
 	}
 }
 
@@ -149,6 +158,7 @@ void FadeManager::StopFade(_In_ std::string_view In_Name) noexcept
 		// フェード停止
 		it->second.IsStartFadeIn = false;
 		it->second.IsStartFadeOut = false;
+		it->second.IsFadeEnd = false;
 		it->second.EaseData.fNowTime = 0.0f;
 	}
 }
@@ -167,6 +177,17 @@ void FadeManager::DeleteFade(_In_ std::string_view In_Name) noexcept
 		// マップから削除
 		m_mapFadeObj.erase(it);
 	}
+}
+
+bool FadeManager::IsFadeEnd(_In_ std::string_view In_Name) const noexcept
+{
+	auto it = m_mapFadeObj.find(std::string(In_Name));
+	if (it != m_mapFadeObj.end())
+	{
+		return it->second.IsFadeEnd;
+	}
+
+	return false;
 }
 
 FadeManager::FadeManager()
@@ -201,8 +222,6 @@ void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	col.w = alpha;
 	cmp->SetColor(col);
 	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
-	
-	InOut_FadeInfo.EaseData.fNowTime += 1.0f / 60.0f;
 }
 
 void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
@@ -218,8 +237,6 @@ void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	col.w = alpha;
 	cmp->SetColor(col);
 	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
-
-	InOut_FadeInfo.EaseData.fNowTime += 1.0f / 60.0f;
 }
 
 GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const FadeInfo &In_FadeInfo)
