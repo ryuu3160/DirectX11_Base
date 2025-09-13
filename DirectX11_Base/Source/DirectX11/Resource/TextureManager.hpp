@@ -52,5 +52,5 @@ private:
 	~TextureManager() override;
 
 private:
-	std::unordered_map<HoldFilePath, std::shared_ptr<Texture>> m_mapTextures; // テクスチャのマップ
+	std::unordered_map<FilePathHold, std::shared_ptr<Texture>> m_mapTextures; // テクスチャのマップ
 };

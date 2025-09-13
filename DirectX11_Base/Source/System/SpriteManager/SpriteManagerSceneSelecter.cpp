@@ -22,7 +22,7 @@ SpriteManagerSceneSelecter::~SpriteManagerSceneSelecter()
 {
 }
 
-void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, HoldFilePath> In_Scenes, _Inout_ int *Inout_Index) noexcept
+void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, FilePathHold> In_Scenes, _Inout_ int *Inout_Index) noexcept
 {
 	const char *scenes[100];
 	if (!In_Scenes.empty())

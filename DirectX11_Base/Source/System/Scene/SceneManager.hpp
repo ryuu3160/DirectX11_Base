@@ -103,6 +103,7 @@ private:
 	std::vector<std::future<void>> m_Futures; // 非同期ロード用のfuture
 
 	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
+	FadeManager &m_FadeManager;
 };
 
 /// <summary>

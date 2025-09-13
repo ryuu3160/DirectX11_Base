@@ -92,9 +92,9 @@ void SceneRoot::Init()
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
 
-	//// スカイボックスを作成
-	//SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	//pSkyBox->SetCamera(pCamera);
+	// スカイボックスを作成
+	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	pSkyBox->SetCamera(pCamera);
 
 	// インスタンシングテスト
 	GameObject *pInstanced = CreateObject<GameObject>("Instanced");

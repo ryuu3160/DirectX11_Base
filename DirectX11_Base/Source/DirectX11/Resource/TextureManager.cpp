@@ -20,7 +20,7 @@
 
 std::shared_ptr<Texture> TextureManager::GetTexture(_In_ const FilePath &In_FilePath) noexcept
 {
-	auto itr = m_mapTextures.find(HoldFilePath(In_FilePath));
+	auto itr = m_mapTextures.find(FilePathHold(In_FilePath));
 
 	if (itr != m_mapTextures.end())
 	{
@@ -77,7 +77,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 				else
 				{
 					// 成功した場合はマップに追加
-					m_mapTextures.insert({ HoldFilePath(path.C_Str()), Tex });
+					m_mapTextures.insert({ FilePathHold(path.C_Str()), Tex });
 				}
 			}
 		}
@@ -96,7 +96,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 		if (SUCCEEDED(hr))
 		{
 			// 成功した場合はマップに追加
-			m_mapTextures.insert({ HoldFilePath(aiTex->mFilename.data), Tex });
+			m_mapTextures.insert({ FilePathHold(aiTex->mFilename.data), Tex });
 		}
 	}
 }
@@ -109,7 +109,7 @@ std::shared_ptr<Texture> TextureManager::LoadTexture(_In_ const FilePath &In_Fil
 	if (SUCCEEDED(hr))
 	{
 		// 成功した場合はマップに追加
-		m_mapTextures.insert({ HoldFilePath(In_FilePath), Tex });
+		m_mapTextures.insert({ FilePathHold(In_FilePath), Tex });
 		return Tex;
 	}
 	return nullptr; // 失敗した場合はnullptrを返す
