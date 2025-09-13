@@ -1,23 +1,63 @@
 /*+===================================================================
 	File: Easing.hpp
 	Summary: Easingのヘッダーファイル
-	Author: AT13C 01 青木雄一郎
+	Author: ryuu3160
 	Date: 2025/1/23 23:04 初回作成
 				/24 02:06 Ease InOut関数追加
 
-	(C) 2025 AT13C 01 青木雄一郎. All rights reserved.
+	(C) 2025 ryuu3160. All rights reserved.
 ===================================================================+*/
 #pragma once
 
 // ==============================
 //	include
 // ==============================
+#include <cmath>
 
 /// <summary>
 /// Easing NameSpace
 /// </summary>
 namespace Ease
 {
+	// ==============================
+	//  列挙型
+	// ==============================
+	enum EasingType : unsigned int
+	{
+		LERP,			// 線形補間
+		IN_SINE,		// Ease-In Sine
+		IN_QUAD,		// Ease-In Quad
+		IN_CUBIC,		// Ease-In Cubic
+		IN_QUART,		// Ease-In Quart
+		IN_QUINT,		// Ease-In Quint
+		IN_EXPO,		// Ease-In Expo
+		IN_CIRC,		// Ease-In Circ
+		IN_BACK,		// Ease-In Back
+		IN_ELASTIC,		// Ease-In Elastic
+		IN_BOUNCE,		// Ease-In Bounce
+		OUT_SINE,		// Ease-Out Sine
+		OUT_QUAD,		// Ease-Out Quad
+		OUT_CUBIC,		// Ease-Out Cubic
+		OUT_QUART,		// Ease-Out Quart
+		OUT_QUINT,		// Ease-Out Quint
+		OUT_EXPO,		// Ease-Out Expo
+		OUT_CIRC,		// Ease-Out Circ
+		OUT_BACK,		// Ease-Out Back
+		OUT_ELASTIC,	// Ease-Out Elastic
+		OUT_BOUNCE,		// Ease-Out Bounce
+		IN_OUT_SINE,	// Ease-InOut Sine
+		IN_OUT_QUAD,	// Ease-InOut Quad
+		IN_OUT_CUBIC,	// Ease-InOut Cubic
+		IN_OUT_QUART,	// Ease-InOut Quart
+		IN_OUT_QUINT,	// Ease-InOut Quint
+		IN_OUT_EXPO,	// Ease-InOut Expo
+		IN_OUT_CIRC,	// Ease-InOut Circ
+		IN_OUT_BACK,	// Ease-InOut Back
+		IN_OUT_ELASTIC,	// Ease-InOut Elastic
+		IN_OUT_BOUNCE,	// Ease-InOut Bounce
+		MAX				// 最大値
+	};
+
 	// ==============================
 	//  構造体
 	// ==============================
@@ -1625,4 +1665,58 @@ namespace Ease
 	/// <param name="[In_sData]">sDataDuration3への参照</param>
 	/// <returns>補間された値</returns>
 	Float3 InOutBounce(DataDuration3 &In_sData);
+
+
+	// ==============================
+	//  引数で指定できるもの
+	// ==============================
+
+	/// <summary>
+	/// 指定されたイージングタイプとデータに基づいてイージング処理を行います。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">sDataRateへの参照</param>
+	/// <returns>補間された値</returns>
+	float Easing(EasingType In_EasingType, DataRate &In_sData);
+
+	/// <summary>
+	/// 指定されたイージングタイプとデータに基づいて、イージング処理を行い、結果を返します。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">DataRate2への参照</param>
+	/// <returns>補間された値</returns>
+	Float2 Easing(EasingType In_EasingType, DataRate2 &In_sData);
+
+	/// <summary>
+	/// 指定されたイージングタイプに従って、3次元データのイージング処理を行います。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">DataRate3への参照</param>
+	/// <returns>補間された値</returns>
+	Float3 Easing(EasingType In_EasingType, DataRate3 &In_sData);
+
+	/// <summary>
+	/// 指定されたイージングタイプとデータに基づいて、イージング値を計算します。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">DataDurationへの参照</param>
+	/// <returns>補間された値</returns>
+	float Easing(EasingType In_EasingType, DataDuration &In_sData);
+
+	/// <summary>
+	/// 指定されたイージングタイプとデータに基づいて、イージング処理を行い、結果の2次元浮動小数点値を返します。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">DataDuration2への参照</param>
+	/// <returns>補間された値</returns>
+	Float2 Easing(EasingType In_EasingType, DataDuration2 &In_sData);
+
+	/// <summary>
+	/// 指定されたイージングタイプとデータに基づいて、3次元のイージング値を計算します。
+	/// </summary>
+	/// <param name="[In_EasingType]">イージングタイプ</param>
+	/// <param name="[In_sData]">DataDuration3への参照</param>
+	/// <returns>補間された値</returns>
+	Float3 Easing(EasingType In_EasingType, DataDuration3 &In_sData);
+
 }
