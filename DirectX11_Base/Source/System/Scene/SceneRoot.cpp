@@ -128,6 +128,10 @@ void SceneRoot::Init()
 	PatternScaleComp->SetPixelShader(ShaderM.GetShader("PS_PatternScale"));
 	pPatternScale->SetPos({ 0.0f, -0.5f, 0.0f });
 	pPatternScale->SetScale({ 1000.0f, 1.0f, 1000.0f });
+
+	FadeManager::GetInstance().SetCamera(pCamera);
+	FadeManager::GetInstance().AddFade("TestFade", 5.0f, Ease::EasingType::MAX, true);
+	FadeManager::GetInstance().StartFadeIn("TestFade");
 }
 
 void SceneRoot::Uninit()
