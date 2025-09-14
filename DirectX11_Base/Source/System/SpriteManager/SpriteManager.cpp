@@ -143,6 +143,22 @@ std::list<Sprite *> SpriteManager::Get3DSprites() noexcept
 
 Sprite *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept
 {
+	for(auto &itr : m_Sprites[_2D])
+	{
+		for (auto &sprite : itr.second)
+		{
+			if (sprite && sprite->GetName() == In_SpriteName.data())
+				return sprite;
+		}
+	}
+	for (auto &itr : m_Sprites[_3D])
+	{
+		for (auto &sprite : itr.second)
+		{
+			if (sprite && sprite->GetName() == In_SpriteName.data())
+				return sprite;
+		}
+	}
 
 	return nullptr;
 }
