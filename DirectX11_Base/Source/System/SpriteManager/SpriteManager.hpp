@@ -106,6 +106,12 @@ public:
 	bool CheckConflictSpriteName(_In_ const std::string_view &In_SpriteName, _In_ const RenderMode &In_Mode) const noexcept;
 
 	/// <summary>
+	/// 指定されたスプライト名のスプライトを削除します。
+	/// </summary>
+	/// <param name="[In_SpriteName]">削除するスプライトの名前を表す文字列ビュー。</param>
+	void DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept;
+
+	/// <summary>
 	/// 全てのスプライトオブジェクトを解放、削除する。
 	/// </summary>
 	void DeleteAll() noexcept;
