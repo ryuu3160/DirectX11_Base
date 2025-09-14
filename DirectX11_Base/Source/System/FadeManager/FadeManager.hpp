@@ -97,6 +97,13 @@ public:
 	/// <returns>フェードが終了しているかの真偽値</returns>
 	bool IsFadeEnd(_In_ std::string_view In_Name) const noexcept;
 
+	/// <summary>
+	/// フェードの状態を取得します。取得する値はアルファ値で、0.0fが完全に透明、1.0fが完全に不透明を表します。
+	/// </summary>
+	/// <param name="[In_Name]">フェード名</param>
+	/// <returns>0.0f~1.0fのアルファ値</returns>
+	float GetFadeStatus(_In_ std::string_view In_Name) const noexcept;
+
 private:
 	FadeManager();
 	~FadeManager();
