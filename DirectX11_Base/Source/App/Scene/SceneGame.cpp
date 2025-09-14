@@ -77,7 +77,11 @@ void SceneGame::Uninit()
 void SceneGame::Update()
 {
 	// フェードイン
-
+	if (FadeManager::GetInstance().IsFadeEnd("Fade"))
+	{
+		FadeManager::GetInstance().StartFadeIn("Fade");
+		return;
+	}
 
 	m_FrameManager.UpdateTimeCounter("GameTimer");
 

@@ -47,7 +47,7 @@ void SceneTitle::Update()
 		m_IsChange = true;
 	}
 
-	if(m_IsChange && FadeManager::GetInstance().IsFadeEnd("Fade"))
+	if(FadeManager::GetInstance().IsFadeEnd("Fade"))
 	{
 		m_SceneManager.RemoveSubScene<SceneTitle>();
 		m_SceneManager.LoadSubScene<SceneGame>();
