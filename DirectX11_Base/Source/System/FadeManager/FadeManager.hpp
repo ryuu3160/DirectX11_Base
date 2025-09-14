@@ -29,17 +29,17 @@ public:
 	struct FadeInfo
 	{
 	public:
-		bool IsAutoDelete;
-		bool IsStartFadeIn;
-		bool IsStartFadeOut;
-		bool IsFadeEnd;
-		Ease::EasingType EaseType;
+		bool IsAutoDelete = false;
+		bool IsStartFadeIn = false;
+		bool IsStartFadeOut = false;
+		bool IsFadeEnd = false;
+		Ease::EasingType EaseType = Ease::LERP;
 		FilePath TexturePath{};
 		FilePathHold PixelShaderName{};
 		FilePathHold VertexShaderName{};
 	private:
 		friend class FadeManager;
-		Ease::DataDuration EaseData;
+		Ease::DataDuration EaseData{};
 		GameObject *pFadeObj = nullptr;
 	};
 
