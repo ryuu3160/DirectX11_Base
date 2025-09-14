@@ -195,7 +195,7 @@ Sprite *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteName, 
 	return work;
 }
 
-void SpriteManager::DeleteSprite(const std::string_view &In_SpriteName) noexcept
+void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
@@ -205,10 +205,6 @@ void SpriteManager::DeleteSprite(const std::string_view &In_SpriteName) noexcept
 			{
 				if (*spriteItr && (*spriteItr)->GetName() == In_SpriteName.data())
 				{
-					// スプライトを削除
-					delete *spriteItr;
-					*spriteItr = nullptr;
-					itr.second.erase(spriteItr);
 					// スプライト名リストからも削除
 					auto nameItr = std::find(m_SpriteNames[i].begin(), m_SpriteNames[i].end(), In_SpriteName.data());
 					if (nameItr != m_SpriteNames[i].end())
@@ -217,6 +213,10 @@ void SpriteManager::DeleteSprite(const std::string_view &In_SpriteName) noexcept
 					auto pointerItr = std::find(m_SpritePointerList[i].begin(), m_SpritePointerList[i].end(), *spriteItr);
 					if (pointerItr != m_SpritePointerList[i].end())
 						m_SpritePointerList[i].erase(pointerItr);
+					// スプライトを削除
+					delete *spriteItr;
+					*spriteItr = nullptr;
+					itr.second.erase(spriteItr);
 					return; // 削除が完了したら終了
 				}
 			}
