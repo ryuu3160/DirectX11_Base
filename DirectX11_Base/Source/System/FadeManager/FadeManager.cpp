@@ -195,15 +195,12 @@ float FadeManager::GetFadeStatus(_In_ std::string_view In_Name) const noexcept
 	auto itr = m_mapFadeObj.find(std::string(In_Name));
 	if (itr != m_mapFadeObj.end())
 	{
-		Ease::EasingType type = itr->second.EaseType;
-		auto data = itr->second.EaseData;
-		float alpha = Ease::Easing(type, data);
-
-		if(alpha <= 0.0f)
-			alpha = 0.0f;
-		else if(alpha >= 1.0f)
-			alpha = 1.0f;
-		return alpha;
+		if (itr->second.pFadeObj)
+		{
+			auto cmp = itr->second.pFadeObj->GetComponent<SpriteRenderer>();
+			auto col = cmp->GetColor();
+			return col.w;
+		}
 	}
 	return 0.0f;
 }
