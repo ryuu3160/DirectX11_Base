@@ -152,42 +152,60 @@ void FadeManager::StartFadeOut(_In_ std::string_view In_Name) noexcept
 
 void FadeManager::StopFade(_In_ std::string_view In_Name) noexcept
 {
-	auto it = m_mapFadeObj.find(std::string(In_Name));
-	if (it != m_mapFadeObj.end())
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
 	{
 		// フェード停止
-		it->second.IsStartFadeIn = false;
-		it->second.IsStartFadeOut = false;
-		it->second.IsFadeEnd = false;
-		it->second.EaseData.fNowTime = 0.0f;
+		itr->second.IsStartFadeIn = false;
+		itr->second.IsStartFadeOut = false;
+		itr->second.IsFadeEnd = false;
+		itr->second.EaseData.fNowTime = 0.0f;
 	}
 }
 
 void FadeManager::DeleteFade(_In_ std::string_view In_Name) noexcept
 {
-	auto it = m_mapFadeObj.find(std::string(In_Name));
-	if (it != m_mapFadeObj.end())
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
 	{
 		// フェード用オブジェクトの破棄
-		if (it->second.pFadeObj)
+		if (itr->second.pFadeObj)
 		{
-			delete it->second.pFadeObj;
-			it->second.pFadeObj = nullptr;
+			delete itr->second.pFadeObj;
+			itr->second.pFadeObj = nullptr;
 		}
 		// マップから削除
-		m_mapFadeObj.erase(it);
+		m_mapFadeObj.erase(itr);
 	}
 }
 
 bool FadeManager::IsFadeEnd(_In_ std::string_view In_Name) const noexcept
 {
-	auto it = m_mapFadeObj.find(std::string(In_Name));
-	if (it != m_mapFadeObj.end())
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
 	{
-		return it->second.IsFadeEnd;
+		return itr->second.IsFadeEnd;
 	}
 
 	return false;
+}
+
+float FadeManager::GetFadeStatus(_In_ std::string_view In_Name) const noexcept
+{
+	auto itr = m_mapFadeObj.find(std::string(In_Name));
+	if (itr != m_mapFadeObj.end())
+	{
+		Ease::EasingType type = itr->second.EaseType;
+		auto data = itr->second.EaseData;
+		float alpha = Ease::Easing(type, data);
+
+		if(alpha <= 0.0f)
+			alpha = 0.0f;
+		else if(alpha >= 1.0f)
+			alpha = 1.0f;
+		return alpha;
+	}
+	return 0.0f;
 }
 
 FadeManager::FadeManager()
