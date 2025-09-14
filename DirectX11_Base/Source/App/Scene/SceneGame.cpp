@@ -77,7 +77,7 @@ void SceneGame::Uninit()
 void SceneGame::Update()
 {
 	// フェードイン
-	if (FadeManager::GetInstance().IsFadeEnd("Fade"))
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f)
 	{
 		FadeManager::GetInstance().StartFadeIn("Fade");
 		return;
