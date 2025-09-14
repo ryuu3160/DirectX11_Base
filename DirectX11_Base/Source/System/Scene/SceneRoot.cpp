@@ -48,6 +48,7 @@ void SceneRoot::Init()
 	SpriteManager::GetInstance().SetCameraObject(pCamera);
 
 	// フェード追加
+	FadeManager::GetInstance().SetCamera(pCamera);
 	FadeManager::GetInstance().AddFade("Fade", 3.0f, Ease::IN_OUT_SINE, false);
 }
 

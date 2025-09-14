@@ -76,6 +76,9 @@ void SceneGame::Uninit()
 
 void SceneGame::Update()
 {
+	// フェードイン
+
+
 	m_FrameManager.UpdateTimeCounter("GameTimer");
 
 	if(m_FrameManager.GetTimeCountSecond("GameTimer") >= TIME_LIMIT)

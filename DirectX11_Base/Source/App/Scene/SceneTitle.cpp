@@ -43,7 +43,7 @@ void SceneTitle::Update()
 {
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
-		FadeManager::GetInstance().StartFadeIn("Fade");
+		FadeManager::GetInstance().StartFadeOut("Fade");
 		m_IsChange = true;
 	}
 
