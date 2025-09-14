@@ -38,6 +38,8 @@ private:
 	void ChangeScene();
 private:
 	int m_Index = 0;
+	float m_ButtonScale = 1.0f;
+	float m_Time;
 	bool m_IsChange = false;
 #ifdef _DEBUG
 	DirectX::XMFLOAT3 m_CamPos{};

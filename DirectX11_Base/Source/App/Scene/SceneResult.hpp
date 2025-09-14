@@ -37,6 +37,7 @@ private:
 
 private:
 	int m_Index = 0;
+	bool m_IsChange = false;
 #ifdef _DEBUG
 	DirectX::XMFLOAT3 m_CamPos{};
 	DirectX::XMFLOAT3 m_CamLook{};

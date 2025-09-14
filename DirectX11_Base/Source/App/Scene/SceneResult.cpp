@@ -41,7 +41,20 @@ void SceneResult::Uninit()
 
 void SceneResult::Update()
 {
+	// フェードイン
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f && !m_IsChange)
+	{
+		FadeManager::GetInstance().StartFadeIn("Fade");
+		return;
+	}
+
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
+	{
+		FadeManager::GetInstance().StartFadeOut("Fade");
+		m_IsChange = true;
+	}
+
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && m_IsChange)
 	{
 		m_SceneManager.RemoveSubScene<SceneResult>();
 		m_SceneManager.LoadSubSceneAsync<SceneTitle>();

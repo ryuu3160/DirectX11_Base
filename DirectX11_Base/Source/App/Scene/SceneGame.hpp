@@ -38,6 +38,7 @@ private:
 	void ChangeScene();
 private:
 	int m_Index = 0;
+	bool m_ChangeScene = false;
 #ifdef _DEBUG
 	DirectX::XMFLOAT3 m_CamPos{};
 	DirectX::XMFLOAT3 m_CamLook{};

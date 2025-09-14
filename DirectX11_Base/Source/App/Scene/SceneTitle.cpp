@@ -33,6 +33,12 @@ void SceneTitle::Init()
 
 	SpriteManager::GetInstance().CreateScene("Title");
 	SpriteManager::GetInstance().ChangeScene(3);
+
+	// フェードイン
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f)
+	{
+		FadeManager::GetInstance().StartFadeIn("Fade");
+	}
 }
 
 void SceneTitle::Uninit()
@@ -41,13 +47,22 @@ void SceneTitle::Uninit()
 
 void SceneTitle::Update()
 {
+	// ボタンの拡縮
+	auto button = SpriteManager::GetInstance().GetSprite("TitleButton");
+	if (button)
+	{
+		m_ButtonScale = 1.0f + (std::sin(m_Time * 3.0f) * 0.05f);
+		button->SetScale({ m_ButtonScale,m_ButtonScale,1.0f });
+		m_Time += 1.0f / 60.0f;
+	}
+
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
 		FadeManager::GetInstance().StartFadeOut("Fade");
 		m_IsChange = true;
 	}
 
-	if(FadeManager::GetInstance().IsFadeEnd("Fade"))
+	if(FadeManager::GetInstance().IsFadeEnd("Fade") && m_IsChange)
 	{
 		m_SceneManager.RemoveSubScene<SceneTitle>();
 		m_SceneManager.LoadSubScene<SceneGame>();

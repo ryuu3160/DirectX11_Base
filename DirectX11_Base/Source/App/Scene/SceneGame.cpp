@@ -24,7 +24,7 @@
 // ===============================
 namespace
 {
-	const inline constexpr float TIME_LIMIT = 60.0f; // 制限時間（秒）
+	const inline constexpr float TIME_LIMIT = 6.0f; // 制限時間（秒）
 }
 
 SceneGame::SceneGame()
@@ -77,7 +77,7 @@ void SceneGame::Uninit()
 void SceneGame::Update()
 {
 	// フェードイン
-	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f)
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f && !m_ChangeScene)
 	{
 		FadeManager::GetInstance().StartFadeIn("Fade");
 		return;
@@ -85,7 +85,14 @@ void SceneGame::Update()
 
 	m_FrameManager.UpdateTimeCounter("GameTimer");
 
-	if(m_FrameManager.GetTimeCountSecond("GameTimer") >= TIME_LIMIT)
+	if(m_FrameManager.GetTimeCountSecond("GameTimer") >= TIME_LIMIT && !m_ChangeScene)
+	{
+		FadeManager::GetInstance().StartFadeOut("Fade");
+		m_ChangeScene = true;
+	}
+
+	// シーンチェンジ
+	if (FadeManager::GetInstance().IsFadeEnd("Fade") && m_ChangeScene)
 	{
 		SceneManager::GetInstance().RemoveSubScene<SceneGame>();
 		SceneManager::GetInstance().LoadSubSceneAsync<SceneResult>();
