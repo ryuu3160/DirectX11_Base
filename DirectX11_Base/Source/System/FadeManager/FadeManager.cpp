@@ -43,6 +43,7 @@ void FadeManager::Update() noexcept
 			continue;
 		}
 
+
 		// フェードが終了している場合はフラグを更新
 		itr->second.IsFadeEnd = true;
 
@@ -234,7 +235,11 @@ void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	// alpha値を設定
 	auto cmp = InOut_FadeInfo.pFadeObj->GetComponent<SpriteRenderer>();
 	auto col = cmp->GetColor();
-	col.w = alpha;
+	// 現在の時間が総時間を超えている場合は0.0fにする
+	if (InOut_FadeInfo.EaseData.fNowTime >= InOut_FadeInfo.EaseData.fDuration)
+		alpha = 0.0f;
+	else
+		col.w = alpha;
 	cmp->SetColor(col);
 	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
 }
@@ -249,7 +254,11 @@ void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	// alpha値を設定
 	auto cmp = InOut_FadeInfo.pFadeObj->GetComponent<SpriteRenderer>();
 	auto col = cmp->GetColor();
-	col.w = alpha;
+	// 現在の時間が総時間を超えている場合は1.0fにする
+	if (InOut_FadeInfo.EaseData.fNowTime >= InOut_FadeInfo.EaseData.fDuration)
+		alpha = 1.0f;
+	else
+		col.w = alpha;
 	cmp->SetColor(col);
 	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
 }
