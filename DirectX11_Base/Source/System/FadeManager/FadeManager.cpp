@@ -21,7 +21,16 @@ void FadeManager::Update() noexcept
 {
 	for (auto &itr : m_mapFadeObj)
 	{
-		UpdateFade(itr.second);
+		if (itr.second.IsStartFadeIn)
+		{
+			// フェードイン処理
+			UpdateFadeIn(itr.second);
+		}
+		else if (itr.second.IsStartFadeOut)
+		{
+			// フェードアウト処理
+			UpdateFadeOut(itr.second);
+		}
 	}
 
 	for(auto itr = m_mapFadeObj.begin(); itr != m_mapFadeObj.end(); )
@@ -29,32 +38,13 @@ void FadeManager::Update() noexcept
 		// フェードが終了していない場合は時間を進めて次へ
 		if (itr->second.EaseData.fNowTime < itr->second.EaseData.fDuration)
 		{
-			if (itr->second.IsStartFadeIn)
-			{
-				UpdateFadeIn(itr->second);
-			}
-			else if (itr->second.IsStartFadeOut)
-			{
-				UpdateFadeOut(itr->second);
-			}
+			itr->second.EaseData.fNowTime += 1.0f / 60.0f;
 			++itr;
 			continue;
-		}
-		else
-		{
-			// フェード時間を超えた場合は、時間をそれぞれの最大値に設定
-			if (itr->second.IsStartFadeIn)
-				itr->second.EaseData.fNowTime = 0.0f;
-			else if (itr->second.IsStartFadeOut)
-				itr->second.EaseData.fNowTime = itr->second.EaseData.fDuration;
-			else
-				itr->second.EaseData.fNowTime = itr->second.EaseData.fDuration;
 		}
 
 		// フェードが終了している場合はフラグを更新
 		itr->second.IsFadeEnd = true;
-		itr->second.IsStartFadeIn = false;
-		itr->second.IsStartFadeOut = false;
 
 		// 自動削除フラグが立っている場合は削除
 		if(itr->second.IsAutoDelete)
@@ -205,15 +195,12 @@ float FadeManager::GetFadeStatus(_In_ std::string_view In_Name) const noexcept
 	auto itr = m_mapFadeObj.find(std::string(In_Name));
 	if (itr != m_mapFadeObj.end())
 	{
-		Ease::EasingType type = itr->second.EaseType;
-		auto data = itr->second.EaseData;
-		float alpha = Ease::Easing(type, data);
-
-		if(alpha <= 0.0f)
-			alpha = 0.0f;
-		else if(alpha >= 1.0f)
-			alpha = 1.0f;
-		return alpha;
+		if (itr->second.pFadeObj)
+		{
+			auto cmp = itr->second.pFadeObj->GetComponent<SpriteRenderer>();
+			auto col = cmp->GetColor();
+			return col.w;
+		}
 	}
 	return 0.0f;
 }
@@ -236,10 +223,10 @@ FadeManager::~FadeManager()
 	m_mapFadeObj.clear();
 }
 
-void FadeManager::UpdateFade(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
+void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 {
 	float alpha;
-	if (InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
+	if(InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
 		alpha = 1.0f - InOut_FadeInfo.EaseData.fNowTime / InOut_FadeInfo.EaseData.fDuration;
 	else
 		alpha = 1.0f - Ease::Easing(InOut_FadeInfo.EaseType, InOut_FadeInfo.EaseData);
@@ -252,14 +239,19 @@ void FadeManager::UpdateFade(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
 }
 
-void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
-{
-	InOut_FadeInfo.EaseData.fNowTime += 1.0f / 60.0f;
-}
-
 void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 {
-	InOut_FadeInfo.EaseData.fNowTime -= 1.0f / 60.0f;
+	float alpha;
+	if (InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
+		alpha = InOut_FadeInfo.EaseData.fNowTime / InOut_FadeInfo.EaseData.fDuration;
+	else
+		alpha = Ease::Easing(InOut_FadeInfo.EaseType, InOut_FadeInfo.EaseData);
+	// alpha値を設定
+	auto cmp = InOut_FadeInfo.pFadeObj->GetComponent<SpriteRenderer>();
+	auto col = cmp->GetColor();
+	col.w = alpha;
+	cmp->SetColor(col);
+	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
 }
 
 GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const FadeInfo &In_FadeInfo)

@@ -108,7 +108,6 @@ private:
 	FadeManager();
 	~FadeManager();
 
-	void UpdateFade(_Inout_ FadeInfo &InOut_FadeInfo) noexcept;
 	void UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept;
 	void UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept;
 
