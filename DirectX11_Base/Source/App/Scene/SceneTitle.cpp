@@ -34,6 +34,11 @@ void SceneTitle::Init()
 	SpriteManager::GetInstance().CreateScene("Title");
 	SpriteManager::GetInstance().ChangeScene(3);
 
+	auto button = SpriteManager::GetInstance().GetSprite("TitleButton");
+	m_ButtonScaleX = button->GetScale().x;
+	m_ButtonScaleY = button->GetScale().y;
+	m_Time = 0.0f;
+
 	// フェードイン
 	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f)
 	{
@@ -49,16 +54,19 @@ void SceneTitle::Update()
 {
 	// ボタンの拡縮
 	auto button = SpriteManager::GetInstance().GetSprite("TitleButton");
-	if (button)
+	if (button && !m_IsChange)
 	{
-		m_ButtonScale = 1.0f + (std::sin(m_Time * 3.0f) * 0.05f);
-		button->SetScale({ m_ButtonScale,m_ButtonScale,1.0f });
+		float x = m_ButtonScaleX * (std::sinf(m_Time) * 0.5f + 1.0f);
+		float y = m_ButtonScaleY * (std::sinf(m_Time) * 0.5f + 1.0f);
+		button->SetScale({ x,y,1.0f });
 		m_Time += 1.0f / 60.0f;
+		if (m_Time >= 360.0f) m_Time = 0.0f;
 	}
 
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
 		FadeManager::GetInstance().StartFadeOut("Fade");
+		SpriteManager::GetInstance().GetSprite("TitleButton")->SetScale({ m_ButtonScaleX,m_ButtonScaleY,1.0f });
 		m_IsChange = true;
 	}
 

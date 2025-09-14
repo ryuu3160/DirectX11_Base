@@ -27,6 +27,7 @@ namespace
 	const inline constexpr float cx_YawSpeed = 0.01f;		// ヨー速度
 	const inline constexpr float cx_RollSpeed = 0.9f;		// ロール速度
 	const inline constexpr float cx_MaxSpeed_ms = 737.71f; // 最大速度（m/s）=マッハ2.5(60fps換算)
+	const inline constexpr float cx_MinSpeed_ms = 49.05f;  // 最小速度（m/s）=マッハ0.167(60fps換算)
 
 	// 機体スペック関連
 	const inline constexpr float cx_MaximumAscentAltitude = 15000.0f; // 最大上昇高度
@@ -164,8 +165,8 @@ void Player::UpdateMovement()
 	{
 		// 急ブレーキ
 		m_fSpeed -= cx_BrakeSpeed;
-		if (m_fSpeed < 0.0f)
-			m_fSpeed = 0.0f;
+		if (m_fSpeed < cx_MinSpeed_ms)
+			m_fSpeed = cx_MinSpeed_ms;
 	}
 	else if (Input::IsKeyPress(SpeedUpKey)) // 急ブレーキ中は速度UPしない
 	{
@@ -178,8 +179,8 @@ void Player::UpdateMovement()
 	{
 		m_fSpeed -= cx_SpeedMinus;
 
-		if (m_fSpeed < 0.0f)
-			m_fSpeed = 0.0f;
+		if (m_fSpeed < cx_MinSpeed_ms)
+			m_fSpeed = cx_MinSpeed_ms;
 	}
 
 	// 回転の更新

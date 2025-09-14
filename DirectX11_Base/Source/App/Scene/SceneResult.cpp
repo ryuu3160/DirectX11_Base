@@ -33,6 +33,12 @@ void SceneResult::Init()
 	pCamera->SetRotation({ 0.0f,0.0f,0.0f });
 
 	SpriteManager::GetInstance().CreateScene("Result");
+	SpriteManager::GetInstance().ChangeScene(1);
+
+	auto button = SpriteManager::GetInstance().GetSprite("ResultButton");
+	m_ButtonScaleX = button->GetScale().x;
+	m_ButtonScaleY = button->GetScale().y;
+	m_Time = 0.0f;
 }
 
 void SceneResult::Uninit()
@@ -41,6 +47,17 @@ void SceneResult::Uninit()
 
 void SceneResult::Update()
 {
+	// ボタンの拡縮
+	auto button = SpriteManager::GetInstance().GetSprite("ResultButton");
+	if (button && !m_IsChange)
+	{
+		float x = m_ButtonScaleX * (std::sinf(m_Time) * 0.5f + 1.0f);
+		float y = m_ButtonScaleY * (std::sinf(m_Time) * 0.5f + 1.0f);
+		button->SetScale({ x,y,1.0f });
+		m_Time += 1.0f / 60.0f;
+		if (m_Time >= 360.0f) m_Time = 0.0f;
+	}
+
 	// フェードイン
 	if (FadeManager::GetInstance().IsFadeEnd("Fade") && FadeManager::GetInstance().GetFadeStatus("Fade") >= 1.0f && !m_IsChange)
 	{
@@ -48,9 +65,11 @@ void SceneResult::Update()
 		return;
 	}
 
+	// スペースキーでタイトルへ(フェードアウト)
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
 		FadeManager::GetInstance().StartFadeOut("Fade");
+		SpriteManager::GetInstance().GetSprite("ResultButton")->SetScale({ m_ButtonScaleX,m_ButtonScaleY,1.0f });
 		m_IsChange = true;
 	}
 

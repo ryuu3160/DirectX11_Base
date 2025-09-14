@@ -65,7 +65,7 @@ void SceneGame::Init()
 	m_FrameManager.AppendTimeCounter("GameTimer",true);
 
 	SpriteManager::GetInstance().CreateScene("Game");
-	SpriteManager::GetInstance().ChangeScene(1);
+	SpriteManager::GetInstance().ChangeScene(0);
 }
 
 void SceneGame::Uninit()
