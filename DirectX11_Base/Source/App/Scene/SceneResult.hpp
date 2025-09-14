@@ -24,7 +24,7 @@ namespace
 class SceneResult : public SceneBase
 {
 public:
-	SceneResult() : SceneBase("Result") {}
+	SceneResult(_In_ const bool &In_IsClear);
 	// シーンの初期化
 	void Init() override;
 	// シーンの解放
@@ -41,6 +41,7 @@ private:
 	float m_ButtonScaleY = 1.0f;
 	float m_Time = 0.0f;
 	bool m_IsChange = false;
+	bool m_IsClear;
 #ifdef _DEBUG
 	DirectX::XMFLOAT3 m_CamPos{};
 	DirectX::XMFLOAT3 m_CamLook{};

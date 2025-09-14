@@ -63,6 +63,7 @@ void SceneGame::Init()
 
 	// 制限時間のタイマー設定
 	m_FrameManager.AppendTimeCounter("GameTimer",true);
+	m_FrameManager.StartTimeCounter("GameTimer");
 
 	SpriteManager::GetInstance().CreateScene("Game");
 	SpriteManager::GetInstance().ChangeScene(0);
@@ -85,9 +86,13 @@ void SceneGame::Update()
 
 	m_FrameManager.UpdateTimeCounter("GameTimer");
 
-	if(m_FrameManager.GetTimeCountSecond("GameTimer") >= TIME_LIMIT && !m_ChangeScene)
+	// 制限時間を超えた、又はプレイヤーが破壊されたらシーンチェンジ
+	float time = m_FrameManager.GetTimeCountSecond("GameTimer");
+	auto player = GetObject<Player>("Player");
+	if ((time >= TIME_LIMIT || player->IsDestroyed()) && !m_ChangeScene)
 	{
 		FadeManager::GetInstance().StartFadeOut("Fade");
+		m_IsClear = (time < TIME_LIMIT && !player->IsDestroyed());
 		m_ChangeScene = true;
 	}
 
@@ -95,7 +100,7 @@ void SceneGame::Update()
 	if (FadeManager::GetInstance().IsFadeEnd("Fade") && m_ChangeScene)
 	{
 		SceneManager::GetInstance().RemoveSubScene<SceneGame>();
-		SceneManager::GetInstance().LoadSubSceneAsync<SceneResult>();
+		SceneManager::GetInstance().LoadSubSceneAsync<SceneResult>(m_IsClear);
 	}
 }
 

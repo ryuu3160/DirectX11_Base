@@ -19,6 +19,11 @@
 #include "App/Scene/SceneTitle.hpp"
 
 
+SceneResult::SceneResult(_In_ const bool &In_IsClear)
+	: SceneBase("Result"), m_IsClear(In_IsClear)
+{
+}
+
 void SceneResult::Init()
 {
 	// ƒJƒƒ‰‚ðƒƒCƒ“ƒV[ƒ“‚©‚çŽæ“¾
@@ -34,6 +39,23 @@ void SceneResult::Init()
 
 	SpriteManager::GetInstance().CreateScene("Result");
 	SpriteManager::GetInstance().ChangeScene(1);
+
+	// ”wŒi‰æ‘œ
+	if (m_IsClear)
+	{
+		auto sprite = SpriteManager::GetInstance().CreateSprite("ResultClear", "Assets/Texture/ResultClear.png", false, false, -1);
+		sprite->SetPosition({ 0.0f,0.0f,0.0f });
+		sprite->SetScale({ 20.0f,11.25f,1.0f });
+		SpriteManager::GetInstance().DeleteSprite("ResultFailed");
+	}
+	else
+	{
+		auto sprite = SpriteManager::GetInstance().CreateSprite("ResultFailed", "Assets/Texture/ResultFailed.png", false, false, -1);
+		sprite->SetPosition({ 0.0f,0.0f,0.0f });
+		sprite->SetScale({ 20.0f,11.25f,1.0f });
+		SpriteManager::GetInstance().DeleteSprite("ResultClear");
+	}
+
 
 	auto button = SpriteManager::GetInstance().GetSprite("ResultButton");
 	m_ButtonScaleX = button->GetScale().x;
