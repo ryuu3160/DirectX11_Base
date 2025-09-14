@@ -112,15 +112,14 @@ void Main::Draw()
 	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
 	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-
-	SceneManager::GetInstance().RootDraw();
-
 	// スプライトマネージャーの3D描画
 	SpriteManager::GetInstance().Draw3D();
 
 	Change2D_Draw(); // 2D描画の設定
 	SpriteManager::GetInstance().Draw2D();
 	Change3D_Draw(); // 3D描画の設定
+
+	SceneManager::GetInstance().RootDraw();
 
 	SpriteManager::GetInstance().DrawImGui();
 
