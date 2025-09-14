@@ -124,7 +124,7 @@ bool SoundManager::IsPlaying(_In_ const std::string &In_strSoundName) const noex
 		return false;
 }
 
-void SoundManager::Stop(_In_ std::string &In_strSoundName, _In_  bool In_bIsFlag) noexcept
+void SoundManager::Stop(_In_ const std::string &In_strSoundName, _In_  bool In_bIsFlag) noexcept
 {
 	if (In_bIsFlag)
 	{

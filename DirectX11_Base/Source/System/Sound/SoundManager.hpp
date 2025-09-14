@@ -54,7 +54,7 @@ public:
 	/// </summary>
 	/// <param name="[In_strFileName]">サウンド名</param>
 	/// <param name="[In_bIsFlag]">trueなら引数以外のサウンドを停止する</param>
-	void Stop(_In_ std::string &In_strSoundName, _In_ bool In_bIsFlag = false) noexcept;
+	void Stop(_In_ const std::string &In_strSoundName, _In_ bool In_bIsFlag = false) noexcept;
 
 	/// <summary>
 	/// ロードしたサウンドの音量を設定する
