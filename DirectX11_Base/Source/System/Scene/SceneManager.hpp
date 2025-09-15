@@ -15,6 +15,7 @@
 //	前方宣言
 // ==============================
 class RenderManager;
+class CollisionManager;
 
 /// <summary>
 /// SceneManagerクラス
@@ -104,6 +105,7 @@ private:
 
 	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
 	FadeManager &m_FadeManager;
+	CollisionManager &m_CollisionManager;
 };
 
 /// <summary>

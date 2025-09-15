@@ -10,10 +10,12 @@
 // ==============================
 #include "SceneManager.hpp"
 #include "DirectX11/System/RenderManager.hpp"
+#include "System/CollisionManager/CollisionManager.hpp"
 
 SceneManager::SceneManager()
 	: m_RenderManager(RenderManager::GetInstance())
 	, m_FadeManager(FadeManager::GetInstance())
+	, m_CollisionManager(CollisionManager::GetInstance())
 {
 	m_pCurrentScene = nullptr;
 	m_pNextScene = nullptr;
@@ -43,7 +45,12 @@ SceneManager::~SceneManager()
 
 void SceneManager::RootUpdate() noexcept
 {
+	// メインの更新
 	_RootUpdateMain();
+
+	m_CollisionManager.CheckAllCollisions();
+
+	// 遅延更新
 	_RootUpdateLate();
 
 	// フェードの処理
