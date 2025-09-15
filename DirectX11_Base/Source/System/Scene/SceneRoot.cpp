@@ -45,7 +45,7 @@ void SceneRoot::Init()
 
 	// BGM追加
 	SoundManager::GetInstance().SetBGMVolume(0.4f);
-	SoundManager::GetInstance().Load("TitleBGM", "Assets/Sound/BGM/BGM12_Mixdown.wav", false, true);
+	SoundManager::GetInstance().Load("TitleBGM", "Assets/Sound/BGM/BGM12_Mixdown.mp3", false, true);
 
 	// スプライトマネージャーにカメラを設定
 	SpriteManager::GetInstance().SetCamera(pCameraComp);
