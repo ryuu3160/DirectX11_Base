@@ -157,6 +157,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\App\GameObject\Character\Enemy.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\App\GameObject\Character\Player.cpp" />
     <ClCompile Include="Source\App\GameObject\Environment\SeaLevel.cpp">
       <SubType>
@@ -325,6 +329,10 @@
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\App\GameObject\Character\Enemy.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\App\GameObject\Character\Player.hpp" />
     <ClInclude Include="Source\App\GameObject\Environment\SeaLevel.hpp">
       <SubType>

@@ -298,6 +298,9 @@
     <ClCompile Include="Source\App\Scene\SceneResult.cpp">
       <Filter>Source\App\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\GameObject\Character\Enemy.cpp">
+      <Filter>Source\App\GameObject\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -509,6 +512,9 @@
     </ClInclude>
     <ClInclude Include="Source\App\Scene\SceneResult.hpp">
       <Filter>Source\App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\GameObject\Character\Enemy.hpp">
+      <Filter>Source\App\GameObject\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

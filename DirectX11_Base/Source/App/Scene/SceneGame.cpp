@@ -16,6 +16,7 @@
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "App/GameObject/Character/Player.hpp"
+#include "App/GameObject/Character/Enemy.hpp"
 #include "App/GameObject/Environment/SeaLevel.hpp"
 #include "App/Scene/SceneResult.hpp"
 
@@ -24,7 +25,7 @@
 // ===============================
 namespace
 {
-	const inline constexpr float TIME_LIMIT = 6.0f; // 制限時間（秒）
+	const inline constexpr float TIME_LIMIT = 60.0f; // 制限時間（秒）
 }
 
 SceneGame::SceneGame()
@@ -49,6 +50,17 @@ void SceneGame::Init()
 
 	// カメラにプレイヤーを設定
 	pCamera->SetTargetPlayer(player);
+
+	// 敵の生成
+	std::string name = "Enemy1";
+	auto enemy1 = CreateObject<Enemy>(name,name);
+	enemy1->SetCamera(pCamera);
+
+	auto pos = player->GetPos();
+	pos.z += 20.0f;
+	pos.y += 50.0f;
+	enemy1->SetPos(pos);
+
 
 	// 海面オブジェクトの生成
 	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",false);
@@ -93,9 +105,12 @@ void SceneGame::Update()
 	bool IsPlayerDead = player->IsDestroyed();
 	if ((time >= TIME_LIMIT || IsPlayerDead) && !m_ChangeScene)
 	{
-		// 失敗時のBGM
-		SoundManager::GetInstance().Load("FailedSE", "Assets/Sound/SE/gameover3.mp3", true, false);
-		SoundManager::GetInstance().Play("FailedSE");
+		if (m_ChangeResultTIme <= 0.0f)
+		{
+			// 失敗時のBGM
+			SoundManager::GetInstance().Load("FailedSE", "Assets/Sound/SE/gameover3.mp3", true, false);
+			SoundManager::GetInstance().Play("FailedSE");
+		}
 
 		// プレイヤーが死んでいた場合とそうでない場合でリザルトへ行くまでの時間を変える
 		if (IsPlayerDead && m_ChangeResultTIme <= 0.0f)

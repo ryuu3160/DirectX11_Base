@@ -95,11 +95,12 @@ void Player::Update()
 	UpdateChildMissile();
 	UpdateShoot();
 	
-	if (m_Pos.y < 0.0f)
+	if (m_Pos.y < 0.0f && !m_IsDestroyed)
 	{
 		m_IsDestroyed = true;
 		SoundManager::GetInstance().Play("Explosion");
 		m_fSpeed = 0.0f;
+		m_Pos.y = -2.0f; // ’n–Ê‚É‚ß‚èž‚Ü‚¹‚é
 	}
 
 	GameObject::Update();
