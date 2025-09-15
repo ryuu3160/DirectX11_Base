@@ -23,6 +23,7 @@
 //  前方宣言
 // ==============================
 class SceneManager;
+class CollisionManager;
 
 class SceneObjectBase
 {
@@ -151,6 +152,7 @@ protected:
 	Items m_Items;
 	Items m_DeadItems; // 破棄するオブジェクトの名前リスト
 	SceneManager &m_SceneManager;
+	CollisionManager &m_CollisionManager;
 };
 
 /// <summary>

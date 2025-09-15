@@ -34,7 +34,7 @@ public:
 	ColliderBase();
 	virtual ~ColliderBase();
 
-	void ReadWrite(_In_ DataAccessor *In_Data) final;
+	void ReadWrite(_In_ DataAccessor *In_Data);
 
 	void ExecuteUpdate() noexcept override;
 

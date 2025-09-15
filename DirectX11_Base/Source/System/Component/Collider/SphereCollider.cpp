@@ -19,7 +19,15 @@ SphereCollider::~SphereCollider()
 {
 }
 
-void SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
+void SphereCollider::ReadWrite(_In_ DataAccessor *In_Data)
+{
+	In_Data->Access<bool>(&m_IsTrigger);
+	In_Data->Access<bool>(&m_IsCollision);
+	// ”¼Œa‚Ì“Ç‚İ‘‚«
+	In_Data->Access<float>(&m_Radius);
+}
+
+void SphereCollider::CheckCollision(_In_opt_ ColliderBase *In_Other) noexcept
 {
 	// ‘Šè‚ª‚¢‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
 	if (!In_Other)

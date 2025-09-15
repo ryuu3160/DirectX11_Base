@@ -30,6 +30,8 @@ void CollisionManager::CheckAllCollisions() noexcept
 	{
 		for(int j = i + 1; j < static_cast<int>(m_ColliderList.size()); ++j)
 		{
+			if(!m_ColliderList[i] || !m_ColliderList[j])
+				continue;
 			// コライダー同士の当たり判定をチェック
 			m_ColliderList[i]->CheckCollision(m_ColliderList[j]);
 		}

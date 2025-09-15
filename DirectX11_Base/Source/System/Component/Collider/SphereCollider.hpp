@@ -20,13 +20,15 @@ public:
 	SphereCollider();
 	virtual ~SphereCollider();
 
+	void ReadWrite(_In_ DataAccessor *In_Data) override;
+
 	/// <summary>
 	/// ”¼Œa‚ğİ’è‚µ‚Ü‚·B
 	/// </summary>
 	/// <param name="[In_Radius]">İ’è‚·‚é”¼Œa‚Ì’lB</param>
 	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
 
-	void CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
+	void CheckCollision(_In_opt_ ColliderBase *In_Other) noexcept override;
 
 private:
 

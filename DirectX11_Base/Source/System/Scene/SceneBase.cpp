@@ -11,6 +11,7 @@
 #include "SceneBase.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Scene/SceneManager.hpp"
+#include "System/CollisionManager/CollisionManager.hpp"
 
 // ==============================
 //  前方宣言
@@ -20,6 +21,7 @@ SceneBase::Objects SceneBase::m_Objects;
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
+	, m_CollisionManager(CollisionManager::GetInstance())
 {
 }
 
@@ -121,6 +123,8 @@ void SceneBase::_RootUpdateMain() noexcept
 
 	// シーン自体の更新(クリア判定など
 	Update();
+
+	m_CollisionManager.CheckAllCollisions();
 
 	// 破棄されたオブジェクトの削除
 	for (auto &name : m_DeadItems)

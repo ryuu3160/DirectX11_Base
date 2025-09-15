@@ -48,8 +48,6 @@ void SceneManager::RootUpdate() noexcept
 	// メインの更新
 	_RootUpdateMain();
 
-	m_CollisionManager.CheckAllCollisions();
-
 	// 遅延更新
 	_RootUpdateLate();
 

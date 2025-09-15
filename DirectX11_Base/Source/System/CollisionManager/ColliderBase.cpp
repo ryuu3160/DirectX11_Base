@@ -22,6 +22,8 @@ ColliderBase::~ColliderBase()
 
 void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
 {
+	In_Data->Access<bool>(&m_IsTrigger);
+	In_Data->Access<bool>(&m_IsCollision);
 }
 
 void ColliderBase::ExecuteUpdate() noexcept
