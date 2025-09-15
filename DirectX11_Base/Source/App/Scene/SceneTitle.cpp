@@ -18,6 +18,15 @@
 #include "App/GameObject/Environment/SeaLevel.hpp"
 #include "App/Scene/SceneGame.hpp"
 
+// ==============================
+//  定数
+// ==============================
+namespace
+{
+	const inline constexpr float cx_ButtonScaleX = 6.0f; // ボタンの初期Xスケール
+	const inline constexpr float cx_ButtonScaleY = 1.28f; // ボタンの初期Yスケール
+}
+
 void SceneTitle::Init()
 {
 	// カメラをメインシーンから取得
@@ -31,12 +40,12 @@ void SceneTitle::Init()
 	pCamera->SetPos({ 0.0f,0.0f,-10.0f });
 	pCamera->SetRotation({ 0.0f,0.0f,0.0f });
 
+	// SE追加
+	SoundManager::GetInstance().Load("Click", "Assets/Sound/SE/ClickButton.mp3", true, false);
+
 	SpriteManager::GetInstance().CreateScene("Title");
 	SpriteManager::GetInstance().ChangeScene(3);
 
-	auto button = SpriteManager::GetInstance().GetSprite("TitleButton");
-	m_ButtonScaleX = button->GetScale().x;
-	m_ButtonScaleY = button->GetScale().y;
 	m_Time = 0.0f;
 
 	// フェードイン
@@ -44,10 +53,14 @@ void SceneTitle::Init()
 	{
 		FadeManager::GetInstance().StartFadeIn("Fade");
 	}
+
+	// BGM再生
+	SoundManager::GetInstance().Play("TitleBGM");
 }
 
 void SceneTitle::Uninit()
 {
+	SoundManager::GetInstance().Stop("TitleBGM");
 }
 
 void SceneTitle::Update()
@@ -56,8 +69,8 @@ void SceneTitle::Update()
 	auto button = SpriteManager::GetInstance().GetSprite("TitleButton");
 	if (button && !m_IsChange)
 	{
-		float x = m_ButtonScaleX * (std::sinf(m_Time) * 0.5f + 1.0f);
-		float y = m_ButtonScaleY * (std::sinf(m_Time) * 0.5f + 1.0f);
+		float x = cx_ButtonScaleX * (std::sinf(m_Time) * 0.5f + 1.0f);
+		float y = cx_ButtonScaleY * (std::sinf(m_Time) * 0.5f + 1.0f);
 		button->SetScale({ x,y,1.0f });
 		m_Time += 1.0f / 60.0f;
 		if (m_Time >= 360.0f) m_Time = 0.0f;
@@ -65,8 +78,9 @@ void SceneTitle::Update()
 
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
+		SoundManager::GetInstance().Play("Click");
 		FadeManager::GetInstance().StartFadeOut("Fade");
-		SpriteManager::GetInstance().GetSprite("TitleButton")->SetScale({ m_ButtonScaleX,m_ButtonScaleY,1.0f });
+		SpriteManager::GetInstance().GetSprite("TitleButton")->SetScale({ cx_ButtonScaleX,cx_ButtonScaleY,1.0f });
 		m_IsChange = true;
 	}
 

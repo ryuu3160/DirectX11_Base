@@ -38,6 +38,7 @@ private:
 	void ChangeScene();
 private:
 	int m_Index = 0;
+	float m_ChangeResultTIme;
 	bool m_ChangeScene = false;
 	bool m_IsClear = false;
 #ifdef _DEBUG

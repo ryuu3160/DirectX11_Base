@@ -29,6 +29,7 @@ namespace
 
 SceneGame::SceneGame()
 	: SceneBase("Game"), m_FrameManager(FrameManager::GetInstance())
+	, m_ChangeResultTIme(0.0f)
 {
 }
 
@@ -89,11 +90,40 @@ void SceneGame::Update()
 	// 制限時間を超えた、又はプレイヤーが破壊されたらシーンチェンジ
 	float time = m_FrameManager.GetTimeCountSecond("GameTimer");
 	auto player = GetObject<Player>("Player");
-	if ((time >= TIME_LIMIT || player->IsDestroyed()) && !m_ChangeScene)
+	bool IsPlayerDead = player->IsDestroyed();
+	if ((time >= TIME_LIMIT || IsPlayerDead) && !m_ChangeScene)
 	{
-		FadeManager::GetInstance().StartFadeOut("Fade");
-		m_IsClear = (time < TIME_LIMIT && !player->IsDestroyed());
-		m_ChangeScene = true;
+		// 失敗時のBGM
+		SoundManager::GetInstance().Load("FailedSE", "Assets/Sound/SE/gameover3.mp3", true, false);
+		SoundManager::GetInstance().Play("FailedSE");
+
+		// プレイヤーが死んでいた場合とそうでない場合でリザルトへ行くまでの時間を変える
+		if (IsPlayerDead && m_ChangeResultTIme <= 0.0f)
+		{
+#ifdef _DEBUG
+			auto cam = GetObject<CameraDCC>("Camera");
+#else
+			auto cam = GetObject<MainCamera>("Camera");
+#endif
+			cam->SetTargetPlayer(nullptr);
+			auto pos = player->GetPos();
+			auto playerFront = player->GetFront();
+			auto playerUp = player->GetUp();
+			pos = (pos - playerFront * (cx_ThirdPerson_Distance * 2.0f)) + playerUp * (cx_ThirdPerson_UpDistanceRate * 2.0f);
+			cam->SetPos(pos);
+			cam->SetQuat(player->GetQuat());
+			m_ChangeResultTIme = 3.0f; // 3秒後にリザルトへ
+		}
+
+		// タイマーを進める
+		m_ChangeResultTIme -= 1.0f / 60.0f;
+
+		if (m_ChangeResultTIme <= 0.0f)
+		{
+			FadeManager::GetInstance().StartFadeOut("Fade");
+			m_IsClear = (time < TIME_LIMIT && !IsPlayerDead);
+			m_ChangeScene = true;
+		}
 	}
 
 	// シーンチェンジ

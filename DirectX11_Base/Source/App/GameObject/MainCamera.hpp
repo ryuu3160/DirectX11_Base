@@ -45,7 +45,7 @@ public:
 
 	void LateUpdate() override final;
 
-	void SetTargetPlayer(_In_ Player *In_pPlayer) noexcept;
+	void SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept;
 
 private:
 	// 3人称視点カメラの更新

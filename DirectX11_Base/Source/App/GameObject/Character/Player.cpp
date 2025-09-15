@@ -17,6 +17,12 @@
 // ==============================
 namespace
 {
+	// プレイヤーの初期位置
+	const inline constexpr DirectX::XMFLOAT3 cx_PlayerStartPos = { 0.0f, 200.0f, 0.0f };
+	const inline constexpr DirectX::XMFLOAT3 cx_PlayerScale = { 0.005f, 0.005f, 0.005f };
+	const inline constexpr DirectX::XMFLOAT4 cx_PlayerStartQuat = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const inline constexpr float cx_PlayerStartSpeed = 100.0f;
+
 	// 移動関連
 	const inline constexpr float MOVE_SPEED_SCALE = 0.01f; // 移動速度の倍率
 	const inline constexpr float cx_SpeedAdd = 0.5f;		// 速度増減量
@@ -61,8 +67,10 @@ Player::Player()
 	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
 	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
-	SetPos({ 0.0f, 0.0f, 0.0f });
-	SetScale({ 0.005f, 0.005f, 0.005f });
+	SetPos(cx_PlayerStartPos);
+	SetScale(cx_PlayerScale);
+	SetQuat(cx_PlayerStartQuat);
+	m_fSpeed = cx_PlayerStartSpeed;
 
 	// ミサイルのリロードタイマーをセット
 	for(int i = 0; i < 4; ++i)
@@ -71,7 +79,9 @@ Player::Player()
 	}
 
 	// SE追加
-	SoundManager::GetInstance().Load("Missile", "Assets/Sound/SE/Missile.wav", true, false);
+	auto &SoundM = SoundManager::GetInstance();
+	SoundM.Load("Missile", "Assets/Sound/SE/Missile.wav", true, false);
+	SoundM.Load("Explosion", "Assets/Sound/SE/small_explosion.wav", true, false);
 }
 
 Player::~Player()
@@ -85,6 +95,12 @@ void Player::Update()
 	UpdateChildMissile();
 	UpdateShoot();
 	
+	if (m_Pos.y < 0.0f)
+	{
+		m_IsDestroyed = true;
+		SoundManager::GetInstance().Play("Explosion");
+		m_fSpeed = 0.0f;
+	}
 
 	GameObject::Update();
 }

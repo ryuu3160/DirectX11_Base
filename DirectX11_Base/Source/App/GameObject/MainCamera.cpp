@@ -48,7 +48,7 @@ void MainCamera::LateUpdate()
 	}
 }
 
-void MainCamera::SetTargetPlayer(_In_ Player *In_pPlayer) noexcept
+void MainCamera::SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept
 {
 	m_pPlayer = In_pPlayer;
 }

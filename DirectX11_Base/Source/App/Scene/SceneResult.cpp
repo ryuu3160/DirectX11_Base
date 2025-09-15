@@ -47,6 +47,8 @@ void SceneResult::Init()
 		sprite->SetPosition({ 0.0f,0.0f,0.0f });
 		sprite->SetScale({ 20.0f,11.25f,1.0f });
 		SpriteManager::GetInstance().DeleteSprite("ResultFailed");
+
+		// クリア時のBGM
 	}
 	else
 	{
@@ -90,6 +92,7 @@ void SceneResult::Update()
 	// スペースキーでタイトルへ(フェードアウト)
 	if (Input::IsKeyTrigger(VK_SPACE) && !Input::IsKeyPress(VK_LSHIFT))
 	{
+		SoundManager::GetInstance().Play("Click");
 		FadeManager::GetInstance().StartFadeOut("Fade");
 		SpriteManager::GetInstance().GetSprite("ResultButton")->SetScale({ m_ButtonScaleX,m_ButtonScaleY,1.0f });
 		m_IsChange = true;

@@ -118,7 +118,7 @@ void CameraDCC::LateUpdate()
 	}
 }
 
-void CameraDCC::SetTargetPlayer(_In_ Player *In_pPlayer) noexcept
+void CameraDCC::SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept
 {
 	m_pPlayer = In_pPlayer;
 }
