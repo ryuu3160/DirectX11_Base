@@ -85,21 +85,21 @@ GameObject::~GameObject()
 		file.write(reinterpret_cast<const char *>(&m_Quat), sizeof(m_Quat));
 		file.write(reinterpret_cast<const char *>(&m_Scale), sizeof(m_Scale));
 
-		// コンポーネントのデータを保存
-		for (itr = m_Components.begin();itr != m_Components.end();itr++)
-		{
-			const char *name = typeid(**itr).name();
-			Component::DataAccessor accessor(nullptr);
-			(*itr)->ReadWrite(&accessor);
-			// データのキーを保存
-			size_t size = strlen(name);
-			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-			file.write(name, size);
-			// データの保存
-			size = accessor.GetWriteSize();
-			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-			file.write(accessor.GetData(), size);
-		}
+		//// コンポーネントのデータを保存
+		//for (itr = m_Components.begin();itr != m_Components.end();itr++)
+		//{
+		//	const char *name = typeid(**itr).name();
+		//	Component::DataAccessor accessor(nullptr);
+		//	(*itr)->ReadWrite(&accessor);
+		//	// データのキーを保存
+		//	size_t size = strlen(name);
+		//	file.write(reinterpret_cast<const char *>(&size), sizeof(size));
+		//	file.write(name, size);
+		//	// データの保存
+		//	size = accessor.GetWriteSize();
+		//	file.write(reinterpret_cast<const char *>(&size), sizeof(size));
+		//	file.write(accessor.GetData(), size);
+		//}
 		file.close();
 	}
 #endif
