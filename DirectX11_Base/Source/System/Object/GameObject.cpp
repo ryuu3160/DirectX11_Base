@@ -392,8 +392,7 @@ void GameObject::UpdateChildTransform()
 
 void GameObject::_destroySelf() noexcept
 {
-	DestroyAllChildObjects(); // まず子オブジェクトを削除
-
+	// 自身が所属しているシーンの削除予約リストに追加
 	if (m_pScene)
 		m_pScene->DestroyObj(m_Name); // シーンから自身を削除
 }

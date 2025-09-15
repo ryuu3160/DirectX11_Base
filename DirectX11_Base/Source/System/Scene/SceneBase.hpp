@@ -143,6 +143,11 @@ private:
 	/// </summary>
 	void _RootDraw() noexcept;
 
+	/// <summary>
+	/// 削除予約リストに追加されたオブジェクトを破棄します。
+	/// </summary>
+	void _DestroyObjects() noexcept;
+
 private:
 	static Objects m_Objects;
 	std::string m_Name;

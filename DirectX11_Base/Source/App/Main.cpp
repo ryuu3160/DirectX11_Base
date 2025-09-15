@@ -104,6 +104,7 @@ void Main::Update()
 
 void Main::Draw()
 {
+	auto &SceneM = SceneManager::GetInstance();
 	DX11_Initialize &DX11 = DX11_Initialize::GetInstance();
 	auto rtv = g_pScene->GetObject<RenderTarget>("RTV");
 	auto dsv = g_pScene->GetObject<DepthStencil>("DSV");
@@ -119,11 +120,16 @@ void Main::Draw()
 	SpriteManager::GetInstance().Draw2D();
 	Change3D_Draw(); // 3D描画の設定
 
-	SceneManager::GetInstance().RootDraw();
+	SceneM.RootDraw();
 
 	SpriteManager::GetInstance().DrawImGui();
 
+	// オブジェクトの破棄は非同期で行う
+	std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
+
 	DX11.Swap();
+
+	fut.get(); // 破棄が終わるまで待機
 }
 
 void Main::Change2D_Draw() noexcept

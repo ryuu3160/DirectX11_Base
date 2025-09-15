@@ -85,12 +85,6 @@ template<> GameObject
 
 void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
 {
-	auto obj = m_Objects.find(In_Name);
-	if (obj == m_Objects.end()) return;
-
-	delete obj->second;
-	m_Objects.erase(obj);
-
 	m_DeadItems.push_back(In_Name);
 }
 
@@ -121,13 +115,6 @@ void SceneBase::_RootUpdateMain() noexcept
 
 	// シーン自体の更新(クリア判定など
 	Update();
-
-	// 破棄されたオブジェクトの削除
-	for (auto &name : m_DeadItems)
-	{
-		m_Items.remove(name);
-	}
-	m_DeadItems.clear();
 }
 
 void SceneBase::_RootUpdateLate() noexcept
@@ -146,13 +133,6 @@ void SceneBase::_RootUpdateLate() noexcept
 
 	// シーン自体の遅延更新
 	LateUpdate();
-
-	// 破棄予定のオブジェクトを削除
-	for (auto &name : m_DeadItems)
-	{
-		m_Items.remove(name);
-	}
-	m_DeadItems.clear();
 }
 
 void SceneBase::_RootDraw() noexcept
@@ -171,4 +151,23 @@ void SceneBase::_RootDraw() noexcept
 
 	// シーン自体の描画
 	Draw();
+}
+
+void SceneBase::_DestroyObjects() noexcept
+{
+	// 破棄予定のオブジェクトを削除
+	for (auto &name : m_DeadItems)
+	{
+		auto obj = m_Objects.find(name);
+		if (obj == m_Objects.end()) return;
+
+		// オブジェクトの削除
+		delete obj->second;
+
+		// 各リストから削除
+		m_Objects.erase(obj);
+		m_Items.remove(name);
+	}
+	// 破棄予定リストをクリア
+	m_DeadItems.clear();
 }

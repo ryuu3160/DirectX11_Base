@@ -74,6 +74,18 @@ void SceneManager::RootDraw() noexcept
 	m_RenderManager.DrawAll();
 }
 
+void SceneManager::DestroyObjects() noexcept
+{
+	if (m_pCurrentScene)
+		m_pCurrentScene->_DestroyObjects();
+	
+	for (auto itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_DestroyObjects();
+	}
+}
+
 void SceneManager::UpdateSceneChange() noexcept
 {
 	// ƒV[ƒ“‚Ì“Ç‚İ‚İ‚ª–³‚¢ê‡‚Í‰½‚à‚µ‚È‚¢

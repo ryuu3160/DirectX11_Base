@@ -41,6 +41,11 @@ public:
 	void RootDraw() noexcept;
 
 	/// <summary>
+	/// 削除予約リストに追加されたオブジェクトを破棄します。
+	/// </summary>
+	void DestroyObjects() noexcept;
+
+	/// <summary>
 	/// <para>シーンの切り替えを行うアップデート</para>
 	/// <para>すべてのアップデートが終わった後に呼び出してください。</para>
 	/// </summary>
