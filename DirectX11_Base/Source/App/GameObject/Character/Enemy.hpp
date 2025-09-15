@@ -24,7 +24,7 @@ namespace
 class Enemy : public GameObject
 {
 public:
-	Enemy(_In_ const std::string &In_Name);
+	Enemy(_In_ std::string In_Name);
 	~Enemy();
 
 	void Update() override;

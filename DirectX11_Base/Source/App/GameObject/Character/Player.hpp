@@ -39,6 +39,8 @@ public:
 	/// <returns>機体が破壊されている場合はtrueを返します</returns>
 	bool IsDestroyed() const noexcept { return m_IsDestroyed; }
 
+	void SetTarget(_In_ GameObject *In_Target) noexcept { m_pTarget = In_Target; }
+
 private:
 
 	void UpdateMovement();
@@ -53,6 +55,7 @@ private:
 
 private:
 	GameObject *m_pCamera;
+	GameObject *m_pTarget; // 攻撃対象
 	float m_fSpeed;			// 現在の速度
 	int m_ShotMissileNum;	// 発射したミサイルの番号
 

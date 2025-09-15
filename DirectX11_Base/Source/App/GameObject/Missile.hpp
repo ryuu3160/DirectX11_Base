@@ -28,7 +28,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Missile(_In_ const std::string &In_Name);
+	Missile(_In_ std::string In_Name, _In_ const bool &In_IsAddCollider);
 
 	/// <summary>
 	/// デストラクタ
@@ -41,6 +41,8 @@ public:
 
 	void SetStartPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept { m_StartPos = In_Pos; }
 
+	void SetTarget(_In_ GameObject *In_pTarget) noexcept { m_pTarget = In_pTarget; }
+
 private:
 	
 	/// <summary>
@@ -50,8 +52,10 @@ private:
 	bool IsAutoDestroy() noexcept;
 
 private:
+	bool m_IsAddCollider;
 	float m_Speed;
 	std::string m_MissileName;
 	DirectX::XMFLOAT3 m_StartPos;
 	Ease::DataDuration m_EaseData;
+	GameObject *m_pTarget;
 };

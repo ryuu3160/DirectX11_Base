@@ -45,6 +45,10 @@ void SceneGame::Init()
 
 	Camera *pCameraComp = pCamera->GetComponent<Camera>();
 
+	// BGMの再生
+	SoundManager::GetInstance().Load("GameBGM", "Assets/Sound/BGM/BattleBGM.wav", true, true);
+	SoundManager::GetInstance().Play("GameBGM");
+
 	auto player = CreateObject<Player>("Player");
 	player->SetCamera(pCamera);
 
@@ -57,10 +61,11 @@ void SceneGame::Init()
 	enemy1->SetCamera(pCamera);
 
 	auto pos = player->GetPos();
-	pos.z += 20.0f;
-	pos.y += 50.0f;
+	pos.z += 100.0f;
 	enemy1->SetPos(pos);
 
+	// ターゲットをプレイヤーに設定
+	player->SetTarget(enemy1);
 
 	// 海面オブジェクトの生成
 	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",false);
@@ -99,6 +104,22 @@ void SceneGame::Update()
 
 	m_FrameManager.UpdateTimeCounter("GameTimer");
 
+	if(!GetObject<Enemy>("Enemy1"))
+	{
+		// 敵が破壊されたらリザルトへ
+		if (!m_ChangeScene)
+		{
+			FadeManager::GetInstance().StartFadeOut("Fade");
+			m_IsClear = true;
+			m_ChangeScene = true;
+
+			// クリア時のBGM
+			SoundManager::GetInstance().Stop("GameBGM");
+			SoundManager::GetInstance().Load("ClearSE", "Assets/Sound/SE/StageClear_Jingle01.mp3", true, false);
+			SoundManager::GetInstance().Play("ClearSE");
+		}
+	}
+
 	// 制限時間を超えた、又はプレイヤーが破壊されたらシーンチェンジ
 	float time = m_FrameManager.GetTimeCountSecond("GameTimer");
 	auto player = GetObject<Player>("Player");
@@ -108,6 +129,7 @@ void SceneGame::Update()
 		if (m_ChangeResultTIme <= 0.0f)
 		{
 			// 失敗時のBGM
+			SoundManager::GetInstance().Stop("GameBGM");
 			SoundManager::GetInstance().Load("FailedSE", "Assets/Sound/SE/gameover3.mp3", true, false);
 			SoundManager::GetInstance().Play("FailedSE");
 		}

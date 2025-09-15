@@ -221,7 +221,16 @@ void Player::UpdateShoot()
 		// ミサイル発射SE
 		SoundManager::GetInstance().Play("Missile");
 		std::string name = "Missile" + std::to_string(m_ShotMissileNum);
-		auto obj = GetScene()->CreateObject<Missile>(name,name);
+		auto obj = GetScene()->CreateObject<Missile>(name,name,true);
+
+		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&m_Pos);
+		auto targetPos = m_pTarget->GetPos();
+		DirectX::XMVECTOR pos2 = DirectX::XMLoadFloat3(&targetPos);
+		DirectX::XMVECTOR sub = DirectX::XMVectorSubtract(pos1, pos2);
+		float length = DirectX::XMVectorGetX(DirectX::XMVector3Length(sub));
+		// ターゲットが一定距離内にいる場合のみターゲットをセット
+		if(length < 20000.0f)
+			obj->SetTarget(m_pTarget);
 		auto cmp = obj->GetComponent<ModelRenderer>();
 		cmp->SetCamera(m_pCamera);
 		cmp->SetLayer(-1); // キャノピー越しに見えるようにする
@@ -256,7 +265,7 @@ void Player::UpdateReload()
 			{
 				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				std::string name = "Missile" + std::to_string((*itr).first);
-				auto obj = AddChildObject<Missile>(name, name);
+				auto obj = AddChildObject<Missile>(name, name,false);
 				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
