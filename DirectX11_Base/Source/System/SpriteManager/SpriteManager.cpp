@@ -54,7 +54,7 @@ void SpriteManager::Init() noexcept
 
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
-		m_Sprites[i].clear();
+		m_SpriteObjects[i].clear();
 		m_SpriteNames[i].clear();
 	}
 
@@ -81,42 +81,13 @@ void SpriteManager::Update() noexcept
 	SpriteController();
 }
 
-void SpriteManager::Draw2D() noexcept
+void SpriteManager::Draw() noexcept
 {
-	// 2Dスプライトの描画
-	for (auto &itr : m_Sprites[_2D])
+	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
-		for (auto &sprite : itr.second)
+		for (auto &itr : m_SpriteObjects[i])
 		{
-			if (sprite)
-			{
-				DirectX::XMFLOAT4X4 view;
-				DirectX::XMMATRIX mView = DirectX::XMMatrixLookAtLH({ 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-				DirectX::XMStoreFloat4x4(&view, DirectX::XMMatrixTranspose(mView));
-				sprite->SetView(view);
-				sprite->SetProjection(m_Projection2D);
-				sprite->Draw();
-			}
-		}
-	}
-}
-
-void SpriteManager::Draw3D() noexcept
-{
-	for (auto &itr : m_Sprites[_3D])
-	{
-		for (auto &sprite : itr.second)
-		{
-			if (sprite)
-			{
-				sprite->SetView(m_View);
-				sprite->SetProjection(m_Projection3D);
-				// ビルボードの場合は専用のView行列を設定
-				if (sprite->GetIsBillBoard())
-					sprite->SetBillBoardView(m_BillBoardView);
-
-				sprite->Draw();
-			}
+			itr->ExecuteDraw();
 		}
 	}
 }
@@ -124,7 +95,7 @@ void SpriteManager::Draw3D() noexcept
 std::list<Sprite *> SpriteManager::Get2DSprites() noexcept
 {
 	std::list<Sprite *> work;
-	for (auto &itr : m_Sprites[_2D])
+	for (auto &itr : m_SpriteObjects[_2D])
 	{
 		work.splice(work.end(), itr.second);
 	}
@@ -141,58 +112,97 @@ std::list<Sprite *> SpriteManager::Get3DSprites() noexcept
 	return work;
 }
 
-Sprite *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept
+GameObject *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept
 {
-	for(auto &itr : m_Sprites[_2D])
+	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
-		for (auto &sprite : itr.second)
+		for (auto &itr : m_SpriteObjects[i])
 		{
-			if (sprite && sprite->GetName() == In_SpriteName.data())
-				return sprite;
+			if (itr && itr->GetName() == In_SpriteName.data())
+				return itr;
 		}
 	}
-	for (auto &itr : m_Sprites[_3D])
-	{
-		for (auto &sprite : itr.second)
-		{
-			if (sprite && sprite->GetName() == In_SpriteName.data())
-				return sprite;
-		}
-	}
+
+	//for(auto &itr : m_Sprites[_2D])
+	//{
+	//	for (auto &sprite : itr.second)
+	//	{
+	//		if (sprite && sprite->GetName() == In_SpriteName.data())
+	//			return sprite;
+	//	}
+	//}
+	//for (auto &itr : m_Sprites[_3D])
+	//{
+	//	for (auto &sprite : itr.second)
+	//	{
+	//		if (sprite && sprite->GetName() == In_SpriteName.data())
+	//			return sprite;
+	//	}
+	//}
 
 	return nullptr;
 }
 
-Sprite *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath, _In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard, _In_ const int &In_Layer, _In_ const float &In_Scale) noexcept
+GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath, _In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard, _In_ const int &In_Layer, _In_ const float &In_Scale) noexcept
 {
-	for (auto &itr : m_Sprites[In_Is3D ? _3D : _2D])
+	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
-		// 既に同名のスプライトが存在するか確認
-		for (auto &sprite : itr.second)
+		// すでに同名のスプライトオブジェクトが存在するか確認
+		for (auto &itr : m_SpriteObjects[i])
 		{
-			if (sprite && sprite->GetName() == In_SpriteName.data())
-				return sprite; // 既に存在する場合はそのまま返す
+			if (itr && itr->GetName() == In_SpriteName.data())
+			{
+				// すでに同盟のスプライトオブジェクトが存在する場合はそのまま返す
+				return itr;
+			}
 		}
 	}
 
-	// 新しいスプライトを作成
-	Sprite *work = new Sprite();
-	work->Load(In_FilePath, In_Layer, In_Scale);
-	work->SetName(In_SpriteName.data());
-	work->SetFilePath(In_FilePath.data());
-	work->Set3D(In_Is3D);
-	if (In_Is3D)
-		work->SetBillBoard(In_IsBillBoard);
-	else
-		work->SetBillBoard(false); // 2Dスプライトはビルボードにしない
-	// スプライトをマネージャーに登録
-	m_Sprites[In_Is3D ? _3D : _2D][In_Layer].push_back(work);
-	// スプライト名を保存
-	m_SpriteNames[In_Is3D ? _3D : _2D].push_back(In_SpriteName.data());
-	// スプライトへのポインタをリストに追加(名前のリストと順番が対応する)
-	m_SpritePointerList[In_Is3D ? _3D : _2D].push_back(work);
+	// 新しいスプライトオブジェクトを作成
+	GameObject *obj = new GameObject(In_SpriteName.data());
+	auto cmp = obj->AddComponent<SpriteRenderer>();
+	cmp->SetAssetPath(In_FilePath);
+	cmp->Set3D(In_Is3D);
+	cmp->SetBillBoard(In_IsBillBoard);
+	cmp->SetLayer(In_Layer);
+	cmp->SetCamera(m_pCameraObj);
+	cmp->Load(In_FilePath, In_Scale);
 
-	return work;
+	// スプライトオブジェクトをマネージャーに登録
+	if(In_Is3D)
+		m_SpriteObjects[RenderMode::_3D].push_back(obj);
+	else
+		m_SpriteObjects[RenderMode::_2D].push_back(obj);
+	return obj;
+
+	//for (auto &itr : m_Sprites[In_Is3D ? _3D : _2D])
+	//{
+	//	// 既に同名のスプライトが存在するか確認
+	//	for (auto &sprite : itr.second)
+	//	{
+	//		if (sprite && sprite->GetName() == In_SpriteName.data())
+	//			return sprite; // 既に存在する場合はそのまま返す
+	//	}
+	//}
+
+	//// 新しいスプライトを作成
+	//Sprite *work = new Sprite();
+	//work->Load(In_FilePath, In_Layer, In_Scale);
+	//work->SetName(In_SpriteName.data());
+	//work->SetFilePath(In_FilePath.data());
+	//work->Set3D(In_Is3D);
+	//if (In_Is3D)
+	//	work->SetBillBoard(In_IsBillBoard);
+	//else
+	//	work->SetBillBoard(false); // 2Dスプライトはビルボードにしない
+	//// スプライトをマネージャーに登録
+	//m_Sprites[In_Is3D ? _3D : _2D][In_Layer].push_back(work);
+	//// スプライト名を保存
+	//m_SpriteNames[In_Is3D ? _3D : _2D].push_back(In_SpriteName.data());
+	//// スプライトへのポインタをリストに追加(名前のリストと順番が対応する)
+	//m_SpritePointerList[In_Is3D ? _3D : _2D].push_back(work);
+
+	//return work;
 }
 
 void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept
@@ -637,10 +647,10 @@ void SpriteManager::LoadSprites() noexcept
 				int layer = spriteData["Layer"];
 				bool is3D = spriteData["Is3D"];
 				bool isBillBoard = spriteData["IsBillBoard"];
-				Sprite *sprite = CreateSprite(name, filePath, is3D, isBillBoard, layer);
+				GameObject *sprite = CreateSprite(name, filePath, is3D, isBillBoard, layer);
 				if (sprite)
 				{
-					sprite->SetPosition(position);
+					sprite->SetPos(position);
 					sprite->SetScale(scale);
 					sprite->SetRotation(rotation);
 				}

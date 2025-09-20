@@ -31,7 +31,8 @@ class Camera;
 class SpriteManager : public Singleton<SpriteManager>
 {
 	friend class Singleton<SpriteManager>;
-	using Sprites = std::map<int, std::list<Sprite *>>;
+	using SpriteObjects = std::list<GameObject *>;
+	//using Sprites = std::map<int, std::list<Sprite *>>;
 
 public:
 
@@ -66,24 +67,22 @@ public:
 	/// </summary>
 	void Update() noexcept;
 
-	void Draw2D() noexcept;
-
-	void Draw3D() noexcept;
+	void Draw() noexcept;
 
 	/// <summary>
 	/// 操作中ディレクトリの2Dスプライトリストを取得します。
 	/// </summary>
 	/// <returns>スプライト（Sprite 型ポインタ）のリストへの定数参照。</returns>
-	std::list<Sprite *> Get2DSprites() noexcept;
+	std::list<GameObject *> Get2DSprites() noexcept;
 
-	std::list<Sprite *> Get3DSprites() noexcept;
+	std::list<GameObject *> Get3DSprites() noexcept;
 
 	/// <summary>
 	/// 操作中のディレクトリにあるスプライトを取得します。
 	/// </summary>
 	/// <param name="[In_SpriteName]">スプライト名</param>
 	/// <returns>スプライトへのポインタ</returns>
-	Sprite *GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept;
+	GameObject *GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept;
 
 	/// <summary>
 	/// スプライトを作成し、操作中のディレクトリに追加します。
@@ -95,7 +94,7 @@ public:
 	/// <param name="[In_Layer]">レイヤー</param>
 	/// <param name="[In_Scale]">スケール</param>
 	/// <returns>追加されたスプライトへのポインタ。</returns>
-	Sprite* CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath,_In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard = false,_In_ const int &In_Layer = 0, _In_ const float &In_Scale = 1.0f) noexcept;
+	GameObject* CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath,_In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard = false,_In_ const int &In_Layer = 0, _In_ const float &In_Scale = 1.0f) noexcept;
 
 	/// <summary>
 	/// スプライト名が指定されたレンダーモードで競合しているかどうかを判定します。
@@ -222,9 +221,11 @@ private:
 	void SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ DirectX::XMVECTOR In_vRayDir) noexcept;
 
 private:
-	Sprites m_Sprites[_MAX_RENDER_MODE]; // スプライトのマップ
+	SpriteObjects m_SpriteObjects[_MAX_RENDER_MODE]; // スプライトオブジェクトのマップ
 	std::list<std::string> m_SpriteNames[_MAX_RENDER_MODE];
-	std::list<Sprite *> m_SpritePointerList[_MAX_RENDER_MODE]; // スプライトのポインタリスト
+
+	//Sprites m_Sprites[_MAX_RENDER_MODE]; // スプライトのマップ
+	//std::list<Sprite *> m_SpritePointerList[_MAX_RENDER_MODE]; // スプライトのポインタリスト
 	
 	// シーンセーブデータ
 	std::map<std::string, FilePathHold> m_SceneSaveData;	// シーン名とパスのマップ
