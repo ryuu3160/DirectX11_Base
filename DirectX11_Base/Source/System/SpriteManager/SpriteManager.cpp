@@ -74,6 +74,15 @@ void SpriteManager::Update() noexcept
 
 	UpdateViewAndProjection(); // カメラのビュー行列と射影行列を更新
 
+	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
+	{
+		for (auto &itr : m_SpriteObjects[i])
+		{
+			itr->ExecuteUpdate();
+			itr->ExecuteLateUpdate();
+		}
+	}
+
 	// ウィンドウが開いていなければ処理しない
 	if (!m_bIsOpen)
 		return;
@@ -92,24 +101,14 @@ void SpriteManager::Draw() noexcept
 	}
 }
 
-std::list<Sprite *> SpriteManager::Get2DSprites() noexcept
+std::list<GameObject *> SpriteManager::Get2DSprites() noexcept
 {
-	std::list<Sprite *> work;
-	for (auto &itr : m_SpriteObjects[_2D])
-	{
-		work.splice(work.end(), itr.second);
-	}
-	return work;
+	return m_SpriteObjects[_2D];
 }
 
-std::list<Sprite *> SpriteManager::Get3DSprites() noexcept
+std::list<GameObject *> SpriteManager::Get3DSprites() noexcept
 {
-	std::list<Sprite *> work;
-	for (auto &itr : m_Sprites[_3D])
-	{
-		work.splice(work.end(), itr.second);
-	}
-	return work;
+	return m_SpriteObjects[_3D];
 }
 
 GameObject *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept
@@ -209,6 +208,11 @@ void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noe
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
+		for (auto &itr : m_SpriteObjects[i])
+		{
+			itr->DestroySelf();
+		}
+
 		for (auto &itr : m_Sprites[i])
 		{
 			for (auto spriteItr = itr.second.begin(); spriteItr != itr.second.end(); ++spriteItr)
@@ -315,7 +319,7 @@ void SpriteManager::InitManagerWindow() noexcept
 		new SpriteManagerLoader(),
 		new SpriteManagerSceneSelecter()
 	};
-	
+
 	auto size = _countof(window);
 	for (int i = 0; i < size; ++i)
 		m_vecWindow.push_back(window[i]);
@@ -804,7 +808,7 @@ void SpriteManager::MouseControl2DSprite() noexcept
 			pos.y = (-Input::GetMouseRelativePos_CenterZero().y) - m_ClickPointOffsetY_2D; // カーソルのY座標からオフセットを引く
 
 			pos.z = 0.0f; // 2DスプライトなのでZ座標は0に設定
-			
+
 			// スプライトの位置を更新
 			(*itr)->SetPosition(pos);
 		}
@@ -864,7 +868,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 			DirectX::XMFLOAT3 pos = (*itr)->GetPosition();
 
 			// ------- 毎フレームのマウス座標更新処理 -------
-			
+
 			// マウス座標(スクリーン座標)をワールド座標に変換
 			DirectX::XMVECTOR Mouse = ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
 			// カメラの位置を取得
@@ -885,7 +889,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 
 			if(result)
 				m_fRayLength = std::abs(fRayLength); // レイの長さを保存
-			
+
 			float x = Input::GetMouseDifference().x * (m_fRayLength * 0.00145f); // マウスのX座標の移動量を取得
 			float y = -Input::GetMouseDifference().y * (m_fRayLength * 0.00145f); // マウスのY座標の移動量を取得
 
