@@ -54,6 +54,12 @@ public:
 	int GetLayer() const noexcept { return m_nLayer; }
 
 	/// <summary>
+	/// アセットのファイルパスを取得します。
+	/// </summary>
+	/// <returns>アセットのファイルパスを表す FilePath 型の値。</returns>
+	FilePath GetAssetPath() const noexcept { return m_AssetPath; }
+
+	/// <summary>
 	/// ビューカメラを設定します。
 	/// </summary>
 	/// <param name="[In_Camera]">設定するカメラオブジェクトへのポインタ。</param>
