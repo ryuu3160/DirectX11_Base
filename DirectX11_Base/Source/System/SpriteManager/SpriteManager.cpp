@@ -415,10 +415,9 @@ void SpriteManager::ConvertTo2D() noexcept
 	// 3Dスプライトを2Dスプライトに変換
 	SR->Set3D(false);
 	SR->SetBillBoard(false); // ビルボードは無効化
+	// 2Dスプライトのリストに移動
 	m_SpriteObjects[_2D].splice(m_SpriteObjects[_2D].begin(), m_SpriteObjects[_3D], pSprite);
-	m_Sprites[_2D][(*sprite)->GetLayer()].push_back((*sprite)); // 2Dスプライトのリストに追加
-	m_SpriteNames[_2D].push_back((*sprite)->GetName()); // スプライト名を追加
-	m_SpritePointerList[_2D].push_back((*sprite)); // ポインタリストにも追加
+	m_SpriteNames[_2D].splice(m_SpriteNames[_2D].begin(), m_SpriteNames[_3D], std::next(m_SpriteNames[_3D].begin(), m_3DIndex));
 	// 3Dスプライトから削除
 	itr.second.erase(sprite);
 	// スプライト名のリストからも削除
