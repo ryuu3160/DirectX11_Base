@@ -14,6 +14,8 @@
 #include "SpriteManagerLoader.hpp"
 #include "SpriteManagerSceneSelecter.hpp"
 
+#include "System/Scene/SceneBase.hpp"
+
 // ==============================
 //  nlohmann/json
 // ==============================
@@ -73,15 +75,6 @@ void SpriteManager::Update() noexcept
 		return;
 
 	UpdateViewAndProjection(); // カメラのビュー行列と射影行列を更新
-
-	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
-	{
-		for (auto &itr : m_SpriteObjects[i])
-		{
-			itr->ExecuteUpdate();
-			itr->ExecuteLateUpdate();
-		}
-	}
 
 	// ウィンドウが開いていなければ処理しない
 	if (!m_bIsOpen)
@@ -158,7 +151,10 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	}
 
 	// 新しいスプライトオブジェクトを作成
-	GameObject *obj = new GameObject(In_SpriteName.data());
+	auto scene = SceneManager::GetInstance().GetCurrentScene();
+	if (scene == nullptr) return nullptr;
+	// メインのシーンでスプライトオブジェクトを作成
+	GameObject *obj = scene->CreateObject<GameObject>(In_SpriteName.data());
 	auto cmp = obj->AddComponent<SpriteRenderer>();
 	cmp->SetAssetPath(In_FilePath);
 	cmp->Set3D(In_Is3D);
@@ -173,35 +169,6 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	else
 		m_SpriteObjects[RenderMode::_2D].push_back(obj);
 	return obj;
-
-	//for (auto &itr : m_Sprites[In_Is3D ? _3D : _2D])
-	//{
-	//	// 既に同名のスプライトが存在するか確認
-	//	for (auto &sprite : itr.second)
-	//	{
-	//		if (sprite && sprite->GetName() == In_SpriteName.data())
-	//			return sprite; // 既に存在する場合はそのまま返す
-	//	}
-	//}
-
-	//// 新しいスプライトを作成
-	//Sprite *work = new Sprite();
-	//work->Load(In_FilePath, In_Layer, In_Scale);
-	//work->SetName(In_SpriteName.data());
-	//work->SetFilePath(In_FilePath.data());
-	//work->Set3D(In_Is3D);
-	//if (In_Is3D)
-	//	work->SetBillBoard(In_IsBillBoard);
-	//else
-	//	work->SetBillBoard(false); // 2Dスプライトはビルボードにしない
-	//// スプライトをマネージャーに登録
-	//m_Sprites[In_Is3D ? _3D : _2D][In_Layer].push_back(work);
-	//// スプライト名を保存
-	//m_SpriteNames[In_Is3D ? _3D : _2D].push_back(In_SpriteName.data());
-	//// スプライトへのポインタをリストに追加(名前のリストと順番が対応する)
-	//m_SpritePointerList[In_Is3D ? _3D : _2D].push_back(work);
-
-	//return work;
 }
 
 void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept
@@ -210,29 +177,13 @@ void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noe
 	{
 		for (auto &itr : m_SpriteObjects[i])
 		{
-			itr->DestroySelf();
-		}
-
-		for (auto &itr : m_Sprites[i])
-		{
-			for (auto spriteItr = itr.second.begin(); spriteItr != itr.second.end(); ++spriteItr)
+			// 指定された名前のスプライトオブジェクトを探す
+			if (itr && itr->GetName() == In_SpriteName.data())
 			{
-				if (*spriteItr && (*spriteItr)->GetName() == In_SpriteName.data())
-				{
-					// スプライト名リストからも削除
-					auto nameItr = std::find(m_SpriteNames[i].begin(), m_SpriteNames[i].end(), In_SpriteName.data());
-					if (nameItr != m_SpriteNames[i].end())
-						m_SpriteNames[i].erase(nameItr);
-					// スプライトポインタリストからも削除
-					auto pointerItr = std::find(m_SpritePointerList[i].begin(), m_SpritePointerList[i].end(), *spriteItr);
-					if (pointerItr != m_SpritePointerList[i].end())
-						m_SpritePointerList[i].erase(pointerItr);
-					// スプライトを削除
-					delete *spriteItr;
-					*spriteItr = nullptr;
-					itr.second.erase(spriteItr);
-					return; // 削除が完了したら終了
-				}
+				itr->DestroySelf();
+				m_SpriteObjects[i].remove(itr);
+				m_SpriteNames[i].remove(In_SpriteName.data());
+				return;
 			}
 		}
 	}
@@ -242,18 +193,12 @@ void SpriteManager::DeleteAll() noexcept
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
-		for (auto &itr : m_Sprites[i])
+		for (auto &itr : m_SpriteObjects[i])
 		{
-			for (auto &sprite : itr.second)
-			{
-				delete sprite;
-				sprite = nullptr;
-			}
-			itr.second.clear();
+			itr->DestroySelf();
 		}
-		m_Sprites[i].clear();
+		m_SpriteObjects[i].clear();
 		m_SpriteNames[i].clear();
-		m_SpritePointerList[i].clear();
 	}
 	m_2DIndex = 0;
 	m_3DIndex = 0;
@@ -355,17 +300,17 @@ void SpriteManager::DrawImGui() noexcept
 		case Inspector:
 		{
 			SpriteManagerInspector *Inspector = static_cast<SpriteManagerInspector *>(m_vecWindow[i]);
-			auto itr2D = m_SpritePointerList[_2D].begin();
-			auto itr3D = m_SpritePointerList[_3D].begin();
-			Sprite *Sprite2D = nullptr;
-			Sprite *Sprite3D = nullptr;
+			auto itr2D = m_SpriteObjects[_2D].begin();
+			auto itr3D = m_SpriteObjects[_3D].begin();
+			GameObject *Sprite2D = nullptr;
+			GameObject *Sprite3D = nullptr;
 
-			if (!m_SpritePointerList[_2D].empty())
+			if (!m_SpriteObjects[_2D].empty())
 			{
 				std::advance(itr2D, m_2DIndex);
 				Sprite2D = *itr2D;
 			}
-			if (!m_SpritePointerList[_3D].empty())
+			if (!m_SpriteObjects[_3D].empty())
 			{
 				std::advance(itr3D, m_3DIndex);
 				Sprite3D = *itr3D;
@@ -455,7 +400,7 @@ void SpriteManager::ChangeScene(_In_ const int &In_Index) noexcept
 void SpriteManager::ConvertTo2D() noexcept
 {
 	// 現在選択されている3Dスプライトを取得
-	auto pSprite = m_SpritePointerList[_3D].begin();
+	auto pSprite = m_SpriteObjects[_3D].begin();
 	std::advance(pSprite, m_3DIndex);
 
 	// 同じ名前のスプライトが2Dスプライトリストに存在しているか確認
@@ -466,37 +411,27 @@ void SpriteManager::ConvertTo2D() noexcept
 		return;
 	}
 
-	// 3Dスプライトのリストから、現在選択されているスプライトを探す
-	for (auto &itr : m_Sprites[_3D])
-	{
-		// レイヤーごとにスプライトを検索
-		for (auto sprite = itr.second.begin();sprite != itr.second.end();)
-		{
-			// スプライトが現在選択されているスプライトと一致するか確認
-			if((*sprite) == (*pSprite))
-			{
-				// 3Dスプライトを2Dスプライトに変換
-				(*sprite)->Set3D(false);
-				(*sprite)->SetBillBoard(false); // ビルボードは無効化
-				m_Sprites[_2D][(*sprite)->GetLayer()].push_back((*sprite)); // 2Dスプライトのリストに追加
-				m_SpriteNames[_2D].push_back((*sprite)->GetName()); // スプライト名を追加
-				m_SpritePointerList[_2D].push_back((*sprite)); // ポインタリストにも追加
-				// 3Dスプライトから削除
-				itr.second.erase(sprite);
-				// スプライト名のリストからも削除
-				m_SpriteNames[_3D].erase(std::next(m_SpriteNames[_3D].begin(), m_3DIndex));
-				// スプライトポインタリストからも削除
-				m_SpritePointerList[_3D].erase(std::next(m_SpritePointerList[_3D].begin(), m_3DIndex));
+	auto SR = (*pSprite)->GetComponent<SpriteRenderer>();
+	// 3Dスプライトを2Dスプライトに変換
+	SR->Set3D(false);
+	SR->SetBillBoard(false); // ビルボードは無効化
+	m_SpriteObjects[_2D].splice(m_SpriteObjects[_2D].begin(), m_SpriteObjects[_3D], pSprite);
+	m_Sprites[_2D][(*sprite)->GetLayer()].push_back((*sprite)); // 2Dスプライトのリストに追加
+	m_SpriteNames[_2D].push_back((*sprite)->GetName()); // スプライト名を追加
+	m_SpritePointerList[_2D].push_back((*sprite)); // ポインタリストにも追加
+	// 3Dスプライトから削除
+	itr.second.erase(sprite);
+	// スプライト名のリストからも削除
+	m_SpriteNames[_3D].erase(std::next(m_SpriteNames[_3D].begin(), m_3DIndex));
+	// スプライトポインタリストからも削除
+	m_SpritePointerList[_3D].erase(std::next(m_SpritePointerList[_3D].begin(), m_3DIndex));
 
-				--m_3DIndex; // インデックスを戻す
-				if(m_3DIndex < 0)
-					m_3DIndex = 0; // インデックスが負にならないようにする
+	--m_3DIndex; // インデックスを戻す
+	if(m_3DIndex < 0)
+		m_3DIndex = 0; // インデックスが負にならないようにする
 
-				return;
-			}
-			++sprite; // 次のスプライトへ
-		}
-	}
+	return;
+		++sprite; // 次のスプライトへ
 }
 
 void SpriteManager::ConvertTo3D() noexcept

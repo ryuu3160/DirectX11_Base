@@ -48,6 +48,12 @@ public:
 	virtual ~RenderComponent();
 
 	/// <summary>
+	/// レイヤー番号を取得します。
+	/// </summary>
+	/// <returns>レイヤーの番号（int型）を返します。</returns>
+	int GetLayer() const noexcept { return m_nLayer; }
+
+	/// <summary>
 	/// ビューカメラを設定します。
 	/// </summary>
 	/// <param name="[In_Camera]">設定するカメラオブジェクトへのポインタ。</param>

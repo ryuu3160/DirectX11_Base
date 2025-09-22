@@ -14,7 +14,7 @@
 // ==============================
 //  ‘O•ûéŒ¾
 // ==============================
-class Sprite;
+class GameObject;
 
 /// <summary>
 /// SpriteManagerInspectorƒNƒ‰ƒX
@@ -32,7 +32,7 @@ public:
 	/// </summary>
 	~SpriteManagerInspector();
 
-	void Draw(_In_opt_ Sprite *In_2DSprite, _In_opt_ Sprite *In_3DSprite) noexcept;
+	void Draw(_In_opt_ GameObject *In_2DSprite, _In_opt_ GameObject *In_3DSprite) noexcept;
 
 private:
 	DirectX::XMFLOAT3 m_Pos2D;
