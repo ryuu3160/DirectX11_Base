@@ -418,25 +418,18 @@ void SpriteManager::ConvertTo2D() noexcept
 	// 2Dスプライトのリストに移動
 	m_SpriteObjects[_2D].splice(m_SpriteObjects[_2D].begin(), m_SpriteObjects[_3D], pSprite);
 	m_SpriteNames[_2D].splice(m_SpriteNames[_2D].begin(), m_SpriteNames[_3D], std::next(m_SpriteNames[_3D].begin(), m_3DIndex));
-	// 3Dスプライトから削除
-	itr.second.erase(sprite);
-	// スプライト名のリストからも削除
-	m_SpriteNames[_3D].erase(std::next(m_SpriteNames[_3D].begin(), m_3DIndex));
-	// スプライトポインタリストからも削除
-	m_SpritePointerList[_3D].erase(std::next(m_SpritePointerList[_3D].begin(), m_3DIndex));
 
 	--m_3DIndex; // インデックスを戻す
 	if(m_3DIndex < 0)
 		m_3DIndex = 0; // インデックスが負にならないようにする
 
 	return;
-		++sprite; // 次のスプライトへ
 }
 
 void SpriteManager::ConvertTo3D() noexcept
 {
 	// 現在選択されている2Dスプライトを取得
-	auto pSprite = m_SpritePointerList[_2D].begin();
+	auto pSprite = m_SpriteObjects[_2D].begin();
 	std::advance(pSprite, m_2DIndex);
 
 	// 同じ名前のスプライトが3Dスプライトリストに存在しているか確認
@@ -447,37 +440,19 @@ void SpriteManager::ConvertTo3D() noexcept
 		return;
 	}
 
-	// 2Dスプライトのリストから、現在選択されているスプライトを探す
-	for (auto &itr : m_Sprites[_2D])
-	{
-		// レイヤーごとにスプライトを検索
-		for (auto sprite = itr.second.begin(); sprite != itr.second.end();)
-		{
-			// スプライトが現在選択されているスプライトと一致するか確認
-			if ((*sprite) == (*pSprite))
-			{
-				// 2Dスプライトを3Dスプライトに変換
-				(*sprite)->Set3D(true);
-				(*sprite)->SetBillBoard(false); // ビルボードは無効化
-				m_Sprites[_3D][(*sprite)->GetLayer()].push_back((*sprite)); // 2Dスプライトのリストに追加
-				m_SpriteNames[_3D].push_back((*sprite)->GetName()); // スプライト名を追加
-				m_SpritePointerList[_3D].push_back((*sprite)); // ポインタリストにも追加
-				// 3Dスプライトから削除
-				itr.second.erase(sprite);
-				// スプライト名のリストからも削除
-				m_SpriteNames[_2D].erase(std::next(m_SpriteNames[_2D].begin(), m_2DIndex));
-				// スプライトポインタリストからも削除
-				m_SpritePointerList[_2D].erase(std::next(m_SpritePointerList[_2D].begin(), m_2DIndex));
+	auto SR = (*pSprite)->GetComponent<SpriteRenderer>();
+	// 2Dスプライトを3Dスプライトに変換
+	SR->Set3D(true);
+	SR->SetBillBoard(false); // ビルボードは無効化
+	// 2Dスプライトのリストに移動
+	m_SpriteObjects[_3D].splice(m_SpriteObjects[_3D].begin(), m_SpriteObjects[_2D], pSprite);
+	m_SpriteNames[_3D].splice(m_SpriteNames[_3D].begin(), m_SpriteNames[_2D], std::next(m_SpriteNames[_2D].begin(), m_2DIndex));
 
-				--m_2DIndex; // インデックスを戻す
-				if (m_2DIndex < 0)
-					m_2DIndex = 0; // インデックスが負にならないようにする
+	--m_2DIndex; // インデックスを戻す
+	if (m_2DIndex < 0)
+		m_2DIndex = 0; // インデックスが負にならないようにする
 
-				return;
-			}
-			++sprite; // 次のスプライトへ
-		}
-	}
+	return;
 }
 
 void SpriteManager::SaveSprites() const noexcept
@@ -490,21 +465,19 @@ void SpriteManager::SaveSprites() const noexcept
 		std::string KeyName = ModeName + "_Sprites";
 		std::string Name = ModeName + "_Sprite";
 
-		for (auto &sprites : m_Sprites[i])
+		for (auto &itr : m_SpriteObjects[i])
 		{
-			for (auto &sprite : sprites.second)
-			{
-				json work;
-				work[Name]["Name"] = sprite->GetName();
-				work[Name]["FilePath"] = sprite->GetFilePath();
-				work[Name]["Position"] = { sprite->GetPosition().x, sprite->GetPosition().y, sprite->GetPosition().z };
-				work[Name]["Scale"] = { sprite->GetScale().x, sprite->GetScale().y, sprite->GetScale().z };
-				work[Name]["Rotation"] = { sprite->GetRotation().x, sprite->GetRotation().y, sprite->GetRotation().z };
-				work[Name]["Layer"] = sprite->GetLayer();
-				work[Name]["Is3D"] = sprite->GetIs3D();
-				work[Name]["IsBillBoard"] = sprite->GetIsBillBoard();
-				data[KeyName].push_back(work); // 2Dスプライトのデータを追加
-			}
+			auto SR = itr->GetComponent<SpriteRenderer>();
+			json work;
+			work[Name]["Name"] = itr->GetName();
+			work[Name]["FilePath"] = SR->GetAssetPath();
+			work[Name]["Position"] = { itr->GetPos().x, itr->GetPos().y, itr->GetPos().z };
+			work[Name]["Scale"] = { itr->GetScale().x, itr->GetScale().y, itr->GetScale().z };
+			work[Name]["Rotation"] = { itr->GetRotation().x, itr->GetRotation().y, itr->GetRotation().z };
+			work[Name]["Layer"] = SR->GetLayer();
+			work[Name]["Is3D"] = SR->GetIs3D();
+			work[Name]["IsBillBoard"] = SR->GetIsBillBoard();
+			data[KeyName].push_back(work); // 2Dスプライトのデータを追加
 		}
 	}
 
@@ -685,8 +658,8 @@ void SpriteManager::CursorHit2DSprite() noexcept
 
 		// マウスカーソルが2Dスプライトに当たったか確認
 		// 手前のスプライトを優先するため、逆イテレータを使用
-		auto itr = m_SpritePointerList[_2D].rbegin();
-		for (int i = static_cast<int>(m_SpritePointerList[_2D].size()) - 1; i >= 0;--i,++itr)
+		auto itr = m_SpriteObjects[_2D].rbegin();
+		for (int i = static_cast<int>(m_SpriteObjects[_2D].size()) - 1; i >= 0;--i,++itr)
 		{
 			if (*itr)
 			{
@@ -695,7 +668,7 @@ void SpriteManager::CursorHit2DSprite() noexcept
 				float ScaleY = (*itr)->GetScale().y;
 
 				// スプライトの中心座標を取得
-				DirectX::XMFLOAT3 center = (*itr)->GetPosition();
+				DirectX::XMFLOAT3 center = (*itr)->GetPos();
 				// スプライトの四隅の座標を計算
 				DirectX::XMFLOAT2 TopLeft = { center.x - (cx_nSpriteRadius * ScaleX), center.y - (cx_nSpriteRadius * ScaleY) };
 				DirectX::XMFLOAT2 BottomRight = { center.x + (cx_nSpriteRadius * ScaleX), center.y + (cx_nSpriteRadius * ScaleY) };
@@ -729,12 +702,12 @@ void SpriteManager::MouseControl2DSprite() noexcept
 	if (m_bIsLeftClickTrigger && !Input::IsKeyRelease(VK_LBUTTON) && !m_bIs3KeyTrigger)
 	{
 		// 対象のスプライトを取得
-		auto itr = m_SpritePointerList[_2D].begin();
+		auto itr = m_SpriteObjects[_2D].begin();
 		std::advance(itr, m_Selected2DSpriteIndex);
 		if (*itr)
 		{
 			// スプライトの位置を取得
-			DirectX::XMFLOAT3 pos = (*itr)->GetPosition();
+			DirectX::XMFLOAT3 pos = (*itr)->GetPos();
 
 			// スプライトの位置をカーソル移動に合わせて動かす
 			pos.x = Input::GetMouseRelativePos_CenterZero().x - m_ClickPointOffsetX_2D; // カーソルのX座標からオフセットを引く
@@ -744,7 +717,7 @@ void SpriteManager::MouseControl2DSprite() noexcept
 			pos.z = 0.0f; // 2DスプライトなのでZ座標は0に設定
 
 			// スプライトの位置を更新
-			(*itr)->SetPosition(pos);
+			(*itr)->SetPos(pos);
 		}
 	}
 	else
@@ -793,13 +766,13 @@ void SpriteManager::MouseControl3DSprite() noexcept
 	if (m_bIs3KeyTrigger && !Input::IsKeyRelease(VK_LBUTTON) && !m_bIsLeftClickTrigger)
 	{
 		// 対象のスプライトを取得
-		auto itr = m_SpritePointerList[_3D].begin();
+		auto itr = m_SpriteObjects[_3D].begin();
 		std::advance(itr, m_Selected3DSpriteIndex);
 
 		if (*itr)
 		{
 			// スプライトの位置を取得
-			DirectX::XMFLOAT3 pos = (*itr)->GetPosition();
+			DirectX::XMFLOAT3 pos = (*itr)->GetPos();
 
 			// ------- 毎フレームのマウス座標更新処理 -------
 
@@ -815,7 +788,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 
 			DirectX::XMFLOAT3 scale = (*itr)->GetScale() / 2.0f; // スプライトのスケールを取得
 			scale.z = cx_fEpsilon; // Z軸のスケールは小さく設定(平面として扱う)
-			DirectX::XMFLOAT4 qua = (*itr)->GetQuaternion(); // スプライトのクォータニオンを取得
+			DirectX::XMFLOAT4 qua = (*itr)->GetQuat(); // スプライトのクォータニオンを取得
 			float fRayLength;
 
 			// レイと平面の交差判定を行う
@@ -839,7 +812,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 			pos.z += z;
 
 			// スプライトの位置を更新
-			(*itr)->SetPosition(pos);
+			(*itr)->SetPos(pos);
 		}
 	}
 	else
@@ -854,22 +827,22 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 	float fObjPos = 0.0f;
 	float fNewObjPos = 0.0f;
 	int WorkIndex = -1; // 当たったスプライトのインデックスを保持
-	auto itr = m_SpritePointerList[_3D].begin();
-	for (int i = 0;i < m_SpritePointerList[_3D].size();++i,++itr)
+	auto itr = m_SpriteObjects[_3D].begin();
+	for (int i = 0;i < m_SpriteObjects[_3D].size();++i,++itr)
 	{
 		if (*itr == nullptr)
 			continue;
 
 		DirectX::XMFLOAT3 scale = (*itr)->GetScale() / 2.0f;
-		DirectX::XMFLOAT4 qua = (*itr)->GetQuaternion();
+		DirectX::XMFLOAT4 qua = (*itr)->GetQuat();
 		scale.z = cx_fEpsilon;
-		DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&(*itr)->GetPosition());
+		DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&(*itr)->GetPos());
 		DirectX::XMVECTOR vExtents = DirectX::XMLoadFloat3(&scale);
 		DirectX::XMVECTOR vOrientation = DirectX::XMLoadFloat4(&qua);
 
 		float fRayLength;
 
-		bool result = IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPosition(), scale, (*itr)->GetQuaternion(), fRayLength);
+		bool result = IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPos(), scale, (*itr)->GetQuat(), fRayLength);
 
 		if (result)
 		{
@@ -882,9 +855,9 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 			{
 				float SpriteLength = 0.0f;
 				float NewSpriteLength = 0.0f;
-				auto NowSprite = m_SpritePointerList[_3D].begin();
+				auto NowSprite = m_SpriteObjects[_3D].begin();
 				std::advance(NowSprite, WorkIndex);
-				DirectX::XMStoreFloat(&SpriteLength, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&(*NowSprite)->GetPosition()), In_vRayPos));
+				DirectX::XMStoreFloat(&SpriteLength, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&(*NowSprite)->GetPos()), In_vRayPos));
 				DirectX::XMStoreFloat(&NewSpriteLength, DirectX::XMVectorSubtract(vCenter, In_vRayPos));
 
 				if (std::abs(SpriteLength) > std::abs(NewSpriteLength))
