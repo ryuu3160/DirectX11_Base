@@ -39,9 +39,10 @@ HRESULT Main::Init()
 	// 各種機能の初期化
 	auto &Sound = SoundManager::GetInstance();
 	Geometory::GetInstance().Init();
-	SpriteManager::GetInstance().Init();
+	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();
+	auto &SpriteM = SpriteManager::GetInstance();
 
 	// よく使うシェーダーの読み込み
 	std::vector<std::string> shaders = {
@@ -71,6 +72,9 @@ HRESULT Main::Init()
 	hr = dsp->Create(Instance.GetWidth(), Instance.GetHeight(),false);
 
 	DX11_Initialize::GetInstance().SetRenderTargets(1, &rtv, dsp);
+
+	// SpriteManagerの初期化
+	SpriteM.Init();
 
 #ifdef _DEBUG
 	// ImGui専用のウィンドウプロシージャを登録
@@ -121,12 +125,11 @@ void Main::Draw()
 	SpriteManager::GetInstance().DrawImGui();
 
 	// オブジェクトの破棄は非同期で行う
-	SceneM.DestroyObjects();
-	//std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
+	std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
 
 	DX11.Swap();
 
-	//fut.get(); // 破棄が終わるまで待機
+	fut.get(); // 破棄が終わるまで待機
 }
 
 void Main::Change2D_Draw() noexcept

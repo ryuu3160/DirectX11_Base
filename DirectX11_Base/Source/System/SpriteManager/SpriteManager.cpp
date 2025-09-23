@@ -85,13 +85,13 @@ void SpriteManager::Update() noexcept
 
 void SpriteManager::Draw() noexcept
 {
-	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
-	{
-		for (auto &itr : m_SpriteObjects[i])
-		{
-			itr->ExecuteDraw();
-		}
-	}
+	//for (int i = 0; i < _MAX_RENDER_MODE; ++i)
+	//{
+	//	for (auto &itr : m_SpriteObjects[i])
+	//	{
+	//		itr->ExecuteDraw();
+	//	}
+	//}
 }
 
 std::list<GameObject *> SpriteManager::Get2DSprites() noexcept
@@ -154,14 +154,16 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	auto scene = SceneManager::GetInstance().GetCurrentScene();
 	if (scene == nullptr) return nullptr;
 	// メインのシーンでスプライトオブジェクトを作成
-	GameObject *obj = scene->CreateObject<GameObject>(In_SpriteName.data());
+	std::string name = In_SpriteName.data();
+	name += "_SpriteManager";
+	GameObject *obj = scene->CreateObject<GameObject>(name);
 	auto cmp = obj->AddComponent<SpriteRenderer>();
-	cmp->SetAssetPath(In_FilePath);
+	cmp->SetAssetPath(std::string(In_FilePath));
 	cmp->Set3D(In_Is3D);
 	cmp->SetBillBoard(In_IsBillBoard);
 	cmp->SetLayer(In_Layer);
 	cmp->SetCamera(m_pCameraObj);
-	cmp->Load(In_FilePath, In_Scale);
+	cmp->Load();
 
 	// スプライトオブジェクトをマネージャーに登録
 	if(In_Is3D)
@@ -247,6 +249,10 @@ SpriteManager::~SpriteManager()
 	if (m_pCamera)
 	{
 		m_pCamera = nullptr;
+	}
+	if(m_pCameraObj)
+	{
+		m_pCameraObj = nullptr;
 	}
 
 	// ImGui終了処理
@@ -469,7 +475,9 @@ void SpriteManager::SaveSprites() const noexcept
 		{
 			auto SR = itr->GetComponent<SpriteRenderer>();
 			json work;
-			work[Name]["Name"] = itr->GetName();
+			std::string name = itr->GetName();
+			name = name.substr(0, name.find_last_of("_SpriteManager") - 13); // "_SpriteManager"を除いた名前を保存
+			work[Name]["Name"] = name;
 			work[Name]["FilePath"] = SR->GetAssetPath();
 			work[Name]["Position"] = { itr->GetPos().x, itr->GetPos().y, itr->GetPos().z };
 			work[Name]["Scale"] = { itr->GetScale().x, itr->GetScale().y, itr->GetScale().z };
@@ -480,6 +488,9 @@ void SpriteManager::SaveSprites() const noexcept
 			data[KeyName].push_back(work); // 2Dスプライトのデータを追加
 		}
 	}
+
+	if(data.empty())
+		return; // 保存するデータが無ければ処理しない
 
 	std::string path = "Assets\\SpriteManager";
 	std::string FileName = m_CurrentSceneName + "Sprites.json";

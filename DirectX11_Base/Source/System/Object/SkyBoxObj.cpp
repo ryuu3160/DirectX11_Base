@@ -34,7 +34,7 @@ SkyBoxObj::~SkyBoxObj()
 void SkyBoxObj::SetFilePath(_In_ const FilePath &In_Path) noexcept
 {
 	if (m_pRenderComponent)
-		m_pRenderComponent->SetAssetPath(In_Path);
+		m_pRenderComponent->SetAssetPath(In_Path.data());
 }
 
 void SkyBoxObj::SetCamera(_In_ GameObject * In_Cam) noexcept

@@ -29,18 +29,16 @@ SpriteManagerInspector::~SpriteManagerInspector()
 
 void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _In_opt_ GameObject *In_3DSprite = nullptr) noexcept
 {
-	auto SR = In_2DSprite->GetComponent<SpriteRenderer>();
 	// 2Dスプライトの情報を表示
 	if (In_2DSprite)
 	{
-		if (!SR) return; // SpriteRendererコンポーネントが存在しない場合は処理を抜ける
+		auto SR2D = In_2DSprite->GetComponent<SpriteRenderer>();
+		if (!SR2D) return; // SpriteRendererコンポーネントが存在しない場合は処理を抜ける
 		m_Pos2D = In_2DSprite->GetPos();
 		m_Scale2D = In_2DSprite->GetScale();
 		m_Rotation2D = In_2DSprite->GetRotation();
-		m_Layer2D = SR->GetLayer();
-		Component::DataAccessor *path = nullptr;
-		SR->ReadWrite(path);
-		strcpy_s(m_cFilePath2D, path->GetData()); // ファイルパスを取得
+		m_Layer2D = SR2D->GetLayer();
+		strcpy_s(m_cFilePath2D, SR2D->GetAssetPath().data()); // ファイルパスを取得
 
 		if (ImGui::CollapsingHeader(In_2DSprite->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -58,20 +56,19 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 		In_2DSprite->SetPos(m_Pos2D);
 		In_2DSprite->SetScale(m_Scale2D);
 		In_2DSprite->SetRotation(m_Rotation2D);
-		SR->SetLayer(m_Layer2D);
+		SR2D->SetLayer(m_Layer2D);
 	}
 
 	// 3Dスプライトの情報を表示
 	if (In_3DSprite)
 	{
+		auto SR3D = In_3DSprite->GetComponent<SpriteRenderer>();
 		m_Pos3D = In_3DSprite->GetPos();
 		m_Scale3D = In_3DSprite->GetScale();
 		m_Rotation3D = In_3DSprite->GetRotation();
-		m_Layer3D = SR->GetLayer();
-		m_bIsBillBoard = SR->GetIsBillBoard();
-		Component::DataAccessor *path = nullptr;
-		SR->ReadWrite(path);
-		strcpy_s(m_cFilePath3D, path->GetData()); // ファイルパスを取得
+		m_Layer3D = SR3D->GetLayer();
+		m_bIsBillBoard = SR3D->GetIsBillBoard();
+		strcpy_s(m_cFilePath3D, SR3D->GetAssetPath().data()); // ファイルパスを取得
 
 		if (ImGui::CollapsingHeader(In_3DSprite->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -92,7 +89,7 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 		In_3DSprite->SetPos(m_Pos3D);
 		In_3DSprite->SetScale(m_Scale3D);
 		In_3DSprite->SetRotation(m_Rotation3D);
-		SR->SetLayer(m_Layer3D);
-		SR->SetBillBoard(m_bIsBillBoard);
+		SR3D->SetLayer(m_Layer3D);
+		SR3D->SetBillBoard(m_bIsBillBoard);
 	}
 }

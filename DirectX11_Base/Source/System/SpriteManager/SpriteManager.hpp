@@ -31,7 +31,6 @@ class SpriteManager : public Singleton<SpriteManager>
 {
 	friend class Singleton<SpriteManager>;
 	using SpriteObjects = std::list<GameObject *>;
-	//using Sprites = std::map<int, std::list<Sprite *>>;
 
 public:
 

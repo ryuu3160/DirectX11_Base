@@ -80,6 +80,12 @@ template<> GameObject
 
 void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
 {
+	// Šù‚É”jŠü—\’èƒŠƒXƒg‚É“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
+	for (auto &itr : m_DeadItems)
+	{
+		if (itr == In_Name)
+			return;
+	}
 	m_DeadItems.push_back(In_Name);
 }
 
@@ -154,7 +160,7 @@ void SceneBase::_DestroyObjects() noexcept
 	for (auto &name : m_DeadItems)
 	{
 		auto obj = m_Objects.find(name);
-		if (obj == m_Objects.end()) return;
+		if (obj == m_Objects.end()) continue;
 
 		// ƒIƒuƒWƒFƒNƒg‚Ìíœ
 		delete obj->second;

@@ -137,7 +137,7 @@ const DirectX::XMVECTOR Sprite::GetNormal() const noexcept
 	DirectX::XMFLOAT3 A = pVtx[0].pos - pVtx[1].pos; // Aベクトル
 	DirectX::XMFLOAT3 B = pVtx[2].pos - pVtx[1].pos; // Bベクトル
 	DirectX::XMVECTOR normal = DirectX::XMVector2Cross(
-		DirectX::XMLoadFloat3(&A), 
+		DirectX::XMLoadFloat3(&A),
 		DirectX::XMLoadFloat3(&B)
 	);
 	// 法線ベクトルを正規化して返す

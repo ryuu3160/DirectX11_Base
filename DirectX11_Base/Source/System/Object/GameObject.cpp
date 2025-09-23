@@ -362,7 +362,7 @@ void GameObject::AngleSynchronization()
 		m_PrevRotation = m_Rotation; // 前回の値を更新
 		return;
 	}
-	
+
 	//// クォータニオンからオイラー角に変換
 	//DirectX::XMFLOAT3 rot = QuaternionToRollPitchYaw(m_Quat);
 
