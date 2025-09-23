@@ -53,5 +53,5 @@ void RenderComponent::ExecuteDraw() noexcept
 
 void RenderComponent::ReadWrite(_In_ DataAccessor *In_Data)
 {
-	In_Data->Access<FilePath>(&m_AssetPath);
+	In_Data->Access<FilePathHold>(&m_AssetPath);
 }

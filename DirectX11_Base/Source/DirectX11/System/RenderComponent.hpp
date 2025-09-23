@@ -75,7 +75,7 @@ public:
 	/// アセットのパスを設定します。
 	/// </summary>
 	/// <param name="[In_Path]">設定するファイルパス。</param>
-	inline void SetAssetPath(_In_ const FilePath &In_Path) noexcept { m_AssetPath = In_Path; }
+	inline void SetAssetPath(_In_ const FilePath &In_Path) noexcept { m_AssetPath = In_Path.data(); }
 
 	virtual void ExecuteUpdate() noexcept override;
 
@@ -85,7 +85,7 @@ public:
 	/// データアクセサーを使用して読み書きを行います。
 	/// </summary>
 	/// <param name="[In_Data]">読み書き操作に使用する DataAccessor 型のポインタ。</param>
-	void ReadWrite(_In_ DataAccessor *In_Data) override;
+	void ReadWrite(_In_ DataAccessor *In_Data) override final;
 
 	/// <summary>
 	/// 描画処理の実装をする純粋仮想関数
@@ -93,7 +93,7 @@ public:
 	virtual void Draw() noexcept = 0;
 
 protected:
-	FilePath m_AssetPath;					// アセットパス
+	FilePathHold m_AssetPath;					// アセットパス
 	int m_nLayer;							// レイヤー番号
 	GameObject *m_pCameraObj;				// カメラオブジェクトへのポインタ
 	Camera *m_pViewCamera;					// ビューカメラ

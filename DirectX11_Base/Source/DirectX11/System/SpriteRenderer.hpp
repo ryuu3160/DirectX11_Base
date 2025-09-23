@@ -26,10 +26,10 @@ public:
 	struct SpriteData
 	{
 		std::shared_ptr<MeshBuffer> mesh;
-		DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values  
-		DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values  
+		DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values
+		DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values
 		Texture *texture = nullptr;         // Initialize to nullptr
-		Shader *vs = nullptr;               // Initialize to nullptr  
+		Shader *vs = nullptr;               // Initialize to nullptr
 		Shader *ps = nullptr;               // Initialize to nullptr
 		bool Is3D = false;
 		bool IsBillBoard = false;
@@ -43,12 +43,6 @@ public:
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
-
-	/// <summary>
-	/// データアクセサーを使用して読み書きを行います。
-	/// </summary>
-	/// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
-	void ReadWrite(_In_ DataAccessor *In_Data) override final;
 
 	/// <summary>
 	/// テクスチャを読みこみ、2Dスプライトを生成する

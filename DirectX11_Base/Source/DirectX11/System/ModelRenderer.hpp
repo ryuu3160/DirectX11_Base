@@ -53,12 +53,6 @@ public:
 	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値。</param>
 	inline void IsUseMaterialShader(_In_ const bool &In_IsUse) noexcept { m_bUseMaterialShader = In_IsUse; }
 
-    /// <summary>
-    /// データアクセサーを使用して読み書きを行います。
-    /// </summary>
-    /// <param name="In_Data">読み書き操作に使用する DataAccessor 型のポインタ。</param>
-    void ReadWrite(_In_ DataAccessor *In_Data) override final;
-
 	/// <summary>
 	/// 指定されたインデックスのメッシュを取得します。
 	/// </summary>

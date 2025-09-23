@@ -72,11 +72,6 @@ void ModelRenderer::ExecuteUpdate() noexcept
 	this->Load(m_AssetPath, m_fScale);
 }
 
-void ModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
-{
-	In_Data->Access<FilePath>(&m_AssetPath);
-}
-
 void ModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
 	VertexShader *cast = reinterpret_cast<VertexShader *>(In_Vs);

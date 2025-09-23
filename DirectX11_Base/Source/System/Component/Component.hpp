@@ -33,8 +33,9 @@ public:
 			m_ptr = m_IsRead ? ptr : new char[m_nSize];
 		}
 		~DataAccessor() { if (!m_IsRead) { delete[] m_ptr; } }
-		// データの読み書きを実行
-		template<class T> void Access(T *ptr)
+		// データの読み書きを実行(POD型のみ対応)
+		template<typename T, typename std::enable_if<std::is_trivial<T>::value && std::is_standard_layout<T>::value>::type * = nullptr>
+		void Access(T *ptr)
 		{
 			// 書き込みか読み込みかを判定
 			if (m_IsRead)
@@ -42,6 +43,17 @@ public:
 			else
 				Write<T>(ptr);
 		}
+
+		template<typename T, typename std::enable_if<std::is_same<T,std::string>::value>::type * = nullptr>
+		void Access(T *ptr)
+		{
+			// 書き込みか読み込みかを判定
+			if(m_IsRead)
+				ReadString(ptr);
+			else
+				WriteString(ptr);
+		}
+
 		/// <summary>
 		/// 現在の書き込みサイズを取得します。
 		/// </summary>
@@ -76,6 +88,35 @@ public:
 			}
 			memcpy(m_ptr + m_cur, ptr, size);
 			m_cur += size;
+		}
+
+		void ReadString(std::string *ptr)
+		{
+			// サイズを取得してメモリをコピー
+			size_t len = 0;
+			int size = sizeof(len);
+			memcpy(&len, m_ptr, size);
+			m_ptr += size;
+			ptr->resize(len);
+			memcpy(ptr->data(), m_ptr, len);
+			m_ptr += len;
+		}
+		void WriteString(std::string *ptr)
+		{
+			size_t len = ptr->size();
+			int size = sizeof(len);
+			// 確保済みのサイズより大きくなりそうであれば再確保
+			if (m_nSize < m_cur + len + size)
+			{
+				char *work = m_ptr;
+				m_ptr = new char[m_nSize <<= 1];
+				memcpy(m_ptr, work, m_cur);
+				delete[] work;
+			}
+			memcpy(m_ptr + m_cur, &len,size);
+			m_cur += size;
+			memcpy(m_ptr + m_cur, ptr->data(), len);
+			m_cur += static_cast<int>(len);
 		}
 	private:
 		bool m_IsRead;	// 読み込みか書き込みかを判定するフラグ

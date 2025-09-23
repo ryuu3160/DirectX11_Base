@@ -64,11 +64,6 @@ void InstancedModelRenderer::ExecuteUpdate() noexcept
 	this->Load(m_AssetPath,m_AlignInstanceData, m_fScale);
 }
 
-void InstancedModelRenderer::ReadWrite(_In_ DataAccessor *In_Data)
-{
-	In_Data->Access<FilePath>(&m_AssetPath);
-}
-
 void InstancedModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
 	InstancedVertexShader *cast = reinterpret_cast<InstancedVertexShader *>(In_Vs);

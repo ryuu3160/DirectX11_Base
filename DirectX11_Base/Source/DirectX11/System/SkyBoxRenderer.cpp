@@ -71,11 +71,6 @@ void SkyBoxRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
 		m_pPS = cast;
 }
 
-void SkyBoxRenderer::ReadWrite(_In_ DataAccessor *In_Data)
-{
-	In_Data->Access<FilePath>(&m_AssetPath);
-}
-
 bool SkyBoxRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale, _In_ const bool &In_IsFlip)
 {
 	// assimp‚Ìİ’è

@@ -61,11 +61,6 @@ void SpriteRenderer::SetPixelShader(_In_ Shader *In_Ps) noexcept
 	m_SpriteData.ps = In_Ps;
 }
 
-void SpriteRenderer::ReadWrite(_In_ DataAccessor *In_Data)
-{
-	In_Data->Access<FilePath>(&m_AssetPath);
-}
-
 void SpriteRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scale)
 {
 	// 頂点データの作成
