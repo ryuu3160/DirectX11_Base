@@ -25,18 +25,13 @@ SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 
 SceneBase::~SceneBase()
 {
-	// 削除
+	// 全てのオブジェクトを削除予約に追加
 	for (auto &itr : m_Items)
 	{
 		DestroyObj(itr.c_str());
 	}
-	// 破棄予定のオブジェクトを削除
-	for (auto &name : m_DeadItems)
-	{
-		m_Items.remove(name);
-	}
-	m_DeadItems.clear();
-	m_Items.clear();
+	// 破棄処理
+	_DestroyObjects();
 }
 
 void SceneBase::Initialize() noexcept
