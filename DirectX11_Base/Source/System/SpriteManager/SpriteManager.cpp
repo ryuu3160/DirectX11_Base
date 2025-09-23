@@ -836,7 +836,8 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 		DirectX::XMFLOAT3 scale = (*itr)->GetScale() / 2.0f;
 		DirectX::XMFLOAT4 qua = (*itr)->GetQuat();
 		scale.z = cx_fEpsilon;
-		DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&(*itr)->GetPos());
+		auto Pos = (*itr)->GetPos();
+		DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&Pos);
 		DirectX::XMVECTOR vExtents = DirectX::XMLoadFloat3(&scale);
 		DirectX::XMVECTOR vOrientation = DirectX::XMLoadFloat4(&qua);
 
@@ -857,7 +858,8 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 				float NewSpriteLength = 0.0f;
 				auto NowSprite = m_SpriteObjects[_3D].begin();
 				std::advance(NowSprite, WorkIndex);
-				DirectX::XMStoreFloat(&SpriteLength, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&(*NowSprite)->GetPos()), In_vRayPos));
+				auto NowPos = (*NowSprite)->GetPos();
+				DirectX::XMStoreFloat(&SpriteLength, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&NowPos), In_vRayPos));
 				DirectX::XMStoreFloat(&NewSpriteLength, DirectX::XMVectorSubtract(vCenter, In_vRayPos));
 
 				if (std::abs(SpriteLength) > std::abs(NewSpriteLength))

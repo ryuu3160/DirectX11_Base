@@ -83,7 +83,7 @@ HRESULT Main::Init()
 void Main::Uninit()
 {
 	g_pScene = nullptr;
-	
+
 	// 各種機能の終了処理
 	Input::Uninit();
 }
@@ -113,23 +113,20 @@ void Main::Draw()
 	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
 	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	// スプライトマネージャーの3D描画
-	SpriteManager::GetInstance().Draw3D();
-
-	Change2D_Draw(); // 2D描画の設定
-	SpriteManager::GetInstance().Draw2D();
-	Change3D_Draw(); // 3D描画の設定
+	// スプライトマネージャーの描画
+	SpriteManager::GetInstance().Draw();
 
 	SceneM.RootDraw();
 
 	SpriteManager::GetInstance().DrawImGui();
 
 	// オブジェクトの破棄は非同期で行う
-	std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
+	SceneM.DestroyObjects();
+	//std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
 
 	DX11.Swap();
 
-	fut.get(); // 破棄が終わるまで待機
+	//fut.get(); // 破棄が終わるまで待機
 }
 
 void Main::Change2D_Draw() noexcept
