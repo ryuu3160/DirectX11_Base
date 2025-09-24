@@ -166,10 +166,16 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	cmp->Load();
 
 	// スプライトオブジェクトをマネージャーに登録
-	if(In_Is3D)
+	if (In_Is3D)
+	{
 		m_SpriteObjects[RenderMode::_3D].push_back(obj);
+		m_SpriteNames[RenderMode::_3D].push_back(In_SpriteName.data());
+	}
 	else
+	{
 		m_SpriteObjects[RenderMode::_2D].push_back(obj);
+		m_SpriteNames[RenderMode::_2D].push_back(In_SpriteName.data());
+	}
 	return obj;
 }
 
