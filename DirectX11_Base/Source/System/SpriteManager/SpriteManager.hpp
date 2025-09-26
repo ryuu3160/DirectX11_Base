@@ -143,6 +143,18 @@ public:
 	void ChangeScene(_In_ const std::string_view &In_SceneName) noexcept;
 
 	/// <summary>
+	/// 指定されたシーン名のシーンを削除します。
+	/// </summary>
+	/// <param name="[In_SceneName]">削除するシーンの名前を表す文字列ビュー。省略時は現在選択中のシーンを削除します。</param>
+	void DeleteScene(_In_ const std::string &In_SceneName) noexcept;
+
+	/// <summary>
+	/// 指定されたインデックスのシーンを削除します。
+	/// </summary>
+	/// <param name="[In_Index]">削除するシーンのインデックス。省略時は -1 で、現在選択中のシーンを削除します。</param>
+	void DeleteScene(_In_ const int &In_Index = -1) noexcept;
+
+	/// <summary>
 	/// 現在選択されている3Dスプライトを2Dスプライトに変換します。
 	/// </summary>
 	void ConvertTo2D() noexcept;

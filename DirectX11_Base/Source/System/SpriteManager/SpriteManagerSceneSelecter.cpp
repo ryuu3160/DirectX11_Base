@@ -39,6 +39,9 @@ void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, FilePathHold> I
 		SpriteManager::GetInstance().ChangeScene();
 	}
 
+	if (ImGui::Button("DeleteScene"))
+		SpriteManager::GetInstance().DeleteScene();
+
 	for(int i = 0; i < 3;++i)
 		ImGui::Spacing();
 

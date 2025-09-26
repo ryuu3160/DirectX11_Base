@@ -50,6 +50,11 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 
 			if (ImGui::Button("Convert to 3D"))
 				SpriteManager::GetInstance().ConvertTo3D();
+
+			if (ImGui::Button("Delete Sprite"))
+			{
+				SpriteManager::GetInstance().DeleteSprite(In_2DSprite->GetName());
+			}
 		}
 
 		// 2Dスプライトのパラメータを更新
@@ -80,9 +85,10 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 			ImGui::InputText("3DTexturePath", m_cFilePath3D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
 
 			if(ImGui::Button("Convert to 2D"))
-			{
 				SpriteManager::GetInstance().ConvertTo2D();
-			}
+
+			if(ImGui::Button("Delete Sprite3D"))
+				SpriteManager::GetInstance().DeleteSprite(In_3DSprite->GetName());
 		}
 
 		// 3Dスプライトのパラメータを更新

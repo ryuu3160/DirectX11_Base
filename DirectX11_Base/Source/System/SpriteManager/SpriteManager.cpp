@@ -196,7 +196,9 @@ void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noe
 			{
 				itr->DestroySelf();
 				m_SpriteObjects[i].remove(itr);
-				m_SpriteNames[i].remove(In_SpriteName.data());
+				std::string name = In_SpriteName.data();
+				name = name.substr(0, name.find_last_of("_SpriteManager") - 13);
+				m_SpriteNames[i].remove(name);
 				return;
 			}
 		}
@@ -390,7 +392,7 @@ void SpriteManager::CreateScene(_In_ const std::string_view &In_SceneName) noexc
 	// シーンを作成
 	if (m_SceneSaveData.find(In_SceneName.data()) == m_SceneSaveData.end())
 	{
-		std::string scenePathStr = "Assets\\SpriteManager\\" + std::string(In_SceneName) + ".json";
+		std::string scenePathStr = "Assets\\SpriteManager\\" + std::string(In_SceneName) + "Sprites" + ".json";
 		FilePath scenePath = scenePathStr.c_str();
 
 		m_SceneSaveData[In_SceneName.data()] = scenePath;
@@ -440,9 +442,79 @@ void SpriteManager::ChangeScene(_In_ const std::string_view &In_SceneName) noexc
 	DeleteAll();
 
 	m_CurrentSceneName = itr->first; // 現在のシーン名を更新
-	m_CurrentSceneIndex = std::distance(m_SceneSaveData.begin(), itr); // 現在のシーンインデックスを更新
+	m_CurrentSceneIndex = static_cast<int>(std::distance(m_SceneSaveData.begin(), itr)); // 現在のシーンインデックスを更新
 	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
 	LoadSprites(); // スプライトをロード
+}
+
+void SpriteManager::DeleteScene(_In_ const std::string &In_SceneName) noexcept
+{
+	auto itr = m_SceneSaveData.begin();
+	if (In_SceneName.empty())
+		itr = m_SceneSaveData.find(m_CurrentSceneName);
+	else
+		itr = m_SceneSaveData.find(In_SceneName);
+
+	if(itr == m_SceneSaveData.end())
+		return; // 見つからなければ何もしない
+
+	// 現在のシーンを削除する場合は、スプライトを削除してからシーンを削除
+	if (m_CurrentSceneName == itr->first)
+		DeleteAll();
+	// ---- シーンを削除 ----
+
+	// シーンインデックスを無効な値に設定
+	m_CurrentSceneIndex = -1;
+	m_PrevSceneIndex = -1;
+
+	// シーンのセーブデータを削除
+	std::filesystem::remove(itr->second.c_str());
+	// シーンの一覧から削除
+	m_SceneSaveData.erase(itr);
+
+	// シーンの変更
+	ChangeScene(0);// 最初のシーンに変更
+}
+
+void SpriteManager::DeleteScene(_In_ const int &In_Index) noexcept
+{
+	auto itr = m_SceneSaveData.begin();
+	if (In_Index == -1)
+		std::advance(itr, m_CurrentSceneIndex);
+	else
+	{
+		if(In_Index < 0 || In_Index >= m_SceneSaveData.size())
+			return; // 範囲外なら何もしない
+		std::advance(itr, In_Index);
+	}
+
+	if (itr == m_SceneSaveData.end())
+		return; // 見つからなければ何もしない
+
+	// 現在のシーンを削除する場合は、スプライトを削除してからシーンを削除
+	if (m_CurrentSceneName == itr->first)
+		DeleteAll();
+	// ---- シーンを削除 ----
+
+	// シーンインデックスを0に設定
+	m_CurrentSceneIndex = 0;
+	m_PrevSceneIndex = 0;
+
+	// シーンのセーブデータを削除
+	std::filesystem::remove(itr->second);
+	// シーンの一覧から削除
+	m_SceneSaveData.erase(itr);
+
+	// シーンをセーブ
+	SaveScene();
+
+	// シーンの変更
+	auto NowItr = m_SceneSaveData.begin();
+	std::advance(NowItr, m_CurrentSceneIndex);
+	m_CurrentSceneName = NowItr->first; // 現在のシーン名を更新
+
+	LoadSprites(); // スプライトをロード
+	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
 }
 
 void SpriteManager::ConvertTo2D() noexcept
@@ -530,9 +602,6 @@ void SpriteManager::SaveSprites() const noexcept
 			data[KeyName].push_back(work); // 2Dスプライトのデータを追加
 		}
 	}
-
-	if(data.empty())
-		return; // 保存するデータが無ければ処理しない
 
 	std::string path = "Assets\\SpriteManager";
 	std::string FileName = m_CurrentSceneName + "Sprites.json";
