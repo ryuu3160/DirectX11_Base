@@ -463,17 +463,25 @@ void SpriteManager::DeleteScene(_In_ const std::string &In_SceneName) noexcept
 		DeleteAll();
 	// ---- シーンを削除 ----
 
-	// シーンインデックスを無効な値に設定
-	m_CurrentSceneIndex = -1;
-	m_PrevSceneIndex = -1;
+	// シーンインデックスを0に設定
+	m_CurrentSceneIndex = 0;
+	m_PrevSceneIndex = 0;
 
 	// シーンのセーブデータを削除
-	std::filesystem::remove(itr->second.c_str());
+	std::filesystem::remove(itr->second);
 	// シーンの一覧から削除
 	m_SceneSaveData.erase(itr);
 
+	// シーンをセーブ
+	SaveScene();
+
 	// シーンの変更
-	ChangeScene(0);// 最初のシーンに変更
+	auto NowItr = m_SceneSaveData.begin();
+	std::advance(NowItr, m_CurrentSceneIndex);
+	m_CurrentSceneName = NowItr->first; // 現在のシーン名を更新
+
+	LoadSprites(); // スプライトをロード
+	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
 }
 
 void SpriteManager::DeleteScene(_In_ const int &In_Index) noexcept
