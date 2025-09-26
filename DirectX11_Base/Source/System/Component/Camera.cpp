@@ -57,7 +57,7 @@ void Camera::Draw() const noexcept
 
 DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
 {
-	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
+	DirectX::XMFLOAT3 pos = m_pTransform->GetPosition();
 	DirectX::XMFLOAT3 look = GetLook();
 	DirectX::XMFLOAT3 up;
 	if (m_bIsLockZ)
@@ -68,7 +68,7 @@ DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
 	DirectX::XMVECTOR vLook = DirectX::XMLoadFloat3(&look);
 	DirectX::XMVECTOR vUp = DirectX::XMLoadFloat3(&up);
 	DirectX::XMMATRIX mat = DirectX::XMMatrixLookAtLH(vPos, vLook, vUp);
-	
+
 	// Transposeするかどうか
 	if (In_Transpose)
 		mat = DirectX::XMMatrixTranspose(mat);
@@ -99,7 +99,7 @@ DirectX::XMFLOAT4X4 Camera::GetProj(_In_ bool In_Transpose) const noexcept
 DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 {
 	// 位置の取得
-	DirectX::XMFLOAT3 pos = m_pTransform->GetPos();
+	DirectX::XMFLOAT3 pos = m_pTransform->GetPosition();
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 
 	// 前方ベクトル取得

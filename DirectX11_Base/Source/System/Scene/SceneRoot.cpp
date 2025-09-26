@@ -52,8 +52,8 @@ void SceneRoot::Init()
 	Component1->SetCamera(pCamera);
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	
-	pModel->SetPos({ 0.0f, 1.0f, 0.0f });
+
+	pModel->SetPosition({ 0.0f, 1.0f, 0.0f });
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();
@@ -61,7 +61,7 @@ void SceneRoot::Init()
 	comp->SetCamera(pCamera);
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	child->SetPos({ 1.0f, 0.0f, 0.0f });
+	child->SetPosition({ 1.0f, 0.0f, 0.0f });
 
 	// F15Eのモデルを読み込む
 	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
@@ -72,7 +72,7 @@ void SceneRoot::Init()
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
-	pModel2->SetPos({ -2.0f, 0.0f, 0.0f });
+	pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
 
 	// スプライトの作成
@@ -82,7 +82,7 @@ void SceneRoot::Init()
 	SpriteComp1->SetCamera(pCamera);
 	SpriteComp1->Set3D(true);
 	SpriteComp1->SetBillBoard(true);
-	pSpriteObj1->SetPos({ 5.0f, 0.0f, 0.0f });
+	pSpriteObj1->SetPosition({ 5.0f, 0.0f, 0.0f });
 	SpriteComp1->SetLayer(-1); // レイヤーを設定
 
 	GameObject *pSpriteObj2 = CreateObject<GameObject>("SpriteObj2");
@@ -98,7 +98,7 @@ void SceneRoot::Init()
 
 	// インスタンシングテスト
 	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
-	pInstanced->SetPos({ 0.0f,0.0f,0.0f });
+	pInstanced->SetPosition({ 0.0f,0.0f,0.0f });
 	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
 	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
@@ -110,7 +110,7 @@ void SceneRoot::Init()
 	instanceData.CountX = 200;
 	instanceData.CountZ = 200;
 	instanceData.CountY = 1;
-	instanceData.StartPos = pInstanced->GetPos();
+	instanceData.StartPos = pInstanced->GetPosition();
 	instanceData.Scale = pInstanced->GetScale();
 	instanceData.Quaternion = pInstanced->GetQuat();
 	instanceData.IsWrite = true;
@@ -126,7 +126,7 @@ void SceneRoot::Init()
 	PatternScaleComp->SetCamera(pCamera);
 	PatternScaleComp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	PatternScaleComp->SetPixelShader(ShaderM.GetShader("PS_PatternScale"));
-	pPatternScale->SetPos({ 0.0f, -0.5f, 0.0f });
+	pPatternScale->SetPosition({ 0.0f, -0.5f, 0.0f });
 	pPatternScale->SetScale({ 1000.0f, 1.0f, 1000.0f });
 
 	FadeManager::GetInstance().SetCamera(pCamera);
@@ -176,7 +176,7 @@ void SceneRoot::Update()
 	Component->SetWriteParam(LightParam);
 	Component->SetWriteParam(PBRParam);
 	Component->SetWriteParam(POMParam);*/
-	//pModel->SetPos(pModel->GetPos() + DirectX::XMFLOAT3(0.0f, 0.0f, 0.01f));
+	//pModel->SetPosition(pModel->GetPosition() + DirectX::XMFLOAT3(0.0f, 0.0f, 0.01f));
 }
 
 void SceneRoot::Draw()

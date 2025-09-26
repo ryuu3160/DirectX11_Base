@@ -11,13 +11,24 @@
 #include "SpriteRenderer.hpp"
 #include "System/Component/Camera.hpp"
 
-SpriteRenderer::SpriteRenderer() : m_bIsLoaded(false)
+// ==============================
+//	定数定義
+// ==============================
+namespace
+{
+	const inline constexpr float cx_fScreenWidthCorrect = 10.0f; // スクリーンの幅補正値
+	const inline constexpr float cx_fScreenHeightCorrect = 5.6f; // スクリーンの高さ補正値
+}
+
+SpriteRenderer::SpriteRenderer()
+	: m_bIsLoaded(false), m_bUsePixelPosition(false), m_PositionPixel{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
 		MakeDefaultShader();
 		MakeDefaultTexture();
 	}
+	GetPositionPixel();
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -118,7 +129,7 @@ void SpriteRenderer::Draw() noexcept
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX BillBoard = DirectX::XMMatrixIdentity();
 
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pTransform->GetPos().x, m_pTransform->GetPos().y, m_pTransform->GetPos().z);
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y, m_pTransform->GetPosition().z);
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_pTransform->GetScale().x, m_pTransform->GetScale().y, m_pTransform->GetScale().z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(m_pTransform->GetRotation().x, m_pTransform->GetRotation().y, m_pTransform->GetRotation().z);
 
@@ -186,6 +197,19 @@ void SpriteRenderer::Draw() noexcept
 	Main::Change3D_Draw();
 }
 
+const DirectX::XMFLOAT3 &SpriteRenderer::GetPositionPixel() noexcept
+{
+	if(!m_pTransform)
+		return DirectX::XMFLOAT3{}; // Transformが設定されていない場合は空の値を返す
+
+	m_PositionPixel = m_pTransform->GetPosition();
+
+	// x軸とy軸をピクセル単位に変換
+	m_PositionPixel.x = m_PositionPixel.x * (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / cx_fScreenWidthCorrect);
+	m_PositionPixel.y = m_PositionPixel.y * (static_cast<float>(cx_nWINDOW_HEIGHT) / 2.0f / cx_fScreenHeightCorrect);
+	return m_PositionPixel;
+}
+
 void SpriteRenderer::SetOffset(_In_ const DirectX::XMFLOAT2 &In_Offset) noexcept
 {
 	m_SpriteData.param[0].x = In_Offset.x;
@@ -223,6 +247,14 @@ void SpriteRenderer::Set3D(_In_ const bool &In_Is3D) noexcept
 void SpriteRenderer::SetBillBoard(_In_ const bool &In_IsBillBoard) noexcept
 {
 	m_SpriteData.IsBillBoard = In_IsBillBoard;
+}
+
+void SpriteRenderer::SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+{
+	DirectX::XMFLOAT3 pos = m_PositionPixel = In_Pos; // ピクセル単位の位置を保存
+	pos.x = pos.x / (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / cx_fScreenWidthCorrect);
+	pos.y = pos.y / (static_cast<float>(cx_nWINDOW_HEIGHT) / 2.0f / cx_fScreenHeightCorrect);
+	m_pTransform->SetPosition(pos);
 }
 
 void SpriteRenderer::MakeDefaultShader() noexcept

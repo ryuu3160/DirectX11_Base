@@ -51,6 +51,6 @@ void SkyBoxObj::LateUpdate()
 	if (NullCheck(m_pCameraObj, NCMode::OUTPUT, "error: SkyBoxObj Error, CameraObj is nullptr"))
 		return;
 
-	m_Pos = m_pCameraObj->GetPos();
+	m_Pos = m_pCameraObj->GetPosition();
 }
 

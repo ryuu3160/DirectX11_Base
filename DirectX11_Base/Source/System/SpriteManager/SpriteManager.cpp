@@ -157,12 +157,18 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	std::string name = In_SpriteName.data();
 	name += "_SpriteManager";
 	GameObject *obj = scene->CreateObject<GameObject>(name);
+
+	// オブジェクトを作成できなかった場合はnullptrを返す
+	if (obj == nullptr)
+		return nullptr;
+
 	auto cmp = obj->AddComponent<SpriteRenderer>();
 	cmp->SetAssetPath(std::string(In_FilePath));
 	cmp->Set3D(In_Is3D);
 	cmp->SetBillBoard(In_IsBillBoard);
 	cmp->SetLayer(In_Layer);
 	cmp->SetCamera(m_pCameraObj);
+	cmp->SetUsePixelPosition(!In_Is3D);
 	cmp->Load();
 
 	// スプライトオブジェクトをマネージャーに登録
@@ -229,7 +235,7 @@ void SpriteManager::UpdateViewAndProjection() noexcept
 SpriteManager::SpriteManager()
 	: m_View(), m_Projection3D(), m_Projection2D(), m_BillBoardView()
 	, m_bIsOpen(false), m_2DIndex(0), m_3DIndex(0)
-	, m_CurrentSceneIndex(0)
+	, m_CurrentSceneIndex(0), m_PrevSceneIndex(-1)
 	, m_pCamera(nullptr), m_pCameraObj(nullptr) // カメラの初期化
 	, m_Selected2DSpriteIndex(-1), m_ClickPointOffsetX_2D(0), m_ClickPointOffsetY_2D(0)
 	, m_bIsLeftClickTrigger(false)
@@ -346,6 +352,7 @@ void SpriteManager::DrawImGui() noexcept
 
 		case SceneSelecter:
 		{
+			m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを保存
 			SpriteManagerSceneSelecter *SceneSelecter = static_cast<SpriteManagerSceneSelecter *>(m_vecWindow[i]);
 			SceneSelecter->Draw(m_SceneSaveData, &m_CurrentSceneIndex);
 
@@ -395,8 +402,16 @@ void SpriteManager::ChangeScene(_In_ const int &In_Index) noexcept
 	// インデックスが指定された場合は、インデックスを変更
 	if (In_Index != -1)
 	{
+		if(In_Index < 0 || In_Index >= m_SceneSaveData.size())
+			return; // 範囲外なら何もしない
+
+		if(In_Index == m_CurrentSceneIndex)
+			return; // 同じシーンなら何もしない
 		m_CurrentSceneIndex = In_Index;
 	}
+
+	if(m_CurrentSceneIndex == m_PrevSceneIndex)
+		return; // 同じシーンなら何もしない
 
 	SaveSprites(); // 現在のスプライトを保存
 	// 現在のスプライトを削除
@@ -406,6 +421,27 @@ void SpriteManager::ChangeScene(_In_ const int &In_Index) noexcept
 	std::advance(itr, m_CurrentSceneIndex);
 	m_CurrentSceneName = itr->first; // 現在のシーン名を更新
 
+	LoadSprites(); // スプライトをロード
+	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
+}
+
+void SpriteManager::ChangeScene(_In_ const std::string_view &In_SceneName) noexcept
+{
+	if(m_CurrentSceneName == In_SceneName.data())
+		return; // 同じシーンなら何もしない
+
+	// シーン名を検索
+	auto itr = m_SceneSaveData.find(In_SceneName.data());
+	if(itr == m_SceneSaveData.end())
+		return; // 見つからなければ何もしない
+
+	SaveSprites(); // 現在のスプライトを保存
+	// 現在のスプライトを削除
+	DeleteAll();
+
+	m_CurrentSceneName = itr->first; // 現在のシーン名を更新
+	m_CurrentSceneIndex = std::distance(m_SceneSaveData.begin(), itr); // 現在のシーンインデックスを更新
+	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
 	LoadSprites(); // スプライトをロード
 }
 
@@ -485,7 +521,7 @@ void SpriteManager::SaveSprites() const noexcept
 			name = name.substr(0, name.find_last_of("_SpriteManager") - 13); // "_SpriteManager"を除いた名前を保存
 			work[Name]["Name"] = name;
 			work[Name]["FilePath"] = SR->GetAssetPath();
-			work[Name]["Position"] = { itr->GetPos().x, itr->GetPos().y, itr->GetPos().z };
+			work[Name]["Position"] = { itr->GetPosition().x, itr->GetPosition().y, itr->GetPosition().z };
 			work[Name]["Scale"] = { itr->GetScale().x, itr->GetScale().y, itr->GetScale().z };
 			work[Name]["Rotation"] = { itr->GetRotation().x, itr->GetRotation().y, itr->GetRotation().z };
 			work[Name]["Layer"] = SR->GetLayer();
@@ -578,7 +614,7 @@ void SpriteManager::LoadSprites() noexcept
 				GameObject *sprite = CreateSprite(name, filePath, is3D, isBillBoard, layer);
 				if (sprite)
 				{
-					sprite->SetPos(position);
+					sprite->SetPosition(position);
 					sprite->SetScale(scale);
 					sprite->SetRotation(rotation);
 				}
@@ -685,7 +721,8 @@ void SpriteManager::CursorHit2DSprite() noexcept
 				float ScaleY = (*itr)->GetScale().y;
 
 				// スプライトの中心座標を取得
-				DirectX::XMFLOAT3 center = (*itr)->GetPos();
+				auto cmp = (*itr)->GetComponent<SpriteRenderer>();
+				DirectX::XMFLOAT3 center = cmp->GetPositionPixel();
 				// スプライトの四隅の座標を計算
 				DirectX::XMFLOAT2 TopLeft = { center.x - (cx_nSpriteRadius * ScaleX), center.y - (cx_nSpriteRadius * ScaleY) };
 				DirectX::XMFLOAT2 BottomRight = { center.x + (cx_nSpriteRadius * ScaleX), center.y + (cx_nSpriteRadius * ScaleY) };
@@ -724,7 +761,8 @@ void SpriteManager::MouseControl2DSprite() noexcept
 		if (*itr)
 		{
 			// スプライトの位置を取得
-			DirectX::XMFLOAT3 pos = (*itr)->GetPos();
+			auto cmp = (*itr)->GetComponent<SpriteRenderer>();
+			DirectX::XMFLOAT3 pos = cmp->GetPositionPixel();
 
 			// スプライトの位置をカーソル移動に合わせて動かす
 			pos.x = Input::GetMouseRelativePos_CenterZero().x - m_ClickPointOffsetX_2D; // カーソルのX座標からオフセットを引く
@@ -734,7 +772,7 @@ void SpriteManager::MouseControl2DSprite() noexcept
 			pos.z = 0.0f; // 2DスプライトなのでZ座標は0に設定
 
 			// スプライトの位置を更新
-			(*itr)->SetPos(pos);
+			cmp->SetPositionPixel(pos);
 		}
 	}
 	else
@@ -754,7 +792,7 @@ void SpriteManager::CursorHit3DSprite() noexcept
 		// マウス座標(スクリーン座標)をワールド座標に変換
 		DirectX::XMVECTOR mousePos = ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
 		// カメラの位置を取得
-		DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
+		DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
 		DirectX::XMVECTOR vCam = DirectX::XMLoadFloat3(&CamPos);
 
 		// カメラ座標からマウス座標へのベクトルを取得、方向に変換するために正規化
@@ -789,14 +827,14 @@ void SpriteManager::MouseControl3DSprite() noexcept
 		if (*itr)
 		{
 			// スプライトの位置を取得
-			DirectX::XMFLOAT3 pos = (*itr)->GetPos();
+			DirectX::XMFLOAT3 pos = (*itr)->GetPosition();
 
 			// ------- 毎フレームのマウス座標更新処理 -------
 
 			// マウス座標(スクリーン座標)をワールド座標に変換
 			DirectX::XMVECTOR Mouse = ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
 			// カメラの位置を取得
-			DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
+			DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
 			DirectX::XMVECTOR vCam = DirectX::XMLoadFloat3(&CamPos);
 
 			// カメラ座標からマウス座標へのベクトルを取得、方向に変換するために正規化
@@ -829,7 +867,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 			pos.z += z;
 
 			// スプライトの位置を更新
-			(*itr)->SetPos(pos);
+			(*itr)->SetPosition(pos);
 		}
 	}
 	else
@@ -853,14 +891,14 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 		DirectX::XMFLOAT3 scale = (*itr)->GetScale() / 2.0f;
 		DirectX::XMFLOAT4 qua = (*itr)->GetQuat();
 		scale.z = cx_fEpsilon;
-		auto Pos = (*itr)->GetPos();
+		auto Pos = (*itr)->GetPosition();
 		DirectX::XMVECTOR vCenter = DirectX::XMLoadFloat3(&Pos);
 		DirectX::XMVECTOR vExtents = DirectX::XMLoadFloat3(&scale);
 		DirectX::XMVECTOR vOrientation = DirectX::XMLoadFloat4(&qua);
 
 		float fRayLength;
 
-		bool result = IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPos(), scale, (*itr)->GetQuat(), fRayLength);
+		bool result = IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPosition(), scale, (*itr)->GetQuat(), fRayLength);
 
 		if (result)
 		{
@@ -875,7 +913,7 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 				float NewSpriteLength = 0.0f;
 				auto NowSprite = m_SpriteObjects[_3D].begin();
 				std::advance(NowSprite, WorkIndex);
-				auto NowPos = (*NowSprite)->GetPos();
+				auto NowPos = (*NowSprite)->GetPosition();
 				DirectX::XMStoreFloat(&SpriteLength, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&NowPos), In_vRayPos));
 				DirectX::XMStoreFloat(&NewSpriteLength, DirectX::XMVectorSubtract(vCenter, In_vRayPos));
 

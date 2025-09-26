@@ -51,8 +51,8 @@ bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) cons
 	SphereCollider *other = dynamic_cast<SphereCollider *>(In_Other);
 	if (!other) return false;
 
-	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPos();
-	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPos();
+	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPosition();
 	float radiusSum = m_Radius + other->m_Radius;
 	float distSq = (pos1.x - pos2.x) * (pos1.x - pos2.x) +
 		(pos1.y - pos2.y) * (pos1.y - pos2.y) +

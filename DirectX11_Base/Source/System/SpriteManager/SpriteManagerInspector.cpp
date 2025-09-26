@@ -34,7 +34,7 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 	{
 		auto SR2D = In_2DSprite->GetComponent<SpriteRenderer>();
 		if (!SR2D) return; // SpriteRendererコンポーネントが存在しない場合は処理を抜ける
-		m_Pos2D = In_2DSprite->GetPos();
+		m_Pos2D = SR2D->GetPositionPixel();
 		m_Scale2D = In_2DSprite->GetScale();
 		m_Rotation2D = In_2DSprite->GetRotation();
 		m_Layer2D = SR2D->GetLayer();
@@ -53,7 +53,7 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 		}
 
 		// 2Dスプライトのパラメータを更新
-		In_2DSprite->SetPos(m_Pos2D);
+		SR2D->SetPositionPixel(m_Pos2D);
 		In_2DSprite->SetScale(m_Scale2D);
 		In_2DSprite->SetRotation(m_Rotation2D);
 		SR2D->SetLayer(m_Layer2D);
@@ -63,7 +63,7 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 	if (In_3DSprite)
 	{
 		auto SR3D = In_3DSprite->GetComponent<SpriteRenderer>();
-		m_Pos3D = In_3DSprite->GetPos();
+		m_Pos3D = In_3DSprite->GetPosition();
 		m_Scale3D = In_3DSprite->GetScale();
 		m_Rotation3D = In_3DSprite->GetRotation();
 		m_Layer3D = SR3D->GetLayer();
@@ -86,7 +86,7 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 		}
 
 		// 3Dスプライトのパラメータを更新
-		In_3DSprite->SetPos(m_Pos3D);
+		In_3DSprite->SetPosition(m_Pos3D);
 		In_3DSprite->SetScale(m_Scale3D);
 		In_3DSprite->SetRotation(m_Rotation3D);
 		SR3D->SetLayer(m_Layer3D);

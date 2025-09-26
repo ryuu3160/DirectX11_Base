@@ -271,7 +271,7 @@ DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcep
 	return fMat;
 }
 
-void GameObject::SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+void GameObject::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
 	if(m_bIsChild)
 		m_ChildPos = In_Pos; // 子オブジェクトの座標を保存(親からの相対座標)

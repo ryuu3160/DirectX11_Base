@@ -139,7 +139,7 @@ void InstancedModelRenderer::Draw() noexcept
 	mat[2] = m_pViewCamera->GetProj(false);
 
 	// カメラの情報を定数バッファで渡す
-	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPos();
+	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
 	DirectX::XMFLOAT4 CameraParam[] = {
 		{CamPos.x,CamPos.y,CamPos.z,0.0f}
 	};

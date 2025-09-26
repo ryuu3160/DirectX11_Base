@@ -100,6 +100,18 @@ public:
 	inline const bool &GetIsBillBoard() const noexcept { return m_SpriteData.IsBillBoard; }
 
 	/// <summary>
+	/// 描画時にピクセル位置を使用するかどうかを示すフラグを取得します。
+	/// </summary>
+	/// <returns>ピクセル位置を使用する場合は true、使用しない場合は false を返します。</returns>
+	inline const bool &GetIsUsePixelPosition() const noexcept { return m_bUsePixelPosition; }
+
+	/// <summary>
+	/// ピクセル単位の位置を取得します。
+	/// </summary>
+	/// <returns>DirectX::XMFLOAT3 型の位置情報への参照を返します。</returns>
+	const DirectX::XMFLOAT3 &GetPositionPixel() noexcept;
+
+	/// <summary>
 	/// 2次元オフセット値を設定します。
 	/// </summary>
 	/// <param name="In_Offset">設定するDirectX::XMFLOAT2型のオフセット値。</param>
@@ -143,6 +155,19 @@ public:
 	/// <param name="[In_IsBillBoard]">ビルボード状態に設定するかどうかを示すブール値（true でビルボード、false で非ビルボード）。</param>
 	void SetBillBoard(_In_ const bool &In_IsBillBoard) noexcept;
 
+	/// <summary>
+	/// 描画時にピクセル位置を使用するかどうかを設定します。
+	/// </summary>
+	/// <param name="[In_Use]">ピクセル位置を使用するかどうかを示す真偽値。</param>
+	inline void SetUsePixelPosition(_In_ const bool &In_Use) noexcept { m_bUsePixelPosition = In_Use; }
+
+	/// <summary>
+	/// <para>ピクセル単位の位置を設定します。</para>
+	/// <para>オブジェクトのTransformコンポーネントの位置も同時に更新されます。</para>
+	/// </summary>
+	/// <param name="[In_Pos]">ピクセル単位の座標</param>
+	void SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
+
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成
@@ -153,6 +178,8 @@ private:
 
 private:
 	SpriteData m_SpriteData;				// スプライトデータ
+	DirectX::XMFLOAT3 m_PositionPixel;		// ピクセル単位の位置
 	bool m_bIsLoaded;						// 読み込み済みかどうか
+	bool m_bUsePixelPosition;				// 描画時にピクセル位置を使用するかどうか
 	std::shared_ptr<Texture> m_DefaultTex;	// デフォルトのテクスチャ
 };

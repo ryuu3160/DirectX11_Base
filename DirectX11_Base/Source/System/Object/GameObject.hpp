@@ -92,7 +92,7 @@ public:
 	inline const std::string &GetName() const noexcept { return m_Name; }
 	inline DirectX::XMFLOAT3 GetRotation() const noexcept { return m_Rotation; }
 
-	inline DirectX::XMFLOAT3 GetPos() const noexcept { return m_Pos; }
+	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_Pos; }
 	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_Quat; }
 	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_Scale; }
 	inline const bool &IsChild() const noexcept { return m_bIsChild; }
@@ -102,7 +102,7 @@ public:
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
-	void SetPos(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
+	void SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
 	void SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept;
 	void SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept;
 	void SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept;

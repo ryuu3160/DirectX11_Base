@@ -76,6 +76,12 @@ public:
 	std::list<GameObject *> Get3DSprites() noexcept;
 
 	/// <summary>
+	/// 現在のシーンインデックスを取得します。
+	/// </summary>
+	/// <returns>現在のシーンインデックスへの参照。</returns>
+	inline const int &GetCurrentSceneIndex() const noexcept { return m_CurrentSceneIndex; }
+
+	/// <summary>
 	/// 操作中のディレクトリにあるスプライトを取得します。
 	/// </summary>
 	/// <param name="[In_SpriteName]">スプライト名</param>
@@ -129,7 +135,13 @@ public:
 	/// </summary>
 	/// <param name="[In_Index]">変更先のシーンのインデックス。省略時は -1 です。</param>
 	void ChangeScene(_In_ const int &In_Index = -1) noexcept;
-	
+
+	/// <summary>
+	/// 指定されたシーン名にシーンを変更します。
+	/// </summary>
+	/// <param name="In_SceneName">変更先のシーン名を表す文字列ビュー。</param>
+	void ChangeScene(_In_ const std::string_view &In_SceneName) noexcept;
+
 	/// <summary>
 	/// 現在選択されている3Dスプライトを2Dスプライトに変換します。
 	/// </summary>
@@ -224,11 +236,12 @@ private:
 
 	//Sprites m_Sprites[_MAX_RENDER_MODE]; // スプライトのマップ
 	//std::list<Sprite *> m_SpritePointerList[_MAX_RENDER_MODE]; // スプライトのポインタリスト
-	
+
 	// シーンセーブデータ
 	std::map<std::string, FilePathHold> m_SceneSaveData;	// シーン名とパスのマップ
 	std::string m_CurrentSceneName;							// 現在のシーン名
 	int m_CurrentSceneIndex;								// 現在のシーンのインデックス
+	int m_PrevSceneIndex;									// 前のシーンのインデックス
 
 	DirectX::XMFLOAT4X4 m_View;				// ビュー行列
 	DirectX::XMFLOAT4X4 m_Projection3D;		// 投影行列
