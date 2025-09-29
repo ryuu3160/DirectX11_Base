@@ -80,6 +80,10 @@ void SpriteManager::Update() noexcept
 	if (!m_bIsOpen)
 		return;
 
+	// ウィンドウにカーソルが被っている場合は処理しない
+	if (m_bIsHoveredWindow)
+		return;
+
 	SpriteController();
 }
 
@@ -236,7 +240,7 @@ void SpriteManager::UpdateViewAndProjection() noexcept
 
 SpriteManager::SpriteManager()
 	: m_View(), m_Projection3D(), m_Projection2D(), m_BillBoardView()
-	, m_bIsOpen(false), m_2DIndex(0), m_3DIndex(0)
+	, m_bIsOpen(false), m_bIsHoveredWindow(false), m_2DIndex(0), m_3DIndex(0)
 	, m_CurrentSceneIndex(0), m_PrevSceneIndex(-1)
 	, m_pCamera(nullptr), m_pCameraObj(nullptr) // カメラの初期化
 	, m_Selected2DSpriteIndex(-1), m_ClickPointOffsetX_2D(0), m_ClickPointOffsetY_2D(0)
@@ -296,6 +300,9 @@ void SpriteManager::DrawImGui() noexcept
 	if (!m_bIsOpen)
 		return;
 
+	// ウィンドウにカーソルが被っているかどうかのフラグリセット
+	m_bIsHoveredWindow = false;
+
 	// Imguiの描画準備
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -305,6 +312,14 @@ void SpriteManager::DrawImGui() noexcept
 	{
 		// ウィンドウ内の描画開始
 		ImGui::Begin(m_vecWindow[i]->GetWindowName().c_str());
+
+		// ウィンドウにカーソルが被っているかどうか
+		// ※ドラッグ中は除外
+		if (!m_bIsLeftClickTrigger && !m_bIs3KeyTrigger)
+		{
+			if (ImGui::IsWindowHovered())
+				m_bIsHoveredWindow = true;
+		}
 
 		// 表示
 		switch (m_vecWindow[i]->GetWindowType())

@@ -246,9 +246,6 @@ private:
 	SpriteObjects m_SpriteObjects[_MAX_RENDER_MODE]; // スプライトオブジェクトのマップ
 	std::list<std::string> m_SpriteNames[_MAX_RENDER_MODE];
 
-	//Sprites m_Sprites[_MAX_RENDER_MODE]; // スプライトのマップ
-	//std::list<Sprite *> m_SpritePointerList[_MAX_RENDER_MODE]; // スプライトのポインタリスト
-
 	// シーンセーブデータ
 	std::map<std::string, FilePathHold> m_SceneSaveData;	// シーン名とパスのマップ
 	std::string m_CurrentSceneName;							// 現在のシーン名
@@ -273,6 +270,7 @@ private:
 
 	// --- ImGui ---
 	bool m_bIsOpen;									// スプライトマネージャーウィンドウが開いているかどうか
+	bool m_bIsHoveredWindow;						// スプライトマネージャーウィンドウにカーソルが乗っているかどうか
 	std::vector<SpriteManagerWindow*> m_vecWindow;	// スプライトマネージャーウィンドウのリスト
 	int m_2DIndex;
 	int m_3DIndex;
