@@ -60,15 +60,22 @@ void SceneManager::RootUpdate() noexcept
 void SceneManager::RootDraw() noexcept
 {
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootDraw();
+		m_DrawFutures.push_back(std::async(std::launch::async, &SceneBase::_RootDraw, m_pCurrentScene));
 	for (auto &itr : m_SubScene)
 	{
 		if (itr.second)
-			itr.second->_RootDraw();
+			m_DrawFutures.push_back(std::async(std::launch::async, &SceneBase::_RootDraw, itr.second));
 	}
 
 	// ƒtƒF[ƒh‚Ì•`‰æ
-	m_FadeManager.Draw();
+	m_DrawFutures.push_back(std::async(std::launch::async, &FadeManager::Draw, &m_FadeManager));
+
+	// ”ñ“¯Šú•`‰æ‚ÌŠ®—¹‚ð‘Ò‚Â
+	for(auto &itr : m_DrawFutures)
+	{
+		if (itr.valid())
+			itr.get();
+	}
 
 	// ‘S‚Ä‚Ì•`‰æ
 	m_RenderManager.DrawAll();
@@ -78,7 +85,7 @@ void SceneManager::DestroyObjects() noexcept
 {
 	if (m_pCurrentScene)
 		m_pCurrentScene->_DestroyObjects();
-	
+
 	for (auto itr : m_SubScene)
 	{
 		if (itr.second)
