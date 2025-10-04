@@ -107,6 +107,7 @@ private:
 	std::vector<std::type_index> m_RemoveSubScene; // 削除するサブシーンの型情報
 
 	std::vector<std::future<void>> m_Futures; // 非同期ロード用のfuture
+	std::list<std::future<void>> m_DrawFutures; // 描画用の非同期ロード
 
 	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
 	FadeManager &m_FadeManager;
