@@ -72,7 +72,7 @@ LRESULT CALLBACK Window::m_WndProc(_In_ HWND In_hWnd, _In_ UINT In_unMessage, _I
 	for (auto &func : m_CustomProcQueue)
 	{
 		// 登録されたカスタムプロシージャを呼び出す
-		if(func(In_hWnd, In_unMessage, In_wParam, In_lParam))
+		if (func(In_hWnd, In_unMessage, In_wParam, In_lParam))
 			return true;
 	}
 
@@ -143,7 +143,7 @@ void Window::Create(_In_ LPCTSTR In_lpcTitleName, _In_ UINT In_unWidth, _In_ UIN
 		m_nX, m_nY,									// ウィンドウの表示位置
 		m_rcWindowRect.right - m_rcWindowRect.left, // ウィンドウの幅
 		m_rcWindowRect.bottom - m_rcWindowRect.top,	// ウィンドウの高さ
-		m_hWndParent,								// 親ウィンドウのハンドル	
+		m_hWndParent,								// 親ウィンドウのハンドル
 		m_hMenu,									// メニューハンドル
 		In_hInstance,								// インスタンスハンドル
 		m_lpParam									// CREATESTRUCT構造体へのポインタ

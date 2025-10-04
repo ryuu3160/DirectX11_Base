@@ -14,6 +14,9 @@
 //	include
 // ==============================
 #include <Windows.h>
+#include <deque>
+#include <functional>
+#include <string>
 #include "../Singleton/Singleton.hpp"
 
 // メンバ関数にGetClassNameがあるため、マクロを無効化
@@ -218,7 +221,7 @@ private:
 	// カーソルアイコン
 	HINSTANCE m_hCursorInstance;
 	LPCTSTR m_lpcCursorName;
-	
+
 	LPCSTR m_lpcClassName;	// ウィンドウを識別するためのクラス名
 	UINT m_unStyle;			// ウィンドウ挙動
 

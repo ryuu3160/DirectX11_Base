@@ -1,19 +1,21 @@
 /*+===================================================================
 	File: FrameManager.cpp
 	Summary: フレームレート管理クラスのソースファイル
-	Author: AT13C 01 青木雄一郎
+	Author: ryuu3160
 	Date: 2024/08/17	   初回作成
 			  /11/19 10:14 クラス全体の改良
 		  2025/04/08 11:40 クラス全体のリファクタリング
 				 /09 03:07 大幅なリファクタリング
 
-	(C) 2021 AT13C 01 青木雄一郎. All rights reserved.
+	(C) 2021 ryuu3160. All rights reserved.
 ===================================================================+*/
 
 // ==============================
 //	include
 // ==============================
 #include "FrameManager.hpp"
+#include <string>
+#include <future>
 
 void FrameManager::Init(float In_fFps)
 {
@@ -41,12 +43,34 @@ bool FrameManager::UpdateMain()
 	if (m_dwTime - m_dwOldTime >= 1000 / m_fMainFps)
 	{
 		m_dwOldTime = m_dwTime;
+
+		// FPSの計測
+#ifdef _DEBUG
+		// Windowハンドルが取得出来ている場合のみ
+		if (m_hWnd != nullptr)
+		{
+			++FpsCount;// 処理回数をカウント
+
+			if (timeGetTime() - FpsTime >= 1000)	// 1000ms経過したら
+			{
+				// 整数型から文字列へ変換
+				std::string mes = m_lpcTitleName;	// ウィンドウタイトルの取得
+				mes += " [fps]:" + std::to_string(FpsCount);
+
+				SetWindowTextA(m_hWnd, mes.c_str());	// FPSの表示
+
+				// 次の計測の準備
+				FpsCount = 0;
+				FpsTime = timeGetTime();
+			}
+		}
+#endif // _DEBUG
 		return true;
 	}
 	return false;
 }
 
-DWORD FrameManager::GetMainTime()
+DWORD FrameManager::GetMainTime() const
 {
 	return m_dwTime;
 }
@@ -78,7 +102,7 @@ void FrameManager::AppendInterval(const std::string &In_strName, float In_fTrueF
 {
 	// スレッドセーフにするためのロック
 	std::lock_guard<std::mutex> lock(m_mutexInterval);
-	
+
 	// 重複チェック
 	CheckExistsLimitAndInterval(In_strName);
 
@@ -170,7 +194,7 @@ void FrameManager::AppendTimeCounter(const std::string &In_strName, bool In_bIsS
 
 	TimeCountData data{};
 	data.m_dwCount = 0;
-	
+
 	// すぐに計測を始めるかどうか
 	if (In_bIsStartNow)
 		data.m_bIsStart = true;
