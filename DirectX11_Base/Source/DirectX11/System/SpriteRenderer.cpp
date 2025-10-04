@@ -200,7 +200,7 @@ void SpriteRenderer::Draw() noexcept
 const DirectX::XMFLOAT3 &SpriteRenderer::GetPositionPixel() noexcept
 {
 	if(!m_pTransform)
-		return DirectX::XMFLOAT3{}; // Transform‚ªÝ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í‹ó‚Ì’l‚ð•Ô‚·
+		return m_PositionPixel = { 0.0f,0.0f,0.0f }; // Transform‚ªÝ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í‹ó‚Ì’l‚ð•Ô‚·
 
 	m_PositionPixel = m_pTransform->GetPosition();
 
