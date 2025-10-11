@@ -133,6 +133,8 @@ public:
 	virtual void ExecuteDraw() noexcept;
 	virtual void ReadWrite(_In_ DataAccessor *In_Data);
 
+	GameObject *GetGameObject() const noexcept { return m_pTransform; }
+
 protected:
 	GameObject *m_pTransform;
 };
