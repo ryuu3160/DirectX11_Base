@@ -10,9 +10,7 @@
 // ==============================
 #include "ModelManager.hpp"
 
-#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 // assimp‚Ìƒ‰ƒCƒuƒ‰ƒŠƒŠƒ“ƒN
 #ifdef _DEBUG

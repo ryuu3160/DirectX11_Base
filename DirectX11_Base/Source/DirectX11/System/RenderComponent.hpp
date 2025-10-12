@@ -11,8 +11,6 @@
 // ==============================
 #include "System/Component/Component.hpp"
 #include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/Texture/MeshBuffer.hpp"
-#include "DirectX11/Texture/Texture.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

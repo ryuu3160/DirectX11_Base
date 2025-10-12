@@ -8,7 +8,6 @@
 // ==============================
 //	include
 // ==============================
-#include "cstring"
 #include "GameObject.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)

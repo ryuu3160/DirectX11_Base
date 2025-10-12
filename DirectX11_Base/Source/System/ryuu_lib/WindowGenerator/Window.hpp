@@ -13,11 +13,6 @@
 // ==============================
 //	include
 // ==============================
-#include <Windows.h>
-#include <deque>
-#include <functional>
-#include <string>
-#include "../Singleton/Singleton.hpp"
 
 // メンバ関数にGetClassNameがあるため、マクロを無効化
 #undef GetClassName

@@ -10,7 +10,6 @@
 // ==============================
 #include "Shader.hpp"
 #include <d3dcompiler.h>
-#include <stdio.h>
 
 #pragma comment(lib, "d3dcompiler.lib")
 

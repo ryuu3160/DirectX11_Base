@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: SceneRoot.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: ルートシーン
 	Author: AT13C 01 青木雄一郎
 	Date: 2025/6/14 Sat AM 07:23:17 初回作成
 ===================================================================+*/
@@ -8,17 +8,14 @@
 // ==============================
 //	include
 // ==============================
-#include "SceneRoot.hpp"
-#include "Source/App/Main.hpp"
-#include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/Resource/ShaderManager.hpp"
-#include "DirectX11/Resource/TextureManager.hpp"
+#include "DirectX11/Resource/ShaderParam.hpp"
+#include "DirectX11/System/Geometory.hpp"
+#include "DirectX11/System/InstancedModelRenderer.hpp"
+#include "SceneRoot.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"
-#include "DirectX11/System/InstancedModelRenderer.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
-#include "DirectX11/Resource/Mesh.hpp"
-#include "DirectX11/Resource/ShaderParam.hpp"
 
 // ==============================
 //  定数
