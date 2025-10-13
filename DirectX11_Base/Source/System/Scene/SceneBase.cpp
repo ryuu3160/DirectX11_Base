@@ -100,6 +100,12 @@ void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 	}
 }
 
+void SceneBase::_RootInit() noexcept
+{
+	// シーン自体の初期化
+	Init();
+}
+
 void SceneBase::_RootUpdateMain() noexcept
 {
 	// シーンが所持しているオブジェクトの更新

@@ -91,7 +91,7 @@ public:
 	/// <returns>新しく作成されたGameObjectへのポインタ。</returns>
 	template<>
 	GameObject *CreateObject(_In_ const std::string &In_Name) noexcept;
-	
+
 	/// <summary>
 	/// 指定された名前に対応するオブジェクトへのポインタを取得します。
 	/// </summary>
@@ -129,6 +129,10 @@ protected:
 
 private:
 
+	/// <summary>
+	/// ルートの初期化処理を実行します。
+	/// </summary>
+	void _RootInit() noexcept;
 	/// <summary>
 	/// ルートのメイン更新処理を実行します。
 	/// </summary>

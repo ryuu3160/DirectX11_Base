@@ -127,7 +127,7 @@ inline std::shared_ptr<T> SceneManager::Init(_In_ Args&&... In_Args) noexcept
 
 	std::shared_ptr<T> newScene = std::make_shared<T>(In_Args...);
 	m_pCurrentScene = newScene;
-	m_pCurrentScene->Init();
+	m_pCurrentScene->_RootInit();
 	return std::static_pointer_cast<T>(m_pCurrentScene);
 }
 
@@ -221,7 +221,7 @@ inline void SceneManager::LoadSubSceneAsync(Args && ...In_Args) noexcept
 	std::future<void> future = std::async(std::launch::async, [this, In_Args...]() {
 		// サブシーンを作成
 		std::shared_ptr<T> newSubScene = std::make_shared<T>(In_Args...);
-		newSubScene->Init();
+		newSubScene->_RootInit();
 
 		// 既に同じ型のサブシーンがロードされている場合は追加しない
 		for(auto &itr : m_NextSubScene)

@@ -278,6 +278,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\Object\Object.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
       <SubType>
       </SubType>
@@ -438,6 +442,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\Object\GameObject.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Object\Object.hpp">
       <SubType>
       </SubType>
     </ClInclude>
