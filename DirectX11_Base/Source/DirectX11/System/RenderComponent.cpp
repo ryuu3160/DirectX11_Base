@@ -13,7 +13,8 @@
 #include "System/Component/Camera.hpp"
 
 RenderComponent::RenderComponent()
-	: m_nLayer(0), m_pViewCamera(nullptr), m_pCameraObj(nullptr)
+	: m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default)
+	, m_pViewCamera(nullptr), m_pCameraObj(nullptr)
 	, m_RenderManager(RenderManager::GetInstance())
 {
 }
@@ -39,6 +40,23 @@ void RenderComponent::SetCamera(_In_ GameObject *In_Camera) noexcept
 	m_pCameraObj = In_Camera;
 }
 
+void RenderComponent::SetLayerGroup(_In_ LayerGroup In_LayerGroup) noexcept
+{
+	if (In_LayerGroup == m_LayerGroup)
+		return;
+
+	m_RenderManager.LayerGroupSortRequest(m_LayerGroup);
+	m_LayerGroup = In_LayerGroup;
+}
+
+void RenderComponent::SetLayer(_In_ int In_Layer) noexcept
+{
+	if(In_Layer == m_nLayer)
+		return;
+	m_RenderManager.LayerSortRequest(m_LayerGroup);
+	m_nLayer = In_Layer;
+}
+
 void RenderComponent::ExecuteUpdate() noexcept
 {
 }
@@ -48,7 +66,7 @@ void RenderComponent::ExecuteDraw() noexcept
 	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::ExecuteDraw."))
 		return;
 
-	m_RenderManager.AddRenderComponent(this, m_nLayer);
+	m_RenderManager.AddRenderComponent(this, m_LayerGroup);
 }
 
 void RenderComponent::ReadWrite(_In_ DataAccessor *In_Data)

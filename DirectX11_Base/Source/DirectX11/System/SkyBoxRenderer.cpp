@@ -39,7 +39,7 @@ SkyBoxRenderer::SkyBoxRenderer()
 	m_pPS = m_defPS.get();
 
 	m_vecMeshes.clear();
-	m_nLayer = RenderLayer_SkyBox;
+	m_LayerGroup = LayerGroup_SkyBox;
 }
 
 SkyBoxRenderer::~SkyBoxRenderer()

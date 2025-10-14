@@ -268,7 +268,7 @@ GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const
 	GameObject *pWork = new GameObject(std::string(In_Name));
 	auto cmp = pWork->AddComponent<SpriteRenderer>();
 	cmp->SetCamera(m_pCameraObj);
-	cmp->SetLayer(RenderLayer_Fade);
+	cmp->SetLayerGroup(LayerGroup_Fade);
 	cmp->SetAssetPath(In_FadeInfo.TexturePath.data());
 	if (!In_FadeInfo.PixelShaderName.empty())
 		cmp->SetPixelShader(ShaderManager::GetInstance().GetShader(In_FadeInfo.PixelShaderName.data()));

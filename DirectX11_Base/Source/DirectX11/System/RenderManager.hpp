@@ -24,7 +24,26 @@ public:
 	/// </summary>
 	/// <param name="[In_RenderComponent]">追加するRenderComponentへのポインタ。</param>
 	/// <param name="[In_Layer]">レンダーコンポーネントを追加するレイヤー番号。省略時は0。</param>
-	void AddRenderComponent(_In_ RenderComponent* In_RenderComponent, _In_ const int& In_Layer = 0) noexcept;
+	void AddRenderComponent(_In_ RenderComponent* In_RenderComponent, _In_ LayerGroup In_Layer = LayerGroup_Default) noexcept;
+
+	/// <summary>
+	/// 指定されたレンダーコンポーネント削除します。
+	/// </summary>
+	/// <param name="[In_RenderComponent]">削除対象の RenderComponent へのポインタ。</param>
+	/// <param name="[In_LayerGroup]">削除を行う LayerGroup。省略時は RenderLayer_Default が使用されます。</param>
+	void RemoveRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_LayerGroup) noexcept;
+
+	/// <summary>
+	/// 指定されたレイヤーグループのソート要求を行います。
+	/// </summary>
+	/// <param name="[In_OldLayerGroup]">ソート対象となるレイヤーグループ。</param>
+	void LayerGroupSortRequest(_In_ LayerGroup In_OldLayerGroup) noexcept;
+
+	/// <summary>
+	/// 指定されたレイヤー番号に基づいてレイヤーの並び替えを要求します。
+	/// </summary>
+	/// <param name="In_OldLayer">並び替え対象のレイヤーグループ</param>
+	void LayerSortRequest(_In_ LayerGroup In_LayerGroup) noexcept;
 
 	/// <summary>
 	/// すべての描画処理を実行します。
@@ -35,7 +54,14 @@ private:
 	RenderManager();
 	~RenderManager();
 
+	void ExecuteLayerGroupSort() noexcept;
+	void ExecuteLayerSort() noexcept;
+
 private:
 
-	std::map<int, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
+	bool m_IsSortLayerGroup; // レイヤーグループのソートが必要かどうかのフラグ
+	bool m_IsSortLayer; // ソートが必要かどうかのフラグ
+	std::list<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト
+	std::list<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
+	std::map<LayerGroup, std::list<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
 };
