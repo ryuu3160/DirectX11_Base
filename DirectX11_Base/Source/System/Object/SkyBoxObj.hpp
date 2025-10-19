@@ -24,7 +24,7 @@ public:
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 
-	void LateUpdate() override final;
+	void LateUpdate() noexcept override final;
 
 private:
 	GameObject *m_pCameraObj; // カメラオブジェクト

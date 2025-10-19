@@ -34,7 +34,7 @@ CameraDCC::~CameraDCC()
 {
 }
 
-void CameraDCC::Update()
+void CameraDCC::Update() noexcept
 {
 	Argument arg{};
 #ifdef _DEBUG

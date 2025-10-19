@@ -35,7 +35,7 @@ public:
 	/// <summary>
 	/// オブジェクトの状態を更新します。
 	/// </summary>
-	void Update() final;
+	void Update() noexcept final;
 
 private:
 	void UpdateState() noexcept;
@@ -52,4 +52,3 @@ private:
 	char m_cMode[256];
 #endif
 };
-	
