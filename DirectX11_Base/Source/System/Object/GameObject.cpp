@@ -179,8 +179,6 @@ void GameObject::ExecuteDraw() noexcept
 	{
 		itr->ExecuteDraw();
 	}
-	// 継承先オブジェクトの描画
-	Draw();
 
 	// 子オブジェクトの描画
 	for (auto &itr : m_ChildObjects)

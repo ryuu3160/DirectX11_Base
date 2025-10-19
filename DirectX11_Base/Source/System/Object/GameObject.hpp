@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Scene/SceneBase.hpp"
+#include "System/Object/Object.hpp"
 // ==============================
 //  前方宣言
 // ==============================
@@ -18,7 +18,7 @@ class Component;
 /// <summary>
 /// GameObjectクラス
 /// </summary>
-class GameObject
+class GameObject : public Object
 {
 	friend class SceneBase;
 private:
@@ -108,14 +108,11 @@ public:
 	void SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept;
 
 protected:
-	// 継承先のクラスでオブジェクト別の更新処理を実装する場合、上書きすること。
-	virtual void Update() {}
-
-	// 継承先のクラスでオブジェクト別の遅延更新処理を実装する場合、上書きすること。
-	virtual void LateUpdate() {}
-
-	// 継承先のクラスでオブジェクト別の描画処理を実装する場合、上書きすること。
-	virtual void Draw() {}
+	// 継承先で使用する関数
+	virtual void Awake() noexcept {}
+	virtual void Init() noexcept {}
+	virtual void Update() noexcept {}
+	virtual void LateUpdate() noexcept {}
 
 private:
 	// コンポーネント追加時に型に関係なく呼び出す処理
