@@ -24,8 +24,6 @@ class SceneManager : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
 public:
-	SceneManager();
-	~SceneManager();
 
 	template <typename T, typename ...Args, typename std::enable_if < std::is_base_of<SceneBase, T>::value>::type * = nullptr>
 	std::shared_ptr<T> Init(_In_ Args&&... In_Args) noexcept;
@@ -78,6 +76,8 @@ public:
 	void LoadSubSceneAsync(_In_ Args&&... In_Args) noexcept;
 
 private:
+	SceneManager();
+	~SceneManager() override;
 
 	/// <summary>
 	/// 現在のシーンをアンロードします。
@@ -98,6 +98,8 @@ private:
 	void _ChangeAndAddSubScene() noexcept;
 
 private:
+
+	bool m_IsInitialized; // 最初のシーンロードがされているか
 
 	std::shared_ptr<SceneBase> m_pCurrentScene; // 現在のシーン
 	std::shared_ptr<SceneBase> m_pNextScene;    // 次にロードするシーン
@@ -122,12 +124,14 @@ private:
 template<typename T, typename ...Args, typename std::enable_if < std::is_base_of<SceneBase, T>::value>::type *>
 inline std::shared_ptr<T> SceneManager::Init(_In_ Args&&... In_Args) noexcept
 {
-	if (m_pCurrentScene)
-		UnLoadCurrentScene();
+	if (m_IsInitialized)
+		return std::static_pointer_cast<T>(m_pCurrentScene);
 
 	std::shared_ptr<T> newScene = std::make_shared<T>(In_Args...);
 	m_pCurrentScene = newScene;
+	m_pCurrentScene->Initialize();
 	m_pCurrentScene->_RootInit();
+	m_IsInitialized = true;
 	return std::static_pointer_cast<T>(m_pCurrentScene);
 }
 

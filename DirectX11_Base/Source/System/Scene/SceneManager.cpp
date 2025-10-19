@@ -16,6 +16,7 @@ SceneManager::SceneManager()
 	: m_RenderManager(RenderManager::GetInstance())
 	, m_FadeManager(FadeManager::GetInstance())
 	, m_CollisionManager(CollisionManager::GetInstance())
+	, m_IsInitialized(false)
 {
 	m_pCurrentScene = nullptr;
 	m_pNextScene = nullptr;
