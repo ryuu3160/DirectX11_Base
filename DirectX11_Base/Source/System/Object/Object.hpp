@@ -22,7 +22,9 @@ class Object
 {
 public:
 	Object() = default;
-	~Object() = default;
+	virtual ~Object() = default;
+
+	void SetActive(_In_ bool In_IsActive) noexcept { m_IsActive = In_IsActive; }
 
 protected:
 	virtual void Awake() noexcept {};
@@ -34,4 +36,7 @@ protected:
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept {};
+
+protected:
+	bool m_IsActive;
 };
