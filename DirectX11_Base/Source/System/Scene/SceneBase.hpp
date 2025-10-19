@@ -55,7 +55,6 @@ private:
 	using Objects = std::map<std::string, SceneObjectBase *>;
 	using Items = std::list<std::string>;
 public:
-	static void Initialize() noexcept;
 
 	/// <summary>
 	/// シーンの名前を指定して、SceneBase オブジェクトを初期化します。
@@ -128,6 +127,11 @@ protected:
 	void Setup(_In_ const int &In_ModelNum) noexcept;
 
 private:
+
+	/// <summary>
+	/// メインカメラの作成など、シーン全体の初期化処理を行います。
+	/// </summary>
+	void Initialize() noexcept;
 
 	/// <summary>
 	/// ルートの初期化処理を実行します。
@@ -241,6 +245,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
+	static_cast<GameObject *>(ptr)->Awake();
 	return ptr;
 }
 
@@ -267,6 +272,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
+	static_cast<GameObject *>(ptr)->Awake();
 	return ptr;
 }
 

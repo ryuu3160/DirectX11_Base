@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "SceneBase.hpp"
+#include "System/Object/CameraDCC.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Scene/SceneManager.hpp"
 
@@ -36,6 +37,9 @@ SceneBase::~SceneBase()
 
 void SceneBase::Initialize() noexcept
 {
+	// メインカメラの作成
+	CreateObject<CameraDCC>("MainCamera");
+
 #ifdef _DEBUG
 	/*debug::Menu::Create("Inspector");
 	debug::Window &window = debug::Menu::Create("Hierarchy");
@@ -75,6 +79,7 @@ template<> GameObject
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<GameObject>(ptr)));
 	m_Items.push_back(In_Name);
+	ptr->Awake();
 	return ptr;
 }
 
