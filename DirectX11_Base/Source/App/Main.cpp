@@ -62,7 +62,6 @@ HRESULT Main::Init()
 	Instance.AddCustomProc(Input::InputCustomProc);
 
 	// シーンの初期化
-	SceneBase::Initialize();
 	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
 	// 初期リソース作成
