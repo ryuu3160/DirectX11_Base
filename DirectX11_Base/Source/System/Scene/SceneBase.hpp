@@ -245,7 +245,6 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	ptr->m_pScene = this; // Š‘®ƒV[ƒ“‚ğİ’è
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
-	static_cast<GameObject *>(ptr)->Awake();
 	return ptr;
 }
 
