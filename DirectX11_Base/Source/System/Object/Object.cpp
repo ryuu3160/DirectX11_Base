@@ -10,3 +10,11 @@
 // ==============================
 #include "Object.hpp"
 
+void Object::Initialize() noexcept
+{
+	if (m_IsInitialized)
+		return;
+
+	Init();
+	m_IsInitialized = true;
+}
