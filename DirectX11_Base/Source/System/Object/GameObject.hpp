@@ -109,10 +109,9 @@ public:
 
 protected:
 	// 継承先で使用する関数
-	virtual void Awake() noexcept {}
-	virtual void Init() noexcept {}
-	virtual void Update() noexcept {}
-	virtual void LateUpdate() noexcept {}
+	virtual void Init() noexcept override {}
+	virtual void Update() noexcept override {}
+	virtual void LateUpdate() noexcept override {}
 
 private:
 	// コンポーネント追加時に型に関係なく呼び出す処理
