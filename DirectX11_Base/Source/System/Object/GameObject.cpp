@@ -116,12 +116,24 @@ GameObject::~GameObject()
 	}
 }
 
+void GameObject::ExecuteInit() noexcept
+{
+	// 継承先オブジェクトの初期化
+	Init();
+
+	// コンポーネントの初期化
+	InitializeComponents();
+}
+
 void GameObject::ExecuteUpdate() noexcept
 {
+	// 初期化が呼ばれていないコンポーネントの初期化
+	InitializeComponents();
+
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		itr->ExecuteUpdate();
+		itr->Update();
 	}
 	// 継承先オブジェクトの処理
 	Update();
@@ -149,7 +161,7 @@ void GameObject::ExecuteLateUpdate() noexcept
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		itr->ExecuteLateUpdate();
+		itr->LateUpdate();
 	}
 	// 継承先オブジェクトの遅延処理
 	LateUpdate();
@@ -174,12 +186,6 @@ void GameObject::ExecuteLateUpdate() noexcept
 
 void GameObject::ExecuteDraw() noexcept
 {
-	// コンポーネントの描画
-	for (auto &itr : m_Components)
-	{
-		itr->ExecuteDraw();
-	}
-
 	// 子オブジェクトの描画
 	for (auto &itr : m_ChildObjects)
 	{
@@ -326,6 +332,13 @@ void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
 		m_PrevRotation = m_Rotation; // 前回の値を更新
 	}
+}
+
+void GameObject::InitializeComponents() noexcept
+{
+	for (auto &itr : m_InitComponents)
+		itr->Init();
+	m_InitComponents.clear();
 }
 
 void GameObject::_addComponent(_In_ Component *In_pComponent)

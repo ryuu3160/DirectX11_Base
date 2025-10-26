@@ -28,6 +28,8 @@ public:
 	GameObject(_In_ std::string In_Name);
 	virtual ~GameObject();
 
+	void ExecuteInit() noexcept;
+
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -44,10 +46,17 @@ public:
 	void ExecuteDraw() noexcept;
 
 	// コンポーネントの生成
-	template<class T>
+	template<typename T>
+	requires std::derived_from<T, Component>
 	T *AddComponent();
+	// コンポーネントの生成(引数付き)
+	template<typename T, typename ...Args>
+	requires std::derived_from<T, Component>
+	T *AddComponent(_In_ Args&&... args);
+
 	// コンポーネントの取得
 	template<class T>
+	requires std::derived_from<T, Component>
 	T *GetComponent();
 
 	// 子オブジェクトを生成、追加する
@@ -114,6 +123,8 @@ protected:
 	virtual void LateUpdate() noexcept override {}
 
 private:
+	void InitializeComponents() noexcept;
+
 	// コンポーネント追加時に型に関係なく呼び出す処理
 	void _addComponent(_In_ Component *In_pComponent);
 
@@ -140,6 +151,7 @@ private:
 
 private:
 	Components			m_Components;	// コンポーネントの一覧
+	Components			m_InitComponents; // 初期化を呼び出すコンポーネントリスト
 	ChildObjects		m_ChildObjects;	// 子オブジェクトの一覧
 	Datas				m_Datas;		// 保存データ
 	std::string			m_Name;			// オブジェクト名
@@ -164,20 +176,32 @@ protected:
 	DirectX::XMFLOAT3	m_ChildScale; // 子オブジェクトの拡縮
 };
 
-template<class T>
+template<typename T>
+requires std::derived_from<T, Component>
 inline T *GameObject::AddComponent()
 {
-#ifdef _DEBUG
-	// デバッグ時のみ、指定された型がComponentを継承しているか確認
-	static_assert(std::is_base_of<Component, T>(),
-		"[GameObject::GetComponent] template T does not inherit from 'Component'");
-#endif
 	// コンポーネント生成
 	T *ptr = new T;
 	// 型に関係ない初期化処理を実施
 	_addComponent(ptr);
 	// 管理リストに追加
 	m_Components.push_back(ptr);
+	m_InitComponents.push_back(ptr);
+
+	return ptr;
+}
+
+template<typename T, typename ...Args>
+requires std::derived_from<T, Component>
+inline T *GameObject::AddComponent(_In_ Args && ...args)
+{
+	// コンポーネント生成
+	T *ptr = new T(args...);
+	// 型に関係ない初期化処理を実施
+	_addComponent(ptr);
+	// 管理リストに追加
+	m_Components.push_back(ptr);
+	m_InitComponents.push_back(ptr);
 
 	return ptr;
 }
@@ -188,6 +212,7 @@ inline T *GameObject::AddComponent()
 /// <typeparam name="[T]">取得したいコンポーネントの型。</typeparam>
 /// <returns>指定した型Tのコンポーネントへのポインタ。該当するコンポーネントが存在しない場合はnullptrを返します。</returns>
 template<class T>
+requires std::derived_from<T, Component>
 inline T *GameObject::GetComponent()
 {
 	T *ptr = nullptr;
