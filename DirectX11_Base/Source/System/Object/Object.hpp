@@ -32,7 +32,7 @@ public:
 	virtual void LateUpdate() noexcept {};
 
 protected:
-	virtual void Init() noexcept {};
+	virtual void Init() noexcept = 0;
 
 	// “–‚½‚è”»’è—p
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {};
