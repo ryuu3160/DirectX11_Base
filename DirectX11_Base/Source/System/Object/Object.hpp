@@ -26,13 +26,11 @@ public:
 
 	void SetActive(_In_ bool In_IsActive) noexcept { m_IsActive = In_IsActive; }
 
-	void Initialize() noexcept;
-
+	virtual void Init() noexcept = 0;
 	virtual void Update() noexcept {};
 	virtual void LateUpdate() noexcept {};
 
 protected:
-	virtual void Init() noexcept = 0;
 
 	// “–‚½‚è”»’è—p
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {};
@@ -40,8 +38,5 @@ protected:
 	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept {};
 
 protected:
-	bool m_IsActive;
-
-private:
-	bool m_IsInitialized = false;
+	bool m_IsActive = true;
 };
