@@ -6,16 +6,16 @@
 ===================================================================+*/
 #pragma once
 
-#include <Windows.h>
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
+#include <Windows.h>
 
 // メモリリークの検出
 #include <crtdbg.h>
 
 // COM
-#include <wrl/client.h>
 #include <initguid.h>
+#include <wrl/client.h>
 using Microsoft::WRL::ComPtr;
 
 // timer
@@ -43,6 +43,13 @@ using Microsoft::WRL::ComPtr;
 #include <random>
 #include <future>
 #include <sal.h>
+
+// C++20以降の機能を利用するための条件付きインクルード
+#if __cplusplus >= 202002L
+#include <utility>
+#include <type_traits>
+#include <concepts>
+#endif
 
 // -------------------------------
 //  STL コンテナ
