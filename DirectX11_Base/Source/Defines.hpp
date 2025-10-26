@@ -82,7 +82,7 @@ inline void Error(std::string_view In_Format, Args&&... In_Args)
 /// <param name="[In_Mode]">ヌル時の動作モード（デフォルトはNullpCheckMode::NONE）。</param>
 /// <param name="[In_strMessage]">エラー時に出力するメッセージ（省略可能）。</param>
 /// <returns>ポインタがヌルの場合はtrue、それ以外はfalse。</returns>
-inline bool NullCheck(_In_ void *In_pData,_In_ NullpCheckMode In_Mode = NullpCheckMode::NONE, _In_ std::string_view In_strMessage = "") noexcept
+inline bool NullCheck(_In_opt_ void *In_pData,_In_ NullpCheckMode In_Mode = NullpCheckMode::NONE, _In_ std::string_view In_strMessage = "") noexcept
 {
     if (In_pData == nullptr)
     {
