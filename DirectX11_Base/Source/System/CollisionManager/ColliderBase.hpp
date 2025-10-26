@@ -36,7 +36,7 @@ public:
 
 	void ReadWrite(_In_ DataAccessor *In_Data) final;
 
-	void ExecuteUpdate() noexcept override;
+	void Update() noexcept override;
 
 	virtual void CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
 

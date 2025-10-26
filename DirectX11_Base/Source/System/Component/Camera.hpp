@@ -20,6 +20,8 @@ public:
 	Camera();
 	virtual ~Camera();
 
+	virtual void Init() noexcept override;
+
 	void ReadWrite(_In_ DataAccessor *In_Data) final;
 #if _DEBUG
 	void Draw() const noexcept;
@@ -39,7 +41,7 @@ public:
 	/// </summary>
 	/// <returns>Z²‚ªŒÅ’è‚³‚ê‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO</returns>
 	inline const bool &IsLockZ() const noexcept { return m_bIsLockZ; }
-	
+
 	/// <summary>
 	/// ƒJƒƒ‰‚Ì‹–ìŠp‚ğæ“¾
 	/// </summary>

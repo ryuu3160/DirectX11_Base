@@ -27,6 +27,10 @@ Camera::~Camera()
 {
 }
 
+void Camera::Init() noexcept
+{
+}
+
 void Camera::ReadWrite(_In_ DataAccessor *In_Data)
 {
 	In_Data->Access<bool>(&m_bIs3D);

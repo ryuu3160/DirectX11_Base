@@ -24,7 +24,7 @@ void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
 {
 }
 
-void ColliderBase::ExecuteUpdate() noexcept
+void ColliderBase::Update() noexcept
 {
 	CollisionManager::GetInstance().AddColliderComponent(this);
 }
