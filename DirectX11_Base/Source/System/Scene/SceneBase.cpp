@@ -109,7 +109,7 @@ void SceneBase::_ObjectsInit() noexcept
 {
 	for (auto &obj : m_InitObjects)
 	{
-		obj->Initialize();
+		obj->ExecuteInit();
 	}
 	m_InitObjects.clear();
 }

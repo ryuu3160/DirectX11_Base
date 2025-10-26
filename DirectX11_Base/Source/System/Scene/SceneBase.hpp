@@ -159,7 +159,7 @@ private:
 
 private:
 	static Objects m_Objects;
-	std::list<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
+	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
 
 protected:
