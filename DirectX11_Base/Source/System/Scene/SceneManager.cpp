@@ -44,8 +44,22 @@ SceneManager::~SceneManager()
 	m_Futures.clear();
 }
 
+void SceneManager::SceneObjectsInit() noexcept
+{
+	if (m_pCurrentScene)
+		m_pCurrentScene->_ObjectsInit();
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_ObjectsInit();
+	}
+}
+
 void SceneManager::RootUpdate() noexcept
 {
+	// 初期化されていないオブジェクトの初期化
+	SceneObjectsInit();
+
 	// メインの更新
 	_RootUpdateMain();
 
