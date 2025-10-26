@@ -11,6 +11,7 @@
 #include "RenderComponent.hpp"
 #include "RenderManager.hpp"
 #include "System/Component/Camera.hpp"
+#include "System/Object/CameraDCC.hpp"
 
 RenderComponent::RenderComponent()
 	: m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default)
@@ -21,6 +22,8 @@ RenderComponent::RenderComponent()
 
 RenderComponent::~RenderComponent()
 {
+	m_RenderManager.RemoveRenderComponent(this, m_LayerGroup);
+
 	m_pViewCamera = nullptr;
 	m_pCameraObj = nullptr;
 	m_defVS = nullptr;
@@ -57,16 +60,23 @@ void RenderComponent::SetLayer(_In_ int In_Layer) noexcept
 	m_nLayer = In_Layer;
 }
 
-void RenderComponent::ExecuteUpdate() noexcept
+void RenderComponent::Init() noexcept
 {
-}
+#ifdef _DEBUG
+	if(!m_pCameraObj)
+		m_pCameraObj = GetGameObject()->GetScene()->GetObject<CameraDCC>("MainCamera");
+#endif
+	if (m_pViewCamera == nullptr && m_pCameraObj)
+		m_pViewCamera = m_pCameraObj->GetComponent<Camera>();
 
-void RenderComponent::ExecuteDraw() noexcept
-{
-	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::ExecuteDraw."))
+	if (NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::ExecuteDraw."))
 		return;
 
 	m_RenderManager.AddRenderComponent(this, m_LayerGroup);
+}
+
+void RenderComponent::Update() noexcept
+{
 }
 
 void RenderComponent::ReadWrite(_In_ DataAccessor *In_Data)

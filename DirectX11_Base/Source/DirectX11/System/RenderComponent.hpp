@@ -83,9 +83,9 @@ public:
 	/// <param name="[In_Path]">設定するファイルパス。</param>
 	inline void SetAssetPath(_In_ const FilePath &In_Path) noexcept { m_AssetPath = std::string(In_Path); }
 
-	virtual void ExecuteUpdate() noexcept override;
+	virtual void Init() noexcept override;
 
-	virtual void ExecuteDraw() noexcept override;
+	virtual void Update() noexcept override;
 
 	/// <summary>
 	/// データアクセサーを使用して読み書きを行います。

@@ -33,6 +33,8 @@ public:
 	/// <param name="[In_LayerGroup]">削除を行う LayerGroup。省略時は RenderLayer_Default が使用されます。</param>
 	void RemoveRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_LayerGroup) noexcept;
 
+	void RemoveAllRenderComponent() noexcept;
+
 	/// <summary>
 	/// 指定されたレイヤーグループのソート要求を行います。
 	/// </summary>
@@ -57,11 +59,19 @@ private:
 	void ExecuteLayerGroupSort() noexcept;
 	void ExecuteLayerSort() noexcept;
 
+
+	void RemoveRenderComponentRequest(_In_ LayerGroup In_LayerGroup) noexcept;
+	void ExecuteRemoveComponentAsync() noexcept;
+	void WaitRemoveComponentAsync() noexcept;
+
 private:
 
 	bool m_IsSortLayerGroup; // レイヤーグループのソートが必要かどうかのフラグ
 	bool m_IsSortLayer; // ソートが必要かどうかのフラグ
-	std::list<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト
-	std::list<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
-	std::map<LayerGroup, std::list<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
+	bool m_IsRemoveComponent; // レンダーコンポーネントの削除が必要かどうかのフラグ
+	std::future<void> m_RemoveFuture; // 非同期削除用のfutureリスト
+	std::vector<LayerGroup> m_StandbyRemoveComponent; // 削除待ちのレイヤーグループリスト
+	std::vector<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト
+	std::vector<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
+	std::map<LayerGroup, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
 };
