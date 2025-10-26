@@ -35,7 +35,7 @@ SceneBase::~SceneBase()
 	_DestroyObjects();
 }
 
-void SceneBase::Initialize() noexcept
+void SceneBase::CommonProcessScene() noexcept
 {
 	// メインカメラの作成
 	CreateObject<CameraDCC>("MainCamera");
@@ -79,6 +79,7 @@ template<> GameObject
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<GameObject>(ptr)));
 	m_Items.push_back(In_Name);
+	m_InitObjects.push_back(ptr);
 	return ptr;
 }
 
@@ -104,10 +105,13 @@ void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 	}
 }
 
-void SceneBase::_RootInit() noexcept
+void SceneBase::_ObjectsInit() noexcept
 {
-	// シーン自体の初期化
-	Init();
+	for (auto &obj : m_InitObjects)
+	{
+		obj->Initialize();
+	}
+	m_InitObjects.clear();
 }
 
 void SceneBase::_RootUpdateMain() noexcept

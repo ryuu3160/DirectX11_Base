@@ -131,12 +131,13 @@ private:
 	/// <summary>
 	/// メインカメラの作成など、シーン全体の初期化処理を行います。
 	/// </summary>
-	void Initialize() noexcept;
+	void CommonProcessScene() noexcept;
 
 	/// <summary>
-	/// ルートの初期化処理を実行します。
+	/// シーン内の、まだ初期化されていないオブジェクトの初期化を行います。
 	/// </summary>
-	void _RootInit() noexcept;
+	void _ObjectsInit() noexcept;
+
 	/// <summary>
 	/// ルートのメイン更新処理を実行します。
 	/// </summary>
@@ -158,6 +159,7 @@ private:
 
 private:
 	static Objects m_Objects;
+	std::list<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
 
 protected:
@@ -245,6 +247,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
+	m_InitObjects.push_back(ptr);
 	return ptr;
 }
 
@@ -271,7 +274,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	ptr->m_pScene = this; // 所属シーンを設定
 	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
 	m_Items.push_back(In_Name);
-	static_cast<GameObject *>(ptr)->Awake();
+	m_InitObjects.push_back(ptr);
 	return ptr;
 }
 
