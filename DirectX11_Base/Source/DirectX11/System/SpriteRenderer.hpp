@@ -40,7 +40,7 @@ public:
 	SpriteRenderer();
 	~SpriteRenderer();
 
-	void ExecuteUpdate() noexcept final;
+	void Update() noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;

@@ -56,7 +56,7 @@ InstancedModelRenderer::~InstancedModelRenderer()
 {
 }
 
-void InstancedModelRenderer::ExecuteUpdate() noexcept
+void InstancedModelRenderer::Update() noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (!m_vecMeshes.empty()) return;

@@ -64,7 +64,7 @@ ModelRenderer::~ModelRenderer()
 	m_vecMeshes.clear();
 }
 
-void ModelRenderer::ExecuteUpdate() noexcept
+void ModelRenderer::Update() noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (!m_vecMeshes.empty()) return;
