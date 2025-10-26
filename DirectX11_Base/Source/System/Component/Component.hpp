@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "System/Object/Object.hpp"
 // ==============================
 // ëOï˚êÈåæ
 // ==============================
@@ -18,7 +18,7 @@ class GameObject;
 /// <summary>
 /// ComponentÉNÉâÉX
 /// </summary>
-class Component
+class Component : public Object
 {
 	friend class GameObject;
 public:
@@ -128,9 +128,10 @@ public:
 public:
 	Component();
 	virtual  ~Component();
-	virtual void ExecuteUpdate() noexcept;
-	virtual void ExecuteLateUpdate() noexcept;
-	virtual void ExecuteDraw() noexcept;
+	virtual void Init() noexcept override = 0;
+	virtual void Update() noexcept override;
+	virtual void LateUpdate() noexcept override;
+
 	virtual void ReadWrite(_In_ DataAccessor *In_Data);
 
 	GameObject *GetGameObject() const noexcept { return m_pTransform; }

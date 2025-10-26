@@ -19,15 +19,11 @@ Component::~Component()
 	m_pTransform = nullptr;
 }
 
-void Component::ExecuteUpdate() noexcept
+void Component::Update() noexcept
 {
 }
 
-void Component::ExecuteLateUpdate() noexcept
-{
-}
-
-void Component::ExecuteDraw() noexcept
+void Component::LateUpdate() noexcept
 {
 }
 
