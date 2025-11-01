@@ -292,6 +292,6 @@ T *SceneBase::GetObject(_In_ const std::string_view &In_Name) noexcept
 	if (itr == m_Objects.end()) return nullptr;
 
 	// Œ^•ÏŠ·
-	T *ptr = reinterpret_cast<T *>(itr->second->m_pObject);
+	T *ptr = static_cast<T *>(itr->second->m_pObject);
 	return ptr;
 }

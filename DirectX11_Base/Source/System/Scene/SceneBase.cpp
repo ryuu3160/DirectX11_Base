@@ -119,11 +119,11 @@ void SceneBase::_RootUpdateMain() noexcept
 	// シーンが所持しているオブジェクトの更新
 	for (auto &itr : m_Items)
 	{
-		auto objIt = m_Objects.find(itr);
+		auto objItr = m_Objects.find(itr);
 		// 型チェック
-		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
+		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
+			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
 			obj->ExecuteUpdate();
 		}
 	}
@@ -141,7 +141,7 @@ void SceneBase::_RootUpdateLate() noexcept
 		// 型チェック
 		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objItr->second->m_pObject);
+			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
 			obj->ExecuteLateUpdate();
 		}
 	}
@@ -159,7 +159,7 @@ void SceneBase::_RootDraw() noexcept
 		// 型チェック
 		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
 		{
-			GameObject *obj = reinterpret_cast<GameObject *>(objIt->second->m_pObject);
+			GameObject *obj = static_cast<GameObject *>(objIt->second->m_pObject);
 			obj->ExecuteDraw();
 		}
 	}
