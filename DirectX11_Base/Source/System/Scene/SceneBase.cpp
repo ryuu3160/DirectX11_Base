@@ -124,7 +124,8 @@ void SceneBase::_RootUpdateMain() noexcept
 		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
 			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			obj->ExecuteUpdate();
+			if(obj->m_IsActive)
+				obj->ExecuteUpdate();
 		}
 	}
 
@@ -142,7 +143,8 @@ void SceneBase::_RootUpdateLate() noexcept
 		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
 			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			obj->ExecuteLateUpdate();
+			if (obj->m_IsActive)
+				obj->ExecuteLateUpdate();
 		}
 	}
 

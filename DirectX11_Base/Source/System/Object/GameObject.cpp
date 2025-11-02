@@ -133,7 +133,8 @@ void GameObject::ExecuteUpdate() noexcept
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		itr->Update();
+		if(itr->m_IsActive)
+			itr->Update();
 	}
 	// 継承先オブジェクトの処理
 	Update();
@@ -141,6 +142,9 @@ void GameObject::ExecuteUpdate() noexcept
 	// 子オブジェクトの処理
 	for (auto &itr : m_ChildObjects)
 	{
+		if (!itr.second->m_IsActive)
+			continue;
+
 		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
@@ -161,7 +165,8 @@ void GameObject::ExecuteLateUpdate() noexcept
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		itr->LateUpdate();
+		if(itr->m_IsActive)
+			itr->LateUpdate();
 	}
 	// 継承先オブジェクトの遅延処理
 	LateUpdate();
@@ -169,6 +174,9 @@ void GameObject::ExecuteLateUpdate() noexcept
 	// 子オブジェクトの処理
 	for (auto &itr : m_ChildObjects)
 	{
+		if (!itr.second->m_IsActive)
+			continue;
+
 		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
 		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
 		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
