@@ -107,11 +107,18 @@ void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 
 void SceneBase::_ObjectsInit() noexcept
 {
-	for (auto &obj : m_InitObjects)
+	for (auto itr = m_InitObjects.begin(); itr != m_InitObjects.end();)
 	{
-		obj->ExecuteInit();
+		if ((*itr)->m_IsActive)
+		{
+			(*itr)->ExecuteInit();
+			itr = m_InitObjects.erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
 	}
-	m_InitObjects.clear();
 }
 
 void SceneBase::_RootUpdateMain() noexcept
@@ -124,7 +131,7 @@ void SceneBase::_RootUpdateMain() noexcept
 		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
 			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			if(obj->m_IsActive)
+			if(obj->m_IsActive && obj->m_IsInitialized)
 				obj->ExecuteUpdate();
 		}
 	}
@@ -143,7 +150,7 @@ void SceneBase::_RootUpdateLate() noexcept
 		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
 		{
 			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			if (obj->m_IsActive)
+			if (obj->m_IsActive && obj->m_IsInitialized)
 				obj->ExecuteLateUpdate();
 		}
 	}

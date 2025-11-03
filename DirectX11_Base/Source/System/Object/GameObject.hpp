@@ -28,6 +28,8 @@ public:
 	GameObject(_In_ std::string In_Name);
 	virtual ~GameObject();
 
+	virtual void OnEnable() noexcept override;
+
 	void ExecuteInit() noexcept;
 
 	/// <summary>

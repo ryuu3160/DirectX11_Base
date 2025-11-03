@@ -9,3 +9,12 @@
 //	include
 // ==============================
 #include "Object.hpp"
+
+void Object::SetActive(_In_ bool In_IsActive) noexcept
+{
+	if (m_IsActive == In_IsActive)
+		return;
+	m_IsActive = In_IsActive;
+	if (m_IsActive)
+		OnEnable();
+}

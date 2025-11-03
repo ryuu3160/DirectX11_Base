@@ -24,7 +24,9 @@ public:
 	Object() = default;
 	virtual ~Object() = default;
 
-	void SetActive(_In_ bool In_IsActive) noexcept { m_IsActive = In_IsActive; }
+	void SetActive(_In_ bool In_IsActive) noexcept;
+
+	virtual void OnEnable() noexcept {};
 
 	virtual void Init() noexcept = 0;
 	virtual void Update() noexcept {};
@@ -39,4 +41,5 @@ protected:
 
 protected:
 	bool m_IsActive = true;
+	bool m_IsInitialized = false;
 };

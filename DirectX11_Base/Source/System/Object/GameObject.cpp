@@ -116,6 +116,15 @@ GameObject::~GameObject()
 	}
 }
 
+void GameObject::OnEnable() noexcept
+{
+	// コンポーネントの有効化処理
+	for (auto &itr : m_Components)
+	{
+		itr->OnEnable();
+	}
+}
+
 void GameObject::ExecuteInit() noexcept
 {
 	// 継承先オブジェクトの初期化
@@ -123,6 +132,8 @@ void GameObject::ExecuteInit() noexcept
 
 	// コンポーネントの初期化
 	InitializeComponents();
+
+	m_IsInitialized = true;
 }
 
 void GameObject::ExecuteUpdate() noexcept
@@ -345,7 +356,10 @@ void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 void GameObject::InitializeComponents() noexcept
 {
 	for (auto &itr : m_InitComponents)
+	{
 		itr->Init();
+		itr->m_IsInitialized = true;
+	}
 	m_InitComponents.clear();
 }
 

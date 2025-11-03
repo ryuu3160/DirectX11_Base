@@ -128,6 +128,7 @@ public:
 public:
 	Component();
 	virtual  ~Component();
+	virtual void OnEnable() noexcept override {};
 	virtual void Init() noexcept override = 0;
 	virtual void Update() noexcept override;
 	virtual void LateUpdate() noexcept override;
