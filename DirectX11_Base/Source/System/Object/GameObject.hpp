@@ -29,6 +29,7 @@ public:
 	virtual ~GameObject();
 
 	virtual void OnEnable() noexcept override;
+	virtual void OnDisable() noexcept override;
 
 	void ExecuteInit() noexcept;
 
@@ -133,9 +134,6 @@ private:
 	// 回転情報の同期
 	void AngleSynchronization();
 
-	// 子オブジェクトの変換情報を更新
-	void UpdateChildTransform();
-
 	// 自身をシーンから破棄
 	void _destroySelf() noexcept;
 
@@ -152,14 +150,15 @@ private:
 	using Datas = std::vector<SaveData>;
 
 private:
-	Components			m_Components;	// コンポーネントの一覧
-	Components			m_InitComponents; // 初期化を呼び出すコンポーネントリスト
-	ChildObjects		m_ChildObjects;	// 子オブジェクトの一覧
-	Datas				m_Datas;		// 保存データ
-	std::string			m_Name;			// オブジェクト名
-	DirectX::XMFLOAT3	m_PrevRotation; // 前回の回転値
-	SceneBase			*m_pScene;		// 所属しているシーンへのポインタ
-	bool m_IsDestroySelf; // 自身を破棄するかどうかのフラグ
+	Components			m_Components;		// コンポーネントの一覧
+	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
+	ChildObjects		m_ChildObjects;		// 子オブジェクトの一覧
+	Datas				m_Datas;			// 保存データ
+	std::string			m_Name;				// オブジェクト名
+	DirectX::XMFLOAT3	m_PrevRotation;		// 前回の回転値
+	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
+	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
+	bool				m_IsDestroySelf;	// 自身を破棄するかどうかのフラグ
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
@@ -167,15 +166,6 @@ protected:
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
 
 	bool				m_bIsChild; // 子オブジェクトかどうか
-	DirectX::XMFLOAT3	m_ParentPos;	// 親オブジェクトの座標
-	DirectX::XMFLOAT3	m_ParentRotation;	// 親オブジェクトの回転(オイラー角)
-	DirectX::XMFLOAT4	m_ParentQuat;	// 親オブジェクトの回転(クォータニオン)
-	DirectX::XMFLOAT3	m_ParentScale;	// 親オブジェクトの拡縮
-
-	DirectX::XMFLOAT3	m_ChildPos; // 子オブジェクトの座標
-	DirectX::XMFLOAT3	m_ChildRotation; // 子オブジェクトの回転(オイラー角)
-	DirectX::XMFLOAT4	m_ChildQuat; // 子オブジェクトの回転(クォータニオン)
-	DirectX::XMFLOAT3	m_ChildScale; // 子オブジェクトの拡縮
 };
 
 template<typename T>
@@ -218,12 +208,12 @@ requires std::derived_from<T, Component>
 inline T *GameObject::GetComponent()
 {
 	T *ptr = nullptr;
-	for (auto itr = m_Components.begin(); itr != m_Components.end();itr++)
+	for (auto itr = m_Components.begin(); itr != m_Components.end();++itr)
 	{
 		// 型チェック
 		if (typeid(T) == typeid(**itr))
 		{
-			ptr = reinterpret_cast<T *>(*itr);
+			ptr = dynamic_cast<T *>(*itr);
 			break;
 		}
 	}
@@ -237,7 +227,7 @@ inline T *GameObject::GetComponent()
 /// <param name="[In_Name]">オブジェクト名</param>
 /// <returns>生成、追加したオブジェクトへのポインタを返す</returns>
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
-inline T *GameObject::AddChildObject(const std::string &In_Name)
+inline T *GameObject::AddChildObject(_In_ const std::string &In_Name)
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
@@ -256,17 +246,15 @@ inline T *GameObject::AddChildObject(const std::string &In_Name)
 
 	// オブジェクト生成
 	T *ptr = new T();
-	reinterpret_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	ptr->m_ParentPos = m_Pos; // 親の座標を設定
-	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
-	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
-	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
+	dynamic_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	dynamic_cast<GameObject *>(ptr)->m_pParent = this; // 親オブジェクトを設定
+	dynamic_cast<GameObject *>(ptr)->m_pScene = m_pScene; // 所属しているシーンを設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
 
 template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
-inline T *GameObject::AddChildObject(const std::string &In_Name, Args && ...args)
+inline T *GameObject::AddChildObject(_In_ const std::string &In_Name, Args && ...args)
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
@@ -285,17 +273,15 @@ inline T *GameObject::AddChildObject(const std::string &In_Name, Args && ...args
 
 	// オブジェクト生成
 	T *ptr = new T(args...);
-	reinterpret_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	ptr->m_ParentPos = m_Pos; // 親の座標を設定
-	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
-	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
-	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
+	dynamic_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	dynamic_cast<GameObject *>(ptr)->m_pParent = this;	// 親オブジェクトを設定
+	dynamic_cast<GameObject *>(ptr)->m_pScene = m_pScene; // 所属しているシーンを設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
 }
 
 template<>
-inline GameObject *GameObject::AddChildObject(const std::string &In_Name)
+inline GameObject *GameObject::AddChildObject(_In_ const std::string &In_Name)
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
@@ -312,9 +298,7 @@ inline GameObject *GameObject::AddChildObject(const std::string &In_Name)
 
 	GameObject *ptr = new GameObject(In_Name);
 	ptr->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	ptr->m_ParentPos = m_Pos; // 親の座標を設定
-	ptr->m_ParentQuat = m_Quat; // 親の回転を設定
-	ptr->m_ParentScale = m_Scale; // 親の拡縮を設定
+	ptr->m_pParent = this; // 親オブジェクトを設定
 	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
 	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	return ptr;
@@ -329,7 +313,7 @@ inline GameObject *GameObject::AddChildObject(const std::string &In_Name)
 /// <param name="In_Name"></param>
 /// <returns></returns>
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
-inline T *GameObject::GetChildObject(const std::string &In_Name)
+inline T *GameObject::GetChildObject(_In_ const std::string &In_Name)
 {
 	for (auto &itr : m_ChildObjects)
 	{
@@ -350,7 +334,7 @@ inline T *GameObject::GetChildObject(const std::string &In_Name)
 }
 
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
-inline void GameObject::DestroyChildObject(const std::string &In_Name)
+inline void GameObject::DestroyChildObject(_In_ const std::string &In_Name)
 {
 	auto itr = m_ChildObjects.find(In_Name);
 	if (itr != m_ChildObjects.end())

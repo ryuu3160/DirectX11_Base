@@ -14,11 +14,9 @@ GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name)
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_Rotation{ 0.0f, 0.0f, 0.0f }
-	, m_bIsChild(false), m_ParentPos{ 0.0f, 0.0f, 0.0f }, m_ParentQuat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_ParentScale{ 0.0f,0.0f,0.0f }
-	, m_ParentRotation{ 0.0f, 0.0f, 0.0f }
+	, m_bIsChild(false)
 	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
-	, m_ChildPos{ 0.0f, 0.0f, 0.0f }, m_ChildRotation{ 0.0f, 0.0f, 0.0f }, m_ChildQuat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_ChildScale{ 0.0f, 0.0f, 0.0f }
-	, m_pScene(nullptr), m_IsDestroySelf(false)
+	, m_pScene(nullptr), m_IsDestroySelf(false), m_pParent(nullptr)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
@@ -125,6 +123,15 @@ void GameObject::OnEnable() noexcept
 	}
 }
 
+void GameObject::OnDisable() noexcept
+{
+	// コンポーネントの無効化処理
+	for (auto &itr : m_Components)
+	{
+		itr->OnDisable();
+	}
+}
+
 void GameObject::ExecuteInit() noexcept
 {
 	// 継承先オブジェクトの初期化
@@ -156,10 +163,6 @@ void GameObject::ExecuteUpdate() noexcept
 		if (!itr.second->m_IsActive)
 			continue;
 
-		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
-		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
-		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
-		itr.second->UpdateChildTransform(); // 子オブジェクトの変換情報を更新
 		itr.second->ExecuteUpdate();
 	}
 
@@ -188,10 +191,6 @@ void GameObject::ExecuteLateUpdate() noexcept
 		if (!itr.second->m_IsActive)
 			continue;
 
-		itr.second->m_ParentPos = m_Pos; // 親の座標を保存
-		itr.second->m_ParentQuat = m_Quat; // 親の回転を保存
-		itr.second->m_ParentScale = m_Scale; // 親の拡縮を保存
-		itr.second->UpdateChildTransform(); // 子オブジェクトの変換情報を更新
 		itr.second->ExecuteLateUpdate();
 	}
 
@@ -276,11 +275,27 @@ DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
 	// 各要素の行列を取得
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
-		DirectX::XMVectorSet(m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w)
+	DirectX::XMMATRIX T;
+	DirectX::XMMATRIX R;
+	DirectX::XMMATRIX S;
+
+	auto Pos = m_Pos;
+	auto Quat = m_Quat;
+	auto Scale = m_Scale;
+
+	if (m_bIsChild && m_pParent)
+	{
+		Pos = Pos + m_pParent->m_Pos;
+		Quat = QuaternionMultiply(Quat, m_pParent->m_Quat);
+		Scale = Scale * m_pParent->m_Scale;
+	}
+
+	T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+	R = DirectX::XMMatrixRotationQuaternion(
+		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
 	);
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+
 	// 行列の合算
 	DirectX::XMMATRIX M = S * R * T;
 	// 転置
@@ -295,62 +310,31 @@ DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcep
 
 void GameObject::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
-	if(m_bIsChild)
-		m_ChildPos = In_Pos; // 子オブジェクトの座標を保存(親からの相対座標)
-	else
-		m_Pos = In_Pos; // 座標を設定
+	m_Pos = In_Pos;
 }
 
 void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 {
-	if (m_bIsChild)
-	{
-		// 子オブジェクトの場合、親の回転を基準にする
-		m_ChildRotation = ToRad(In_Rotation);
-		// クォータニオンに変換
-		DirectX::XMStoreFloat4(&m_ChildQuat, DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
-	}
-	else
-	{
-		// 回転を設定
-		m_Rotation = ToRad(In_Rotation);
-		m_PrevRotation = m_Rotation; // 前回の値を更新
-		// クォータニオンに変換
-		DirectX::XMStoreFloat4(&m_Quat,DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
-	}
+	// 回転を設定
+	m_Rotation = ToRad(In_Rotation);
+	m_PrevRotation = m_Rotation; // 前回の値を更新
+	// クォータニオンに変換
+	DirectX::XMStoreFloat4(&m_Quat,DirectX::XMQuaternionRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z));
 }
 
 void GameObject::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 {
-	if (m_bIsChild)
-	{
-		// 子オブジェクトの場合、親の拡縮を基準にする
-		m_ChildScale = In_Scale;
-	}
-	else
-	{
-		// 拡縮を設定
-		m_Scale = In_Scale;
-	}
+	// 拡縮を設定
+	m_Scale = In_Scale;
 }
 
 void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 {
-	if (m_bIsChild)
-	{
-		// 子オブジェクトの場合、親のクォータニオンを基準にする
-		m_ChildQuat = In_Quat;
-		// オイラー角に変換
-		m_ChildRotation = QuaternionToRollPitchYaw(m_Quat);
-	}
-	else
-	{
-		// クォータニオンを設定
-		m_Quat = In_Quat;
-		// オイラー角に変換
-		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
-		m_PrevRotation = m_Rotation; // 前回の値を更新
-	}
+	// クォータニオンを設定
+	m_Quat = In_Quat;
+	// オイラー角に変換
+	m_Rotation = QuaternionToRollPitchYaw(m_Quat);
+	m_PrevRotation = m_Rotation; // 前回の値を更新
 }
 
 void GameObject::InitializeComponents() noexcept
@@ -404,22 +388,6 @@ void GameObject::AngleSynchronization()
 	//	m_Rotation = rot;
 	//	m_PrevRotation = m_Rotation; // 前回の値を更新
 	//}
-}
-
-void GameObject::UpdateChildTransform()
-{
-	// 親の変換情報を基準に子オブジェクトの変換情報を更新
-	if (m_bIsChild)
-	{
-		// 座標
-		m_Pos = m_ParentPos + m_ChildPos;
-		// 回転
-		m_Quat = QuaternionMultiply(m_ParentQuat, m_ChildQuat);
-		m_Rotation = QuaternionToRollPitchYaw(m_Quat);
-		m_PrevRotation = m_ChildRotation = m_Rotation; // 前回の値を更新
-		// 拡縮
-		m_Scale = m_ParentScale * m_ChildScale;
-	}
 }
 
 void GameObject::_destroySelf() noexcept
