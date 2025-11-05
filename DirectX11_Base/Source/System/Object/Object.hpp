@@ -27,6 +27,9 @@ public:
 	void SetActive(_In_ bool In_IsActive) noexcept;
 
 	virtual void OnEnable() noexcept {};
+	virtual void OnDisable() noexcept {};
+	[[nodiscard]] bool IsActive() const noexcept { return m_IsActive; }
+	[[nodiscard]] bool IsInitialized() const noexcept { return m_IsInitialized; }
 
 	virtual void Init() noexcept = 0;
 	virtual void Update() noexcept {};
