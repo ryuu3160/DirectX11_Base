@@ -13,9 +13,7 @@
 GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
-	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	, m_bIsChild(false)
-	, m_PrevRotation{ 0.0f, 0.0f, 0.0f }
 	, m_pScene(nullptr), m_IsDestroySelf(false), m_pParent(nullptr)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
