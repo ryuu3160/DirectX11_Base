@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "System/Object/Object.hpp"
+#include "System/Scene/SceneBase.hpp"
 // ==============================
 //  前方宣言
 // ==============================
@@ -23,7 +24,7 @@ class GameObject : public Object
 	friend class SceneBase;
 private:
 	// 子オブジェクトリスト
-	using ChildObjects = std::map<std::string, GameObject *>;
+	using ChildObjects = std::vector<GameObject *>;
 public:
 	GameObject(_In_ std::string In_Name);
 	virtual ~GameObject();
@@ -42,11 +43,6 @@ public:
 	/// 遅延更新処理
 	/// </summary>
 	void ExecuteLateUpdate() noexcept;
-
-	/// <summary>
-	/// 描画処理
-	/// </summary>
-	void ExecuteDraw() noexcept;
 
 	// コンポーネントの生成
 	template<typename T>
@@ -155,6 +151,7 @@ private:
 	ChildObjects		m_ChildObjects;		// 子オブジェクトの一覧
 	Datas				m_Datas;			// 保存データ
 	std::string			m_Name;				// オブジェクト名
+	std::string			m_ChildNameSaffix;	// 子オブジェクト名のサフィックス
 	DirectX::XMFLOAT3	m_PrevRotation;		// 前回の回転値
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
 	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
@@ -229,79 +226,46 @@ inline T *GameObject::GetComponent()
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
 inline T *GameObject::AddChildObject(_In_ const std::string &In_Name)
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
-	if (itr != m_ChildObjects.end())
-	{
-		std::string buf = "Failed to create object." + In_Name;
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+	std::string Name = In_Name + m_ChildNameSaffix;
+	auto Child = m_pScene->CreateObject<T>(Name);
+
+	if (!Child)
 		return nullptr;
-	}
 
-	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
-
-#endif // _DEBUG
-
-	// オブジェクト生成
-	T *ptr = new T();
-	dynamic_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	dynamic_cast<GameObject *>(ptr)->m_pParent = this; // 親オブジェクトを設定
-	dynamic_cast<GameObject *>(ptr)->m_pScene = m_pScene; // 所属しているシーンを設定
-	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
-	return ptr;
+	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
+	m_ChildObjects.push_back(Child);
+	return Child;
 }
 
 template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
 inline T *GameObject::AddChildObject(_In_ const std::string &In_Name, Args && ...args)
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
-	if (itr != m_ChildObjects.end())
-	{
-		std::string buf = "Failed to create object." + In_Name;
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+	std::string Name = In_Name + m_ChildNameSaffix;
+	auto Child = m_pScene->CreateObject<T>(Name, args);
+
+	if (!Child)
 		return nullptr;
-	}
 
-	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
-
-#endif // _DEBUG
-
-	// オブジェクト生成
-	T *ptr = new T(args...);
-	dynamic_cast<GameObject *>(ptr)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	dynamic_cast<GameObject *>(ptr)->m_pParent = this;	// 親オブジェクトを設定
-	dynamic_cast<GameObject *>(ptr)->m_pScene = m_pScene; // 所属しているシーンを設定
-	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
-	return ptr;
+	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
+	m_ChildObjects.push_back(Child);
+	return Child;
 }
 
 template<>
 inline GameObject *GameObject::AddChildObject(_In_ const std::string &In_Name)
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	ChildObjects::iterator itr = m_ChildObjects.find(In_Name);
-	if (itr != m_ChildObjects.end())
-	{
-		std::string buf = "Failed to create object." + In_Name;
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-	// ヒエラルキーに追加
-	//hierarchy->AddListItem(In_Name.data());
-#endif // _DEBUG
+	std::string Name = In_Name + m_ChildNameSaffix;
+	auto Child = m_pScene->CreateObject<GameObject>(Name);
 
-	GameObject *ptr = new GameObject(In_Name);
-	ptr->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	ptr->m_pParent = this; // 親オブジェクトを設定
-	ptr->m_pScene = m_pScene; // 所属しているシーンを設定
-	m_ChildObjects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
-	return ptr;
+	if (!Child)
+		return nullptr;
+
+	Child->m_bIsChild = true;
+	Child->m_pParent = this;
+	m_ChildObjects.push_back(Child);
+	return Child;
 }
 
 /// <summary>
@@ -315,31 +279,32 @@ inline GameObject *GameObject::AddChildObject(_In_ const std::string &In_Name)
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
 inline T *GameObject::GetChildObject(_In_ const std::string &In_Name)
 {
+	auto Name = In_Name + m_ChildNameSaffix;
 	for (auto &itr : m_ChildObjects)
 	{
-		if (itr.first == In_Name)
+		if (itr->m_Name == Name)
 		{
 			// 型チェック
-			if (typeid(T) != typeid(*itr.second))
+			if (std::is_same_v<T,decltype(*itr)> == false)
 			{
 				std::string buf = "Failed to get object." + In_Name;
 				MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 				return nullptr;
 			}
-			return reinterpret_cast<T *>(itr.second);
+			return dynamic_cast<T *>(itr);
 		}
 	}
-
 	return nullptr;
 }
 
 template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
 inline void GameObject::DestroyChildObject(_In_ const std::string &In_Name)
 {
-	auto itr = m_ChildObjects.find(In_Name);
-	if (itr != m_ChildObjects.end())
-	{
-		delete itr->second;
-		m_ChildObjects.erase(itr);
-	}
+	auto itr = GetChildObject<T>(In_Name);
+
+	if (!itr)
+		return;
+
+	dynamic_cast<GameObject *>(itr)->DestroySelf();
+	m_ChildObjects.erase(std::remove(m_ChildObjects.begin(), m_ChildObjects.end(), itr), m_ChildObjects.end());
 }

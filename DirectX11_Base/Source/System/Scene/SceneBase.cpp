@@ -161,18 +161,6 @@ void SceneBase::_RootUpdateLate() noexcept
 
 void SceneBase::_RootDraw() noexcept
 {
-	// シーンが所持しているオブジェクトの描画
-	for (auto &itr : m_Items)
-	{
-		auto objIt = m_Objects.find(itr);
-		// 型チェック
-		if (objIt != m_Objects.end() && objIt->second->m_bIsGameObject)
-		{
-			GameObject *obj = static_cast<GameObject *>(objIt->second->m_pObject);
-			obj->ExecuteDraw();
-		}
-	}
-
 	// シーン自体の描画
 	Draw();
 }

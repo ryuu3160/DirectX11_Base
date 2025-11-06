@@ -82,9 +82,6 @@ void SceneManager::RootDraw() noexcept
 			m_DrawFutures.push_back(std::async(std::launch::async, &SceneBase::_RootDraw, itr.second));
 	}
 
-	// フェードの描画
-	m_DrawFutures.push_back(std::async(std::launch::async, &FadeManager::Draw, &m_FadeManager));
-
 	// 非同期描画の完了を待つ
 	for(auto &itr : m_DrawFutures)
 	{

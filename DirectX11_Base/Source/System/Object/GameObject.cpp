@@ -11,7 +11,7 @@
 #include "GameObject.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
-	: m_Name(In_Name)
+	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 	, m_bIsChild(false)
@@ -107,10 +107,9 @@ GameObject::~GameObject()
 		delete (*itr);
 	}
 
-	// 子オブジェクトの削除
 	for (auto &child : m_ChildObjects)
 	{
-		delete child.second; // 子オブジェクトの削除
+		child = nullptr;
 	}
 }
 
@@ -157,15 +156,6 @@ void GameObject::ExecuteUpdate() noexcept
 	// 継承先オブジェクトの処理
 	Update();
 
-	// 子オブジェクトの処理
-	for (auto &itr : m_ChildObjects)
-	{
-		if (!itr.second->m_IsActive)
-			continue;
-
-		itr.second->ExecuteUpdate();
-	}
-
 	// 角度データの同期
 	AngleSynchronization();
 
@@ -185,15 +175,6 @@ void GameObject::ExecuteLateUpdate() noexcept
 	// 継承先オブジェクトの遅延処理
 	LateUpdate();
 
-	// 子オブジェクトの処理
-	for (auto &itr : m_ChildObjects)
-	{
-		if (!itr.second->m_IsActive)
-			continue;
-
-		itr.second->ExecuteLateUpdate();
-	}
-
 	// 角度データの同期
 	AngleSynchronization();
 
@@ -202,16 +183,7 @@ void GameObject::ExecuteLateUpdate() noexcept
 		_destroySelf();
 }
 
-void GameObject::ExecuteDraw() noexcept
-{
-	// 子オブジェクトの描画
-	for (auto &itr : m_ChildObjects)
-	{
-		itr.second->ExecuteDraw();
-	}
-}
-
-std::map<std::string,GameObject *> GameObject::GetChildObjects() const noexcept
+std::vector<GameObject *> GameObject::GetChildObjects() const noexcept
 {
 	return m_ChildObjects;
 }
@@ -220,7 +192,7 @@ void GameObject::DestroyAllChildObjects() noexcept
 {
 	for (auto &child : m_ChildObjects)
 	{
-		delete child.second; // 子オブジェクトの削除
+		child->DestroySelf();
 	}
 	m_ChildObjects.clear();
 }
@@ -228,6 +200,9 @@ void GameObject::DestroyAllChildObjects() noexcept
 void GameObject::DestroySelf() noexcept
 {
 	m_IsDestroySelf = true;
+
+	for (const auto &itr : m_ChildObjects)
+		itr->DestroySelf();
 }
 
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept

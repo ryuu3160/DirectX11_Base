@@ -66,21 +66,6 @@ void FadeManager::Update() noexcept
 	}
 }
 
-void FadeManager::Draw() noexcept
-{
-	for (auto &itr : m_mapFadeObj)
-	{
-		if(itr.second.IsStartFadeIn == false && itr.second.IsStartFadeOut == false)
-			continue;
-
-		// •`‰æ
-		if (itr.second.pFadeObj)
-		{
-			itr.second.pFadeObj->ExecuteDraw();
-		}
-	}
-}
-
 void FadeManager::AddFade(_In_ std::string_view In_Name, _In_ float In_FadeTime, _In_ Ease::EasingType In_EaseType, _In_ bool In_IsAutoDelete,
 	_In_ FilePath In_TexturePath, _In_ std::string_view In_PixcelShaderName, _In_ std::string_view In_VertexShaderName) noexcept
 {

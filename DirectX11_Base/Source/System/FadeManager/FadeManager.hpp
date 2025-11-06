@@ -47,8 +47,6 @@ public:
 
 	void Update() noexcept;
 
-	void Draw() noexcept;
-
 	/// <summary>
 	/// 指定した名前のフェードを追加します。
 	/// </summary>
