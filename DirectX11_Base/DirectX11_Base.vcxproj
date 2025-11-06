@@ -164,6 +164,11 @@
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp" />
+    <ClCompile Include="Source\DirectX11\Renderer\ModelRenderer.cpp" />
+    <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp" />
+    <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp" />
+    <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\InstancedMesh.cpp">
       <SubType>
       </SubType>
@@ -205,24 +210,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
-    <ClCompile Include="Source\DirectX11\System\InstancedModelRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp" />
     <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SkyBoxRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -328,6 +316,11 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
       <SubType>
       </SubType>
@@ -373,24 +366,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
-    <ClInclude Include="Source\DirectX11\System\InstancedModelRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp" />
     <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SkyBoxRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
       <SubType>
       </SubType>
     </ClInclude>

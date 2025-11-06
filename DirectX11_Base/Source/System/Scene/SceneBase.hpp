@@ -11,8 +11,8 @@
 // ==============================
 #include "System/Object/GameObject.hpp"
 #include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/System/ModelRenderer.hpp"
-#include "DirectX11/System/SpriteRenderer.hpp"
+#include "DirectX11/Renderer/ModelRenderer.hpp"
+#include "DirectX11/Renderer/SpriteRenderer.hpp"
 
 // ==============================
 //  undefine

@@ -98,6 +98,9 @@
     <Filter Include="Source\System\Component\Collider">
       <UniqueIdentifier>{b34bb0cd-66cd-4b0d-83f1-efb72566b987}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\DirectX11\Renderer">
+      <UniqueIdentifier>{48544fe2-3d7e-46af-bbc7-bff1c4024329}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
@@ -184,9 +187,6 @@
     <ClCompile Include="Source\System\ImGui\imgui_impl_win32.cpp">
       <Filter>Source\System\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\ModelRenderer.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Camera.cpp">
       <Filter>Source\System\Component</Filter>
     </ClCompile>
@@ -194,12 +194,6 @@
       <Filter>Source\System\Object</Filter>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderComponent.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SpriteRenderer.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp">
@@ -244,9 +238,6 @@
     <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\SkyBoxRenderer.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
       <Filter>Source\System\Object</Filter>
     </ClCompile>
@@ -255,9 +246,6 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Texture\InstancedMeshBuffer.cpp">
       <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\InstancedModelRenderer.cpp">
-      <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
@@ -285,6 +273,21 @@
     </ClCompile>
     <ClCompile Include="Source\System\Object\Object.cpp">
       <Filter>Source\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\ModelRenderer.cpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,9 +387,6 @@
     <ClInclude Include="Source\Defines.hpp">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\ModelRenderer.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Component\Camera.hpp">
       <Filter>Source\System\Component</Filter>
     </ClInclude>
@@ -397,12 +397,6 @@
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderComponent.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SpriteRenderer.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp">
@@ -447,9 +441,6 @@
     <ClInclude Include="Source\DirectX11\Resource\ShaderManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\SkyBoxRenderer.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
       <Filter>Source\System\Object</Filter>
     </ClInclude>
@@ -458,9 +449,6 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Texture\InstancedMeshBuffer.hpp">
       <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\InstancedModelRenderer.hpp">
-      <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
@@ -488,6 +476,21 @@
     </ClInclude>
     <ClInclude Include="Source\System\Object\Object.hpp">
       <Filter>Source\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp">
+      <Filter>Source\DirectX11\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

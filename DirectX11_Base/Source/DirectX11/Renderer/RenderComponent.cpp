@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "RenderComponent.hpp"
-#include "RenderManager.hpp"
+#include "DirectX11/System/RenderManager.hpp"
 #include "System/Component/Camera.hpp"
 #include "System/Object/CameraDCC.hpp"
 

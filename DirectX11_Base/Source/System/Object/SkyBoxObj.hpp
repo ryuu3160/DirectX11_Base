@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "GameObject.hpp"
-#include "DirectX11/System/SkyBoxRenderer.hpp"
+#include "DirectX11/Renderer/SkyBoxRenderer.hpp"
 
 /// <summary>
 /// SkyBoxObjƒNƒ‰ƒX

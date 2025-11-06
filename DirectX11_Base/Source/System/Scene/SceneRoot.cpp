@@ -11,7 +11,7 @@
 #include "DirectX11/Resource/ShaderManager.hpp"
 #include "DirectX11/Resource/ShaderParam.hpp"
 #include "DirectX11/System/Geometory.hpp"
-#include "DirectX11/System/InstancedModelRenderer.hpp"
+#include "DirectX11/Renderer/InstancedModelRenderer.hpp"
 #include "SceneRoot.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"

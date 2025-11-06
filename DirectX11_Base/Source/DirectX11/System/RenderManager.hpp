@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "RenderComponent.hpp"
+#include "DirectX11/Renderer/RenderComponent.hpp"
 
 /// <summary>
 /// RenderManagerƒNƒ‰ƒX
