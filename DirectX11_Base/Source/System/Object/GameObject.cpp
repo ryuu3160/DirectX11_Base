@@ -154,9 +154,6 @@ void GameObject::ExecuteUpdate() noexcept
 	// 継承先オブジェクトの処理
 	Update();
 
-	// 角度データの同期
-	AngleSynchronization();
-
 	// 自身の破棄
 	if (m_IsDestroySelf)
 		_destroySelf();
@@ -172,9 +169,6 @@ void GameObject::ExecuteLateUpdate() noexcept
 	}
 	// 継承先オブジェクトの遅延処理
 	LateUpdate();
-
-	// 角度データの同期
-	AngleSynchronization();
 
 	// 自身の破棄
 	if (m_IsDestroySelf)
