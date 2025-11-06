@@ -65,6 +65,10 @@ public:
 	/// <returns>シーンへのシェアポインタ</returns>
 	std::shared_ptr<SceneBase> GetCurrentScene() const noexcept { return m_pCurrentScene; }
 
+	template <typename T>
+	requires std::derived_from<T, SceneBase>
+	std::shared_ptr<T> GetSubScene() noexcept;
+
 	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<SceneBase, T>::value>::type * = nullptr>
 	void LoadScene(_In_ Args&&... In_Args) noexcept;
 
@@ -146,6 +150,19 @@ inline void SceneManager::RemoveSubScene() noexcept
 {
 	// 削除予約リストに追加
 	m_RemoveSubScene.push_back(typeid(T));
+}
+
+template<typename T>
+requires std::derived_from<T, SceneBase>
+inline std::shared_ptr<T> SceneManager::GetSubScene() noexcept
+{
+	for (const auto &itr : m_SubScene)
+	{
+		if(itr.first == typeid(T))
+		{
+			return std::static_pointer_cast<T>(itr.second);
+		}
+	}
 }
 
 /// <summary>
