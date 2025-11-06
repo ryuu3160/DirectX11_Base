@@ -98,7 +98,7 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
-	inline DirectX::XMFLOAT3 GetRotation() const noexcept { return m_Rotation; }
+	DirectX::XMFLOAT3 GetRotation() const noexcept;
 
 	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_Pos; }
 	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_Quat; }
@@ -127,9 +127,6 @@ private:
 	// コンポーネント追加時に型に関係なく呼び出す処理
 	void _addComponent(_In_ Component *In_pComponent);
 
-	// 回転情報の同期
-	void AngleSynchronization();
-
 	// 自身をシーンから破棄
 	void _destroySelf() noexcept;
 
@@ -152,14 +149,12 @@ private:
 	Datas				m_Datas;			// 保存データ
 	std::string			m_Name;				// オブジェクト名
 	std::string			m_ChildNameSaffix;	// 子オブジェクト名のサフィックス
-	DirectX::XMFLOAT3	m_PrevRotation;		// 前回の回転値
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
 	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
 	bool				m_IsDestroySelf;	// 自身を破棄するかどうかのフラグ
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
-	DirectX::XMFLOAT3	m_Rotation;	// 回転(オイラー角)
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
 
 	bool				m_bIsChild; // 子オブジェクトかどうか
