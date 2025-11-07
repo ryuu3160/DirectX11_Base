@@ -31,7 +31,7 @@ enum ColliderType
 class ColliderBase : public Component
 {
 public:
-	ColliderBase();
+	ColliderBase(_In_ std::string In_Name);
 	virtual ~ColliderBase();
 
 	void ReadWrite(_In_ DataAccessor *In_Data) final;

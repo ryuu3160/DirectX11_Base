@@ -21,7 +21,8 @@ namespace
 }
 
 SpriteRenderer::SpriteRenderer()
-	: m_bIsLoaded(false), m_bUsePixelPosition(false), m_PositionPixel{}
+	: RenderComponent("SpriteRenderer")
+	, m_bIsLoaded(false), m_bUsePixelPosition(false), m_PositionPixel{}
 {
 	if (!m_defVS && !m_defPS) // ‚Ç‚¿‚ç‚ànullptr
 	{

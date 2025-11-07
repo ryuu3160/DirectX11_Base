@@ -13,8 +13,9 @@
 #include "System/Component/Camera.hpp"
 #include "System/Object/CameraDCC.hpp"
 
-RenderComponent::RenderComponent()
-	: m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default)
+RenderComponent::RenderComponent(_In_ std::string In_Name)
+	: Component(In_Name)
+	, m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default)
 	, m_pViewCamera(nullptr), m_pCameraObj(nullptr)
 	, m_RenderManager(RenderManager::GetInstance())
 {

@@ -11,8 +11,9 @@
 #include "ColliderBase.hpp"
 #include "CollisionManager.hpp"
 
-ColliderBase::ColliderBase()
-	: m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
+ColliderBase::ColliderBase(_In_ std::string In_Name)
+	: Component(In_Name)
+	, m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
 {
 }
 

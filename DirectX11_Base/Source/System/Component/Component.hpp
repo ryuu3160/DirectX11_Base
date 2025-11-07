@@ -126,7 +126,7 @@ public:
 	};
 
 public:
-	Component();
+	Component(_In_ std::string In_Name);
 	virtual  ~Component();
 	virtual void OnEnable() noexcept override {};
 	virtual void Init() noexcept override = 0;
@@ -139,11 +139,11 @@ public:
 
 	bool IsDestroyed() const noexcept { return m_IsDestroyed; }
 
-	void DestroySelf() noexcept { m_IsDestroyed = true; }
+	void DestroySelf() noexcept;
 
 protected:
 	GameObject *m_pTransform;
-
+	std::string m_Name;
 private:
 	bool m_IsDestroyed = false;
 };

@@ -26,7 +26,8 @@
 #endif
 
 SkyBoxRenderer::SkyBoxRenderer()
-	: m_pVS(nullptr)
+	: RenderComponent("SkyBoxRenderer")
+	, m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)

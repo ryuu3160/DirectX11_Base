@@ -35,14 +35,7 @@ enum LayerGroup : int
 class RenderComponent : public Component
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	RenderComponent();
-
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
+	RenderComponent(_In_ std::string In_Name);
 	virtual ~RenderComponent();
 
 	/// <summary>

@@ -10,7 +10,8 @@
 // ==============================
 #include "Component.hpp"
 
-Component::Component() : m_pTransform(nullptr)
+Component::Component(_In_ std::string In_Name)
+	: m_Name(In_Name), m_pTransform(nullptr)
 {
 }
 
@@ -29,4 +30,10 @@ void Component::LateUpdate() noexcept
 
 void Component::ReadWrite(_In_ DataAccessor *In_Data)
 {
+}
+
+void Component::DestroySelf() noexcept
+{
+	m_IsDestroyed = true;
+	m_pTransform->RemoveComponent(m_Name);
 }

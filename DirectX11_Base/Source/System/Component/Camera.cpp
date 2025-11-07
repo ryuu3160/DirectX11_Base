@@ -13,7 +13,8 @@
 #include "System/Object/GameObject.hpp"
 
 Camera::Camera()
-	: m_bIs3D(true), m_bIsLockZ(true)
+	: Component("Camera")
+	, m_bIs3D(true), m_bIsLockZ(true)
 	, m_fFovy(60.0f), m_fWidth(20.0f)
 	, m_fAspect(16.0f / 9.0f), m_fNear(0.2f), m_fFar(1000.0f)
 	, m_fFocus(1.0f)

@@ -26,7 +26,8 @@
 #endif
 
 InstancedModelRenderer::InstancedModelRenderer()
-	: m_pVS(nullptr)
+	: RenderComponent("InstancedModelRenderer")
+	, m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
