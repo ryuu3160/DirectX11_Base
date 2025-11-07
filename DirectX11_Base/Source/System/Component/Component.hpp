@@ -137,6 +137,13 @@ public:
 
 	GameObject *GetGameObject() const noexcept { return m_pTransform; }
 
+	bool IsDestroyed() const noexcept { return m_IsDestroyed; }
+
+	void DestroySelf() noexcept { m_IsDestroyed = true; }
+
 protected:
 	GameObject *m_pTransform;
+
+private:
+	bool m_IsDestroyed = false;
 };
