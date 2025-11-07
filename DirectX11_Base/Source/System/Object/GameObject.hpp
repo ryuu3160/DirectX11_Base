@@ -54,9 +54,15 @@ public:
 	T *AddComponent(_In_ Args&&... args);
 
 	// コンポーネントの取得
-	template<class T>
+	template<typename T>
 	requires std::derived_from<T, Component>
 	T *GetComponent();
+
+	template <typename T>
+	requires std::derived_from<T, Component>
+	void RemoveComponent();
+
+	void RemoveComponent(_In_ std::string In_Name);
 
 	// 子オブジェクトを生成、追加する
 	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
@@ -130,6 +136,8 @@ private:
 	// 自身をシーンから破棄
 	void _destroySelf() noexcept;
 
+	void ExecuteDestroyComponents() noexcept;
+
 private:
 	// コンポーネントリスト
 	using Components = std::vector<Component *>;
@@ -145,6 +153,7 @@ private:
 private:
 	Components			m_Components;		// コンポーネントの一覧
 	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
+	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
 	ChildObjects		m_ChildObjects;		// 子オブジェクトの一覧
 	Datas				m_Datas;			// 保存データ
 	std::string			m_Name;				// オブジェクト名
@@ -195,21 +204,33 @@ inline T *GameObject::AddComponent(_In_ Args && ...args)
 /// </summary>
 /// <typeparam name="[T]">取得したいコンポーネントの型。</typeparam>
 /// <returns>指定した型Tのコンポーネントへのポインタ。該当するコンポーネントが存在しない場合はnullptrを返します。</returns>
-template<class T>
+template<typename T>
 requires std::derived_from<T, Component>
 inline T *GameObject::GetComponent()
 {
-	T *ptr = nullptr;
 	for (auto itr = m_Components.begin(); itr != m_Components.end();++itr)
 	{
 		// 型チェック
 		if (typeid(T) == typeid(**itr))
 		{
-			ptr = dynamic_cast<T *>(*itr);
-			break;
+			return dynamic_cast<T *>(*itr);
 		}
 	}
-	return ptr;
+	return nullptr;
+}
+
+template<typename T>
+requires std::derived_from<T, Component>
+inline void GameObject::RemoveComponent()
+{
+	for (auto itr = m_Components.begin(); itr != m_Components.end(); ++itr)
+	{
+		// 型チェック
+		if (typeid(T) == typeid(**itr))
+		{
+			(*itr)->DestroySelf();
+		}
+	}
 }
 
 /// <summary>

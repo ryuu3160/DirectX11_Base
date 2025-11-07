@@ -153,10 +153,6 @@ void GameObject::ExecuteUpdate() noexcept
 	}
 	// 継承先オブジェクトの処理
 	Update();
-
-	// 自身の破棄
-	if (m_IsDestroySelf)
-		_destroySelf();
 }
 
 void GameObject::ExecuteLateUpdate() noexcept
@@ -170,9 +166,24 @@ void GameObject::ExecuteLateUpdate() noexcept
 	// 継承先オブジェクトの遅延処理
 	LateUpdate();
 
-	// 自身の破棄
-	if (m_IsDestroySelf)
-		_destroySelf();
+	// 破棄予約されたコンポーネントの破棄処理
+	ExecuteDestroyComponents();
+}
+
+void GameObject::RemoveComponent(_In_ std::string In_Name)
+{
+	for (auto itr = m_Components.begin(); itr != m_Components.end(); ++itr)
+	{
+		if ((*itr)->m_Name == In_Name)
+		{
+			for(auto deadCmp : m_DeadComponents)
+			{
+				if (deadCmp == *itr)
+					return;
+			}
+			m_DeadComponents.push_back(*itr);
+		}
+	}
 }
 
 std::vector<GameObject *> GameObject::GetChildObjects() const noexcept
@@ -192,6 +203,8 @@ void GameObject::DestroyAllChildObjects() noexcept
 void GameObject::DestroySelf() noexcept
 {
 	m_IsDestroySelf = true;
+
+	_destroySelf();
 
 	for (const auto &itr : m_ChildObjects)
 		itr->DestroySelf();
@@ -339,4 +352,18 @@ void GameObject::_destroySelf() noexcept
 	// 自身が所属しているシーンの削除予約リストに追加
 	if (m_pScene)
 		m_pScene->DestroyObj(m_Name); // シーンから自身を削除
+}
+
+void GameObject::ExecuteDestroyComponents() noexcept
+{
+	for (auto &itr : m_DeadComponents)
+	{
+		auto compItr = std::find(m_Components.begin(), m_Components.end(), itr);
+		if (compItr != m_Components.end())
+		{
+			delete *compItr;
+			m_Components.erase(compItr);
+		}
+	}
+	m_DeadComponents.clear();
 }
