@@ -289,6 +289,9 @@
     <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp">
       <Filter>Source\DirectX11\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
+      <Filter>Source\System\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
@@ -491,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp">
       <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
+      <Filter>Source\System\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

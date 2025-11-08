@@ -258,6 +258,10 @@
     <ClCompile Include="Source\System\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\System\Input\Input.cpp" />
+    <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Object\CameraDCC.cpp">
       <SubType>
       </SubType>
@@ -413,6 +417,10 @@
     <ClInclude Include="Source\System\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\System\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\System\Input\Input.hpp" />
+    <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\System\Object\CameraDCC.hpp">
       <SubType>
       </SubType>
