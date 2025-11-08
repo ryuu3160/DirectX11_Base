@@ -29,10 +29,6 @@ public:
 	CameraBaseObj(_In_ std::string In_Name);
 	~CameraBaseObj();
 
-	virtual void Init() noexcept;
-	virtual void Update() noexcept;
-	virtual void LateUpdate() noexcept;
-
 protected:
 	Camera *m_pComponent;
 };

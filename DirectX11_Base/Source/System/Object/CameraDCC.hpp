@@ -9,7 +9,6 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Component/Camera.hpp"
 #include "CameraBaseObj.hpp"
 
 /// <summary>
