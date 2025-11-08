@@ -10,12 +10,12 @@
 //	include
 // ==============================
 #include "System/Component/Camera.hpp"
-#include "GameObject.hpp"
+#include "CameraBaseObj.hpp"
 
 /// <summary>
 /// CameraDCCƒNƒ‰ƒX
 /// </summary>
-class CameraDCC : public GameObject
+class CameraDCC : public CameraBaseObj
 {
 private:
 	struct Argument
@@ -47,7 +47,6 @@ private:
 private:
 	int m_nState;
 	POINT m_OldPos;
-	Camera *m_pComponent;
 #ifdef _DEBUG
 	char m_cMode[256];
 #endif

@@ -20,10 +20,9 @@ enum CameraDCCKind
 };
 
 CameraDCC::CameraDCC()
-	: GameObject("CameraDCC")
+	: CameraBaseObj("CameraDCC")
 	, m_nState(CAM_DCC_NONE)
 	, m_OldPos{ 0, 0 }
-	, m_pComponent(AddComponent<Camera>())
 {
 #ifdef _DEBUG
 	sprintf_s(m_cMode, "None");
