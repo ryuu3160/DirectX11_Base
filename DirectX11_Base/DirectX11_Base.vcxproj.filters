@@ -103,7 +103,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
+    <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
       <Filter>Source\DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp">
@@ -294,7 +294,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp">
+    <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
       <Filter>Source\DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp">

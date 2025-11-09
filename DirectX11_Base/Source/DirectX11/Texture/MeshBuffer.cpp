@@ -62,7 +62,7 @@ HRESULT MeshBuffer::CreateVertexBuffer(_In_ const void *In_pVtx, _In_ const UINT
 
 	//--- 頂点バッファの作成
 	HRESULT hr;
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pVtxBuffer.GetAddressOf());
 
 	return hr;
@@ -90,7 +90,7 @@ HRESULT MeshBuffer::CreateIndexBuffer(_In_ const void *In_pIdx, _In_ const UINT 
 	subResource.pSysMem = In_pIdx;
 
 	// インデックスバッファ生成
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	HRESULT hr;
 	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pIdxBuffer.GetAddressOf());
 
@@ -99,7 +99,7 @@ HRESULT MeshBuffer::CreateIndexBuffer(_In_ const void *In_pIdx, _In_ const UINT 
 
 void MeshBuffer::Draw(_In_ int In_Count) noexcept
 {
-	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
+	ID3D11DeviceContext *pContext = DX11_Core::GetInstance().GetDeviceContext();
 	UINT stride = m_Desc.vtxSize;
 	UINT offset = 0;
 
@@ -137,7 +137,7 @@ void MeshBuffer::Draw(_In_ int In_Count) noexcept
 HRESULT MeshBuffer::Write(_In_ void *In_pVtx) noexcept
 {
 	if (!m_Desc.isWrite) { return E_FAIL; }
-	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	DX11_Core &Instance = DX11_Core::GetInstance();
 	HRESULT hr;
 	ID3D11Device *pDevice = Instance.GetDevice();
 	ID3D11DeviceContext *pContext = Instance.GetDeviceContext();

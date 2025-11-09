@@ -40,7 +40,7 @@ void SpriteManager::Init() noexcept
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	auto &io = ImGui::GetIO();
-	auto &Instance = DX11_Initialize::GetInstance();
+	auto &Instance = DX11_Core::GetInstance();
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(Window::GetInstance().GetHwnd());
@@ -397,7 +397,7 @@ void SpriteManager::DrawImGui() noexcept
 		ImGui::RenderPlatformWindowsDefault();
 
 		// レンダーターゲットを復元
-		DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+		DX11_Core &Instance = DX11_Core::GetInstance();
 		Instance.SetRenderTargets(1, &rtv, dsv);
 	}
 }

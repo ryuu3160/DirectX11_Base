@@ -1,6 +1,6 @@
 /*+===================================================================
-	File: DX11_Initialize.hpp
-	Summary: DirectX11の初期化クラス
+	File: DX11_Core.hpp
+	Summary: DirectX11のコア
 	Author: AT13C 01 青木雄一郎
 	Date: 10/19/2024 Sat AM 12:32:59 初回作成
 ===================================================================+*/
@@ -8,10 +8,10 @@
 // ==============================
 //	include
 // ==============================
-#include "DX11_Initialize.hpp"
+#include "DX11_Core.hpp"
 #include "Texture/Texture.hpp"
 
-DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_BlendFactor{0.0f, 0.0f, 0.0f, 0.0f}
+DX11_Core::DX11_Core() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_BlendFactor{0.0f, 0.0f, 0.0f, 0.0f}
 {
 	//nullptrでの初期化
 	m_cpDevice = nullptr;
@@ -60,7 +60,7 @@ DX11_Initialize::DX11_Initialize() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_B
 #endif
 };
 
-DX11_Initialize::~DX11_Initialize()
+DX11_Core::~DX11_Core()
 {
 	// ComPtrは自動的に解放されるため、明示的な解放は不要
 	for (int i = 0; i < 3; ++i)
@@ -90,7 +90,7 @@ DX11_Initialize::~DX11_Initialize()
 	m_cpSwapChain = nullptr;
 }
 
-HRESULT DX11_Initialize::Init()
+HRESULT DX11_Core::Init()
 {
 	m_hr = E_FAIL;
 
@@ -121,9 +121,9 @@ HRESULT DX11_Initialize::Init()
 			m_nuCreateDeviceFlags,				// デバイスフラグ
 			m_FeatureLevels,					// 機能レベル
 			m_nuFeatureLevels,					// 機能レベル数
-			D3D11_SDK_VERSION, 
+			D3D11_SDK_VERSION,
 			&ini_sd,							// スワップチェインの設定
-			m_cpSwapChain.GetAddressOf(),		// IDXGIDwapChainインタフェース	
+			m_cpSwapChain.GetAddressOf(),		// IDXGIDwapChainインタフェース
 			m_cpDevice.GetAddressOf(),			// ID3D11Deviceインタフェース
 			&m_FeatureLevel,					// サポートされている機能レベル
 			m_cpContext.GetAddressOf());		// デバイスコンテキスト
@@ -139,10 +139,10 @@ HRESULT DX11_Initialize::Init()
 
 	// カリング設定
 	D3D11_RASTERIZER_DESC rasterizer = {};
-	D3D11_CULL_MODE cull[] = { 
+	D3D11_CULL_MODE cull[] = {
 		D3D11_CULL_NONE,
 		D3D11_CULL_FRONT,
-		D3D11_CULL_BACK, 
+		D3D11_CULL_BACK,
 	};
 	rasterizer.FillMode = D3D11_FILL_SOLID;
 	rasterizer.FrontCounterClockwise = false;
@@ -234,17 +234,17 @@ HRESULT DX11_Initialize::Init()
 		if (FAILED(m_hr)) return m_hr;
 	}
 	SetSamplerState(SAMPLER_LINEAR);
-	
+
 	return m_hr;
 }
 
-void DX11_Initialize::Swap()
+void DX11_Core::Swap()
 {
 	// 描画完了時に画面へ出力
 	m_cpSwapChain->Present(0, 0);
 }
 
-DepthState DX11_Initialize::GetNowDepthState() const noexcept
+DepthState DX11_Core::GetNowDepthState() const noexcept
 {
 	ID3D11DepthStencilState *pCurrentState = nullptr;
 	UINT stencilRef = 0;
@@ -261,7 +261,7 @@ DepthState DX11_Initialize::GetNowDepthState() const noexcept
 	return DEPTH_ERROR;
 }
 
-void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
+void DX11_Core::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
 {
 	m_WindowColor[0] = In_fR;
 	m_WindowColor[1] = In_fG;
@@ -269,7 +269,7 @@ void DX11_Initialize::SetWindowColor(_In_ const float &In_fR, _In_ const float &
 	m_WindowColor[3] = In_fA;
 }
 
-void DX11_Initialize::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) noexcept
+void DX11_Core::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) noexcept
 {
 	m_WindowColor[0] = In_arrRgba.x;
 	m_WindowColor[1] = In_arrRgba.y;
@@ -277,67 +277,67 @@ void DX11_Initialize::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) n
 	m_WindowColor[3] = In_arrRgba.w;
 }
 
-void DX11_Initialize::SetWindowColor_R(_In_ const float &In_fR) noexcept
+void DX11_Core::SetWindowColor_R(_In_ const float &In_fR) noexcept
 {
 	m_WindowColor[0] = In_fR;
 }
 
-void DX11_Initialize::SetWindowColor_G(_In_ const float &In_fG) noexcept
+void DX11_Core::SetWindowColor_G(_In_ const float &In_fG) noexcept
 {
 	m_WindowColor[1] = In_fG;
 }
 
-void DX11_Initialize::SetWindowColor_B(_In_ const float &In_fB) noexcept
+void DX11_Core::SetWindowColor_B(_In_ const float &In_fB) noexcept
 {
 	m_WindowColor[2] = In_fB;
 }
 
-void DX11_Initialize::SetWindowColor_A(_In_ const float &In_fA) noexcept
+void DX11_Core::SetWindowColor_A(_In_ const float &In_fA) noexcept
 {
 	m_WindowColor[3] = In_fA;
 }
 
-void DX11_Initialize::_SetRefreshRate_Numerator(_In_ const UINT &In_unNum) noexcept
+void DX11_Core::_SetRefreshRate_Numerator(_In_ const UINT &In_unNum) noexcept
 {
 	m_RefreshRate_Numerator = In_unNum;
 }
 
-void DX11_Initialize::_SetRefreshRate_Denominator(_In_ const UINT &In_unNum) noexcept
+void DX11_Core::_SetRefreshRate_Denominator(_In_ const UINT &In_unNum) noexcept
 {
 	m_RefreshRate_Denominator = In_unNum;
 }
 
-void DX11_Initialize::_SetSampleDesc_Count(_In_ const UINT &In_unCount) noexcept
+void DX11_Core::_SetSampleDesc_Count(_In_ const UINT &In_unCount) noexcept
 {
 	m_SampleDesc_Count = In_unCount;
 }
 
-void DX11_Initialize::_SetFormat(_In_ const DXGI_FORMAT &In_dxgiFormat) noexcept
+void DX11_Core::_SetFormat(_In_ const DXGI_FORMAT &In_dxgiFormat) noexcept
 {
 	m_Format = In_dxgiFormat;
 }
 
-void DX11_Initialize::_SetBufferUsage(_In_ const DXGI_USAGE &In_dxgiBufferUsage) noexcept
+void DX11_Core::_SetBufferUsage(_In_ const DXGI_USAGE &In_dxgiBufferUsage) noexcept
 {
 	m_BufferUsage = In_dxgiBufferUsage;
 }
 
-void DX11_Initialize::_SetBufferCount(_In_ const UINT &In_unBufferCount) noexcept
+void DX11_Core::_SetBufferCount(_In_ const UINT &In_unBufferCount) noexcept
 {
 	m_BufferCount = In_unBufferCount;
 }
 
-void DX11_Initialize::_SetFullScreen(_In_ const bool &In_bFullScreen) noexcept
+void DX11_Core::_SetFullScreen(_In_ const bool &In_bFullScreen) noexcept
 {
 	m_FullScreen = In_bFullScreen;
 }
 
-void DX11_Initialize::_SetFlags(_In_ const UINT &In_unFlags) noexcept
+void DX11_Core::_SetFlags(_In_ const UINT &In_unFlags) noexcept
 {
 	m_Flags = In_unFlags;
 }
 
-void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView) noexcept
+void DX11_Core::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppViews, DepthStencil *In_dspView) noexcept
 {
 	static ID3D11RenderTargetView *rtvs[4];
 
@@ -358,7 +358,7 @@ void DX11_Initialize::SetRenderTargets(UINT In_unNum, RenderTarget **In_rtppView
 	m_cpContext->RSSetViewports(1, &vp);
 }
 
-void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull) noexcept
+void DX11_Core::SetCullingMode(D3D11_CULL_MODE In_cull) noexcept
 {
 	switch (In_cull)
 	{
@@ -374,12 +374,12 @@ void DX11_Initialize::SetCullingMode(D3D11_CULL_MODE In_cull) noexcept
 	}
 }
 
-void DX11_Initialize::SetDepthTest(DepthState In_State) noexcept
+void DX11_Core::SetDepthTest(DepthState In_State) noexcept
 {
 	m_cpContext->OMSetDepthStencilState(m_cpDepthStencilState[In_State].Get(), 0);
 }
 
-void DX11_Initialize::SetBlendMode(BlendMode In_Blend) noexcept
+void DX11_Core::SetBlendMode(BlendMode In_Blend) noexcept
 {
 	if (In_Blend < 0 || In_Blend >= BLEND_MAX)
 		return;
@@ -387,7 +387,7 @@ void DX11_Initialize::SetBlendMode(BlendMode In_Blend) noexcept
 	m_cpContext->OMSetBlendState(m_cpBlendState[In_Blend].Get(), BlendFactor, 0xffffffff);
 }
 
-void DX11_Initialize::SetSamplerState(SamplerState In_State) noexcept
+void DX11_Core::SetSamplerState(SamplerState In_State) noexcept
 {
 	if (In_State < 0 || In_State >= SAMPLER_MAX)
 		return;

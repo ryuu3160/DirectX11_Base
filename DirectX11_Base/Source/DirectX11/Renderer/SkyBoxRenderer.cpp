@@ -126,7 +126,7 @@ bool SkyBoxRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Sca
 void SkyBoxRenderer::Draw() noexcept
 {
 	// 現在の深度テストを保存し、無効化
-	auto &Dx11 = DX11_Initialize::GetInstance();
+	auto &Dx11 = DX11_Core::GetInstance();
 	auto rtv = Main::GetRenderTarget();
 	auto dsv = Main::GetDepthStencil();
 	auto PrevDepth = Dx11.GetNowDepthState();

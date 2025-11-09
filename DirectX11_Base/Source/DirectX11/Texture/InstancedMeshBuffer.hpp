@@ -9,7 +9,6 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/DX11_Initialize.hpp"
 
 /// <summary>
 /// InstancedMeshBufferクラス
@@ -17,7 +16,7 @@
 class InstancedMeshBuffer
 {
 public:
-	
+
 	/// <summary>
 	/// 頂点およびインデックスバッファの情報とインスタンシング用の情報を格納する構造体
 	/// </summary>

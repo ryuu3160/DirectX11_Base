@@ -50,7 +50,7 @@ InstancedMeshBuffer::~InstancedMeshBuffer()
 
 void InstancedMeshBuffer::Draw(_In_ int In_Count) noexcept
 {
-	ID3D11DeviceContext *pContext = DX11_Initialize::GetInstance().GetDeviceContext();
+	ID3D11DeviceContext *pContext = DX11_Core::GetInstance().GetDeviceContext();
 	UINT stride = m_Desc.vtxSize;
 	UINT offset = 0;
 
@@ -109,7 +109,7 @@ HRESULT InstancedMeshBuffer::CreateVertexBuffer(_In_ const void *In_pVtx, _In_ c
 
 	//--- 頂点バッファの作成
 	HRESULT hr;
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pVtxBuffer.GetAddressOf());
 
 	return hr;
@@ -137,7 +137,7 @@ HRESULT InstancedMeshBuffer::CreateIndexBuffer(_In_ const void *In_pIdx, _In_ co
 	subResource.pSysMem = In_pIdx;
 
 	// インデックスバッファ生成
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	HRESULT hr;
 	hr = pDevice->CreateBuffer(&bufDesc, &subResource, m_pIdxBuffer.GetAddressOf());
 
@@ -177,7 +177,7 @@ HRESULT InstancedMeshBuffer::CreateInstanceBuffer(_In_ const void *In_pInstance,
 
 	// インスタンスデータ用バッファの作成
 	HRESULT hr;
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	hr = pDevice->CreateBuffer(&bd_instance, &subResource, &m_pInstanceBuffer);
 
 	return hr;
@@ -198,7 +198,7 @@ HRESULT InstancedMeshBuffer::CreateInstanceSRV(_In_ const UINT &In_Count) noexce
 	srvDesc.BufferEx.NumElements = In_Count;
 
 	// インスタンス用のリソースビューを作成
-	ID3D11Device *pDevice = DX11_Initialize::GetInstance().GetDevice();
+	ID3D11Device *pDevice = DX11_Core::GetInstance().GetDevice();
 	hr = pDevice->CreateShaderResourceView(m_pInstanceBuffer.Get(), &srvDesc, &m_pInstanceSRV);
 
 	return hr;

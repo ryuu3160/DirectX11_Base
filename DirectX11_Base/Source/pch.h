@@ -84,7 +84,7 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 #include "App/Main.hpp"
 #include "Defines.hpp"
-#include "DirectX11/DX11_Initialize.hpp"
+#include "DirectX11/DX11_Core.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Component/Component.hpp"
 #include "System/Input/Input.hpp"

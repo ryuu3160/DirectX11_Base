@@ -26,7 +26,7 @@ UnorderedAccessView::~UnorderedAccessView()
 HRESULT UnorderedAccessView::Create(_In_ const UINT &In_Stride, _In_ const UINT &In_Num, _In_ void *In_pData) noexcept
 {
     // https://wizframework.github.io/BaseCross64/15_01.html
-    DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+    DX11_Core &Instance = DX11_Core::GetInstance();
     ID3D11Device *pDevice = Instance.GetDevice();
     ID3D11DeviceContext *pContext = Instance.GetDeviceContext();
     HRESULT hr = E_FAIL;
@@ -71,7 +71,7 @@ HRESULT UnorderedAccessView::Create(_In_ const UINT &In_Stride, _In_ const UINT 
 
 void UnorderedAccessView::Copy()
 {
-	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	DX11_Core &Instance = DX11_Core::GetInstance();
     D3D11_MAPPED_SUBRESOURCE MappedResource = { 0 };
     D3D11_BUFFER_DESC desc = {};
     D3D11_BUFFER_DESC base;

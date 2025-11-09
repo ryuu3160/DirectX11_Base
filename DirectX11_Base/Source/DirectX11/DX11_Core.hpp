@@ -1,6 +1,6 @@
 /*+===================================================================
-	File: DX11_Initialize.hpp
-	Summary: DirectX11の初期化クラス
+	File: DX11_Core.hpp
+	Summary: DirectX11のコア
 	Author: AT13C 01 青木雄一郎
 	Date: 10/19/2024 Sat AM 12:32:59 初回作成
 ===================================================================+*/
@@ -76,7 +76,7 @@ enum DepthState
 /// <summary>
 /// DirectX初期化クラス
 /// </summary>
-class DX11_Initialize : public Singleton<DX11_Initialize>
+class DX11_Core : public Singleton<DX11_Core>
 {
 	friend class Singleton;
 public:
@@ -231,11 +231,11 @@ private:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	DX11_Initialize();
+	DX11_Core();
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~DX11_Initialize() override;
+	~DX11_Core() override;
 
 private:
 	ComPtr<ID3D11Device> m_cpDevice;							//DirectXでアセットの作成を行う機能

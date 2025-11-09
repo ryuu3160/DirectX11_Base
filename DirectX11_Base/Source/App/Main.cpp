@@ -32,7 +32,7 @@ HRESULT Main::Init()
 	Window &Instance = Window::GetInstance();
 
 	// DirectXÇÃèâä˙âª
-	hr = DX11_Initialize::GetInstance().Init();
+	hr = DX11_Core::GetInstance().Init();
 	if (FAILED(hr))
 		return hr;
 
@@ -70,7 +70,7 @@ HRESULT Main::Init()
 	auto dsp = g_pScene->CreateObject<DepthStencil>("DSV");
 	hr = dsp->Create(Instance.GetWidth(), Instance.GetHeight(),false);
 
-	DX11_Initialize::GetInstance().SetRenderTargets(1, &rtv, dsp);
+	DX11_Core::GetInstance().SetRenderTargets(1, &rtv, dsp);
 
 	// SpriteManagerÇÃèâä˙âª
 	SpriteM.Init();
@@ -108,7 +108,7 @@ void Main::Update()
 void Main::Draw()
 {
 	auto &SceneM = SceneManager::GetInstance();
-	DX11_Initialize &DX11 = DX11_Initialize::GetInstance();
+	DX11_Core &DX11 = DX11_Core::GetInstance();
 	auto rtv = g_pScene->GetObject<RenderTarget>("RTV");
 	auto dsv = g_pScene->GetObject<DepthStencil>("DSV");
 	float color[4] = { 0.1f, 0.2f, 0.3f, 1.0f };
@@ -134,7 +134,7 @@ void Main::Draw()
 void Main::Change2D_Draw() noexcept
 {
 	// 2Dï`âÊÇÃê›íË
-	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	DX11_Core &Instance = DX11_Core::GetInstance();
 	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
 	Instance.SetDepthTest(DEPTH_DISABLE); // ê[ìxÉeÉXÉgñ≥å¯
 	Instance.SetRenderTargets(1, &pRTV, nullptr);
@@ -143,7 +143,7 @@ void Main::Change2D_Draw() noexcept
 void Main::Change3D_Draw() noexcept
 {
 	// 3Dï`âÊÇÃê›íË
-	DX11_Initialize &Instance = DX11_Initialize::GetInstance();
+	DX11_Core &Instance = DX11_Core::GetInstance();
 	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
 	auto pDSV = Main::GetScene().GetObject<DepthStencil>("DSV");
 	Instance.SetRenderTargets(1, &pRTV, pDSV);

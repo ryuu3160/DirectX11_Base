@@ -10,7 +10,7 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/DX11_Initialize.hpp"
+#include "DirectX11/DX11_Core.hpp"
 
 class MeshBuffer
 {

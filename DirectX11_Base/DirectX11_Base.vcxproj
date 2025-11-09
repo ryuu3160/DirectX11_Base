@@ -161,7 +161,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\DX11_Initialize.cpp">
+    <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp" />
@@ -319,7 +319,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\DX11_Initialize.hpp" />
+    <ClInclude Include="Source\DirectX11\DX11_Core.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp" />

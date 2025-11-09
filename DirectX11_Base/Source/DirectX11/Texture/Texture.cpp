@@ -59,7 +59,7 @@ HRESULT Texture::Create(_In_ const FilePath &In_FileName) noexcept
 	}
 
 	// シェーダリソース生成
-	hr = CreateShaderResourceView(DX11_Initialize::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
+	hr = CreateShaderResourceView(DX11_Core::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = (UINT)mdata.width;
@@ -81,7 +81,7 @@ HRESULT Texture::Create(_In_ const aiTexture *In_aiTex) noexcept
 	}
 
 	// シェーダリソース生成
-	hr = CreateShaderResourceView(DX11_Initialize::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
+	hr = CreateShaderResourceView(DX11_Core::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());
 	if (SUCCEEDED(hr))
 	{
 		m_width = (UINT)mdata.width;
@@ -112,7 +112,7 @@ HRESULT Texture::CreateResource(_In_ D3D11_TEXTURE2D_DESC &In_Desc, const void *
 {
 	HRESULT hr = E_FAIL;
 
-	auto Device = DX11_Initialize::GetInstance().GetDevice();
+	auto Device = DX11_Core::GetInstance().GetDevice();
 
 	// テクスチャ作成
 	D3D11_SUBRESOURCE_DATA data = {};
@@ -159,7 +159,7 @@ void RenderTarget::Clear()
 }
 void RenderTarget::Clear(_In_ const float *In_Color) noexcept
 {
-	DX11_Initialize::GetInstance().GetDeviceContext()->ClearRenderTargetView(m_pRTV.Get(), In_Color);
+	DX11_Core::GetInstance().GetDeviceContext()->ClearRenderTargetView(m_pRTV.Get(), In_Color);
 }
 HRESULT RenderTarget::Create(_In_ DXGI_FORMAT In_Format, _In_ const UINT &In_Width, _In_ const UINT &In_Height) noexcept
 {
@@ -170,7 +170,7 @@ HRESULT RenderTarget::Create(_In_ DXGI_FORMAT In_Format, _In_ const UINT &In_Wid
 HRESULT RenderTarget::CreateFromScreen() noexcept
 {
 	HRESULT hr;
-	DX11_Initialize& Instance = DX11_Initialize::GetInstance();
+	DX11_Core & Instance = DX11_Core::GetInstance();
 
 	// バックバッファのポインタを取得
 	ID3D11Texture2D *pBackBuffer = NULL;
@@ -204,7 +204,7 @@ HRESULT RenderTarget::CreateResource(_In_ D3D11_TEXTURE2D_DESC &In_Desc, const v
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
 	// 生成
-	return DX11_Initialize::GetInstance().GetDevice()->CreateRenderTargetView(m_pTex.Get(), &rtvDesc, m_pRTV.GetAddressOf());
+	return DX11_Core::GetInstance().GetDevice()->CreateRenderTargetView(m_pTex.Get(), &rtvDesc, m_pRTV.GetAddressOf());
 }
 
 /// <summary>
@@ -221,7 +221,7 @@ DepthStencil::~DepthStencil()
 }
 void DepthStencil::Clear()
 {
-	DX11_Initialize::GetInstance().GetDeviceContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	DX11_Core::GetInstance().GetDeviceContext()->ClearDepthStencilView(m_pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 HRESULT DepthStencil::Create(_In_ const UINT &In_Width, _In_ const UINT &In_Height, _In_ const bool &In_UseStencil) noexcept
 {
@@ -246,5 +246,5 @@ HRESULT DepthStencil::CreateResource(_In_ D3D11_TEXTURE2D_DESC &In_Desc, const v
 	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	// 生成
-	return DX11_Initialize::GetInstance().GetDevice()->CreateDepthStencilView(m_pTex.Get(), &dsvDesc, m_pDSV.GetAddressOf());
+	return DX11_Core::GetInstance().GetDevice()->CreateDepthStencilView(m_pTex.Get(), &dsvDesc, m_pDSV.GetAddressOf());
 }
