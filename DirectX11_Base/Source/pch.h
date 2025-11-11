@@ -6,8 +6,8 @@
 ===================================================================+*/
 #pragma once
 
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
 #include <Windows.h>
 
 // メモリリークの検出
@@ -34,7 +34,6 @@ using Microsoft::WRL::ComPtr;
 #include <iomanip>
 #include <typeindex>
 #include <memory>
-#include <xmemory>
 #include <algorithm>
 #include <functional>
 #include <any>
@@ -42,7 +41,6 @@ using Microsoft::WRL::ComPtr;
 #include <cmath>
 #include <random>
 #include <future>
-#include <sal.h>
 
 // C++20以降の機能を利用するための条件付きインクルード
 #if __cplusplus >= 202002L
@@ -61,6 +59,10 @@ using Microsoft::WRL::ComPtr;
 #include <unordered_map>
 #include <deque>
 #include <initializer_list>
+#include <forward_list>
+#include <set>
+#include <unordered_set>
+#include <iterator>
 
 // ------------------------------
 //  DirectX11
@@ -85,6 +87,7 @@ using Microsoft::WRL::ComPtr;
 #include "App/Main.hpp"
 #include "Defines.hpp"
 #include "DirectX11/DX11_Core.hpp"
+#include "DirectX11/ResourceManager/RenderTargetManager.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Component/Component.hpp"
 #include "System/Input/Input.hpp"
