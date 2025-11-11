@@ -101,6 +101,9 @@
     <Filter Include="Source\DirectX11\Renderer">
       <UniqueIdentifier>{48544fe2-3d7e-46af-bbc7-bff1c4024329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\DebugManager">
+      <UniqueIdentifier>{a69a2225-a546-490a-a4fd-7fe47e67b5f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -291,6 +294,12 @@
     </ClCompile>
     <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
       <Filter>Source\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugManager.cpp">
+      <Filter>Source\System\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
+      <Filter>Source\System\DebugManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -497,6 +506,12 @@
     </ClInclude>
     <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
       <Filter>Source\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugManager.hpp">
+      <Filter>Source\System\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
+      <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

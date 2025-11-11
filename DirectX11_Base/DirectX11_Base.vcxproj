@@ -247,6 +247,14 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
       <SubType>
       </SubType>
@@ -401,6 +409,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugManager.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
       <SubType>
       </SubType>
     </ClInclude>
