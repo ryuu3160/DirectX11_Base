@@ -65,12 +65,15 @@ HRESULT Main::Init()
 	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
 	// 初期リソース作成
-	auto rtv = g_pScene->CreateObject<RenderTarget>("RTV");
-	rtv->CreateFromScreen();
-	auto dsp = g_pScene->CreateObject<DepthStencil>("DSV");
-	hr = dsp->Create(Instance.GetWidth(), Instance.GetHeight(),false);
+	auto [RTV,DSV] = RenderTargetManager::GetInstance().InitializeDefaultResources(Instance.GetWidth(), Instance.GetHeight());
 
-	DX11_Core::GetInstance().SetRenderTargets(1, &rtv, dsp);
+	if (!RTV || !DSV)
+	{
+		Error("Failed to create default resources.");
+		return E_FAIL;
+	}
+
+	DX11_Core::GetInstance().SetRenderTargets(1, &RTV, DSV);
 
 	// SpriteManagerの初期化
 	SpriteM.Init();
@@ -109,8 +112,9 @@ void Main::Draw()
 {
 	auto &SceneM = SceneManager::GetInstance();
 	DX11_Core &DX11 = DX11_Core::GetInstance();
-	auto rtv = g_pScene->GetObject<RenderTarget>("RTV");
-	auto dsv = g_pScene->GetObject<DepthStencil>("DSV");
+	auto &RTVManager = RenderTargetManager::GetInstance();
+	auto rtv = RTVManager.GetDefaultRTV();
+	auto dsv = RTVManager.GetDefaultDSV();
 	float color[4] = { 0.1f, 0.2f, 0.3f, 1.0f };
 
 	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
@@ -129,38 +133,4 @@ void Main::Draw()
 	DX11.Swap();
 
 	fut.get(); // 破棄が終わるまで待機
-}
-
-void Main::Change2D_Draw() noexcept
-{
-	// 2D描画の設定
-	DX11_Core &Instance = DX11_Core::GetInstance();
-	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
-	Instance.SetDepthTest(DEPTH_DISABLE); // 深度テスト無効
-	Instance.SetRenderTargets(1, &pRTV, nullptr);
-}
-
-void Main::Change3D_Draw() noexcept
-{
-	// 3D描画の設定
-	DX11_Core &Instance = DX11_Core::GetInstance();
-	auto pRTV = Main::GetScene().GetObject<RenderTarget>("RTV");
-	auto pDSV = Main::GetScene().GetObject<DepthStencil>("DSV");
-	Instance.SetRenderTargets(1, &pRTV, pDSV);
-	Instance.SetDepthTest(DEPTH_ENABLE_WRITE_TEST); // 深度テスト有効
-}
-
-SceneBase &Main::GetScene() noexcept
-{
-	return *g_pScene;
-}
-
-RenderTarget *Main::GetRenderTarget() noexcept
-{
-	return g_pScene->GetObject<RenderTarget>("RTV");
-}
-
-DepthStencil *Main::GetDepthStencil() noexcept
-{
-	return g_pScene->GetObject<DepthStencil>("DSV");
 }

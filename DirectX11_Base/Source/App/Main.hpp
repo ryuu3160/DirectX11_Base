@@ -24,14 +24,4 @@ namespace Main
 	void Uninit();
 	void Update();
 	void Draw();
-
-	void Change2D_Draw() noexcept;
-
-	void Change3D_Draw() noexcept;
-
-	SceneBase &GetScene() noexcept;
-
-	RenderTarget *GetRenderTarget() noexcept;
-
-	DepthStencil *GetDepthStencil() noexcept;
 }
