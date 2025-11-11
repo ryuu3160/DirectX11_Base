@@ -169,59 +169,32 @@
     <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp" />
     <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\InstancedMesh.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\InstancedModelManager.cpp" />
+    <ClCompile Include="Source\DirectX11\ResourceManager\MaterialManager.cpp" />
+    <ClCompile Include="Source\DirectX11\ResourceManager\ModelManager.cpp" />
+    <ClCompile Include="Source\DirectX11\ResourceManager\ShaderManager.cpp" />
+    <ClCompile Include="Source\DirectX11\ResourceManager\TextureManager.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\MaterialManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Mesh.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ModelManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMesh.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\Mesh.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\MeshBuffer.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ShaderManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\TextureManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\Shader.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\ShaderParam.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp" />
+    <ClCompile Include="Source\DirectX11\Resource\Texture.cpp" />
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
     <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\InstancedMeshBuffer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp" />
-    <ClCompile Include="Source\DirectX11\Texture\Shader.cpp" />
-    <ClCompile Include="Source\DirectX11\Texture\Texture.cpp" />
-    <ClCompile Include="Source\DirectX11\Texture\UnorderedAccessView.cpp" />
     <ClCompile Include="Source\EntryPoint.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -333,46 +306,27 @@
     <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\InstancedModelManager.hpp" />
+    <ClInclude Include="Source\DirectX11\ResourceManager\MaterialManager.hpp" />
+    <ClInclude Include="Source\DirectX11\ResourceManager\ModelManager.hpp" />
+    <ClInclude Include="Source\DirectX11\ResourceManager\ShaderManager.hpp" />
+    <ClInclude Include="Source\DirectX11\ResourceManager\TextureManager.hpp" />
     <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\MaterialManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Mesh.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ModelManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMesh.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\Mesh.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\MeshBuffer.hpp" />
     <ClInclude Include="Source\DirectX11\Resource\ResourceSetting.hpp">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ShaderManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\TextureManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\Shader.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\ShaderParam.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.hpp" />
+    <ClInclude Include="Source\DirectX11\Resource\Texture.hpp" />
     <ClInclude Include="Source\DirectX11\System\DX11_Math.hpp">
       <SubType>
       </SubType>
@@ -382,14 +336,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\InstancedMeshBuffer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp" />
-    <ClInclude Include="Source\DirectX11\Texture\Shader.hpp" />
-    <ClInclude Include="Source\DirectX11\Texture\Texture.hpp" />
-    <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp" />
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\System\CollisionManager\ColliderBase.hpp">

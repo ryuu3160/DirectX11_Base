@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: TextureManager.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: テクスチャ管理クラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/08/15 Fri AM 01:22:55 初回作成
 ===================================================================+*/
@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "TextureManager.hpp"
-#include "ResourceSetting.hpp"
+#include "DirectX11/Resource/ResourceSetting.hpp"
 
 // assimpのライブラリリンク
 #ifdef _DEBUG

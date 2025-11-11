@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "DX11_Core.hpp"
-#include "Texture/Texture.hpp"
+#include "DirectX11/Resource/Texture.hpp"
 
 DX11_Core::DX11_Core() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_BlendFactor{0.0f, 0.0f, 0.0f, 0.0f}
 {

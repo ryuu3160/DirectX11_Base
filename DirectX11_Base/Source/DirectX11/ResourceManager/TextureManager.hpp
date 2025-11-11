@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/Texture/Texture.hpp"
+#include "DirectX11/Resource/Texture.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

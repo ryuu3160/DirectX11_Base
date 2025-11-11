@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Material.hpp"
+#include "DirectX11/Resource/Material.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

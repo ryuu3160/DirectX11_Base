@@ -11,7 +11,7 @@
 #include "Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
+#include "DirectX11/ResourceManager/ShaderManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
 #include "System/ImGui/imgui_impl_win32.h"

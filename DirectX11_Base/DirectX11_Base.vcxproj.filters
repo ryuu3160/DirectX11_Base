@@ -23,9 +23,6 @@
     <Filter Include="Source\DirectX11\System">
       <UniqueIdentifier>{57613732-92ce-4310-9d78-4aaa06eae2fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\DirectX11\Texture">
-      <UniqueIdentifier>{56545085-a460-4ad3-ba8a-44c2b2036d81}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\System\ryuu_lib">
       <UniqueIdentifier>{0e6f99b9-aa4d-46fa-b2c4-5def24b407d2}</UniqueIdentifier>
     </Filter>
@@ -104,22 +101,19 @@
     <Filter Include="Source\System\DebugManager">
       <UniqueIdentifier>{a69a2225-a546-490a-a4fd-7fe47e67b5f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\DirectX11\ResourceManager">
+      <UniqueIdentifier>{85f376bf-44db-4f22-8a49-2a0640b29773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\Resource\Meshes">
+      <UniqueIdentifier>{be644f4b-82ae-4c3e-b4ce-70c979947676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\Resource\Shaders">
+      <UniqueIdentifier>{7aa0ef16-d438-44af-a261-7afe122c6371}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
       <Filter>Source\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\MeshBuffer.cpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\Shader.cpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\Texture.cpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\UnorderedAccessView.cpp">
-      <Filter>Source\DirectX11\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source</Filter>
@@ -223,38 +217,11 @@
     <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\MaterialManager.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Mesh.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ModelManager.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\TextureManager.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ShaderManager.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
       <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\InstancedMesh.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Texture\InstancedMeshBuffer.cpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\InstancedModelManager.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ShaderParam.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Sound\SoundManager.cpp">
       <Filter>Source\System\Sound</Filter>
@@ -301,22 +268,49 @@
     <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
       <Filter>Source\System\DebugManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\ModelManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\ShaderManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\TextureManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\InstancedModelManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\MaterialManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMesh.cpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\Mesh.cpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.cpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Meshes\MeshBuffer.cpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\Shader.cpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\ShaderParam.cpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\Resource\Texture.cpp">
+      <Filter>Source\DirectX11\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
       <Filter>Source\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\MeshBuffer.hpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\Shader.hpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\Texture.hpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\UnorderedAccessView.hpp">
-      <Filter>Source\DirectX11\Texture</Filter>
     </ClInclude>
     <ClInclude Include="Source\pch.h">
       <Filter>Source</Filter>
@@ -435,38 +429,11 @@
     <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\MaterialManager.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Mesh.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ModelManager.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\TextureManager.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\ResourceSetting.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ShaderManager.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
       <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\InstancedMesh.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Texture\InstancedMeshBuffer.hpp">
-      <Filter>Source\DirectX11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\InstancedModelManager.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ShaderParam.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Sound\SoundManager.hpp">
       <Filter>Source\System\Sound</Filter>
@@ -512,6 +479,45 @@
     </ClInclude>
     <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
       <Filter>Source\System\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\ModelManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\ShaderManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\TextureManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\InstancedModelManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\MaterialManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMesh.hpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\Mesh.hpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.hpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Meshes\MeshBuffer.hpp">
+      <Filter>Source\DirectX11\Resource\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\Shader.hpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\ShaderParam.hpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.hpp">
+      <Filter>Source\DirectX11\Resource\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\Resource\Texture.hpp">
+      <Filter>Source\DirectX11\Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

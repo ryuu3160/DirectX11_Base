@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "DirectX11/Renderer/RenderComponent.hpp"
-#include "DirectX11/Resource/ShaderParam.hpp"
+#include "DirectX11/Resource/Shaders/ShaderParam.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾

@@ -10,9 +10,9 @@
 // ==============================
 #include "ModelRenderer.hpp"
 #include "System/Component/Camera.hpp"
-#include "DirectX11/Resource/MaterialManager.hpp"
-#include "DirectX11/Resource/TextureManager.hpp"
-#include "DirectX11/Resource/ModelManager.hpp"
+#include "DirectX11/ResourceManager/MaterialManager.hpp"
+#include "DirectX11/ResourceManager/TextureManager.hpp"
+#include "DirectX11/ResourceManager/ModelManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

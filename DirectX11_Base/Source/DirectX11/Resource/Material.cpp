@@ -9,8 +9,8 @@
 //	include
 // ==============================
 #include "Material.hpp"
-#include "TextureManager.hpp"
-#include "ShaderManager.hpp"
+#include "DirectX11/ResourceManager/TextureManager.hpp"
+#include "DirectX11/ResourceManager/ShaderManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -205,7 +205,7 @@ bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcep
 			length = line.length() - (pos); // 行の終わりまでの長さを計算
 		else
 			length = nextPos - (pos + 1);
-		
+
 		// マテリアル情報の抽出
 		Info = line.substr(pos + 1, length);
 

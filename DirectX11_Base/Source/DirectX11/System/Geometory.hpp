@@ -6,10 +6,10 @@
 ===================================================================+*/
 #pragma once
 
-#include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/Texture/MeshBuffer.hpp"
+#include "DirectX11/Resource/Shaders/Shader.hpp"
+#include "DirectX11/Resource/Meshes/MeshBuffer.hpp"
 
-namespace 
+namespace
 {
 	constexpr int GEOMETORY_MAX_LINE_NUM = 10000 * 2; // 1’¼ü‚É‚Â‚«A2’¸“_
 }

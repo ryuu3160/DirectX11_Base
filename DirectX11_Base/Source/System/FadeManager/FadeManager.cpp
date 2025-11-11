@@ -10,7 +10,7 @@
 // ==============================
 #include "FadeManager.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
+#include "DirectX11/ResourceManager/ShaderManager.hpp"
 
 void FadeManager::SetCamera(_In_ GameObject *In_Camera) noexcept
 {

@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "System/Object/GameObject.hpp"
-#include "DirectX11/Texture/Shader.hpp"
+#include "DirectX11/Resource/Shaders/Shader.hpp"
 #include "DirectX11/Renderer/ModelRenderer.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
 

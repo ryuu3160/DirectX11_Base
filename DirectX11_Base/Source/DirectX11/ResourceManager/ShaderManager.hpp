@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/Texture/Shader.hpp"
+#include "DirectX11/Resource/Shaders/Shader.hpp"
 
 /// <summary>
 /// ShaderManagerƒNƒ‰ƒX

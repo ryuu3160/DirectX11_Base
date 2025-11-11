@@ -9,9 +9,9 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/Texture/MeshBuffer.hpp"
-#include "DirectX11/Texture/Shader.hpp"
-#include "DirectX11/Texture/Texture.hpp"
+#include "DirectX11/Resource/Meshes/MeshBuffer.hpp"
+#include "DirectX11/Resource/Shaders/Shader.hpp"
+#include "DirectX11/Resource/Texture.hpp"
 
 class Sprite
 {
@@ -25,10 +25,10 @@ public:
     struct SpriteData
     {
         std::shared_ptr<MeshBuffer> mesh;
-        DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values  
-        DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values  
+        DirectX::XMFLOAT4X4 matrix[3] = {}; // Initialize to default values
+        DirectX::XMFLOAT4 param[3] = {};    // Initialize to default values
         Texture *texture = nullptr;         // Initialize to nullptr
-        Shader *vs = nullptr;               // Initialize to nullptr  
+        Shader *vs = nullptr;               // Initialize to nullptr
         Shader *ps = nullptr;               // Initialize to nullptr
         bool Is3D = false;
         bool IsBillBoard = false;
@@ -38,7 +38,7 @@ public:
     Sprite();
     ~Sprite();
 
-   void Draw();  
+   void Draw();
 
    void Load(_In_ const FilePath &In_File, _In_ const int& In_Layer, _In_ const float &In_Scale = 1.0f);
 
@@ -238,8 +238,8 @@ private:
 
 	FilePathHold m_FilePath; // テクスチャのファイルパス
 
-    std::shared_ptr<VertexShader> m_defVS;  
-    std::shared_ptr<PixelShader> m_defPS;  
+    std::shared_ptr<VertexShader> m_defVS;
+    std::shared_ptr<PixelShader> m_defPS;
     std::shared_ptr<Texture> m_whiteTex;
     DirectX::XMFLOAT4X4 m_BillBoardView;
 };

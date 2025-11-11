@@ -8,8 +8,8 @@
 // ==============================
 //	include
 // ==============================
-#include "DirectX11/Resource/ShaderManager.hpp"
-#include "DirectX11/Resource/ShaderParam.hpp"
+#include "DirectX11/ResourceManager/ShaderManager.hpp"
+#include "DirectX11/Resource/Shaders/ShaderParam.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/Renderer/InstancedModelRenderer.hpp"
 #include "SceneRoot.hpp"
