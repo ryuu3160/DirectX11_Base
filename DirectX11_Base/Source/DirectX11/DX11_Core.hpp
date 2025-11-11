@@ -227,6 +227,9 @@ public:
 	/// <param name="[In_State]">SamplerState</param>
 	void SetSamplerState(SamplerState In_State) noexcept;
 
+	void Change2DMode();
+	void Change3DMode();
+
 private:
 	/// <summary>
 	/// コンストラクタ

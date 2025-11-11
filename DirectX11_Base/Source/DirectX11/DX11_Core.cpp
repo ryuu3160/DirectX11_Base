@@ -397,3 +397,21 @@ void DX11_Core::SetSamplerState(SamplerState In_State) noexcept
 	m_cpContext->HSSetSamplers(0, 1, &ptr);
 	m_cpContext->DSSetSamplers(0, 1, &ptr);
 }
+
+void DX11_Core::Change2DMode()
+{
+	// 2D描画の設定
+	auto pRTV = RenderTargetManager::GetInstance().GetDefaultRTV();
+	SetDepthTest(DEPTH_DISABLE); // 深度テスト無効
+	SetRenderTargets(1, &pRTV, nullptr);
+}
+
+void DX11_Core::Change3DMode()
+{
+	// 3D描画の設定
+	auto &RTVManager = RenderTargetManager::GetInstance();
+	auto pRTV = RTVManager.GetDefaultRTV();
+	auto pDSV = RTVManager.GetDefaultDSV();
+	SetRenderTargets(1, &pRTV, pDSV);
+	SetDepthTest(DEPTH_ENABLE_WRITE_TEST); // 深度テスト有効
+}
