@@ -307,6 +307,9 @@
     <ClCompile Include="Source\DirectX11\Resource\Texture.cpp">
       <Filter>Source\DirectX11\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\ResourceManager\RenderTargetManager.cpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -518,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\Resource\Texture.hpp">
       <Filter>Source\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\ResourceManager\RenderTargetManager.hpp">
+      <Filter>Source\DirectX11\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

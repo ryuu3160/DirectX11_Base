@@ -389,8 +389,9 @@ void SpriteManager::DrawImGui() noexcept
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		// 現在のレンダーターゲットと深度ステンシルビューを取得
-		auto rtv = Main::GetRenderTarget();
-		auto dsv = Main::GetDepthStencil();
+		auto &RTVManager = RenderTargetManager::GetInstance();
+		auto rtv = RTVManager.GetDefaultRTV();
+		auto dsv = RTVManager.GetDefaultDSV();
 
 		// ImGuiのビューポートを更新
 		ImGui::UpdatePlatformWindows();

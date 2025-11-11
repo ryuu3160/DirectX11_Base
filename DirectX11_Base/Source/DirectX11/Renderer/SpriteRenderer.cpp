@@ -124,7 +124,8 @@ void SpriteRenderer::Load() noexcept
 void SpriteRenderer::Draw() noexcept
 {
 	// 2D•`‰æ‚Ì€”õ
-	Main::Change2D_Draw();
+	auto &DX11 = DX11_Core::GetInstance();
+	DX11.Change2DMode();
 
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMMATRIX mWorld;
@@ -195,7 +196,7 @@ void SpriteRenderer::Draw() noexcept
 	m_SpriteData.mesh->Draw();
 
 	// 3D•`‰æ‚Ìİ’è‚É–ß‚·
-	Main::Change3D_Draw();
+	DX11.Change3DMode();
 }
 
 const DirectX::XMFLOAT3 &SpriteRenderer::GetPositionPixel() noexcept

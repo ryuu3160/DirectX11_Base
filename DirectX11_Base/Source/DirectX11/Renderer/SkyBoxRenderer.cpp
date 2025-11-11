@@ -127,8 +127,9 @@ void SkyBoxRenderer::Draw() noexcept
 {
 	// 現在の深度テストを保存し、無効化
 	auto &Dx11 = DX11_Core::GetInstance();
-	auto rtv = Main::GetRenderTarget();
-	auto dsv = Main::GetDepthStencil();
+	auto &RTVManager = RenderTargetManager::GetInstance();
+	auto rtv = RTVManager.GetDefaultRTV();
+	auto dsv = RTVManager.GetDefaultDSV();
 	auto PrevDepth = Dx11.GetNowDepthState();
 	Dx11.SetRenderTargets(1,&rtv, nullptr);
 	Dx11.SetDepthTest(DEPTH_DISABLE);
