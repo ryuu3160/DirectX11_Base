@@ -227,6 +227,11 @@ public:
 	/// <param name="[In_State]">SamplerState</param>
 	void SetSamplerState(SamplerState In_State) noexcept;
 
+	/// <summary>
+	/// レンダーターゲットをデフォルトの状態に設定します。
+	/// </summary>
+	void SetRenderTargetsToDefault() noexcept;
+
 	void Change2DMode();
 	void Change3DMode();
 

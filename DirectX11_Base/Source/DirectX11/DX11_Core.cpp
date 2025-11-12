@@ -398,6 +398,14 @@ void DX11_Core::SetSamplerState(SamplerState In_State) noexcept
 	m_cpContext->DSSetSamplers(0, 1, &ptr);
 }
 
+void DX11_Core::SetRenderTargetsToDefault() noexcept
+{
+	auto &RTVManager = RenderTargetManager::GetInstance();
+	auto pRTV = RTVManager.GetDefaultRTV();
+	auto pDSV = RTVManager.GetDefaultDSV();
+	SetRenderTargets(1, &pRTV, pDSV);
+}
+
 void DX11_Core::Change2DMode()
 {
 	// 2D•`‰æ‚Ìİ’è
