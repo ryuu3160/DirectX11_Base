@@ -10,19 +10,17 @@
 // ==============================
 #include "Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
+#include "DirectX11/System/RenderManager.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
+#include "System/Object/CameraDCC.hpp"
 #include "System/ImGui/imgui_impl_win32.h"
 
 // ==============================
 //  グローバル変数
 // ==============================
-namespace
-{
-	std::shared_ptr<SceneRoot> g_pScene;
-}
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -37,6 +35,7 @@ HRESULT Main::Init()
 		return hr;
 
 	// 各種機能の初期化
+	auto &RenderM = RenderManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
 	Geometory::GetInstance().Init();
 	SceneManager::GetInstance();
@@ -62,7 +61,7 @@ HRESULT Main::Init()
 	Instance.AddCustomProc(Input::InputCustomProc);
 
 	// シーンの初期化
-	g_pScene = SceneManager::GetInstance().Init<SceneRoot>();
+	auto pScene = SceneManager::GetInstance().Init<SceneRoot>();
 
 	// 初期リソース作成
 	auto [RTV,DSV] = RenderTargetManager::GetInstance().InitializeDefaultResources(Instance.GetWidth(), Instance.GetHeight());
@@ -74,6 +73,15 @@ HRESULT Main::Init()
 	}
 
 	DX11_Core::GetInstance().SetRenderTargets(1, &RTV, DSV);
+
+	// メインのレンダーコンテキスト作成
+	auto CameraCmp = pScene->GetObject<CameraDCC>("MainCamera")->GetComponent<Camera>();
+	if(CameraCmp == nullptr)
+	{
+		Error("MainCamera is not found.");
+		return E_FAIL;
+	}
+	RenderM.CreateRenderContext(CameraCmp, RTV, DSV);
 
 	// SpriteManagerの初期化
 	SpriteM.Init();
@@ -88,8 +96,6 @@ HRESULT Main::Init()
 
 void Main::Uninit()
 {
-	g_pScene = nullptr;
-
 	// 各種機能の終了処理
 	Input::Uninit();
 }

@@ -202,9 +202,6 @@
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\Sprite.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClCompile>
@@ -309,6 +306,9 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\ResourceManager\RenderTargetManager.cpp">
       <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
+      <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -420,9 +420,6 @@
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\Sprite.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp">
       <Filter>Source\System\SpriteManager</Filter>
     </ClInclude>
@@ -524,6 +521,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\ResourceManager\RenderTargetManager.hpp">
       <Filter>Source\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
+      <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

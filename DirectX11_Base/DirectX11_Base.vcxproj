@@ -29,13 +29,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -48,7 +48,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -195,6 +195,10 @@
     <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\Texture.cpp" />
     <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
+    <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
       <SubType>
       </SubType>
@@ -287,7 +291,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\Sprite.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerHierarchy.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp" />
@@ -340,6 +343,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
+    <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
       <SubType>
       </SubType>
@@ -432,7 +439,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\Sprite.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp" />
