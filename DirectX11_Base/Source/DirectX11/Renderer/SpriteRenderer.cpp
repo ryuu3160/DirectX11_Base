@@ -121,7 +121,7 @@ void SpriteRenderer::Load() noexcept
 	m_bIsLoaded = true; // 読み込み完了フラグを立てる
 }
 
-void SpriteRenderer::Draw() noexcept
+void SpriteRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 {
 	// 2D描画の準備
 	auto &DX11 = DX11_Core::GetInstance();
@@ -136,13 +136,11 @@ void SpriteRenderer::Draw() noexcept
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(m_pTransform->GetRotation().x, m_pTransform->GetRotation().y, m_pTransform->GetRotation().z);
 
 	// ビュー行列とプロジェクション行列取得
-	bool prev = m_pViewCamera->Is3D();
 	if (m_SpriteData.Is3D)
 	{
-		m_SpriteData.matrix[1] = m_pViewCamera->GetView(); // 3Dカメラのビュー行列を取得
-
-		m_pViewCamera->Set3D(true); // 3Dカメラに設定
-		m_SpriteData.matrix[2] = m_pViewCamera->GetProj();
+		// 3Dカメラのビュー行列
+		m_SpriteData.matrix[1] = In_RenderContext->GetView();
+		m_SpriteData.matrix[2] = In_RenderContext->GetProj();
 	}
 	else
 	{
@@ -151,15 +149,13 @@ void SpriteRenderer::Draw() noexcept
 		DirectX::XMStoreFloat4x4(&view, DirectX::XMMatrixTranspose(mView));
 		m_SpriteData.matrix[1] = view; // 2Dカメラのビュー行列を設定
 
-		m_pViewCamera->Set3D(false); // 2Dカメラに設定
-		m_SpriteData.matrix[2] = m_pViewCamera->GetProj();
+		m_SpriteData.matrix[2] = In_RenderContext->Get2DProj();
 	}
-	m_pViewCamera->Set3D(prev); // 元のカメラモードに戻す
 
 	// ビルボードかそうでないかで処理を分ける(3D空間に配置されている時限定)
 	if (m_SpriteData.IsBillBoard && m_SpriteData.Is3D)
 	{
-		DirectX::XMFLOAT4X4 BillBoardView = m_pViewCamera->GetView(false);
+		DirectX::XMFLOAT4X4 BillBoardView = In_RenderContext->GetView(false);
 
 		// 計算用の型に置き換え
 		BillBoard = DirectX::XMLoadFloat4x4(&BillBoardView);

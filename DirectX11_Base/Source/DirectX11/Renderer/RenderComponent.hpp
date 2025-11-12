@@ -11,6 +11,7 @@
 // ==============================
 #include "System/Component/Component.hpp"
 #include "DirectX11/Resource/Shaders//Shader.hpp"
+#include "DirectX11/System/RenderContext.hpp"
 
 // ==============================
 //  前方宣言
@@ -23,10 +24,12 @@ class RenderManager;
 // ==============================
 enum LayerGroup : int
 {
-	LayerGroup_SkyBox = -100,	// スカイボックス
-	LayerGroup_Default = 0,	// 通常オブジェクト
-	LayerGroup_UI = 50,		// UIオブジェクト
-	LayerGroup_Fade = 100,	// フェード用オブジェクト
+	LayerGroup_SkyBox = -1,	// スカイボックス
+	LayerGroup_Default,	// 通常オブジェクト
+	LayerGroup_UI,		// UIオブジェクト
+	LayerGroup_Fade,	// フェード用オブジェクト
+
+	LayerGroup_RenderTexture = 100, // レンダーテクスチャ用オブジェクト
 };
 
 /// <summary>
@@ -89,7 +92,7 @@ public:
 	/// <summary>
 	/// 描画処理の実装をする純粋仮想関数
 	/// </summary>
-	virtual void Draw() noexcept = 0;
+	virtual void Draw(_In_ RenderContext *In_RenderContext) noexcept = 0;
 
 protected:
 	FilePathHold m_AssetPath;				// アセットパス

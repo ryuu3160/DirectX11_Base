@@ -43,8 +43,9 @@ public:
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
-	template<typename T, typename std::enable_if<std::is_same<ShaderParam, T>::value>::type * = nullptr>
-	void SetWriteParam(_In_ T *In_Param);
+	template<typename T>
+	requires std::derived_from<T, ShaderParam>
+	void SetWriteParam(_In_ const std::shared_ptr<T> &In_Param);
 
 	/// <summary>
 	/// マテリアルシェーダーの使用状態を設定します。
@@ -92,7 +93,7 @@ public:
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
-	void Draw() noexcept override final;
+	void Draw(_In_ RenderContext *In_RenderContext) noexcept override final;
 
 	/// <summary>
 	/// 頂点データを再生成するための関数を呼び出します。
@@ -123,7 +124,7 @@ private:
     float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 
-	std::vector<ShaderParam *> m_pShaderParams; // シェーダーパラメータ
+	std::vector<std::shared_ptr<ShaderParam>> m_pShaderParams; // シェーダーパラメータ
 };
 
 /// <summary>
@@ -131,9 +132,10 @@ private:
 /// </summary>
 /// <typeparam name="[T]">ShaderParamを継承した型。</typeparam>
 /// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ。</param>
-template<typename T, typename std::enable_if<std::is_same<ShaderParam, T>::value>::type*>
-inline void ModelRenderer::SetWriteParam(T *In_Param)
+template<typename T>
+requires std::derived_from<T, ShaderParam>
+inline void ModelRenderer::SetWriteParam(const std::shared_ptr<T> &In_Param)
 {
 	if(In_Param)
-		m_pShaderParams.push_back(In_Param);
+		m_pShaderParams.push_back(std::move(In_Param));
 }

@@ -60,7 +60,7 @@ public:
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
-	void Draw() noexcept override final;
+	void Draw(_In_ RenderContext *In_RenderContext) noexcept override final;
 
 	/// <summary>
 	/// オフセット値を取得

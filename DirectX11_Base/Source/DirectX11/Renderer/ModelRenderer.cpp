@@ -10,6 +10,7 @@
 // ==============================
 #include "ModelRenderer.hpp"
 #include "System/Component/Camera.hpp"
+#include "DirectX11/System/RenderManager.hpp"
 #include "DirectX11/ResourceManager/MaterialManager.hpp"
 #include "DirectX11/ResourceManager/TextureManager.hpp"
 #include "DirectX11/ResourceManager/ModelManager.hpp"
@@ -42,26 +43,12 @@ ModelRenderer::ModelRenderer()
 
 	m_vecMeshes.clear();
 
-	for (auto &itr : m_pShaderParams)
-	{
-		if(itr)
-		{
-			delete itr;
-			itr = nullptr;
-		}
-	}
+	m_pShaderParams.clear();
 }
 
 ModelRenderer::~ModelRenderer()
 {
-	for (auto &itr : m_pShaderParams)
-	{
-		if (itr)
-		{
-			delete itr;
-			itr = nullptr;
-		}
-	}
+	m_pShaderParams.clear();
 	m_vecMeshes.clear();
 }
 
@@ -138,19 +125,13 @@ bool ModelRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Scal
 	return true;
 }
 
-void ModelRenderer::Draw() noexcept
+void ModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 {
 	// 定数バッファに渡す行列の情報を作成
 	DirectX::XMFLOAT4X4 mat[3];
 	// カメラのビュー/プロジェクション行列を設定
-	mat[1] = m_pViewCamera->GetView(false);
-	mat[2] = m_pViewCamera->GetProj(false);
-
-	// カメラの情報を定数バッファで渡す
-	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
-	DirectX::XMFLOAT4 CameraParam[] = {
-		{CamPos.x,CamPos.y,CamPos.z,0.0f}
-	};
+	mat[1] = In_RenderContext->GetView(false);
+	mat[2] = In_RenderContext->GetProj(false);
 
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);
@@ -171,11 +152,10 @@ void ModelRenderer::Draw() noexcept
 			{
 				m_pPS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
 				// パラメーターの解放
-				delete itr;
-				itr = nullptr;
 			}
 		}
 		m_pPS->Bind();
+		m_pShaderParams.clear();
 	}
 
 	for (auto &itr : m_vecMeshes)
@@ -203,15 +183,13 @@ void ModelRenderer::Draw() noexcept
 						if (name == info.ParamName && slot == info.SlotNum)
 						{
 							pPS->WriteBuffer(slot, PsPara->GetParam());
-							// パラメーターの解放
-							delete PsPara;
-							PsPara = nullptr;
 							break;
 						}
 					}
 				}
 
 				pPS->Bind();
+				m_pShaderParams.clear();
 			}
 		}
 

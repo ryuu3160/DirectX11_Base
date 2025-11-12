@@ -65,7 +65,7 @@ public:
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
-	void Draw() noexcept override final;
+	void Draw(_In_ RenderContext *In_RenderContext) noexcept override final;
 
 	/// <summary>
 	/// 頂点データを再生成するための関数を呼び出します。

@@ -123,13 +123,12 @@ bool SkyBoxRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Sca
 	return true;
 }
 
-void SkyBoxRenderer::Draw() noexcept
+void SkyBoxRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 {
 	// 現在の深度テストを保存し、無効化
 	auto &Dx11 = DX11_Core::GetInstance();
-	auto &RTVManager = RenderTargetManager::GetInstance();
-	auto rtv = RTVManager.GetDefaultRTV();
-	auto dsv = RTVManager.GetDefaultDSV();
+	auto rtv = In_RenderContext->GetRTV();
+	auto dsv = In_RenderContext->GetDSV();
 	auto PrevDepth = Dx11.GetNowDepthState();
 	Dx11.SetRenderTargets(1,&rtv, nullptr);
 	Dx11.SetDepthTest(DEPTH_DISABLE);
@@ -138,14 +137,8 @@ void SkyBoxRenderer::Draw() noexcept
 	// 定数バッファに渡す行列の情報を作成
 	DirectX::XMFLOAT4X4 mat[3];
 	// カメラのビュー/プロジェクション行列を設定
-	mat[1] = m_pViewCamera->GetView(false);
-	mat[2] = m_pViewCamera->GetProj(false);
-
-	// カメラの情報を定数バッファで渡す
-	DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
-	DirectX::XMFLOAT4 CameraParam[] = {
-		{CamPos.x,CamPos.y,CamPos.z,0.0f}
-	};
+	mat[1] = In_RenderContext->GetView(false);
+	mat[2] = In_RenderContext->GetProj(false);
 
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);

@@ -54,8 +54,9 @@ public:
 	/// <param name="[In_Data]">設定するAlignInstanceDataの参照。</param>
 	void SetAlignInstanceData(_In_ const InstancedMesh::AlignInstanceData &In_Data) noexcept { m_AlignInstanceData = In_Data; }
 
-	template<typename T, typename std::enable_if<std::is_same<ShaderParam, T>::value>::type * = nullptr>
-	void SetWriteParam(_In_ T *In_Param);
+	template<typename T>
+	requires std::derived_from<T, ShaderParam>
+	void SetWriteParam(_In_ const std::shared_ptr<T> &In_Param);
 
 	/// <summary>
 	/// マテリアルシェーダーの使用状態を設定します。
@@ -103,7 +104,7 @@ public:
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います。
 	/// </summary>
-	void Draw() noexcept override final;
+	void Draw(_In_ RenderContext *In_RenderContext) noexcept override final;
 
 	/// <summary>
 	/// 頂点データを再生成するための関数を呼び出します。
@@ -131,12 +132,13 @@ private:
 	float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 
-	std::vector<ShaderParam *> m_pShaderParams; // シェーダーパラメータ
+	std::vector<std::shared_ptr<ShaderParam>> m_pShaderParams; // シェーダーパラメータ
 };
 
-template<typename T, typename std::enable_if<std::is_same<ShaderParam, T>::value>::type *>
-inline void InstancedModelRenderer::SetWriteParam(T *In_Param)
+template<typename T>
+requires std::derived_from<T, ShaderParam>
+inline void InstancedModelRenderer::SetWriteParam(_In_ const std::shared_ptr<T> &In_Param)
 {
 	if (In_Param)
-		m_pShaderParams.push_back(In_Param);
+		m_pShaderParams.push_back(std::move(In_Param));
 }
