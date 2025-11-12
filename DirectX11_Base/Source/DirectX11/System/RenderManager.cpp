@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "RenderManager.hpp"
+#include "System/Component/Camera.hpp"
 
 void RenderManager::AddRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_Layer) noexcept
 {
@@ -45,6 +46,18 @@ void RenderManager::RemoveAllRenderComponent() noexcept
 	}
 }
 
+void RenderManager::CreateRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
+{
+	RenderContext *Context = new RenderContext();
+	DirectX::XMFLOAT4X4 ViewMatrix;
+	DirectX::XMFLOAT4X4 ProjMatrix;
+	// カメラからビュー行列と射影行列を取得
+	ViewMatrix = In_Camera->GetView(false);
+	ProjMatrix = In_Camera->GetProj(false);
+	Context->Create(In_Camera, In_RTV, In_DSV);
+	m_RenderContexts.push_back(Context);
+}
+
 void RenderManager::LayerGroupSortRequest(_In_ LayerGroup In_OldLayerGroup) noexcept
 {
 	m_IsSortLayerGroup = true;
@@ -59,6 +72,8 @@ void RenderManager::LayerSortRequest(_In_ LayerGroup In_LayerGroup) noexcept
 
 void RenderManager::DrawAll() noexcept
 {
+	auto &DX11Core = DX11_Core::GetInstance();
+
 	// レンダーコンポーネントの削除要求があれば完了を待機
 	if(m_IsRemoveComponent)
 		WaitRemoveComponentAsync();
@@ -69,17 +84,37 @@ void RenderManager::DrawAll() noexcept
 	if (m_IsSortLayer)
 		ExecuteLayerSort();
 
-	// レイヤー順に登録されたものを全て描画
-	// mapは常にキーの昇順で管理されている
-	for (auto &layer : m_RenderComponents)
+	// 全てのレンダーコンテキストで描画処理を実行
+	// メインのコンテキストでレンダーテクスチャを使用するため、逆順で処理を行う
+	for (auto ctx = m_RenderContexts.rbegin(); ctx != m_RenderContexts.rend();++ctx)
 	{
-		for (auto &itr : layer.second)
+		// ViewとProjection行列を再計算
+		(*ctx)->ReCalculateMatrices();
+
+		// レンダーターゲットとデプスステンシルをセット
+		auto rtv = (*ctx)->GetRTV();
+		auto dsv = (*ctx)->GetDSV();
+		DX11Core.SetRenderTargets(1, &rtv, dsv);
+
+		// レイヤー順に登録されたものを全て描画
+		// mapは常にキーの昇順で管理されている
+		for (auto &layer : m_RenderComponents)
 		{
-			// RenderComopnentがnullptrじゃない場合のみDrawを呼び出す
-			if (itr)
-				itr->Draw();
+			// メインコンテキスト以外ではレンダーテクスチャ用のレイヤーはスキップ
+			if (!(*ctx)->IsMainContext() && layer.first == LayerGroup::LayerGroup_RenderTexture)
+				continue;
+
+			for (auto &itr : layer.second)
+			{
+				// RenderComopnentがnullptrじゃない場合のみDrawを呼び出す
+				if (itr)
+					itr->Draw(*ctx);
+			}
 		}
 	}
+
+	// RTVとDSVをデフォルトに戻す
+	DX11Core.SetRenderTargetsToDefault();
 
 	// レンダーコンポーネントの削除要求があれば非同期で実行
 	if (m_IsRemoveComponent)
@@ -95,6 +130,13 @@ RenderManager::RenderManager()
 }
 RenderManager::~RenderManager()
 {
+	for (auto &ctx : m_RenderContexts)
+	{
+		delete ctx;
+		ctx = nullptr;
+	}
+	m_RenderContexts.clear();
+
 	for (auto &layer : m_RenderComponents)
 	{
 		for (auto *component : layer.second)

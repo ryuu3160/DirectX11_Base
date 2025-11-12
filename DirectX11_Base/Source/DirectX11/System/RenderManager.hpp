@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "DirectX11/Renderer/RenderComponent.hpp"
+#include "DirectX11/System/RenderContext.hpp"
 
 /// <summary>
 /// RenderManagerクラス
@@ -34,6 +35,14 @@ public:
 	void RemoveRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_LayerGroup) noexcept;
 
 	void RemoveAllRenderComponent() noexcept;
+
+	/// <summary>
+	/// 指定したカメラ、レンダーターゲット、およびデプスステンシルを使用してレンダーコンテキストを作成または初期化します。
+	/// </summary>
+	/// <param name="[In_Camera]">レンダリングに使用するカメラへのポインタ (Camera*)。ビューや投影情報を提供します。</param>
+	/// <param name="[In_RTV]">カラー描画先となるレンダーターゲットビューへのポインタ (RenderTarget*)。</param>
+	/// <param name="[In_DSV]">深度およびステンシル情報を保持するデプスステンシルへのポインタ (DepthStencil*)。</param>
+	void CreateRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
 
 	/// <summary>
 	/// 指定されたレイヤーグループのソート要求を行います。
@@ -74,4 +83,6 @@ private:
 	std::vector<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト
 	std::vector<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
 	std::map<LayerGroup, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
+
+	std::vector<RenderContext*> m_RenderContexts; // レンダーコンテキストのリスト
 };
