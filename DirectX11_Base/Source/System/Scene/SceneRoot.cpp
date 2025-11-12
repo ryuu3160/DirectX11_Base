@@ -146,7 +146,7 @@ void SceneRoot::Update()
 	PaternScale ps;
 	ps.scale = { 1000.0f,1000.0f };
 	ps.dummy = { 0.0f,0.0f };
-	ShaderParam *pPatternScaleParam = new ShaderParam("PatternScale", 0, &ps, 1);
+	std::shared_ptr<ShaderParam> pPatternScaleParam = std::make_shared<ShaderParam>("PatternScale", 0, &ps, 1);
 	auto pPatternScale = GetObject<GameObject>("PatternScale");
 	auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
 	PatternScaleComp->SetWriteParam(pPatternScaleParam);
