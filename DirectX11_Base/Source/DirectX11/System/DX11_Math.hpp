@@ -20,6 +20,7 @@ namespace
 	/// 円周率（π）を表す定数
 	/// </summary>
 	const inline constexpr float PI = 3.14159265358979323846f;
+	const inline constexpr float EPSILON = 1e-6f;
 
 	const inline constexpr DirectX::XMVECTORF32 g_RayEpsilon = { { { 1e-20f, 1e-20f, 1e-20f, 1e-20f } } };
 	const inline constexpr DirectX::XMVECTORF32 g_FltMin = { { { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX } } };
@@ -385,35 +386,76 @@ static inline DirectX::XMFLOAT4 ToDeg(_In_ DirectX::XMFLOAT4 In_Rad)
 }
 
 /// <summary>
+/// 値を指定した範囲 [In_Low, In_High] に収めます。
+/// </summary>
+/// <param name="[In_Value]">クランプする入力値。</param>
+/// <param name="[In_Low]">許容される下限。In_Valueがこの値より小さい場合、In_Lowが返されます。</param>
+/// <param name="[In_High]">許容される上限。In_Valueがこの値より大きい場合、In_High が返されます。</param>
+/// <returns>v をIn_LowとIn_Highの範囲内に制限した結果のfloat値(両端を含む)</returns>
+inline float Clampf(_In_ float In_Value, _In_ float In_Low, _In_ float In_High)
+{
+	if (In_Value < In_Low) return In_Low;
+	if (In_Value > In_High) return In_High;
+	return In_Value;
+}
+
+/// <summary>
 /// クォータニオンをロール・ピッチ・ヨー（オイラー角）に変換します。
 /// </summary>
 /// <param name="[In_Quat]">変換対象のDirectX::XMFLOAT4型クォータニオン。</param>
 /// <returns>変換されたDirectX::XMFLOAT3型のロール・ピッチ・ヨー（オイラー角）。</returns>
 static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMFLOAT4 &In_Quat)
 {
-	// 各成分用意
-	float ysqr = In_Quat.y * In_Quat.y;
+	// DirectX quaternions: x, y, z, w
+	float x = In_Quat.x;
+	float y = In_Quat.y;
+	float z = In_Quat.z;
+	float w = In_Quat.w;
 
-	// ロール（X軸回転）
-	float t0 = 2.0f * (In_Quat.w * In_Quat.x + In_Quat.y * In_Quat.z);
-	float t1 = 1.0f - 2.0f * (In_Quat.x * In_Quat.x + ysqr);
-	float roll = std::atan2(t0, t1);
+	// 正規化
+	float mag = std::sqrt(x * x + y * y + z * z + w * w);
+	if (mag > 0.0f)
+	{
+		x /= mag; y /= mag; z /= mag; w /= mag;
+	}
 
-	// クォータニオンの成分
-	float x = In_Quat.x, y = In_Quat.y, z = In_Quat.z, w = In_Quat.w;
+	// t2 = 2*(w*y - z*x) が asin に入る値
+	// これが ±1 に近いとジンバルロック
+	float t0 = 2.0f * (w * x + y * z);
+	float t1 = 1.0f - 2.0f * (x * x + y * y);
+	float t2 = 2.0f * (w * y - z * x);
+	float t3 = 2.0f * (w * z + x * y);
+	float t4 = 1.0f - 2.0f * (y * y + z * z);
 
-	// 回転行列の要素
-	float m21 = 2.0f * (x * z + y * w);      // 行列[2][1]
-	float m22 = 1.0f - 2.0f * (y * y + z * z); // 行列[2][2]
-	float m20 = -2.0f * (x * y - z * w);     // 行列[2][0]
+	float roll, pitch, yaw;
 
-	// ピッチ（Y軸） = atan2(-m20, sqrt(m21*m21 + m22*m22))
-	float pitch = std::atan2(-m20, std::sqrt(m21 * m21 + m22 * m22));
-
-	// ヨー（Z軸回転）
-	float t3 = 2.0f * (In_Quat.w * In_Quat.z + In_Quat.x * In_Quat.y);
-	float t4 = 1.0f - 2.0f * (ysqr + In_Quat.z * In_Quat.z);
-	float yaw = std::atan2(t3, t4);
+	if (std::fabs(t2) < 1.0f - EPSILON)
+	{
+		// 通常ケース
+		roll = std::atan2(t0, t1);       // X軸回転
+		pitch = std::asin(Clampf(t2, -1.0f, 1.0f)); // Y軸回転
+		yaw = std::atan2(t3, t4);       // Z軸回転
+	}
+	else
+	{
+		// ジンバルロック付近の特別処理
+		// pitchを±pi/2に固定してrollを固定(roll=0にしてyawを算出)
+		if (t2 > 0.0f)
+		{
+			// N（+pi/2）
+			pitch = +PI / 2.0f;
+			// yawを2*atan2(x, w)で復元する
+			yaw = 2.0f * std::atan2(x, w);
+			roll = 0.0f;
+		}
+		else
+		{
+			// S（-pi/2）
+			pitch = -PI / 2.0f;
+			yaw = -2.0f * std::atan2(x, w);
+			roll = 0.0f;
+		}
+	}
 
 	return DirectX::XMFLOAT3(roll, pitch, yaw);
 }
