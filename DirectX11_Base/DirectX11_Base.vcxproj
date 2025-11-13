@@ -167,6 +167,10 @@
     <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\Renderer\ModelRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp" />
+    <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Source\DirectX11\ResourceManager\InstancedModelManager.cpp" />
@@ -311,6 +315,10 @@
     <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp" />
+    <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp" />
     <ClInclude Include="Source\DirectX11\ResourceManager\InstancedModelManager.hpp" />
