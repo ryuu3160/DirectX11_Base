@@ -26,6 +26,7 @@ public:
 	RenderContext();
 	~RenderContext();
 
+	void CreateMainContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
 	void Create(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
 
 	/// <summary>
@@ -51,5 +52,4 @@ private:
 	DepthStencil *m_pDSV;
 
 	bool m_bIsMainContext;
-	static bool m_bIsExistMainContext;
 };

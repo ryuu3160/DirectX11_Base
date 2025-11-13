@@ -81,7 +81,7 @@ HRESULT Main::Init()
 		Error("MainCamera is not found.");
 		return E_FAIL;
 	}
-	RenderM.CreateRenderContext(CameraCmp, RTV, DSV);
+	RenderM.CreateMainRenderContext(CameraCmp, RTV, DSV);
 
 	// SpriteManager‚Ì‰Šú‰»
 	SpriteM.Init();

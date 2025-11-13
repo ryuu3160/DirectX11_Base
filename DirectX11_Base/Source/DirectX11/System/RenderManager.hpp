@@ -37,12 +37,30 @@ public:
 	void RemoveAllRenderComponent() noexcept;
 
 	/// <summary>
+	/// 指定したカメラとレンダーターゲット／デプスステンシルを使用してメインの RenderContext を作成します。関数は例外を投げません。
+	/// </summary>
+	/// <param name="[In_Camera]">描画に使用する入力カメラ。</param>
+	/// <param name="[In_RTV]">描画結果の出力先となるレンダーターゲットビュー（RenderTarget）。</param>
+	/// <param name="[In_DSV]">深度およびステンシル情報を保持するデプスステンシルビュー（DepthStencil）。</param>
+	/// <returns>作成された RenderContext へのポインタを返します。作成に失敗した場合は nullptr を返す可能性があります。</returns>
+	RenderContext *CreateMainRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
+
+	/// <summary>
 	/// 指定したカメラ、レンダーターゲット、およびデプスステンシルを使用してレンダーコンテキストを作成または初期化します。
 	/// </summary>
+	/// <param name="[In_Name]">レンダーコンテキストの名前を表す文字列。</param>
 	/// <param name="[In_Camera]">レンダリングに使用するカメラへのポインタ (Camera*)。ビューや投影情報を提供します。</param>
 	/// <param name="[In_RTV]">カラー描画先となるレンダーターゲットビューへのポインタ (RenderTarget*)。</param>
 	/// <param name="[In_DSV]">深度およびステンシル情報を保持するデプスステンシルへのポインタ (DepthStencil*)。</param>
-	void CreateRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
+	/// <returns>作成または既に作成されているRenderContextへのポインタ。</returns>
+	RenderContext* CreateRenderContext(_In_ const std::string &In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
+
+	/// <summary>
+	/// 指定した名前のレンダーコンテキストを取得する
+	/// </summary>
+	/// <param name="[In_Name]">検索名</param>
+	/// <returns>ヒットした場合、RenderContextへのポインタが返る</returns>
+	RenderContext *GetRenderContext(_In_ const std::string &In_Name);
 
 	/// <summary>
 	/// 指定されたレイヤーグループのソート要求を行います。
@@ -84,5 +102,6 @@ private:
 	std::vector<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
 	std::map<LayerGroup, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
 
-	std::vector<RenderContext*> m_RenderContexts; // レンダーコンテキストのリスト
+	std::unordered_map<std::string, RenderContext *> m_RenderContexts; // レンダーコンテキストのマップ
+	std::vector<std::string> m_RenderContextNames; // レンダーコンテキストのリスト
 };

@@ -19,11 +19,6 @@ namespace
 {
 }
 
-// ==============================
-//  ê√ìIÉÅÉìÉoïœêîèâä˙âª
-// ==============================
-bool RenderContext::m_bIsExistMainContext = false;
-
 RenderContext::RenderContext()
 	: m_pCamera(nullptr), m_pRTV(nullptr), m_pDSV(nullptr), m_bIsMainContext(false)
 {
@@ -36,18 +31,18 @@ RenderContext::~RenderContext()
 	m_pDSV = nullptr;
 }
 
+void RenderContext::CreateMainContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
+{
+	Create(In_Camera, In_RTV, In_DSV);
+	m_bIsMainContext = true;
+}
+
 void RenderContext::Create(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
 {
 	m_pCamera = In_Camera;
 	m_pRTV = In_RTV;
 	m_pDSV = In_DSV;
 	ReCalculateMatrices();
-
-	if (!m_bIsExistMainContext)
-	{
-		m_bIsMainContext = true;
-		m_bIsExistMainContext = true;
-	}
 }
 
 void RenderContext::ReCalculateMatrices() noexcept

@@ -46,7 +46,30 @@ void RenderManager::RemoveAllRenderComponent() noexcept
 	}
 }
 
-void RenderManager::CreateRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
+RenderContext *RenderManager::CreateMainRenderContext(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
+{
+	RenderContext *Context = new RenderContext();
+	DirectX::XMFLOAT4X4 ViewMatrix;
+	DirectX::XMFLOAT4X4 ProjMatrix;
+	// カメラからビュー行列と射影行列を取得
+	ViewMatrix = In_Camera->GetView(false);
+	ProjMatrix = In_Camera->GetProj(false);
+	Context->CreateMainContext(In_Camera, In_RTV, In_DSV);
+	auto Result = m_RenderContexts.try_emplace("Main", Context);
+	if (!Result.second)
+	{
+		// 既に同じ名前のコンテキストが存在する場合は古い方を削除して置き換え
+		delete Result.first->second;
+		Result.first->second = Context;
+	}
+	else
+	{
+		m_RenderContextNames.push_back("Main");
+	}
+	return Context;
+}
+
+RenderContext* RenderManager::CreateRenderContext(_In_ const std::string &In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
 {
 	RenderContext *Context = new RenderContext();
 	DirectX::XMFLOAT4X4 ViewMatrix;
@@ -55,7 +78,26 @@ void RenderManager::CreateRenderContext(_In_ Camera *In_Camera, _In_ RenderTarge
 	ViewMatrix = In_Camera->GetView(false);
 	ProjMatrix = In_Camera->GetProj(false);
 	Context->Create(In_Camera, In_RTV, In_DSV);
-	m_RenderContexts.push_back(Context);
+	auto Result = m_RenderContexts.try_emplace(In_Name, Context);
+	if (!Result.second)
+	{
+		// 既に同じ名前のコンテキストが存在する場合は古い方を削除して置き換え
+		delete Result.first->second;
+		Result.first->second = Context;
+	}
+	else
+	{
+		m_RenderContextNames.push_back(In_Name);
+	}
+	return Context;
+}
+
+RenderContext *RenderManager::GetRenderContext(_In_ const std::string &In_Name)
+{
+	auto ctx = m_RenderContexts.find(In_Name);
+	if (ctx != m_RenderContexts.end())
+		return ctx->second;
+	return nullptr;
 }
 
 void RenderManager::LayerGroupSortRequest(_In_ LayerGroup In_OldLayerGroup) noexcept
@@ -86,29 +128,39 @@ void RenderManager::DrawAll() noexcept
 
 	// 全てのレンダーコンテキストで描画処理を実行
 	// メインのコンテキストでレンダーテクスチャを使用するため、逆順で処理を行う
-	for (auto ctx = m_RenderContexts.rbegin(); ctx != m_RenderContexts.rend();++ctx)
+	for (auto itr = m_RenderContextNames.rbegin(); itr != m_RenderContextNames.rend();++itr)
 	{
+		auto ctx = m_RenderContexts.find(*itr);
 		// ViewとProjection行列を再計算
-		(*ctx)->ReCalculateMatrices();
+		ctx->second->ReCalculateMatrices();
 
 		// レンダーターゲットとデプスステンシルをセット
-		auto rtv = (*ctx)->GetRTV();
-		auto dsv = (*ctx)->GetDSV();
+		auto rtv = ctx->second->GetRTV();
+		auto dsv = ctx->second->GetDSV();
 		DX11Core.SetRenderTargets(1, &rtv, dsv);
+
+		if(!ctx->second->IsMainContext())
+		{
+			// メインコンテキスト以外ではクリア処理を実行
+			float color[4] = { 1.0f,1.0f,1.0f,1.0f };
+			rtv->Clear(color);
+			dsv->Clear();
+		}
 
 		// レイヤー順に登録されたものを全て描画
 		// mapは常にキーの昇順で管理されている
 		for (auto &layer : m_RenderComponents)
 		{
 			// メインコンテキスト以外ではレンダーテクスチャ用のレイヤーはスキップ
-			if (!(*ctx)->IsMainContext() && layer.first == LayerGroup::LayerGroup_RenderTexture)
+			if (!ctx->second->IsMainContext() &&
+				(layer.first == LayerGroup::LayerGroup_RenderTexture || layer.first == LayerGroup::LayerGroup_UI))
 				continue;
 
 			for (auto &itr : layer.second)
 			{
 				// RenderComopnentがnullptrじゃない場合のみDrawを呼び出す
 				if (itr)
-					itr->Draw(*ctx);
+					itr->Draw(ctx->second);
 			}
 		}
 	}
@@ -132,10 +184,11 @@ RenderManager::~RenderManager()
 {
 	for (auto &ctx : m_RenderContexts)
 	{
-		delete ctx;
-		ctx = nullptr;
+		delete ctx.second;
+		ctx.second = nullptr;
 	}
 	m_RenderContexts.clear();
+	m_RenderContextNames.clear();
 
 	for (auto &layer : m_RenderComponents)
 	{
