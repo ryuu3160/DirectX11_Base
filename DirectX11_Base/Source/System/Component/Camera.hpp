@@ -85,6 +85,12 @@ public:
 	/// <param name="focus">焦点距離</param>
 	inline void SetFocus(_In_ const float &In_fFocus) noexcept { m_fFocus = In_fFocus; }
 
+	/// <summary>
+	/// 垂直視野角（fovy）を設定します。
+	/// </summary>
+	/// <param name="In_fFovy">設定する垂直視野角を表す const float 型の参照。</param>
+	inline void SetFovy(_In_ const float &In_fFovy) noexcept { m_fFovy = In_fFovy; }
+
 	inline void Set3D(_In_ const bool &In_bIs3D) noexcept { m_bIs3D = In_bIs3D; }
 
 	/// <summary>
