@@ -10,6 +10,11 @@
 // ==============================
 #include "CameraBaseObj.hpp"
 
+CameraBaseObj::CameraBaseObj()
+	: CameraBaseObj("CameraBaseObj")
+{
+}
+
 CameraBaseObj::CameraBaseObj(_In_ std::string In_Name)
 	: GameObject(In_Name)
 	, m_pComponent(nullptr)

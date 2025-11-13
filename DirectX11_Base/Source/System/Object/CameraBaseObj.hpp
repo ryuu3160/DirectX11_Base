@@ -26,6 +26,7 @@ namespace
 class CameraBaseObj : public GameObject
 {
 public:
+	CameraBaseObj();
 	CameraBaseObj(_In_ std::string In_Name);
 	~CameraBaseObj();
 
