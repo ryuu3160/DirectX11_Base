@@ -233,7 +233,9 @@ public:
 	void SetRenderTargetsToDefault() noexcept;
 
 	void Change2DMode();
+	void Change2DMode(_In_ RenderTarget *In_RTV);
 	void Change3DMode();
+	void Change3DMode(_In_ RenderTarget *In_RTV,_In_ DepthStencil* In_DSV);
 
 private:
 	/// <summary>

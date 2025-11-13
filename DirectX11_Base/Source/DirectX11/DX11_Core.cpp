@@ -414,6 +414,13 @@ void DX11_Core::Change2DMode()
 	SetRenderTargets(1, &pRTV, nullptr);
 }
 
+void DX11_Core::Change2DMode(_In_ RenderTarget *In_RTV)
+{
+	// 2D描画の設定
+	SetDepthTest(DEPTH_DISABLE); // 深度テスト無効
+	SetRenderTargets(1, &In_RTV, nullptr);
+}
+
 void DX11_Core::Change3DMode()
 {
 	// 3D描画の設定
@@ -421,5 +428,12 @@ void DX11_Core::Change3DMode()
 	auto pRTV = RTVManager.GetDefaultRTV();
 	auto pDSV = RTVManager.GetDefaultDSV();
 	SetRenderTargets(1, &pRTV, pDSV);
+	SetDepthTest(DEPTH_ENABLE_WRITE_TEST); // 深度テスト有効
+}
+
+void DX11_Core::Change3DMode(_In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV)
+{
+	// 3D描画の設定
+	SetRenderTargets(1, &In_RTV, In_DSV);
 	SetDepthTest(DEPTH_ENABLE_WRITE_TEST); // 深度テスト有効
 }
