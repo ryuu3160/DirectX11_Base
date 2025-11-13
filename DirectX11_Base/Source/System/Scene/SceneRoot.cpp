@@ -8,10 +8,12 @@
 // ==============================
 //	include
 // ==============================
+#include "DirectX11/System/RenderManager.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 #include "DirectX11/Resource/Shaders/ShaderParam.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/Renderer/InstancedModelRenderer.hpp"
+#include "DirectX11/Renderer/RTSpriteRenderer.hpp"
 #include "SceneRoot.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"
@@ -46,7 +48,6 @@ void SceneRoot::Init()
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
 	Component1->SetAssetPath("Assets/Model/spot/spot.fbx");
-	Component1->SetCamera(pCamera);
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
@@ -55,7 +56,6 @@ void SceneRoot::Init()
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();
 	comp->SetAssetPath("Assets/Model/spot/spot.fbx");
-	comp->SetCamera(pCamera);
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	child->SetPosition({ 1.0f, 0.0f, 0.0f });
@@ -64,7 +64,6 @@ void SceneRoot::Init()
 	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
 	auto Component2 = pModel2->GetComponent<ModelRenderer>();
 	Component2->SetAssetPath("Assets/Model/F15E.fbx");
-	Component2->SetCamera(pCamera);
 	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
@@ -76,7 +75,6 @@ void SceneRoot::Init()
 	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
 	auto SpriteComp1 = pSpriteObj1->AddComponent<SpriteRenderer>();
 	SpriteComp1->SetAssetPath("Assets/Texture/TestTexture.png");
-	SpriteComp1->SetCamera(pCamera);
 	SpriteComp1->Set3D(true);
 	SpriteComp1->SetBillBoard(true);
 	pSpriteObj1->SetPosition({ 5.0f, 0.0f, 0.0f });
@@ -86,22 +84,23 @@ void SceneRoot::Init()
 	GameObject *pSpriteObj2 = CreateObject<GameObject>("SpriteObj2");
 	auto SpriteComp2 = pSpriteObj2->AddComponent<SpriteRenderer>();
 	SpriteComp2->SetAssetPath("Assets/Texture/TestTexture.png");
-	SpriteComp2->SetCamera(pCamera);
 	SpriteComp2->Set3D(false);
 	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
+	pSpriteObj2->SetPosition({ 0.0f, 0.0f, 0.0f });
+	SpriteComp2->SetLayerGroup(LayerGroup_UI);
+	SpriteComp2->SetLayer(0); // レイヤーを設定
 
 	// スカイボックスを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
 	pSkyBox->SetCamera(pCamera);
 
 	// インスタンシングテスト
-	GameObject *pInstanced = CreateObject<GameObject>("Instanced");
+	/*GameObject *pInstanced = CreateObject<GameObject>("Instanced");
 	pInstanced->SetPosition({ 0.0f,0.0f,0.0f });
 	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
 	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
 	InstancedComp->SetAssetPath("Assets/Model/plane/plane.fbx");
-	InstancedComp->SetCamera(pCamera);
 	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
 	InstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	InstancedMesh::AlignInstanceData instanceData;
@@ -115,21 +114,35 @@ void SceneRoot::Init()
 	instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
 	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
-	InstancedComp->SetAlignInstanceData(instanceData);
+	InstancedComp->SetAlignInstanceData(instanceData);*/
 
 	// パターンスケールテスト
 	GameObject *pPatternScale = CreateObject<GameObject>("PatternScale");
 	auto PatternScaleComp = pPatternScale->AddComponent<ModelRenderer>();
 	PatternScaleComp->SetAssetPath("Assets/Model/plane/plane.fbx");
-	PatternScaleComp->SetCamera(pCamera);
 	PatternScaleComp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	PatternScaleComp->SetPixelShader(ShaderM.GetShader("PS_PatternScale"));
 	pPatternScale->SetPosition({ 0.0f, -0.5f, 0.0f });
 	pPatternScale->SetScale({ 1000.0f, 1.0f, 1000.0f });
 
-	FadeManager::GetInstance().SetCamera(pCamera);
 	FadeManager::GetInstance().AddFade("TestFade", 5.0f, Ease::EasingType::MAX, true);
 	FadeManager::GetInstance().StartFadeIn("TestFade");
+
+	// レンダーターゲットスプライトテスト
+	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM, 512, 512);
+	auto DSV = RenderTargetManager::GetInstance().CreateDepthStencil("GameDSV", 512, 512,false);
+
+	CameraBaseObj *pGameCam = CreateObject<CameraBaseObj>("GameCamera");
+	auto GameCamCmp = pGameCam->GetComponent<Camera>();
+	pGameCam->SetPosition({ 0.0f,5.0f,0.0f });
+	pGameCam->SetRotation({ 90.0f,180.0f,0.0f});
+	auto RenderCtx = RenderManager::GetInstance().CreateRenderContext("Game", GameCamCmp, RTV, DSV);
+
+	GameObject *pRTSprite = CreateObject<GameObject>("RTSprite");
+	auto RTSpriteCmp = pRTSprite->AddComponent<RTSpriteRenderer>();
+	RTSpriteCmp->SetRenderContext(RenderCtx);
+	pRTSprite->SetPosition({ 5.0f,2.0f,0.0f });
+	pRTSprite->SetScale({ 5.0f,5.0f,1.0f });
 }
 
 void SceneRoot::Uninit()
