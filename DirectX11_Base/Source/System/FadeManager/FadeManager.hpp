@@ -43,8 +43,6 @@ public:
 		GameObject *pFadeObj = nullptr;
 	};
 
-	void SetCamera(_In_ GameObject *In_Camera) noexcept;
-
 	void Update() noexcept;
 
 	/// <summary>
@@ -118,6 +116,5 @@ private:
 	GameObject *CreateFadeObj(_In_ std::string_view In_Name, _In_ const FadeInfo &In_FadeInfo);
 
 private:
-	GameObject *m_pCameraObj;
 	std::unordered_map<std::string,FadeInfo> m_mapFadeObj;
 };

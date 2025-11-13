@@ -12,11 +12,6 @@
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 
-void FadeManager::SetCamera(_In_ GameObject *In_Camera) noexcept
-{
-	m_pCameraObj = In_Camera;
-}
-
 void FadeManager::Update() noexcept
 {
 	for (auto &itr : m_mapFadeObj)
@@ -192,7 +187,6 @@ float FadeManager::GetFadeStatus(_In_ std::string_view In_Name) const noexcept
 }
 
 FadeManager::FadeManager()
-	: m_pCameraObj(nullptr)
 {
 	m_mapFadeObj.clear();
 }
@@ -252,7 +246,6 @@ GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const
 {
 	GameObject *pWork = new GameObject(std::string(In_Name));
 	auto cmp = pWork->AddComponent<SpriteRenderer>();
-	cmp->SetCamera(m_pCameraObj);
 	cmp->SetLayerGroup(LayerGroup_Fade);
 	cmp->SetAssetPath(In_FadeInfo.TexturePath.data());
 	if (!In_FadeInfo.PixelShaderName.empty())
