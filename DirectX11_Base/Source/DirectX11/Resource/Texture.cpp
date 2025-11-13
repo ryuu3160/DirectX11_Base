@@ -173,7 +173,6 @@ HRESULT RenderTarget::CreateFromScreen() noexcept
 	DX11_Core & Instance = DX11_Core::GetInstance();
 
 	// バックバッファのポインタを取得
-	ID3D11Texture2D *pBackBuffer = NULL;
 	hr = Instance.GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(m_pTex.GetAddressOf()));
 	if (FAILED(hr)) { return hr; }
 
