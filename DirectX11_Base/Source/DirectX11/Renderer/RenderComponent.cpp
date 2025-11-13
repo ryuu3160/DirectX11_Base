@@ -16,7 +16,6 @@
 RenderComponent::RenderComponent(_In_ std::string In_Name)
 	: Component(In_Name)
 	, m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default)
-	, m_pViewCamera(nullptr), m_pCameraObj(nullptr)
 	, m_RenderManager(RenderManager::GetInstance())
 {
 }
@@ -25,23 +24,8 @@ RenderComponent::~RenderComponent()
 {
 	m_RenderManager.RemoveRenderComponent(this, m_LayerGroup);
 
-	m_pViewCamera = nullptr;
-	m_pCameraObj = nullptr;
 	m_defVS = nullptr;
 	m_defPS = nullptr;
-}
-
-void RenderComponent::SetCamera(_In_ GameObject *In_Camera) noexcept
-{
-	if (NullCheck(In_Camera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::SetCamera."))
-		return;
-
-	m_pViewCamera = In_Camera->GetComponent<Camera>();
-
-	if(NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera component is null in RenderComponent::SetCamera."))
-		return;
-
-	m_pCameraObj = In_Camera;
 }
 
 void RenderComponent::SetLayerGroup(_In_ LayerGroup In_LayerGroup) noexcept
@@ -63,16 +47,6 @@ void RenderComponent::SetLayer(_In_ int In_Layer) noexcept
 
 void RenderComponent::Init() noexcept
 {
-#ifdef _DEBUG
-	if(!m_pCameraObj)
-		m_pCameraObj = GetGameObject()->GetScene()->GetObject<CameraDCC>("MainCamera");
-#endif
-	if (m_pViewCamera == nullptr && m_pCameraObj)
-		m_pViewCamera = m_pCameraObj->GetComponent<Camera>();
-
-	if (NullCheck(m_pViewCamera, NCMode::OUTPUT, "error: Camera is null in RenderComponent::ExecuteDraw."))
-		return;
-
 	m_RenderManager.AddRenderComponent(this, m_LayerGroup);
 }
 

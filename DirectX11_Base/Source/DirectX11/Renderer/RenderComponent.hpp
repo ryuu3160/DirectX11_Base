@@ -59,12 +59,6 @@ public:
 	/// <returns>アセットのファイルパスを表す FilePath 型の値。</returns>
 	FilePath GetAssetPath() const noexcept { return m_AssetPath; }
 
-	/// <summary>
-	/// ビューカメラを設定します。
-	/// </summary>
-	/// <param name="[In_Camera]">設定するカメラオブジェクトへのポインタ。</param>
-	void SetCamera(_In_ GameObject *In_Camera) noexcept;
-
 	void SetLayerGroup(_In_ LayerGroup In_LayerGroup) noexcept;
 
 	/// <summary>
@@ -98,8 +92,6 @@ protected:
 	FilePathHold m_AssetPath;				// アセットパス
 	LayerGroup m_LayerGroup;				// レイヤーグループ
 	int m_nLayer;							// レイヤー番号
-	GameObject *m_pCameraObj;				// カメラオブジェクトへのポインタ
-	Camera *m_pViewCamera;					// ビューカメラ
 
 	std::shared_ptr<Shader> m_defVS;	// デフォルトの頂点シェーダー
 	std::shared_ptr<PixelShader> m_defPS;	// デフォルトのピクセルシェーダー
