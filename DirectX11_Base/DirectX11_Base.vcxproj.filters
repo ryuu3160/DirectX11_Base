@@ -310,6 +310,7 @@
     <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -525,6 +526,7 @@
     <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

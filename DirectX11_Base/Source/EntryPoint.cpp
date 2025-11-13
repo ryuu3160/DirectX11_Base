@@ -29,8 +29,10 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ------------------------------
 	FrameManager &frame = FrameManager::GetInstance();	// インスタンス生成
 	frame.Init(60);										// フレームレートを60fpsに設定して初期化
+#ifdef _DEBUG
 	frame._SetHwnd(window.GetHwnd());					// ウィンドウハンドルの設定
 	frame._SetWindowTitle(window.GetTitleName());		// ウィンドウタイトルの設定
+#endif
 
 	// ------------------------------
 	// DirectXなどの各種機能の初期化

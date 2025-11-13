@@ -166,6 +166,7 @@ public:
 	/// <param name="[In_strName]">フレームデータ名</param>
 	void Delete(const std::string &In_strName);
 
+#ifdef _DEBUG
 	/// <summary>
 	/// fpsを表示するウィンドウのハンドルを設定(デバッグ用)
 	/// </summary>
@@ -177,6 +178,7 @@ public:
 	/// </summary>
 	/// <param name="In_lpcTitleName">設定するウィンドウタイトルの文字列（LPCSTR型）。</param>
 	void _SetWindowTitle(LPCSTR In_lpcTitleName) { m_lpcTitleName = In_lpcTitleName; }
+#endif
 
 private:
 	FrameManager();
