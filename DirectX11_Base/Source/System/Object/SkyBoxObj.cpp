@@ -40,10 +40,6 @@ void SkyBoxObj::SetFilePath(_In_ const FilePath &In_Path) noexcept
 void SkyBoxObj::SetCamera(_In_ GameObject * In_Cam) noexcept
 {
 	m_pCameraObj = In_Cam;
-	if (m_pRenderComponent && m_pCameraObj)
-	{
-		m_pRenderComponent->SetCamera(m_pCameraObj);
-	}
 }
 
 void SkyBoxObj::LateUpdate() noexcept
