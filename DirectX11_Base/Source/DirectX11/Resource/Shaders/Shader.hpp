@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="[In_Slot]">テクスチャを設定するスロット番号。</param>
 	/// <param name="[In_Tex]">設定するテクスチャへのポインタ。</param>
-	void SetTexture(_In_ const UINT &In_Slot, _In_ Texture *In_Tex) noexcept;
+	void SetTexture(_In_ const UINT &In_Slot, _In_opt_ Texture *In_Tex) noexcept;
 
 	virtual void Bind(void) = 0;
 

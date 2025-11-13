@@ -87,7 +87,7 @@ void Shader::WriteBuffer(_In_ const UINT &In_Slot, _In_ void *In_pData) noexcept
 	if (In_Slot < m_pBuffers.size())
 		DX11_Core::GetInstance().GetDeviceContext()->UpdateSubresource(m_pBuffers[In_Slot], 0, nullptr, In_pData, 0, 0);
 }
-void Shader::SetTexture(_In_ const UINT &In_Slot, _In_ Texture *In_Tex) noexcept
+void Shader::SetTexture(_In_ const UINT &In_Slot, _In_opt_ Texture *In_Tex) noexcept
 {
 	if (In_Slot >= m_pTextures.size()) { return; }
 	ID3D11ShaderResourceView *pTex = In_Tex ? In_Tex->GetResource() : nullptr;
