@@ -77,7 +77,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 				else
 				{
 					// 成功した場合はマップに追加
-					m_mapTextures.insert({ FilePathHold(path.C_Str()), Tex });
+					m_mapTextures.try_emplace(FilePathHold(path.C_Str()), Tex);
 				}
 			}
 		}
@@ -96,7 +96,7 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 		if (SUCCEEDED(hr))
 		{
 			// 成功した場合はマップに追加
-			m_mapTextures.insert({ FilePathHold(aiTex->mFilename.data), Tex });
+			m_mapTextures.try_emplace(FilePathHold(aiTex->mFilename.data), Tex);
 		}
 	}
 }
@@ -104,7 +104,13 @@ void TextureManager::LoadTextures(_In_ const aiScene *In_Scene, _In_ const FileP
 std::shared_ptr<Texture> TextureManager::LoadTexture(_In_ const FilePath &In_FilePath) noexcept
 {
 	HRESULT hr;
-	auto Tex = std::make_shared<Texture>();
+
+	auto Tex = GetTexture(In_FilePath);
+
+	if (Tex)
+		return Tex; // 既に存在する場合は既存のテクスチャを返す
+
+	Tex = std::make_shared<Texture>();
 	hr = Tex->Create(In_FilePath.data());
 	if (SUCCEEDED(hr))
 	{
