@@ -170,8 +170,8 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	cmp->SetAssetPath(std::string(In_FilePath));
 	cmp->Set3D(In_Is3D);
 	cmp->SetBillBoard(In_IsBillBoard);
+	cmp->SetLayerGroup(LayerGroup_UI);
 	cmp->SetLayer(In_Layer);
-	cmp->SetCamera(m_pCameraObj);
 	cmp->SetUsePixelPosition(!In_Is3D);
 	cmp->Load();
 
