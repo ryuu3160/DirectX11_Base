@@ -77,7 +77,7 @@ template<> GameObject
 
 	GameObject *ptr = new GameObject(In_Name);
 	ptr->m_pScene = this; // 所属シーンを設定
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<GameObject>(ptr)));
+	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
 	return ptr;
@@ -126,13 +126,11 @@ void SceneBase::_RootUpdateMain() noexcept
 	// シーンが所持しているオブジェクトの更新
 	for (auto &itr : m_Items)
 	{
-		auto objItr = m_Objects.find(itr);
-		// 型チェック
-		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
+		auto obj = m_Objects.find(itr);
+		// アクティブかつ初期化済みなら更新を実行
+		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
 		{
-			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			if(obj->m_IsActive && obj->m_IsInitialized)
-				obj->ExecuteUpdate();
+			obj->second->ExecuteUpdate();
 		}
 	}
 
@@ -145,13 +143,11 @@ void SceneBase::_RootUpdateLate() noexcept
 	// シーンが所持しているオブジェクトの遅延更新
 	for (auto &itr : m_Items)
 	{
-		auto objItr = m_Objects.find(itr);
+		auto obj = m_Objects.find(itr);
 		// 型チェック
-		if (objItr != m_Objects.end() && objItr->second->m_bIsGameObject)
+		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
 		{
-			GameObject *obj = static_cast<GameObject *>(objItr->second->m_pObject);
-			if (obj->m_IsActive && obj->m_IsInitialized)
-				obj->ExecuteLateUpdate();
+			obj->second->ExecuteLateUpdate();
 		}
 	}
 

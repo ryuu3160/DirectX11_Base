@@ -24,27 +24,6 @@
 // ==============================
 class SceneManager;
 
-class SceneObjectBase
-{
-public:
-	virtual ~SceneObjectBase() {};
-	void *m_pObject = nullptr;
-	bool m_bIsGameObject = false;	// GameObjectかどうか
-};
-
-template<class T>
-class SceneObject : public SceneObjectBase
-{
-public:
-	SceneObject(T *ptr)
-	{
-		m_pObject = ptr;
-		// TがGameObjectの派生クラスかどうかを判定
-		m_bIsGameObject = std::is_base_of<GameObject, T>();
-	}
-	virtual ~SceneObject() { delete static_cast<T *>(m_pObject); }
-};
-
 /// <summary>
 /// SceneBaseクラス
 /// </summary>
@@ -52,7 +31,7 @@ class SceneBase
 {
 private:
 	friend class SceneManager; // シーンマネージャーをフレンドクラスに登録
-	using Objects = std::map<std::string, SceneObjectBase *>;
+	using Objects = std::map<std::string, GameObject *>;
 	using Items = std::list<std::string>;
 public:
 
@@ -65,22 +44,12 @@ public:
 
 	// オブジェクト操作
 
-	/// <summary>
-	/// 指定された名前でオブジェクトを作成します。
-	/// </summary>
-	/// <typeparam name="[T]">作成するオブジェクトの型。</typeparam>
-	/// <param name="[In_Name]">作成するオブジェクトの名前を表す文字列。</param>
-	/// <returns>作成されたオブジェクトへのポインタ。</returns>
-	template <typename T, typename std::enable_if<!std::is_base_of<GameObject,T>::value>::type * = nullptr>
+	template <typename T>
+	requires std::derived_from<T, GameObject>
 	T *CreateObject(_In_ const std::string &In_Name) noexcept;
 
-	template <typename T, typename ...Args, typename std::enable_if<!std::is_base_of<GameObject, T>::value>::type * = nullptr >
-	T *CreateObject(_In_ const std::string &In_Name, Args&&... args) noexcept;
-
-	template <typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
-	T *CreateObject(_In_ const std::string &In_Name) noexcept;
-
-	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
+	template <typename T, typename ...Args>
+	requires std::derived_from<T, GameObject>
 	T *CreateObject(_In_ const std::string &In_Name, Args&&... args) noexcept;
 
 	/// <summary>
@@ -168,63 +137,8 @@ protected:
 	SceneManager &m_SceneManager;
 };
 
-/// <summary>
-/// オブジェクトの生成
-/// </summary>
-/// <typeparam name="[T]">オブジェクトの型</typeparam>
-/// <param name="[In_szName]">オブジェクトの名称</param>
-/// <returns>生成したオブジェクト</returns>
-template<typename T, typename std::enable_if<!std::is_base_of<GameObject, T>::value>::type*>
-T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
-{
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name);
-	if (itr != m_Objects.end())
-	{
-		std::string buf = "Failed to create object." + In_Name;
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-
-	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
-
-#endif // _DEBUG
-
-	// オブジェクト生成
-	T *ptr = new T();
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
-	m_Items.push_back(In_Name);
-	return ptr;
-}
-
-template<typename T, typename ...Args, typename std::enable_if<!std::is_base_of<GameObject, T>::value>::type *>
-inline T *SceneBase::CreateObject(const std::string &In_Name, Args && ...args) noexcept
-{
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name);
-	if (itr != m_Objects.end())
-	{
-		std::string buf = "Failed to create object." + In_Name;
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-
-	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
-
-#endif // _DEBUG
-
-	// オブジェクト生成
-	T *ptr = new T(args...);
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
-	m_Items.push_back(In_Name);
-	return ptr;
-}
-
-template <typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+template <typename T>
+requires std::derived_from<T, GameObject>
 T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 {
 #ifdef _DEBUG
@@ -245,13 +159,14 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	// オブジェクト生成
 	T *ptr = new T();
 	ptr->m_pScene = this; // 所属シーンを設定
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
+	m_Objects.insert(std::pair<std::string, T*>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
 	return ptr;
 }
 
-template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+template <typename T, typename ...Args>
+requires std::derived_from<T, GameObject>
 T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noexcept
 {
 #ifdef _DEBUG
@@ -272,7 +187,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	// オブジェクト生成
 	T *ptr = new T(args...);
 	ptr->m_pScene = this; // 所属シーンを設定
-	m_Objects.insert(std::pair<std::string, SceneObjectBase *>(In_Name, new SceneObject<T>(ptr)));
+	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
 	return ptr;
@@ -292,6 +207,10 @@ T *SceneBase::GetObject(_In_ const std::string_view &In_Name) noexcept
 	if (itr == m_Objects.end()) return nullptr;
 
 	// 型変換
-	T *ptr = static_cast<T *>(itr->second->m_pObject);
+	T *ptr = dynamic_cast<T *>(itr->second);
+
+	if(NullCheck(ptr, NullpCheckMode::OUTPUT, "Failed to get object." + std::string(In_Name)))
+		return nullptr;
+
 	return ptr;
 }
