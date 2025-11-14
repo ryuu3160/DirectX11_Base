@@ -27,9 +27,9 @@ enum LayerGroup : int
 	LayerGroup_SkyBox = -1,	// スカイボックス
 	LayerGroup_Default,	// 通常オブジェクト
 	LayerGroup_UI,		// UIオブジェクト
+	LayerGroup_RenderTexture, // レンダーテクスチャ用オブジェクト
 	LayerGroup_Fade,	// フェード用オブジェクト
 
-	LayerGroup_RenderTexture = 100, // レンダーテクスチャ用オブジェクト
 };
 
 /// <summary>
