@@ -154,7 +154,8 @@ void RenderManager::DrawAll() noexcept
 			// メインコンテキスト以外ではレンダーテクスチャ用のレイヤーはスキップ
 			// また、UIレイヤーもスキップ
 			if (!ctx->second->IsMainContext() &&
-				(layer.first == LayerGroup::LayerGroup_RenderTexture || layer.first == LayerGroup::LayerGroup_UI))
+				(layer.first == LayerGroup::LayerGroup_RenderTexture || layer.first == LayerGroup::LayerGroup_UI ||
+					layer.first == LayerGroup::LayerGroup_Fade))
 				continue;
 
 			for (auto &itr : layer.second)
