@@ -12,6 +12,7 @@
 #include "System/ImGui/imgui.h"
 #include "System/ImGui/imgui_impl_dx11.h"
 #include "System/ImGui/imgui_impl_win32.h"
+#include "System/DebugManager/DebugWindow.hpp"
 
 // ==============================
 //	’è”’è‹`
@@ -30,15 +31,12 @@ public:
 	DebugManager();
 	~DebugManager();
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	void Init();
 
+	void Update() noexcept;
 
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	void Draw() noexcept;
 
 private:
-
+	std::unordered_map<std::string, DebugWindow *> m_DebugWindows;
 };
