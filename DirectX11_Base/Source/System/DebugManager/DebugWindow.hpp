@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/DebugManager/DebugManager.hpp"
+#include "System/DebugManager/DebugItem.hpp"
 
 // ==============================
 //	íËêîíËã`
@@ -24,17 +24,14 @@ namespace
 class DebugWindow
 {
 public:
-	DebugWindow() = default;
-	~DebugWindow() = default;
+	DebugWindow();
+	~DebugWindow();
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	DebugItem *CreateItemValue(_In_ std::string_view In_ItemName);
 
+	void RemoveItem(_In_ std::string_view In_ItemName);
 
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	void ClearItems();
 
 private:
 

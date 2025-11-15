@@ -17,3 +17,10 @@ namespace
 {
 }
 
+DebugWindow::DebugWindow()
+{
+}
+
+DebugWindow::~DebugWindow()
+{
+}

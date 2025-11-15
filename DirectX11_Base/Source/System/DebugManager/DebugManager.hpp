@@ -9,10 +9,9 @@
 // ==============================
 //	include
 // ==============================
-#include "System/ImGui/imgui.h"
-#include "System/ImGui/imgui_impl_dx11.h"
-#include "System/ImGui/imgui_impl_win32.h"
+#include "System/DebugManager/InitializeImGui.hpp"
 #include "System/DebugManager/DebugWindow.hpp"
+#include "System/DebugManager/DebugItem.hpp"
 
 // ==============================
 //	定数定義
@@ -37,6 +36,19 @@ public:
 
 	void Draw() noexcept;
 
+	/// <summary>
+	/// デバッグウィンドウを作成する
+	/// </summary>
+	/// <param name="[In_Name]">ウィンドウ名</param>
+	/// <returns>作成されたウィンドウへのポインタ</returns>
+	DebugWindow *CreateDebugWindow(_In_ const std::string_view In_Name);
+
+	DebugWindow *GetDebugWindow(_In_ const std::string_view In_Name);
+
 private:
-	std::unordered_map<std::string, DebugWindow *> m_DebugWindows;
+
+	void DrawImGui(_In_ DebugItem* In_Item) noexcept;
+
+private:
+	std::unordered_map<std::string, DebugWindow*> m_DebugWindows;
 };
