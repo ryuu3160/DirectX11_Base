@@ -36,22 +36,6 @@ namespace
 
 void SpriteManager::Init() noexcept
 {
-	// ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	auto &io = ImGui::GetIO();
-	auto &Instance = DX11_Core::GetInstance();
-
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(Window::GetInstance().GetHwnd());
-	ImGui_ImplDX11_Init(Instance.GetDevice(), Instance.GetDeviceContext());
-
-	// フォントの設定
-	io.Fonts->AddFontFromFileTTF("Assets\\Fonts\\NotoSansJP-Medium.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-	// ドッキングの有効化
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // ビューポートの有効化
-
 	InitManagerWindow();
 
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
@@ -272,11 +256,6 @@ SpriteManager::~SpriteManager()
 	{
 		m_pCameraObj = nullptr;
 	}
-
-	// ImGui終了処理
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 }
 
 void SpriteManager::InitManagerWindow() noexcept

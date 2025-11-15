@@ -9,9 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/ImGui/imgui.h"
-#include "System/ImGui/imgui_impl_dx11.h"
-#include "System/ImGui/imgui_impl_win32.h"
+#include "System/DebugManager/InitializeImGui.hpp"
 #include "SpriteManagerWindow.hpp"
 
 // ==============================

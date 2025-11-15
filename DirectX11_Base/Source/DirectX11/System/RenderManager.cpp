@@ -154,8 +154,7 @@ void RenderManager::DrawAll() noexcept
 			// メインコンテキスト以外ではレンダーテクスチャ用のレイヤーはスキップ
 			// また、UIレイヤーもスキップ
 			if (!ctx->second->IsMainContext() &&
-				(layer.first == LayerGroup::LayerGroup_RenderTexture || layer.first == LayerGroup::LayerGroup_UI ||
-					layer.first == LayerGroup::LayerGroup_Fade))
+				(m_RenderContextComparison.CheckComparison("MainOnlyDraw", layer.first )))
 				continue;
 
 			for (auto &itr : layer.second)
@@ -181,6 +180,9 @@ RenderManager::RenderManager()
 {
 	// レンダリングコンポーネントのマップを初期化
 	m_RenderComponents.clear();
+
+	m_RenderContextComparison.MakeComparison("MainOnlyDraw",
+		{ LayerGroup::LayerGroup_RenderTexture,LayerGroup::LayerGroup_UI,LayerGroup::LayerGroup_Fade });
 }
 RenderManager::~RenderManager()
 {

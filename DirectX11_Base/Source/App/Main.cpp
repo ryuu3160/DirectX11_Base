@@ -11,6 +11,8 @@
 #include "Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/System/RenderManager.hpp"
+#include "System/DebugManager/InitializeImGui.hpp"
+#include "System/DebugManager/DebugManager.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 #include "System/Input/Input.hpp"
@@ -41,6 +43,9 @@ HRESULT Main::Init()
 	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();
+
+	// デバッグ関連の初期化
+	InitializeImGui::InitImGui();
 	auto &SpriteM = SpriteManager::GetInstance();
 
 	// よく使うシェーダーの読み込み

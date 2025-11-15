@@ -80,6 +80,7 @@ using Microsoft::WRL::ComPtr;
 #include "System/ryuu_lib/FrameManager/FrameManager.hpp"
 #include "System/ryuu_lib/Easing/Easing.hpp"
 #include "System/ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
+#include "System/ryuu_lib/MultiComparison/MultiComparison.hpp"
 
 // ------------------------------
 //  Original

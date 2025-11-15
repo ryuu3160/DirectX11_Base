@@ -110,6 +110,9 @@
     <Filter Include="Source\DirectX11\Resource\Shaders">
       <UniqueIdentifier>{7aa0ef16-d438-44af-a261-7afe122c6371}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\ryuu_lib\MultiComparison">
+      <UniqueIdentifier>{5471ce5e-28f8-436b-b6a9-bb7ab653e9ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -312,6 +315,12 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp">
       <Filter>Source\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
+      <Filter>Source\System\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\InitializeImGui.cpp">
+      <Filter>Source\System\DebugManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -528,8 +537,17 @@
     <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClInclude>
+    <ClInclude Include="Source\System\ryuu_lib\MultiComparison\MultiComparison.hpp">
+      <Filter>Source\System\ryuu_lib\MultiComparison</Filter>
+    </ClInclude>
     <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp">
       <Filter>Source\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugItem.hpp">
+      <Filter>Source\System\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
+      <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

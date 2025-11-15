@@ -232,11 +232,19 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\DebugManager\DebugManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\DebugManager\InitializeImGui.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -381,11 +389,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\DebugItem.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\System\DebugManager\DebugManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -426,6 +442,7 @@
     <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\MultiComparison\MultiComparison.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\RandomModule\Random.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp" />

@@ -102,6 +102,7 @@ private:
 	std::vector<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
 	std::map<LayerGroup, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
 
+	MultiComparison<std::string,LayerGroup> m_RenderContextComparison; // レンダーコンテキストの比較用マルチコンパリソン
 	std::unordered_map<std::string, RenderContext *> m_RenderContexts; // レンダーコンテキストのマップ
 	std::vector<std::string> m_RenderContextNames; // レンダーコンテキストのリスト
 };
