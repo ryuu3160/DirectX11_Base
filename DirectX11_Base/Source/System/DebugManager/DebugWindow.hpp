@@ -27,12 +27,39 @@ public:
 	DebugWindow();
 	~DebugWindow();
 
-	DebugItem *CreateItemValue(_In_ std::string_view In_ItemName);
+	void Draw() noexcept;
 
-	void RemoveItem(_In_ std::string_view In_ItemName);
+	DebugItem &operator[](_In_ std::string_view In_ItemName);
+
+	template <typename T, typename ...Args>
+	requires std::derived_from<T, DebugItem>
+	T *CreateItem(_In_ const std::string_view In_Name, _In_ Args&& ...args);
+
+	void RemoveItem(_In_ std::string_view In_Name);
 
 	void ClearItems();
 
 private:
 
+	auto FindItem(_In_ std::string_view In_Name) noexcept
+	{
+		return std::find_if(m_Items.begin(), m_Items.end(),
+			[&](DebugItem *item)
+			{
+				return item->GetName() == In_Name;
+			});
+	}
+
+private:
+	std::vector<DebugItem *> m_Items;
 };
+
+template<typename T, typename ...Args>
+requires std::derived_from<T, DebugItem>
+inline T *DebugWindow::CreateItem(_In_ const std::string_view In_Name, _In_ Args && ...args)
+{
+	T *item = new T(In_Name, std::forward<Args>(args)...);
+
+	m_Items.push_back(static_cast<DebugItem>(item));
+	return item;
+}

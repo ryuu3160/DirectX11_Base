@@ -43,6 +43,11 @@ public:
 	/// <returns>作成されたウィンドウへのポインタ</returns>
 	DebugWindow *CreateDebugWindow(_In_ const std::string_view In_Name);
 
+	/// <summary>
+	/// 指定した名前に対応するデバッグウィンドウを取得します。
+	/// </summary>
+	/// <param name="[In_Name]">検索するデバッグウィンドウの名前を示す読み取り専用の std::string_view。</param>
+	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合は nullptr を返します。</returns>
 	DebugWindow *GetDebugWindow(_In_ const std::string_view In_Name);
 
 private:

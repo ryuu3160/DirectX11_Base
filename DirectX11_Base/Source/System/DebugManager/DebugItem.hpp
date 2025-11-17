@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: DebugItem.hpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: デバッグ項目クラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/11/15 Sat PM 04:00:12 初回作成
 ===================================================================+*/
@@ -24,25 +24,62 @@ namespace
 class DebugItem
 {
 public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	DebugItem() = default;
+	union Value {
+		bool				flg;
+		int					nValue;
+		float				fValue;
+		DirectX::XMFLOAT2	vector2;
+		DirectX::XMFLOAT3	vector;
+		DirectX::XMFLOAT4	color;
+		std::string			string;
+	};
+
+	enum Kind {
+		Label,		// 項目のみの表示
+		Bool,		// チェックボックス
+		Int,		// 整数入力
+		Float,		// 小数入力
+		Vector,		// ベクター入力
+		Color,		// 色入力
+		Path,		// ファイルパスの指定
+		Command,	// ボタン
+		Group,		// 表示項目をまとめる
+		List,		// 一覧表示
+	};
+
+protected:
+	DebugItem();
+
+public:
+	~DebugItem();
+
+	std::string GetName() const;
+
+	const char *GetCStrName() const;
 
 	/// <summary>
-	/// デストラクタ
+	/// 項目の種別を取得
 	/// </summary>
-	~DebugItem() = default;
+	/// <returns>種類</returns>
+	Kind GetKind() const;
+	// 各種設定値の取得
+	bool GetBool() const;
+	int GetInt() const;
+	float GetFloat() const;
+	DirectX::XMFLOAT3 GetVector() const;
+	DirectX::XMFLOAT4 GetColor() const;
+	std::string GetStr() const;
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+public:
+	// 文字列から項目の種別を取得
+	static Kind StrToKind(std::string str);
+	// 項目の種別から文字列を取得
+	static std::string KindToStr(Kind kind);
 
-
-	// ------------------------------
-	//  Setter
-	// ------------------------------
 
 private:
-
+	std::string m_Name;
+	Kind m_Kind;
 };
+
+
