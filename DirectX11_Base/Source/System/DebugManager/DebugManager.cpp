@@ -36,6 +36,11 @@ void DebugManager::Update() noexcept
 
 void DebugManager::Draw() noexcept
 {
+	for (const auto &itr : m_DebugWindows)
+	{
+		if (itr.second)
+			itr.second->Draw();
+	}
 }
 
 DebugWindow *DebugManager::CreateDebugWindow(const std::string_view In_Name)

@@ -82,4 +82,13 @@ private:
 	Kind m_Kind;
 };
 
+class ItemValue : public DebugItem
+{
+public:
+	ItemValue();
+	~ItemValue();
 
+private:
+	Value m_Value;
+	bool m_IsSave;
+};

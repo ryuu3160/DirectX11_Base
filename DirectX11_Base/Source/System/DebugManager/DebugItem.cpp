@@ -12,6 +12,8 @@
 
 DebugItem::DebugItem()
 {
+	m_Name = "None";
+	m_Kind = Kind::Label;
 }
 
 DebugItem::~DebugItem()
@@ -31,4 +33,13 @@ const char *DebugItem::GetCStrName() const
 DebugItem::Kind DebugItem::GetKind() const
 {
 	return Kind();
+}
+
+// ==============================
+//  ItemValue
+// ==============================
+
+
+ItemValue::~ItemValue()
+{
 }
