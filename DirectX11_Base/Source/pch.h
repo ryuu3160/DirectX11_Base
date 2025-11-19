@@ -37,6 +37,7 @@ using Microsoft::WRL::ComPtr;
 #include <algorithm>
 #include <functional>
 #include <any>
+#include <variant>
 #include <mutex>
 #include <cmath>
 #include <random>
