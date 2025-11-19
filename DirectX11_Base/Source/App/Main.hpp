@@ -24,4 +24,6 @@ namespace Main
 	void Uninit();
 	void Update();
 	void Draw();
+
+	void InitializeDebugWindows() noexcept;
 }

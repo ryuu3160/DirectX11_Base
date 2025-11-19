@@ -47,6 +47,7 @@ HRESULT Main::Init()
 	// デバッグ関連の初期化
 	InitializeImGui::InitImGui();
 	auto &SpriteM = SpriteManager::GetInstance();
+	auto &DebugM = DebugManager::GetInstance();
 
 	// よく使うシェーダーの読み込み
 	std::vector<std::string> shaders = {
@@ -90,6 +91,11 @@ HRESULT Main::Init()
 
 	// SpriteManagerの初期化
 	SpriteM.Init();
+	// DebugManagerの初期化
+	DebugM.Init();
+
+	// 通常のデバッグウィンドウを追加
+	InitializeDebugWindows();
 
 #ifdef _DEBUG
 	// ImGui専用のウィンドウプロシージャを登録
@@ -111,6 +117,7 @@ void Main::Update()
 	Input::Update();
 	SceneM.RootUpdate();
 	SpriteManager::GetInstance().Update();
+	DebugManager::GetInstance().Update();
 
 	// シーン切り替えの更新
 	SceneM.UpdateSceneChange();
@@ -131,12 +138,14 @@ void Main::Draw()
 	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
 	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	// スプライトマネージャーの描画
-	SpriteManager::GetInstance().Draw();
-
 	SceneM.RootDraw();
 
+	InitializeImGui::BeginImGuiFrame();
+	// スプライトマネージャーの描画
 	SpriteManager::GetInstance().DrawImGui();
+	// デバッグマネージャーの描画
+	DebugManager::GetInstance().Draw();
+	InitializeImGui::EndImGuiFrame();
 
 	// オブジェクトの破棄は非同期で行う
 	std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
@@ -144,4 +153,13 @@ void Main::Draw()
 	DX11.Swap();
 
 	fut.get(); // 破棄が終わるまで待機
+}
+
+void Main::InitializeDebugWindows() noexcept
+{
+	auto &DebugM = DebugManager::GetInstance();
+	// フレームレート表示ウィンドウ
+	DebugM.CreateDebugWindow("System", "Log");
+	DebugM.CreateDebugWindow("System", "Inspector");
+	DebugM.CreateDebugWindow("System", "Hierarchy");
 }
