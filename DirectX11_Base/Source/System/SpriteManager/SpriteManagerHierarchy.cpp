@@ -14,7 +14,7 @@
 #include "System/ImGui/imgui_impl_win32.h"
 
 SpriteManagerHierarchy::SpriteManagerHierarchy()
-	: SpriteManagerWindow("Hierarchy")
+	: SpriteManagerWindow("Sprite_Hierarchy")
 {
 	m_WindowType = Hierarchy;
 }

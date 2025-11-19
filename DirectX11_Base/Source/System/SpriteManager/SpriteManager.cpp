@@ -282,10 +282,6 @@ void SpriteManager::DrawImGui() noexcept
 	// ウィンドウにカーソルが被っているかどうかのフラグリセット
 	m_bIsHoveredWindow = false;
 
-	// Imguiの描画準備
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
 	// ウィンドウ内の表示項目を描画
 	for (int i = 0; i < m_vecWindow.size();++i)
 	{
@@ -358,27 +354,6 @@ void SpriteManager::DrawImGui() noexcept
 
 		// ウィンドウ内の描画終了
 		ImGui::End();
-	}
-
-	// ImGuiの表示
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	// マルチビューポートが有効な場合の処理
-	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		// 現在のレンダーターゲットと深度ステンシルビューを取得
-		auto &RTVManager = RenderTargetManager::GetInstance();
-		auto rtv = RTVManager.GetDefaultRTV();
-		auto dsv = RTVManager.GetDefaultDSV();
-
-		// ImGuiのビューポートを更新
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-
-		// レンダーターゲットを復元
-		DX11_Core &Instance = DX11_Core::GetInstance();
-		Instance.SetRenderTargets(1, &rtv, dsv);
 	}
 }
 

@@ -12,7 +12,7 @@
 #include "SpriteManager.hpp"
 
 SpriteManagerInspector::SpriteManagerInspector()
-	: SpriteManagerWindow("Inspector")
+	: SpriteManagerWindow("Sprite_Inspector")
 	, m_Pos2D(0.0f, 0.0f, 0.0f), m_Scale2D(1.0f, 1.0f, 1.0f), m_Rotation2D(0.0f, 0.0f, 0.0f), m_Layer2D(0)
 	, m_Pos3D(0.0f, 0.0f, 0.0f), m_Scale3D(1.0f, 1.0f, 1.0f), m_Rotation3D(0.0f, 0.0f, 0.0f), m_Layer3D(0)
 	, m_bIsBillBoard(false)
