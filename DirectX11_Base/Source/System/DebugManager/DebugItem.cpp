@@ -40,7 +40,7 @@ const char *DebugItem::GetCStrName() const
 
 DebugItem::Kind DebugItem::GetKind() const
 {
-	return Kind();
+	return m_Kind;
 }
 
 bool DebugItem::GetBool() const
@@ -205,9 +205,9 @@ ItemValue::ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_I
 {
 	m_Name = In_Name;
 
-	if(In_Kind == Kind::Group || In_Kind == Kind::List || In_Kind == Kind::Command)
+	if(In_Kind == Kind::InputStr || In_Kind == Kind::Group || In_Kind == Kind::List || In_Kind == Kind::Command)
 	{
-		// グループ、リスト、コマンドはItemValueでは扱えない
+		// InputStr、グループ、リスト、コマンドはItemValueでは扱えない
 		In_Kind = Kind::Label;
 	}
 
@@ -215,6 +215,24 @@ ItemValue::ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_I
 }
 
 ItemValue::~ItemValue()
+{
+}
+
+// ==============================
+//  ItemText
+// ==============================
+
+ItemText::ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool In_IsSave)
+{
+	m_Name = In_Name;
+	m_Kind = Kind::InputStr;
+	m_Flags = In_Flags;
+	m_IsMultiline = In_IsMultiline;
+	m_IsSave = In_IsSave;
+	m_LineCount = 0;
+}
+
+ItemText::~ItemText()
 {
 }
 

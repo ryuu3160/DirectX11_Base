@@ -17,11 +17,14 @@ namespace
 {
 	constexpr float cx_fTitleBarHeight = 80.0f;
 	constexpr float cx_fToolBarHeight = 15.0f;
+	static DebugWindow *c_NullWindow;
 }
 
 DebugManager::DebugManager()
 	: m_ToolBarFlags(0)
 {
+	c_NullWindow = new DebugWindow("NullWindow");
+	c_NullWindow->m_IsDummy = true;
 }
 
 DebugManager::~DebugManager()
@@ -42,6 +45,7 @@ void DebugManager::Init()
 	m_ToolBarFlags |= ImGuiWindowFlags_MenuBar;
 	m_ToolBarFlags |= ImGuiWindowFlags_NoCollapse;
 	m_ToolBarFlags |= ImGuiWindowFlags_NoMove;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoResize;
 
 	// ÉfÅ[É^ÇÃì«Ç›çûÇ›
 	std::fstream file("Assets\\Debug\\DebugManagerData.csv", std::ios::in);
@@ -134,5 +138,5 @@ DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupNa
 			}
 		}
 	}
-	return nullptr;
+	return c_NullWindow;
 }

@@ -21,7 +21,7 @@ namespace
 }
 
 DebugWindow::DebugWindow(_In_ const std::string_view In_Name)
-	: m_Name(In_Name), m_IsOpen(true)
+	: m_Name(In_Name), m_IsOpen(true), m_IsDummy(false)
 {
 }
 
@@ -74,9 +74,6 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 		pBind = dynamic_cast<ItemBind *>(In_Item);
 	if (!pValue && !pBind)
 		pCallback = dynamic_cast<ItemCallback *>(In_Item);
-
-	if (!pValue && !pBind && !pCallback)
-		return;
 
 	switch (In_Item->GetKind())
 	{
@@ -162,12 +159,40 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 		{
 			char buffer[MAX_PATH];
 			strncpy_s(buffer, std::get<std::string>(pValue->GetValue()).c_str(), MAX_PATH);
-			ImGui::InputText(In_Item->GetCStrName(), buffer, MAX_PATH);
-			std::get<std::string>(pValue->GetValue()) = buffer;
+			if(ImGui::InputText(In_Item->GetCStrName(), buffer, MAX_PATH))
+				std::get<std::string>(pValue->GetValue()) = buffer;
 		}
 		else // 紐づけ項目の表示
 			ImGui::InputText(In_Item->GetCStrName(), pBind->GetPtr<char>(), MAX_PATH);
 		break;
+		// 入力文字列項目の表示
+	case DebugItem::InputStr:
+	{
+		ItemText *pText = dynamic_cast<ItemText *>(In_Item);
+		if (!pText) break;
+		if (pText->IsMultiline())
+		{
+			// 複数行入力
+			char buffer[4096];
+			strncpy_s(buffer, pText->GetText().c_str(), 4096);
+			float height = ImGui::GetTextLineHeight();
+			if (pText->GetLineCount() > 0)
+				height *= pText->GetLineCount();
+			else
+				height = ImGui::GetContentRegionAvail().y;
+			if (ImGui::InputTextMultiline(In_Item->GetCStrName(), buffer, 4096, ImVec2(-FLT_MIN, height), pText->GetFlags()))
+				pText->GetText() = buffer;
+		}
+		else
+		{
+			// 単一行入力
+			char buffer[256];
+			strncpy_s(buffer, pText->GetText().c_str(), 256);
+			if (ImGui::InputText(In_Item->GetCStrName(), buffer, 256, pText->GetFlags()))
+				pText->GetText() = buffer;
+		}
+	}
+	break;
 		// ボタンの表示
 	case DebugItem::Kind::Command:
 		if (ImGui::Button(In_Item->GetCStrName()) && pCallback)

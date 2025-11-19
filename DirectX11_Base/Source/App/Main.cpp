@@ -122,6 +122,8 @@ void Main::Update()
 	// シーン切り替えの更新
 	SceneM.UpdateSceneChange();
 
+	DebugManager::GetInstance().DebugLog("Frame Start");
+
 	// Inputの更新終了処理
 	Input::EndUpdate();
 }
@@ -159,7 +161,9 @@ void Main::InitializeDebugWindows() noexcept
 {
 	auto &DebugM = DebugManager::GetInstance();
 	// フレームレート表示ウィンドウ
-	DebugM.CreateDebugWindow("System", "Log");
+	auto log = DebugM.CreateDebugWindow("System", "Log");
 	DebugM.CreateDebugWindow("System", "Inspector");
 	DebugM.CreateDebugWindow("System", "Hierarchy");
+
+	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly, true);
 }

@@ -23,6 +23,7 @@ namespace
 /// </summary>
 class DebugWindow
 {
+	friend class DebugManager;
 public:
 	DebugWindow(_In_ const std::string_view In_Name);
 	~DebugWindow();
@@ -40,6 +41,8 @@ public:
 	void ClearItems();
 
 	std::string GetName() const noexcept { return m_Name; }
+
+	bool NotDummy() const noexcept { return !m_IsDummy; }
 
 	bool IsOpen() const noexcept { return m_IsOpen; }
 
@@ -62,6 +65,7 @@ private:
 
 private:
 	bool m_IsOpen;
+	bool m_IsDummy;
 	std::string m_Name;
 	std::vector<DebugItem *> m_Items;
 };
@@ -72,6 +76,6 @@ inline T *DebugWindow::CreateItem(const std::string_view In_Name, Args && ...arg
 {
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
 
-	m_Items.push_back(static_cast<DebugItem*>(item));
+	m_Items.push_back(item);
 	return item;
 }

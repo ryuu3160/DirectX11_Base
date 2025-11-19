@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "InitializeImGui.hpp"
 // ==============================
 //  前方宣言
 // ==============================
@@ -50,6 +50,7 @@ public:
 		Vector,		// ベクター入力
 		Color,		// 色入力
 		Path,		// ファイルパスの指定
+		InputStr,	// 文字列入力
 		Command,	// ボタン
 		Group,		// 表示項目をまとめる
 		List,		// 一覧表示
@@ -111,6 +112,33 @@ public:
 
 private:
 	Value m_Value;
+	bool m_IsSave;
+};
+
+class ItemText : public DebugItem
+{
+public:
+	ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool In_IsSave);
+	~ItemText();
+
+	std::string &GetText() { return m_Text; }
+	ImGuiInputTextFlags GetFlags() const { return m_Flags; }
+	bool IsMultiline() const { return m_IsMultiline; }
+	bool IsSave() const { return m_IsSave; }
+	int GetLineCount() const { return m_LineCount; }
+
+	/// <summary>
+	/// <para>マルチライン時の行数を設定</para>
+	/// <para>0の場合は描画時余っているスペース全てを使用</para>
+	/// </summary>
+	/// <param name="In_LineCount"></param>
+	void SetLineCount(_In_ int In_LineCount = 0) { m_LineCount = In_LineCount; }
+
+private:
+	std::string m_Text;
+	ImGuiInputTextFlags m_Flags;
+	int m_LineCount;
+	bool m_IsMultiline;
 	bool m_IsSave;
 };
 

@@ -58,6 +58,39 @@ public:
 	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合は nullptr を返します。</returns>
 	DebugWindow *GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
+	template<typename ...Args>
+	void DebugLog(_In_ const char* In_Format, Args&& ...args)
+	{
+		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+
+		auto window = GetDebugWindow("System", "Log");
+		if(window->NotDummy())
+		{
+			auto &item = (*window)["LogText"];
+			if (item.GetKind() == DebugItem::Kind::InputStr)
+			{
+				auto TextItem = dynamic_cast<ItemText *>(&item);
+				if (TextItem)
+				{
+					std::string &text = TextItem->GetText();
+					text += msg + "\n";
+
+					// 文字数制限
+					if (TextItem->IsMultiline())
+					{
+						if (text.length() > 4096)
+							text = text.substr(text.find('\n') + 1);
+					}
+					else
+					{
+						if (text.length() > 256)
+							text = text.substr(text.find('\n'));
+					}
+				}
+			}
+		}
+	}
+
 private:
 
 private:
