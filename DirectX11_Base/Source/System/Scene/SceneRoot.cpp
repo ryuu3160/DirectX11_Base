@@ -71,25 +71,6 @@ void SceneRoot::Init()
 	pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
 
-	// スプライトの作成
-	GameObject *pSpriteObj1 = CreateObject<GameObject>("SpriteObj1");
-	auto SpriteComp1 = pSpriteObj1->AddComponent<SpriteRenderer>();
-	SpriteComp1->SetAssetPath("Assets/Texture/TestTexture.png");
-	SpriteComp1->Set3D(true);
-	SpriteComp1->SetBillBoard(true);
-	pSpriteObj1->SetPosition({ 5.0f, 0.0f, 0.0f });
-	SpriteComp1->SetLayerGroup(LayerGroup_UI);
-	SpriteComp1->SetLayer(-1); // レイヤーを設定
-
-	GameObject *pSpriteObj2 = CreateObject<GameObject>("SpriteObj2");
-	auto SpriteComp2 = pSpriteObj2->AddComponent<SpriteRenderer>();
-	SpriteComp2->SetAssetPath("Assets/Texture/TestTexture.png");
-	SpriteComp2->Set3D(false);
-	pSpriteObj2->SetRotation({ 0.0f, 0.0f, 90.0f });
-	pSpriteObj2->SetPosition({ 0.0f, 0.0f, 0.0f });
-	SpriteComp2->SetLayerGroup(LayerGroup_UI);
-	SpriteComp2->SetLayer(0); // レイヤーを設定
-
 	// スカイボックスを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
 	pSkyBox->SetCamera(pCamera);
