@@ -27,6 +27,14 @@ class DebugManager : public Singleton<DebugManager>
 {
 	friend class Singleton<DebugManager>;
 public:
+	struct SaveData
+	{
+		DebugItem::Kind kind;
+		std::string path;
+		std::string value;
+	};
+
+public:
 	DebugManager();
 	~DebugManager();
 
@@ -41,19 +49,19 @@ public:
 	/// </summary>
 	/// <param name="[In_Name]">ウィンドウ名</param>
 	/// <returns>作成されたウィンドウへのポインタ</returns>
-	DebugWindow *CreateDebugWindow(_In_ const std::string_view In_Name);
+	DebugWindow *CreateDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
 	/// <summary>
 	/// 指定した名前に対応するデバッグウィンドウを取得します。
 	/// </summary>
 	/// <param name="[In_Name]">検索するデバッグウィンドウの名前を示す読み取り専用の std::string_view。</param>
 	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合は nullptr を返します。</returns>
-	DebugWindow *GetDebugWindow(_In_ const std::string_view In_Name);
+	DebugWindow *GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
 private:
 
-	void DrawImGui(_In_ DebugItem* In_Item) noexcept;
-
 private:
-	std::unordered_map<std::string, DebugWindow*> m_DebugWindows;
+	ImGuiWindowFlags m_ToolBarFlags;
+	std::unordered_map<std::string, std::vector<DebugWindow*>> m_DebugWindows;
+	std::vector<SaveData> m_SaveData;
 };

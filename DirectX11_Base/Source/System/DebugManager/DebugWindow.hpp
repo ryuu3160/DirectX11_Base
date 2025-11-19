@@ -24,7 +24,7 @@ namespace
 class DebugWindow
 {
 public:
-	DebugWindow();
+	DebugWindow(_In_ const std::string_view In_Name);
 	~DebugWindow();
 
 	void Draw() noexcept;
@@ -33,11 +33,19 @@ public:
 
 	template <typename T, typename ...Args>
 	requires std::derived_from<T, DebugItem>
-	T *CreateItem(_In_ const std::string_view In_Name, _In_ Args&& ...args);
+	T *CreateItem(const std::string_view In_Name, Args&& ...args);
 
 	void RemoveItem(_In_ std::string_view In_Name);
 
 	void ClearItems();
+
+	std::string GetName() const noexcept { return m_Name; }
+
+	bool IsOpen() const noexcept { return m_IsOpen; }
+
+	void SetIsOpen(_In_ const bool In_IsOpen) noexcept { m_IsOpen = In_IsOpen; }
+	void EnableOpen() noexcept { m_IsOpen = true; }
+	void DisableOpen() noexcept { m_IsOpen = false; }
 
 private:
 
@@ -50,16 +58,20 @@ private:
 			});
 	}
 
+	void DrawImgui(_In_ DebugItem *In_Item) noexcept;
+
 private:
+	bool m_IsOpen;
+	std::string m_Name;
 	std::vector<DebugItem *> m_Items;
 };
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, DebugItem>
-inline T *DebugWindow::CreateItem(_In_ const std::string_view In_Name, _In_ Args && ...args)
+inline T *DebugWindow::CreateItem(const std::string_view In_Name, Args && ...args)
 {
-	T *item = new T(In_Name, std::forward<Args>(args)...);
+	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
 
-	m_Items.push_back(static_cast<DebugItem>(item));
+	m_Items.push_back(static_cast<DebugItem*>(item));
 	return item;
 }

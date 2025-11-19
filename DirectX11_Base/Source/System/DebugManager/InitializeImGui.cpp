@@ -36,3 +36,36 @@ void InitializeImGui::UninitImGui()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 }
+
+void InitializeImGui::BeginImGuiFrame() noexcept
+{
+	// Imguiの描画準備
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+}
+
+void InitializeImGui::EndImGuiFrame() noexcept
+{
+	// ImGuiの表示
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	// マルチビューポートが有効な場合の処理
+	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		// 現在のレンダーターゲットと深度ステンシルビューを取得
+		auto &RTVManager = RenderTargetManager::GetInstance();
+		auto rtv = RTVManager.GetDefaultRTV();
+		auto dsv = RTVManager.GetDefaultDSV();
+
+		// ImGuiのビューポートを更新
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+
+		// レンダーターゲットを復元
+		DX11_Core &Instance = DX11_Core::GetInstance();
+		Instance.SetRenderTargets(1, &rtv, dsv);
+	}
+}

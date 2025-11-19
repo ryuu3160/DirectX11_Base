@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "DebugWindow.hpp"
+#include "DebugItem.hpp"
 #include "InitializeImGui.hpp"
 
 // ==============================
@@ -19,7 +20,8 @@ namespace
 	static DebugItem *s_NullItem = nullptr;
 }
 
-DebugWindow::DebugWindow()
+DebugWindow::DebugWindow(_In_ const std::string_view In_Name)
+	: m_Name(In_Name), m_IsOpen(true)
 {
 }
 
@@ -31,143 +33,11 @@ void DebugWindow::Draw() noexcept
 {
 	for (const auto &item : m_Items)
 	{
-
-		switch (item->GetKind())
-		{
-			// 項目名のみの表示
-		case Item::Label:
-			if (isBind)
-			{
-				char str[256];
-				sprintf_s(str, "%s : %s", item->GetName(), reinterpret_cast<char *>(pBind->ptr));
-				ImGui::Text("%s", str);
-			}
-			else
-				ImGui::Text("%s", item->GetName());
-			break;
-			// チェックフラグの表示
-		case Item::Bool:
-			if (isValue)
-				ImGui::Checkbox(item->GetCStrName(), &pValue->value.flg);
-			else if (isBind)
-				ImGui::Checkbox(item->GetCStrName(), reinterpret_cast<bool *>(pBind->ptr));
-			else if (isCallback)
-			{
-				pCallback->func(false, &pCallback->value.flg);
-				if (ImGui::Checkbox(item->GetName(), &pCallback->value.flg))
-					pCallback->func(true, &pCallback->value.flg);
-			}
-			break;
-			// 整数項目の表示
-		case Item::Int:
-			if (isValue)
-				ImGui::InputInt(item->GetName(), &pValue->value.nValue);
-			else if (isBind)
-				ImGui::InputInt(item->GetName(), reinterpret_cast<int *>(pBind->ptr));
-			else if (isCallback)
-			{
-				pCallback->func(false, &pCallback->value.nValue);
-				if (ImGui::InputInt(item->GetName(), &pCallback->value.nValue))
-					pCallback->func(true, &pCallback->value.nValue);
-			}
-			break;
-			// 小数項目の表示
-		case Item::Float:
-			if (isValue)
-				ImGui::InputFloat(item->GetName(), &pValue->value.fValue);
-			else if (isBind)
-				ImGui::InputFloat(item->GetName(), reinterpret_cast<float *>(pBind->ptr));
-			else if (isCallback)
-			{
-				pCallback->func(false, &pCallback->value.fValue);
-				if (ImGui::InputFloat(item->GetName(), &pCallback->value.fValue))
-					pCallback->func(true, &pCallback->value.fValue);
-			}
-			break;
-			// ベクトル項目の表示
-		case Item::Vector:
-			if (isValue)
-				ImGui::InputFloat3(item->GetName(), &pValue->value.vec.x, "%.2f");
-			else if (isBind)
-				ImGui::InputFloat3(item->GetName(), reinterpret_cast<float *>(pBind->ptr), "%.2f");
-			else if (isCallback)
-			{
-				pCallback->func(false, &pCallback->value.vec.x);
-				if (ImGui::InputFloat3(item->GetName(), &pCallback->value.vec.x, "%.2f"))
-					pCallback->func(true, &pCallback->value.vec.x);
-			}
-			break;
-			// 色項目の表示
-		case Item::Color:
-			if (isValue)
-				ImGui::ColorEdit4(item->GetName(), &pValue->value.color.x);
-			else if (isBind)
-				ImGui::ColorEdit4(item->GetName(), reinterpret_cast<float *>(pBind->ptr));
-			else if (isCallback)
-			{
-				pCallback->func(false, &pCallback->value.color.x);
-				if (ImGui::ColorEdit4(item->GetName(), &pCallback->value.color.x))
-					pCallback->func(true, &pCallback->value.color.x);
-			}
-			break;
-			// パス項目の表示
-		case Item::Path:
-			if (typeid(ItemValue) == typeid(*item)) // 通常表示
-				ImGui::InputText(item->GetName(), static_cast<ItemValue *>(item)->value.str, MAX_PATH);
-			else // 紐づけ項目の表示
-				ImGui::InputText(item->GetName(), reinterpret_cast<char *>(static_cast<ItemBind *>(item)->ptr), MAX_PATH);
-			break;
-			// ボタンの表示
-		case Item::Kind::Command:
-			if (ImGui::Button(item->GetName()))
-				pCallback->func(false, nullptr);
-			break;
-			// グループ項目の表示
-		case Item::Group:
-		{
-			ItemGroup *ptr = reinterpret_cast<ItemGroup *>(item);
-			// 表示項目がなければ表示しない
-			if (ptr->group.empty()) break;
-
-			// グループが展開されてなければ表示しない
-			if (!ImGui::CollapsingHeader(item->GetName(), ImGuiTreeNodeFlags_DefaultOpen)) break;
-
-			// グループ内の項目を再帰で表示
-			auto it = ptr->group.begin();
-			while (it != ptr->group.end())
-			{
-				DrawImgui(*it);
-				++it;
-			}
-		}
-		break;
-		// リスト項目の表示
-		case Item::List:
-		{
-			ItemList *ptr = reinterpret_cast<ItemList *>(item);
-			// 表示項目がなければ表示しない
-			if (ptr->list.empty()) break;
-
-			// 表示項目の構築
-			static const char *pList[100];
-			auto it = ptr->list.begin();
-			for (int i = 0; i < ptr->list.size() && i < 100; ++i, ++it)
-				pList[i] = it->c_str();
-
-			// 表示
-			if (ImGui::ListBox(item->GetName(), &ptr->selectNo, pList, static_cast<int>(ptr->list.size())))
-			{
-				// 関数があれば選択時処理を実行
-				if (ptr->func && ptr->selectNo >= 0)
-					ptr->func(pList[ptr->selectNo]);
-			}
-		}
-		break;
-		}
+		DrawImgui(item);
 	}
 }
 
-DebugItem &DebugWindow::operator[](std::string_view In_ItemName)
+DebugItem &DebugWindow::operator[](_In_ std::string_view In_ItemName)
 {
 	auto itr = FindItem(In_ItemName);
 	if (itr == m_Items.end())
@@ -176,7 +46,7 @@ DebugItem &DebugWindow::operator[](std::string_view In_ItemName)
 	return **itr;
 }
 
-void DebugWindow::RemoveItem(std::string_view In_Name)
+void DebugWindow::RemoveItem(_In_ std::string_view In_Name)
 {
 	auto itr = FindItem(In_Name);
 	if (itr != m_Items.end())
@@ -193,4 +63,155 @@ void DebugWindow::ClearItems()
 		delete item;
 	}
 	m_Items.clear();
+}
+
+void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
+{
+	ItemValue *pValue = dynamic_cast<ItemValue *>(In_Item);
+	ItemBind *pBind = nullptr;
+	ItemCallback *pCallback = nullptr;
+	if (!pValue)
+		pBind = dynamic_cast<ItemBind *>(In_Item);
+	if (!pValue && !pBind)
+		pCallback = dynamic_cast<ItemCallback *>(In_Item);
+
+	if (!pValue && !pBind && !pCallback)
+		return;
+
+	switch (In_Item->GetKind())
+	{
+		// 項目名のみの表示
+	case DebugItem::Label:
+		if (pBind)
+		{
+			char str[256];
+			sprintf_s(str, "%s : %s", In_Item->GetCStrName(), pBind->GetPtr<char>());
+			ImGui::Text("%s", str);
+		}
+		else
+			ImGui::Text("%s", In_Item->GetName());
+		break;
+		// チェックフラグの表示
+	case DebugItem::Bool:
+		if (pValue)
+			ImGui::Checkbox(In_Item->GetCStrName(), &std::get<bool>(pValue->GetValue()));
+		else if (pBind)
+			ImGui::Checkbox(In_Item->GetCStrName(), pBind->GetPtr<bool>());
+		else if (pCallback)
+		{
+			pCallback->GetFunc()(false, &std::get<bool>(pCallback->GetValue()));
+			if (ImGui::Checkbox(In_Item->GetCStrName(), &std::get<bool>(pCallback->GetValue())))
+				pCallback->GetFunc()(true, &std::get<bool>(pCallback->GetValue()));
+		}
+		break;
+		// 整数項目の表示
+	case DebugItem::Int:
+		if (pValue)
+			ImGui::InputInt(In_Item->GetCStrName(), &std::get<int>(pCallback->GetValue()));
+		else if (pBind)
+			ImGui::InputInt(In_Item->GetCStrName(), pBind->GetPtr<int>());
+		else if (pCallback)
+		{
+			pCallback->GetFunc()(false, &std::get<int>(pCallback->GetValue()));
+			if (ImGui::InputInt(In_Item->GetCStrName(), &std::get<int>(pCallback->GetValue())))
+				pCallback->GetFunc()(true, &std::get<int>(pCallback->GetValue()));
+		}
+		break;
+		// 小数項目の表示
+	case DebugItem::Float:
+		if (pValue)
+			ImGui::InputFloat(In_Item->GetCStrName(), &std::get<float>(pValue->GetValue()));
+		else if (pBind)
+			ImGui::InputFloat(In_Item->GetCStrName(), pBind->GetPtr<float>());
+		else if (pCallback)
+		{
+			pCallback->GetFunc()(false, &std::get<float>(pValue->GetValue()));
+			if (ImGui::InputFloat(In_Item->GetCStrName(), &std::get<float>(pValue->GetValue())))
+				pCallback->GetFunc()(true, &std::get<float>(pValue->GetValue()));
+		}
+		break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+		if (pValue)
+			ImGui::InputFloat3(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x, "%.2f");
+		else if (pBind)
+			ImGui::InputFloat3(In_Item->GetCStrName(), pBind->GetPtr<float>(), "%.2f");
+		else if (pCallback)
+		{
+			pCallback->GetFunc()(false, &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x);
+			if (ImGui::InputFloat3(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x, "%.2f"))
+				pCallback->GetFunc()(true, &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x);
+		}
+		break;
+		// 色項目の表示
+	case DebugItem::Color:
+		if (pValue)
+			ImGui::ColorEdit4(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x);
+		else if (pBind)
+			ImGui::ColorEdit4(In_Item->GetCStrName(), pBind->GetPtr<float>());
+		else if (pCallback)
+		{
+			pCallback->GetFunc()(false, &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x);
+			if (ImGui::ColorEdit4(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x))
+				pCallback->GetFunc()(true, &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x);
+		}
+		break;
+		// パス項目の表示
+	case DebugItem::Path:
+		if (typeid(ItemValue) == typeid(*In_Item)) // 通常表示
+		{
+			char buffer[MAX_PATH];
+			strncpy_s(buffer, std::get<std::string>(pValue->GetValue()).c_str(), MAX_PATH);
+			ImGui::InputText(In_Item->GetCStrName(), buffer, MAX_PATH);
+			std::get<std::string>(pValue->GetValue()) = buffer;
+		}
+		else // 紐づけ項目の表示
+			ImGui::InputText(In_Item->GetCStrName(), pBind->GetPtr<char>(), MAX_PATH);
+		break;
+		// ボタンの表示
+	case DebugItem::Kind::Command:
+		if (ImGui::Button(In_Item->GetCStrName()) && pCallback)
+			pCallback->GetFunc()(false, nullptr);
+		break;
+		// グループ項目の表示
+	case DebugItem::Group:
+	{
+		ItemGroup *ptr = dynamic_cast<ItemGroup *>(In_Item);
+		// 表示項目がなければ表示しない
+		if (ptr->GetGroupItems().empty()) break;
+
+		// グループが展開されてなければ表示しない
+		if (!ImGui::CollapsingHeader(In_Item->GetCStrName(), ImGuiTreeNodeFlags_DefaultOpen)) break;
+
+		// グループ内の項目を再帰で表示
+		auto itr = ptr->GetGroupItems().begin();
+		for (; itr != ptr->GetGroupItems().end(); ++itr)
+		{
+			DrawImgui(*itr);
+		}
+	}
+	break;
+	// リスト項目の表示
+	case DebugItem::List:
+	{
+		ItemList *ptr = dynamic_cast<ItemList *>(In_Item);
+		// 表示項目がなければ表示しない
+		if (ptr->GetList().empty()) break;
+
+		// 表示項目の構築
+		static const char *pList[100];
+		auto it = ptr->GetList().begin();
+		for (int i = 0; i < ptr->GetList().size() && i < 100; ++i, ++it)
+			pList[i] = it->c_str();
+
+		// 表示
+		if (ImGui::ListBox(In_Item->GetCStrName(), &ptr->GetSelectNo(), pList, static_cast<int>(ptr->GetList().size())))
+		{
+			// 関数があれば選択時処理を実行
+			if (ptr->GetFunc() && ptr->GetSelectNo() >= 0)
+				ptr->GetFunc()(pList[ptr->GetSelectNo()]);
+		}
+	}
+	break;
+	}
 }

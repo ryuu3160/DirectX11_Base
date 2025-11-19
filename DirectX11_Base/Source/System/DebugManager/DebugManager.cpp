@@ -15,19 +15,46 @@
 // ==============================
 namespace
 {
+	constexpr float cx_fTitleBarHeight = 80.0f;
+	constexpr float cx_fToolBarHeight = 15.0f;
 }
 
 DebugManager::DebugManager()
+	: m_ToolBarFlags(0)
 {
 }
 
 DebugManager::~DebugManager()
 {
+	for (auto &itr : m_DebugWindows)
+	{
+		for (const auto &window : itr.second)
+		{
+			delete window;
+		}
+		itr.second.clear();
+	}
+	m_DebugWindows.clear();
 }
 
 void DebugManager::Init()
 {
+	m_ToolBarFlags |= ImGuiWindowFlags_MenuBar;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoCollapse;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoMove;
 
+	// ƒf[ƒ^‚Ì“Ç‚Ýž‚Ý
+	std::fstream file("Assets\\Debug\\DebugManagerData.csv", std::ios::in);
+
+	if (file.is_open())
+	{
+		std::string line;
+		while (std::getline(file, line))
+		{
+
+		}
+		file.close();
+	}
 }
 
 void DebugManager::Update() noexcept
@@ -36,23 +63,76 @@ void DebugManager::Update() noexcept
 
 void DebugManager::Draw() noexcept
 {
+	ImGuiViewport *vp = ImGui::GetMainViewport();
+	ImVec2 pos = ImVec2(vp->WorkPos.x, vp->WorkPos.y - cx_fTitleBarHeight);
+	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(cx_nWINDOW_WIDTH, cx_fToolBarHeight), ImGuiCond_Always);
+	if (ImGui::Begin("ToolBar",nullptr, m_ToolBarFlags))
+	{
+		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+		if (ImGui::BeginMenuBar())
+		{
+			for (const auto &itr : m_DebugWindows)
+			{
+				if (ImGui::BeginMenu(itr.first.c_str()))
+				{
+					for (const auto &window : itr.second)
+					{
+						if (!window)
+							continue;
+						bool isOpen = window->IsOpen();
+						if (ImGui::MenuItem(window->GetName().c_str(), nullptr, isOpen))
+						{
+							window->SetIsOpen(!isOpen);
+						}
+					}
+					ImGui::EndMenu();
+				}
+			}
+
+			ImGui::EndMenuBar();
+		}
+		ImGui::PopItemWidth();
+	}
+	ImGui::End();
+
 	for (const auto &itr : m_DebugWindows)
 	{
-		if (itr.second)
-			itr.second->Draw();
+		for(const auto &window : itr.second)
+		{
+			if (!window)
+				continue;
+
+			if (window->IsOpen())
+			{
+				ImGui::Begin(window->GetName().c_str());
+				window->Draw();
+				ImGui::End();
+			}
+		}
 	}
 }
 
-DebugWindow *DebugManager::CreateDebugWindow(const std::string_view In_Name)
+DebugWindow *DebugManager::CreateDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
 {
-	return nullptr;
+	DebugWindow *NewWindow = new DebugWindow(In_Name);
+	auto itr = m_DebugWindows.try_emplace(In_GroupName.data());
+	itr.first->second.push_back(NewWindow);
+	return NewWindow;
 }
 
-DebugWindow *DebugManager::GetDebugWindow(const std::string_view In_Name)
+DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
 {
+	auto itr = m_DebugWindows.find(In_GroupName.data());
+	if (itr != m_DebugWindows.end())
+	{
+		for (const auto &window : itr->second)
+		{
+			if (window && window->GetName() == In_Name)
+			{
+				return window;
+			}
+		}
+	}
 	return nullptr;
-}
-
-void DebugManager::DrawImGui(DebugItem *In_Item) noexcept
-{
 }

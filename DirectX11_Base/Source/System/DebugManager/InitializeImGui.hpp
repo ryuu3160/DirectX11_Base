@@ -40,4 +40,8 @@ public:
 	static void InitImGui();
 
 	static void UninitImGui();
+
+	static void BeginImGuiFrame() noexcept;
+
+	static void EndImGuiFrame() noexcept;
 };
