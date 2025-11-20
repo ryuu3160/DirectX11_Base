@@ -50,7 +50,7 @@ RTSpriteRenderer::~RTSpriteRenderer()
 		m_Context = nullptr;
 }
 
-void RTSpriteRenderer::Update() noexcept
+void RTSpriteRenderer::Update(_In_ float In_Tick) noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (m_bIsLoaded)

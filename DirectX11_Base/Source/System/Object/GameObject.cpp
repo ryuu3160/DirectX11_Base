@@ -140,7 +140,7 @@ void GameObject::ExecuteInit() noexcept
 	m_IsInitialized = true;
 }
 
-void GameObject::ExecuteUpdate() noexcept
+void GameObject::ExecuteUpdate(_In_ float In_Tick) noexcept
 {
 	// 初期化が呼ばれていないコンポーネントの初期化
 	InitializeComponents();
@@ -149,22 +149,22 @@ void GameObject::ExecuteUpdate() noexcept
 	for (auto &itr : m_Components)
 	{
 		if(itr->m_IsActive)
-			itr->Update();
+			itr->Update(In_Tick);
 	}
 	// 継承先オブジェクトの処理
-	Update();
+	Update(In_Tick);
 }
 
-void GameObject::ExecuteLateUpdate() noexcept
+void GameObject::ExecuteLateUpdate(_In_ float In_Tick) noexcept
 {
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
 		if(itr->m_IsActive)
-			itr->LateUpdate();
+			itr->LateUpdate(In_Tick);
 	}
 	// 継承先オブジェクトの遅延処理
-	LateUpdate();
+	LateUpdate(In_Tick);
 
 	// 破棄予約されたコンポーネントの破棄処理
 	ExecuteDestroyComponents();

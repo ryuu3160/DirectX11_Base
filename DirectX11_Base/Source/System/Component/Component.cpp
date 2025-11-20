@@ -20,11 +20,11 @@ Component::~Component()
 	m_pTransform = nullptr;
 }
 
-void Component::Update() noexcept
+void Component::Update(_In_ float In_Tick) noexcept
 {
 }
 
-void Component::LateUpdate() noexcept
+void Component::LateUpdate(_In_ float In_Tick) noexcept
 {
 }
 

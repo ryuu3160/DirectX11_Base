@@ -55,7 +55,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			// fps制御
 			if (frame.UpdateMain())
 			{
-				Main::Update();	// 更新処理
+				Main::Update(0.1f);	// 更新処理
 				Main::Draw();	// 描画処理
 			}
 		}

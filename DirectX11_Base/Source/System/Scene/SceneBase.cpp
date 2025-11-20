@@ -121,7 +121,7 @@ void SceneBase::_ObjectsInit() noexcept
 	}
 }
 
-void SceneBase::_RootUpdateMain() noexcept
+void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
 {
 	// シーンが所持しているオブジェクトの更新
 	for (auto &itr : m_Items)
@@ -130,15 +130,15 @@ void SceneBase::_RootUpdateMain() noexcept
 		// アクティブかつ初期化済みなら更新を実行
 		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
 		{
-			obj->second->ExecuteUpdate();
+			obj->second->ExecuteUpdate(In_Tick);
 		}
 	}
 
 	// シーン自体の更新(クリア判定など
-	Update();
+	Update(In_Tick);
 }
 
-void SceneBase::_RootUpdateLate() noexcept
+void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 {
 	// シーンが所持しているオブジェクトの遅延更新
 	for (auto &itr : m_Items)
@@ -147,12 +147,12 @@ void SceneBase::_RootUpdateLate() noexcept
 		// 型チェック
 		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
 		{
-			obj->second->ExecuteLateUpdate();
+			obj->second->ExecuteLateUpdate(In_Tick);
 		}
 	}
 
 	// シーン自体の遅延更新
-	LateUpdate();
+	LateUpdate(In_Tick);
 }
 
 void SceneBase::_RootDraw() noexcept

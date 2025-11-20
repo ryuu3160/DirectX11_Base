@@ -52,7 +52,7 @@ InstancedModelRenderer::~InstancedModelRenderer()
 	m_pShaderParams.clear();
 }
 
-void InstancedModelRenderer::Update() noexcept
+void InstancedModelRenderer::Update(_In_ float In_Tick) noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (!m_vecMeshes.empty()) return;

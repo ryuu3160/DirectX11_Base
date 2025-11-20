@@ -32,8 +32,8 @@ public:
 	[[nodiscard]] bool IsInitialized() const noexcept { return m_IsInitialized; }
 
 	virtual void Init() noexcept = 0;
-	virtual void Update() noexcept {};
-	virtual void LateUpdate() noexcept {};
+	virtual void Update(_In_ float In_Tick) noexcept {};
+	virtual void LateUpdate(_In_ float In_Tick) noexcept {};
 
 protected:
 

@@ -84,8 +84,8 @@ public:
 	// 継承先で使用する関数
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
-	virtual void Update() = 0;
-	virtual void LateUpdate() {};
+	virtual void Update(_In_ float In_Tick) = 0;
+	virtual void LateUpdate(_In_ float In_Tick) {};
 	virtual void Draw() = 0;
 
 protected:
@@ -110,11 +110,11 @@ private:
 	/// <summary>
 	/// ルートのメイン更新処理を実行します。
 	/// </summary>
-	void _RootUpdateMain() noexcept;
+	void _RootUpdateMain(_In_ float In_Tick) noexcept;
 	/// <summary>
 	/// ルートオブジェクトの遅延更新処理を実行します。
 	/// </summary>
-	void _RootUpdateLate() noexcept;
+	void _RootUpdateLate(_In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// シーンの描画を行います。

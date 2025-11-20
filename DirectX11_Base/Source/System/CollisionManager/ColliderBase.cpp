@@ -25,7 +25,7 @@ void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
 {
 }
 
-void ColliderBase::Update() noexcept
+void ColliderBase::Update(_In_ float In_Tick) noexcept
 {
 	CollisionManager::GetInstance().AddColliderComponent(this);
 }

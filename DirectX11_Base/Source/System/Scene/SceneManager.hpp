@@ -33,7 +33,7 @@ public:
 	/// <summary>
 	/// シーンのアップデート
 	/// </summary>
-	void RootUpdate() noexcept;
+	void RootUpdate(_In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// シーンの描画
@@ -90,8 +90,8 @@ private:
 	/// </summary>
 	void UnLoadCurrentScene() noexcept;
 
-	void _RootUpdateMain() noexcept;
-	void _RootUpdateLate() noexcept;
+	void _RootUpdateMain(_In_ float In_Tick) noexcept;
+	void _RootUpdateLate(_In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// 削除予約リストに追加されたサブシーンを削除します。

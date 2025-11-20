@@ -111,11 +111,11 @@ void Main::Uninit()
 	Input::Uninit();
 }
 
-void Main::Update()
+void Main::Update(_In_ float In_Tick)
 {
 	auto &SceneM = SceneManager::GetInstance();
 	Input::Update();
-	SceneM.RootUpdate();
+	SceneM.RootUpdate(In_Tick);
 	SpriteManager::GetInstance().Update();
 	DebugManager::GetInstance().Update();
 

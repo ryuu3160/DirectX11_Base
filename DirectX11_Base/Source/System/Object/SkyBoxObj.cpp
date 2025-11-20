@@ -42,7 +42,7 @@ void SkyBoxObj::SetCamera(_In_ GameObject * In_Cam) noexcept
 	m_pCameraObj = In_Cam;
 }
 
-void SkyBoxObj::LateUpdate() noexcept
+void SkyBoxObj::LateUpdate(_In_ float In_Tick) noexcept
 {
 	if (NullCheck(m_pCameraObj, NCMode::OUTPUT, "error: SkyBoxObj Error, CameraObj is nullptr"))
 		return;

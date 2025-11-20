@@ -55,21 +55,21 @@ void SceneManager::SceneObjectsInit() noexcept
 	}
 }
 
-void SceneManager::RootUpdate() noexcept
+void SceneManager::RootUpdate(_In_ float In_Tick) noexcept
 {
 	// 初期化されていないオブジェクトの初期化
 	SceneObjectsInit();
 
 	// メインの更新
-	_RootUpdateMain();
+	_RootUpdateMain(In_Tick);
 
 	m_CollisionManager.CheckAllCollisions();
 
 	// 遅延更新
-	_RootUpdateLate();
+	_RootUpdateLate(In_Tick);
 
 	// フェードの処理
-	m_FadeManager.Update();
+	m_FadeManager.Update(In_Tick);
 }
 
 void SceneManager::RootDraw() noexcept
@@ -167,29 +167,29 @@ void SceneManager::UnLoadCurrentScene() noexcept
 	}
 }
 
-void SceneManager::_RootUpdateMain() noexcept
+void SceneManager::_RootUpdateMain(_In_ float In_Tick) noexcept
 {
 	// メインシーンの更新
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootUpdateMain();
+		m_pCurrentScene->_RootUpdateMain(In_Tick);
 	// サブシーンの更新
 	for (auto &itr : m_SubScene)
 	{
 		if(itr.second)
-			itr.second->_RootUpdateMain();
+			itr.second->_RootUpdateMain(In_Tick);
 	}
 }
 
-void SceneManager::_RootUpdateLate() noexcept
+void SceneManager::_RootUpdateLate(_In_ float In_Tick) noexcept
 {
 	// メインシーンの更新
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootUpdateLate();
+		m_pCurrentScene->_RootUpdateLate(In_Tick);
 	// サブシーンの更新
 	for (auto &itr : m_SubScene)
 	{
 		if (itr.second)
-			itr.second->_RootUpdateLate();
+			itr.second->_RootUpdateLate(In_Tick);
 	}
 }
 

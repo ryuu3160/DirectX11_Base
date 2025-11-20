@@ -130,8 +130,8 @@ public:
 	virtual  ~Component();
 	virtual void OnEnable() noexcept override {};
 	virtual void Init() noexcept override = 0;
-	virtual void Update() noexcept override;
-	virtual void LateUpdate() noexcept override;
+	virtual void Update(_In_ float In_Tick) noexcept override;
+	virtual void LateUpdate(_In_ float In_Tick) noexcept override;
 
 	virtual void ReadWrite(_In_ DataAccessor *In_Data);
 

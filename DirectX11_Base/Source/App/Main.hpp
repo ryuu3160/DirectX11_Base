@@ -22,7 +22,7 @@ namespace Main
 {
 	HRESULT Init();
 	void Uninit();
-	void Update();
+	void Update(_In_ float In_Tick);
 	void Draw();
 
 	void InitializeDebugWindows() noexcept;

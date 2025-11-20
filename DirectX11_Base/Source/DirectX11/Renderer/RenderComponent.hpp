@@ -75,7 +75,7 @@ public:
 
 	virtual void Init() noexcept override;
 
-	virtual void Update() noexcept override;
+	virtual void Update(_In_ float In_Tick) noexcept override;
 
 	/// <summary>
 	/// データアクセサーを使用して読み書きを行います。

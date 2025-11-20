@@ -34,7 +34,7 @@ public:
 	/// <summary>
 	/// オブジェクトの状態を更新します。
 	/// </summary>
-	void Update() noexcept final;
+	void Update(_In_ float In_Tick) noexcept final;
 
 private:
 	void UpdateState() noexcept;

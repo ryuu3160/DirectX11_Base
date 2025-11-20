@@ -37,12 +37,12 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void ExecuteUpdate() noexcept;
+	void ExecuteUpdate(_In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// 遅延更新処理
 	/// </summary>
-	void ExecuteLateUpdate() noexcept;
+	void ExecuteLateUpdate(_In_ float In_Tick) noexcept;
 
 	// コンポーネントの生成
 	template<typename T>
@@ -124,8 +124,8 @@ public:
 protected:
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}
-	virtual void Update() noexcept override {}
-	virtual void LateUpdate() noexcept override {}
+	virtual void Update(_In_ float In_Tick) noexcept override {}
+	virtual void LateUpdate(_In_ float In_Tick) noexcept override {}
 
 private:
 	void InitializeComponents() noexcept;

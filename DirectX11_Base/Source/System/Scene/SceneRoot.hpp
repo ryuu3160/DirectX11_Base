@@ -17,13 +17,13 @@
 class SceneRoot : public SceneBase
 {
 public:
-	SceneRoot() : SceneBase("Root") {} 
+	SceneRoot() : SceneBase("Root") {}
 	// シーンの初期化
 	void Init() override;
 	// シーンの解放
 	void Uninit() override;
 	// シーンの更新
-	void Update() override;
+	void Update(_In_ float In_Tick) override;
 	// シーンの描画
 	void Draw() override;
 private:

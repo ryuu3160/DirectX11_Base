@@ -43,7 +43,7 @@ public:
 		GameObject *pFadeObj = nullptr;
 	};
 
-	void Update() noexcept;
+	void Update(_In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// 指定した名前のフェードを追加します。
@@ -104,8 +104,8 @@ private:
 	FadeManager();
 	~FadeManager();
 
-	void UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept;
-	void UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept;
+	void UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept;
+	void UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept;
 
 	/// <summary>
 	/// 指定された名前とフェード情報を使用して、フェード用のGameObjectを作成します。

@@ -130,7 +130,7 @@ void SceneRoot::Uninit()
 {
 }
 
-void SceneRoot::Update()
+void SceneRoot::Update(_In_ float In_Tick)
 {
 	struct PaternScale
 	{

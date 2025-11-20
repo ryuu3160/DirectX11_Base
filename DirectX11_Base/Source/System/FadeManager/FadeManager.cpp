@@ -12,19 +12,19 @@
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 
-void FadeManager::Update() noexcept
+void FadeManager::Update(_In_ float In_Tick) noexcept
 {
 	for (auto &itr : m_mapFadeObj)
 	{
 		if (itr.second.IsStartFadeIn)
 		{
 			// フェードイン処理
-			UpdateFadeIn(itr.second);
+			UpdateFadeIn(itr.second, In_Tick);
 		}
 		else if (itr.second.IsStartFadeOut)
 		{
 			// フェードアウト処理
-			UpdateFadeOut(itr.second);
+			UpdateFadeOut(itr.second, In_Tick);
 		}
 	}
 
@@ -203,7 +203,7 @@ FadeManager::~FadeManager()
 	m_mapFadeObj.clear();
 }
 
-void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
+void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept
 {
 	float alpha;
 	if(InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
@@ -220,10 +220,10 @@ void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	else
 		col.w = alpha;
 	cmp->SetColor(col);
-	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
+	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_Tick);
 }
 
-void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
+void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept
 {
 	float alpha;
 	if (InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
@@ -239,7 +239,7 @@ void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo) noexcept
 	else
 		col.w = alpha;
 	cmp->SetColor(col);
-	InOut_FadeInfo.pFadeObj->ExecuteUpdate();
+	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_Tick);
 }
 
 GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const FadeInfo &In_FadeInfo)
