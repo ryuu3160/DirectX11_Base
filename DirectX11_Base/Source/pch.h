@@ -97,3 +97,4 @@ using Microsoft::WRL::ComPtr;
 #include "System/FadeManager/FadeManager.hpp"
 #include "System/Scene/SceneManager.hpp"
 #include "System/Sound/SoundManager.hpp"
+#include "System/DebugManager/DebugManager.hpp"

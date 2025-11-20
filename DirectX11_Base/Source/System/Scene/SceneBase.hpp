@@ -128,6 +128,7 @@ private:
 
 private:
 	static Objects m_Objects;
+	static ItemList *m_Hierarchy;
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
 

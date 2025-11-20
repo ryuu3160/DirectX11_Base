@@ -17,6 +17,7 @@
 //  ‘O•ûéŒ¾
 // ==============================
 SceneBase::Objects SceneBase::m_Objects;
+ItemList *SceneBase::m_Hierarchy = nullptr;
 
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
@@ -41,6 +42,18 @@ void SceneBase::CommonProcessScene() noexcept
 	CreateObject<CameraDCC>("MainCamera");
 
 #ifdef _DEBUG
+	auto &DebugM = DebugManager::GetInstance();
+	DebugWindow *window = DebugM.GetDebugWindow("System", "Hierarchy");
+	m_Hierarchy = window->CreateItem<ItemList>("Name", [](const void *arg)
+		{
+			const char *name = reinterpret_cast<const char *>(arg);
+			auto itr = m_Objects.find(name);
+			if (itr == m_Objects.end()) return;
+			auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+			window->ClearItems();
+			window->CreateItem<ItemValue>(itr->first.c_str(), DebugItem::Label);
+			itr->second->RegisterDebugInspector(window);
+		});
 	/*debug::Menu::Create("Inspector");
 	debug::Window &window = debug::Menu::Create("Hierarchy");
 	hierarchy = debug::Item::CreateList("Name", [](const void *arg)

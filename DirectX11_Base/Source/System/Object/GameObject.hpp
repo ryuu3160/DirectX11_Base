@@ -15,6 +15,7 @@
 //  前方宣言
 // ==============================
 class Component;
+class DebugWindow;
 
 /// <summary>
 /// GameObjectクラス
@@ -137,6 +138,10 @@ private:
 	void _destroySelf() noexcept;
 
 	void ExecuteDestroyComponents() noexcept;
+
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow);
+#endif // _DEBUG
 
 private:
 	// コンポーネントリスト

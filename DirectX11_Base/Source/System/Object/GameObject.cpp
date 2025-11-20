@@ -367,3 +367,39 @@ void GameObject::ExecuteDestroyComponents() noexcept
 	}
 	m_DeadComponents.clear();
 }
+
+void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+	// トランスフォームグループの作成
+	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
+	group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
+	group->CreateGroupItem<ItemBind>("Rotation", DebugItem::Kind::Vector,
+		[this](bool IsWrite, void *arg)
+		{
+			DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
+			if (IsWrite)
+			{
+				DirectX::XMStoreFloat4(&m_Quat,
+					DirectX::XMQuaternionRotationRollPitchYaw( // zxy
+						DirectX::XMConvertToRadians(pVec->x), // pitch
+						DirectX::XMConvertToRadians(pVec->y), // yaw
+						DirectX::XMConvertToRadians(pVec->z))); // roll
+			}
+			else
+			{
+				DirectX::XMFLOAT3 rot = QuaternionToRollPitchYaw(m_Quat);
+				pVec->x = DirectX::XMConvertToDegrees(rot.x);
+				pVec->y = DirectX::XMConvertToDegrees(rot.y);
+				pVec->z = DirectX::XMConvertToDegrees(rot.z);
+			}
+		});
+	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+
+	// コンポーネントのインスペクター登録
+	/*auto it = m_components.begin();
+	while (it != m_components.end())
+	{
+		(*it)->Debug(window);
+		++it;
+	}*/
+}
