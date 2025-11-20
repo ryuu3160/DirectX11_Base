@@ -11,6 +11,7 @@
 #include "EntryPoint.hpp"
 #include "App/Main.hpp"
 #include "System/DebugManager/InitializeImGui.hpp"
+#include "System/DebugManager/DebugManager.hpp"
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -55,7 +56,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			// fps制御
 			if (frame.UpdateMain())
 			{
-				Main::Update(0.1f);	// 更新処理
+				Main::Update(frame.GetTick());	// 更新処理
 				Main::Draw();	// 描画処理
 			}
 		}

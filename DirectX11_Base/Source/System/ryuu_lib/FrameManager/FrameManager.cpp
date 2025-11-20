@@ -40,6 +40,7 @@ bool FrameManager::UpdateMain()
 	// フレームレートの制限
 	if (m_dwTime - m_dwOldTime >= 1000 / m_fMainFps)
 	{
+		m_fTick = static_cast<float>(m_dwTime - m_dwOldTime) / 1000.0f;	// 経過時間の計算
 		m_dwOldTime = m_dwTime;
 
 		// FPSの計測

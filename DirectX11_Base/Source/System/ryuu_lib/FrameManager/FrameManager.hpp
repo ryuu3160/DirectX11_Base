@@ -40,6 +40,8 @@ public:
 	/// <returns>設定したフレーム数を超えていた場合trueを返す</returns>
 	bool UpdateMain();
 
+	float GetTick() const { return m_fTick; }
+
 	/// <summary>
 	/// 現在時間の取得（main）
 	/// </summary>
@@ -189,6 +191,7 @@ private:
 	DWORD m_dwTime;
 	DWORD m_dwOldTime;
 	float m_fMainFps;
+	float m_fTick;
 	bool m_bMainExists;
 
 	// スレッドセーフのためのミューテックス
