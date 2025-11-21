@@ -118,3 +118,16 @@ DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 	DirectX::XMStoreFloat3(&pos, vLook);
 	return pos;
 }
+
+void Camera::RegisterDebugInspector(DebugWindow *In_pWindow)
+{
+	auto *group = In_pWindow->CreateItem<ItemGroup>("Camera Component");
+	group->CreateGroupItem<ItemBind>("is3D", DebugItem::Kind::Bool, &m_bIs3D);
+	group->CreateGroupItem<ItemBind>("Fovy", DebugItem::Kind::Float, &m_fFovy);
+	group->CreateGroupItem<ItemBind>("Focus", DebugItem::Kind::Float, &m_fFocus);
+	group->CreateGroupItem<ItemBind>("Width", DebugItem::Kind::Float, &m_fWidth);
+	group->CreateGroupItem<ItemBind>("Near", DebugItem::Kind::Float, &m_fNear);
+	group->CreateGroupItem<ItemBind>("Far", DebugItem::Kind::Float, &m_fFar);
+	group->CreateGroupItem<ItemBind>("Aspect", DebugItem::Kind::Float, &m_fAspect);
+	group->CreateGroupItem<ItemBind>("isShow", DebugItem::Kind::Bool, &m_bIsShow);
+}

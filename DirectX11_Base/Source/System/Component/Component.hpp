@@ -142,6 +142,12 @@ public:
 	void DestroySelf() noexcept;
 
 protected:
+
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
+
+protected:
 	GameObject *m_pTransform;
 	std::string m_Name;
 private:

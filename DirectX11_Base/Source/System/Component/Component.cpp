@@ -37,3 +37,7 @@ void Component::DestroySelf() noexcept
 	m_IsDestroyed = true;
 	m_pTransform->RemoveComponent(m_Name);
 }
+
+void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+}
