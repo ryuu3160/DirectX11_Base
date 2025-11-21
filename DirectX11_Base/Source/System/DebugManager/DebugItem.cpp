@@ -264,6 +264,38 @@ ItemBind::~ItemBind()
 
 ItemCallback::ItemCallback(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func)
 {
+	m_Name = In_Name;
+	if(In_Kind == Kind::Group || In_Kind == Kind::List)
+	{
+		// グループ、リストはItemCallbackでは扱えない
+		In_Kind = Kind::Label;
+	}
+	m_Kind = In_Kind;
+	m_Func = In_Func;
+
+	switch (m_Kind)
+	{
+	case Kind::Label:
+	case Kind::Path:
+	case Kind::InputStr:
+		m_Value = std::string{};
+		break;
+	case Kind::Bool:
+		m_Value = false;
+		break;
+	case Kind::Int:
+		m_Value = 0;
+		break;
+	case Kind::Float:
+		m_Value = 0.0f;
+		break;
+	case Kind::Vector:
+		m_Value = DirectX::XMFLOAT3{};
+		break;
+	case Kind::Color:
+		m_Value = DirectX::XMFLOAT4{};
+		break;
+	}
 }
 
 ItemCallback::~ItemCallback()

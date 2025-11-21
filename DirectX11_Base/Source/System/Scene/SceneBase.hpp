@@ -13,6 +13,7 @@
 #include "DirectX11/Resource/Shaders/Shader.hpp"
 #include "DirectX11/Renderer/ModelRenderer.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
+#include "System/DebugManager/DebugItem.hpp"
 
 // ==============================
 //  undefine
@@ -128,7 +129,9 @@ private:
 
 private:
 	static Objects m_Objects;
+#ifdef _DEBUG
 	static ItemList *m_Hierarchy;
+#endif // _DEBUG
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
 
@@ -153,7 +156,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	}
 
 	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
+	m_Hierarchy->AddListItem(In_Name);
 
 #endif // _DEBUG
 
@@ -181,7 +184,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	}
 
 	// ヒエラルキーに追加
-	//hierarchy->AddListItem(name);
+	m_Hierarchy->AddListItem(In_Name);
 
 #endif // _DEBUG
 

@@ -373,9 +373,8 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	// トランスフォームグループの作成
 	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
 	group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
-	group->CreateGroupItem<ItemBind>("Rotation", DebugItem::Kind::Vector,
-		[this](bool IsWrite, void *arg)
-		{
+	group->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
+		[this](bool IsWrite, void *arg) {
 			DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
 			if (IsWrite)
 			{
@@ -396,10 +395,8 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
 
 	// コンポーネントのインスペクター登録
-	/*auto it = m_components.begin();
-	while (it != m_components.end())
+	for (auto &itr : m_Components)
 	{
-		(*it)->Debug(window);
-		++it;
-	}*/
+		itr->RegisterDebugInspector(In_pWindow);
+	}
 }

@@ -17,7 +17,9 @@
 //  前方宣言
 // ==============================
 SceneBase::Objects SceneBase::m_Objects;
+#ifdef _DEBUG
 ItemList *SceneBase::m_Hierarchy = nullptr;
+#endif // DEBUG
 
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
@@ -38,9 +40,6 @@ SceneBase::~SceneBase()
 
 void SceneBase::CommonProcessScene() noexcept
 {
-	// メインカメラの作成
-	CreateObject<CameraDCC>("MainCamera");
-
 #ifdef _DEBUG
 	auto &DebugM = DebugManager::GetInstance();
 	DebugWindow *window = DebugM.GetDebugWindow("System", "Hierarchy");
@@ -51,25 +50,14 @@ void SceneBase::CommonProcessScene() noexcept
 			if (itr == m_Objects.end()) return;
 			auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
 			window->ClearItems();
-			window->CreateItem<ItemValue>(itr->first.c_str(), DebugItem::Label);
+			window->CreateItem<ItemValue>(itr->first, DebugItem::Label);
 			itr->second->RegisterDebugInspector(window);
 		});
-	/*debug::Menu::Create("Inspector");
-	debug::Window &window = debug::Menu::Create("Hierarchy");
-	hierarchy = debug::Item::CreateList("Name", [](const void *arg)
-		{
-			const char *name = reinterpret_cast<const char *>(arg);
-			auto it = m_objects.find(name);
-			if (it == m_objects.end()) return;
-			auto &window = debug::Menu::Get("Inspector");
-			window.Clear();
-			window.AddItem(debug::Item::CreateValue(it->first.c_str(), debug::Item::Label));
-			if (!it->second->isGameObject) return;
-
-			static_cast<GameObject *>(it->second->m_pObj)->Debug(&window);
-		});
-	window.AddItem(hierarchy);*/
 #endif
+
+	// メインカメラの作成
+	CreateObject<CameraDCC>("MainCamera");
+
 }
 
 template<> GameObject
@@ -85,7 +73,7 @@ template<> GameObject
 		return nullptr;
 	}
 	// ヒエラルキーに追加
-	//hierarchy->AddListItem(In_Name.data());
+	m_Hierarchy->AddListItem(In_Name.data());
 #endif // _DEBUG
 
 	GameObject *ptr = new GameObject(In_Name);

@@ -105,7 +105,7 @@ protected:
 class ItemValue : public DebugItem
 {
 public:
-	ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave);
+	ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave = false);
 	~ItemValue();
 
 	Value &GetValue() { return m_Value; }
@@ -165,7 +165,7 @@ public:
 	~ItemCallback();
 
 	Value &GetValue() { return m_Value; }
-	CallBack GetFunc() const { return m_Func; }
+	void CallFunc(_In_ bool In_IsSet, _In_ void *In_Ptr) { m_Func(In_IsSet, In_Ptr); }
 
 private:
 	Value m_Value;
@@ -210,7 +210,7 @@ inline T *DebugItem::CreateGroupItem(const std::string_view In_Name, Args && ...
 	if (m_Kind != Kind::Group)
 		return nullptr;
 
-	T *item = new T(In_Name, std::forward<Args>(args)...);
+	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
 	dynamic_cast<ItemGroup *>(this)->m_Items.push_back(static_cast<DebugItem *>(item));
 	return item;
 }

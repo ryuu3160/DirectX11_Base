@@ -140,7 +140,7 @@ private:
 	void ExecuteDestroyComponents() noexcept;
 
 #ifdef _DEBUG
-	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow);
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
 #endif // _DEBUG
 
 private:

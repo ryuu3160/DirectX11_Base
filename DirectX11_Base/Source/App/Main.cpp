@@ -48,6 +48,10 @@ HRESULT Main::Init()
 	InitializeImGui::InitImGui();
 	auto &SpriteM = SpriteManager::GetInstance();
 	auto &DebugM = DebugManager::GetInstance();
+	// DebugManagerの初期化
+	DebugM.Init();
+	// 通常のデバッグウィンドウを追加
+	InitializeDebugWindows();
 
 	// よく使うシェーダーの読み込み
 	std::vector<std::string> shaders = {
@@ -91,11 +95,6 @@ HRESULT Main::Init()
 
 	// SpriteManagerの初期化
 	SpriteM.Init();
-	// DebugManagerの初期化
-	DebugM.Init();
-
-	// 通常のデバッグウィンドウを追加
-	InitializeDebugWindows();
 
 #ifdef _DEBUG
 	// ImGui専用のウィンドウプロシージャを登録

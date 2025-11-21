@@ -86,7 +86,7 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::Text("%s", str);
 		}
 		else
-			ImGui::Text("%s", In_Item->GetName());
+			ImGui::Text("%s", In_Item->GetCStrName());
 		break;
 		// チェックフラグの表示
 	case DebugItem::Bool:
@@ -96,9 +96,9 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::Checkbox(In_Item->GetCStrName(), pBind->GetPtr<bool>());
 		else if (pCallback)
 		{
-			pCallback->GetFunc()(false, &std::get<bool>(pCallback->GetValue()));
+			pCallback->CallFunc(false, &std::get<bool>(pCallback->GetValue()));
 			if (ImGui::Checkbox(In_Item->GetCStrName(), &std::get<bool>(pCallback->GetValue())))
-				pCallback->GetFunc()(true, &std::get<bool>(pCallback->GetValue()));
+				pCallback->CallFunc(true, &std::get<bool>(pCallback->GetValue()));
 		}
 		break;
 		// 整数項目の表示
@@ -109,9 +109,9 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::InputInt(In_Item->GetCStrName(), pBind->GetPtr<int>());
 		else if (pCallback)
 		{
-			pCallback->GetFunc()(false, &std::get<int>(pCallback->GetValue()));
+			pCallback->CallFunc(false, &std::get<int>(pCallback->GetValue()));
 			if (ImGui::InputInt(In_Item->GetCStrName(), &std::get<int>(pCallback->GetValue())))
-				pCallback->GetFunc()(true, &std::get<int>(pCallback->GetValue()));
+				pCallback->CallFunc(true, &std::get<int>(pCallback->GetValue()));
 		}
 		break;
 		// 小数項目の表示
@@ -122,9 +122,9 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::InputFloat(In_Item->GetCStrName(), pBind->GetPtr<float>());
 		else if (pCallback)
 		{
-			pCallback->GetFunc()(false, &std::get<float>(pValue->GetValue()));
-			if (ImGui::InputFloat(In_Item->GetCStrName(), &std::get<float>(pValue->GetValue())))
-				pCallback->GetFunc()(true, &std::get<float>(pValue->GetValue()));
+			pCallback->CallFunc(false, &std::get<float>(pCallback->GetValue()));
+			if (ImGui::InputFloat(In_Item->GetCStrName(), &std::get<float>(pCallback->GetValue())))
+				pCallback->CallFunc(true, &std::get<float>(pCallback->GetValue()));
 		}
 		break;
 		// ベクトル項目の表示
@@ -135,9 +135,9 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::InputFloat3(In_Item->GetCStrName(), pBind->GetPtr<float>(), "%.2f");
 		else if (pCallback)
 		{
-			pCallback->GetFunc()(false, &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x);
-			if (ImGui::InputFloat3(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x, "%.2f"))
-				pCallback->GetFunc()(true, &std::get<DirectX::XMFLOAT3>(pValue->GetValue()).x);
+			pCallback->CallFunc(false, &std::get<DirectX::XMFLOAT3>(pCallback->GetValue()));
+			if (ImGui::InputFloat3(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT3>(pCallback->GetValue()).x, "%.2f"))
+				pCallback->CallFunc(true, &std::get<DirectX::XMFLOAT3>(pCallback->GetValue()).x);
 		}
 		break;
 		// 色項目の表示
@@ -148,9 +148,9 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			ImGui::ColorEdit4(In_Item->GetCStrName(), pBind->GetPtr<float>());
 		else if (pCallback)
 		{
-			pCallback->GetFunc()(false, &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x);
-			if (ImGui::ColorEdit4(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x))
-				pCallback->GetFunc()(true, &std::get<DirectX::XMFLOAT4>(pValue->GetValue()).x);
+			pCallback->CallFunc(false, &std::get<DirectX::XMFLOAT4>(pCallback->GetValue()).x);
+			if (ImGui::ColorEdit4(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT4>(pCallback->GetValue()).x))
+				pCallback->CallFunc(true, &std::get<DirectX::XMFLOAT4>(pCallback->GetValue()).x);
 		}
 		break;
 		// パス項目の表示
@@ -196,7 +196,7 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 		// ボタンの表示
 	case DebugItem::Kind::Command:
 		if (ImGui::Button(In_Item->GetCStrName()) && pCallback)
-			pCallback->GetFunc()(false, nullptr);
+			pCallback->CallFunc(false, nullptr);
 		break;
 		// グループ項目の表示
 	case DebugItem::Group:
