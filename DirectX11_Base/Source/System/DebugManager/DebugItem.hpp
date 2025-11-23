@@ -47,6 +47,7 @@ public:
 		Bool,		// チェックボックス
 		Int,		// 整数入力
 		Float,		// 小数入力
+		Float2,		// 2Dベクター入力
 		Vector,		// ベクター入力
 		Color,		// 色入力
 		Path,		// ファイルパスの指定
@@ -75,6 +76,7 @@ public:
 	bool GetBool() const;
 	int GetInt() const;
 	float GetFloat() const;
+	DirectX::XMFLOAT2 GetVector2() const;
 	DirectX::XMFLOAT3 GetVector() const;
 	DirectX::XMFLOAT4 GetColor() const;
 	std::string GetStr() const;
@@ -109,6 +111,13 @@ public:
 	~ItemValue();
 
 	Value &GetValue() { return m_Value; }
+
+	template<typename T>
+	requires TypePOD<T> || TypeString<T> || std::is_same_v<T, DirectX::XMFLOAT2> || std::is_same_v<T, DirectX::XMFLOAT3> || std::is_same_v<T, DirectX::XMFLOAT4>
+	T &GetValue()
+	{
+		return std::get<T>(m_Value);
+	}
 
 private:
 	Value m_Value;

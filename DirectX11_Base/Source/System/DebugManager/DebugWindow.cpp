@@ -27,6 +27,11 @@ DebugWindow::DebugWindow(_In_ const std::string_view In_Name)
 
 DebugWindow::~DebugWindow()
 {
+	for(auto item : m_Items)
+	{
+		delete item;
+	}
+	m_Items.clear();
 }
 
 void DebugWindow::Draw() noexcept
@@ -127,6 +132,18 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 				pCallback->CallFunc(true, &std::get<float>(pCallback->GetValue()));
 		}
 		break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+		if (pValue)
+			ImGui::InputFloat2(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT2>(pValue->GetValue()).x, "%.2f");
+		else if (pBind)
+			ImGui::InputFloat2(In_Item->GetCStrName(), pBind->GetPtr<float>(), "%.2f");
+		else if (pCallback)
+		{
+			pCallback->CallFunc(false, &std::get<DirectX::XMFLOAT2>(pCallback->GetValue()));
+			if (ImGui::InputFloat2(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT2>(pCallback->GetValue()).x, "%.2f"))
+				pCallback->CallFunc(true, &std::get<DirectX::XMFLOAT2>(pCallback->GetValue()).x);
+		}
 		// ベクトル項目の表示
 	case DebugItem::Vector:
 		if (pValue)

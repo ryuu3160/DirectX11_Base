@@ -161,8 +161,8 @@ void Main::InitializeDebugWindows() noexcept
 	auto &DebugM = DebugManager::GetInstance();
 	// フレームレート表示ウィンドウ
 	auto log = DebugM.CreateDebugWindow("System", "Log");
-	DebugM.CreateDebugWindow("System", "Inspector");
 	DebugM.CreateDebugWindow("System", "Hierarchy");
+	DebugM.CreateDebugWindow("System", "Inspector");
 
 	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly, true);
 }

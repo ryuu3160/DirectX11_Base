@@ -549,6 +549,9 @@
     <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
       <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
+    <ClInclude Include="Concept.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

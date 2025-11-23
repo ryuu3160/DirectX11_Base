@@ -79,6 +79,18 @@ float DebugItem::GetFloat() const
 	return 0.0f;
 }
 
+DirectX::XMFLOAT2 DebugItem::GetVector2() const
+{
+	if(m_Kind == Kind::Float2)
+	{
+		auto me = *this;
+		auto ptr = dynamic_cast<ItemValue *>(&me);
+		if(ptr)
+			return std::get<DirectX::XMFLOAT2>(ptr->GetValue());
+	}
+	return DirectX::XMFLOAT2{};
+}
+
 DirectX::XMFLOAT3 DebugItem::GetVector() const
 {
 	if (m_Kind == Kind::Vector)
@@ -314,6 +326,11 @@ ItemGroup::ItemGroup(_In_ std::string In_Name)
 
 ItemGroup::~ItemGroup()
 {
+	for(auto &item : m_Items)
+	{
+		delete item;
+	}
+	m_Items.clear();
 }
 
 // ==============================
@@ -331,4 +348,5 @@ ItemList::ItemList(_In_ std::string In_Name, _In_ ConstCallback In_Func, _In_ bo
 
 ItemList::~ItemList()
 {
+	m_List.clear();
 }

@@ -91,7 +91,17 @@ public:
 		}
 	}
 
+	void DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item);
+
 private:
+
+	void SaveDebugData();
+	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item);
+	void WindowDataWrite(_Inout_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugWindow *In_Window);
+
+	void LoadDebugData();
+
+	void WindowDataRead(_In_ std::string In_Path, _Inout_ DebugWindow *Inout_Window);
 
 private:
 	ImGuiWindowFlags m_ToolBarFlags;

@@ -311,6 +311,10 @@
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Concept.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Source\App\Main.hpp">
       <SubType>
       </SubType>
