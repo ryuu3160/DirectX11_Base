@@ -35,9 +35,19 @@ public:
 	void AddColliderComponent(_In_ ColliderBase *In_Collider) noexcept;
 
 	/// <summary>
+	/// 指定したコライダのコンポーネントを削除する関数
+	/// </summary>
+	/// <param name="[In_Collider]">削除対象の ColliderBase への入力ポインタ</param>
+	void RemoveColliderComponent(_In_ ColliderBase *In_Collider);
+
+	/// <summary>
 	/// すべての衝突を検査します。
 	/// </summary>
 	void CheckAllCollisions() noexcept;
+
+private:
+
+
 
 private:
 	std::vector<ColliderBase *> m_ColliderList; // コライダーリスト

@@ -36,6 +36,8 @@ public:
 
 	void ReadWrite(_In_ DataAccessor *In_Data) final;
 
+	void Init() noexcept override;
+
 	void Update(_In_ float In_Tick) noexcept override;
 
 	virtual void CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
@@ -57,4 +59,7 @@ protected:
 	ColliderType m_Type; // コライダーの形状
 	bool m_IsTrigger; // トリガーかどうか
 	bool m_IsCollision; // 衝突しているかどうか
+
+private:
+	CollisionManager &m_CollisionManager;
 };

@@ -24,6 +24,16 @@ void CollisionManager::AddColliderComponent(_In_ ColliderBase *In_Collider) noex
 	m_ColliderList.push_back(In_Collider);
 }
 
+void CollisionManager::RemoveColliderComponent(ColliderBase *In_Collider)
+{
+	// コライダーリストから削除
+	auto itr = std::find(m_ColliderList.begin(), m_ColliderList.end(), In_Collider);
+	if(itr != m_ColliderList.end())
+	{
+		m_ColliderList.erase(itr);
+	}
+}
+
 void CollisionManager::CheckAllCollisions() noexcept
 {
 	for(int i = 0; i < static_cast<int>(m_ColliderList.size()); ++i)

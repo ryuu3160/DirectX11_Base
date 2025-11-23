@@ -14,18 +14,25 @@
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
 	, m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
+	, m_CollisionManager(CollisionManager::GetInstance())
 {
 }
 
 ColliderBase::~ColliderBase()
 {
+	m_CollisionManager.RemoveColliderComponent(this);
+
 }
 
 void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
 {
 }
 
+void ColliderBase::Init() noexcept
+{
+	m_CollisionManager.AddColliderComponent(this);
+}
+
 void ColliderBase::Update(_In_ float In_Tick) noexcept
 {
-	CollisionManager::GetInstance().AddColliderComponent(this);
 }
