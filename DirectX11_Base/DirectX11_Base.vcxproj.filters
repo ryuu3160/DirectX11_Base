@@ -113,6 +113,9 @@
     <Filter Include="Source\System\ryuu_lib\MultiComparison">
       <UniqueIdentifier>{5471ce5e-28f8-436b-b6a9-bb7ab653e9ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Shader\PixelShader\Shadow">
+      <UniqueIdentifier>{c4c2ac24-3e8d-40fb-b82f-7d6324137349}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -597,6 +600,21 @@
     </FxCompile>
     <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl">
       <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_DepthShadow.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_PCF.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_ProjectionShadow.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_WriteShadow.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Shadow.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
