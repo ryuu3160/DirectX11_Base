@@ -56,7 +56,7 @@ void SceneBase::CommonProcessScene() noexcept
 #endif
 
 	// ƒƒCƒ“ƒJƒƒ‰‚Ìì¬
-	CreateObject<CameraDCC>("MainCamera");
+	CreateObject<CameraDCC>("EditorCamera");
 
 }
 

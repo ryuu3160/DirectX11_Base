@@ -33,7 +33,7 @@ namespace
 void SceneRoot::Init()
 {
 	// オブジェクトの作成
-	CameraDCC *pCamera = GetObject<CameraDCC>("MainCamera");
+	CameraDCC *pCamera = GetObject<CameraDCC>("EditorCamera");
 	auto pCameraComp = pCamera->GetComponent<Camera>();
 
 	// スプライトマネージャーにカメラを設定
@@ -175,7 +175,7 @@ void SceneRoot::Draw()
 {
 #ifdef _DEBUG
 	Geometory &geometory = Geometory::GetInstance();
-	Camera *pCamera = GetObject<CameraDCC>("MainCamera")->GetComponent<Camera>();
+	Camera *pCamera = GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
 
 	geometory.SetView(pCamera->GetView());
 	geometory.SetProjection(pCamera->GetProj());

@@ -98,3 +98,18 @@ DirectX::XMFLOAT4X4 RenderContext::Get2DProj(_In_ bool In_Transpose) const noexc
 	}
 	return m_2DProjMatrix;
 }
+
+void RenderContext::SwapCamera(_In_ Camera *In_pCamera) noexcept
+{
+	m_pCamera = In_pCamera;
+	ReCalculateMatrices();
+}
+
+void RenderContext::SwapCamera(_In_ RenderContext *In_pContext) noexcept
+{
+	Camera *work = this->m_pCamera;
+	m_pCamera = In_pContext->GetCamera();
+	In_pContext->m_pCamera = work;
+	ReCalculateMatrices();
+	In_pContext->ReCalculateMatrices();
+}
