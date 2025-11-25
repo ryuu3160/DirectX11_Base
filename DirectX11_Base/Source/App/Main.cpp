@@ -85,7 +85,12 @@ HRESULT Main::Init()
 	DX11_Core::GetInstance().SetRenderTargets(1, &RTV, DSV);
 
 	// メインのレンダーコンテキスト作成
-	auto CameraCmp = pScene->GetObject<CameraDCC>("MainCamera")->GetComponent<Camera>();
+	Camera *CameraCmp = nullptr;
+#ifdef _DEBUG
+	CameraCmp = pScene->GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
+#else
+
+#endif
 	if(CameraCmp == nullptr)
 	{
 		Error("MainCamera is not found.");
@@ -163,7 +168,47 @@ void Main::InitializeDebugWindows() noexcept
 	auto log = DebugM.CreateDebugWindow("System", "Log");
 	DebugM.CreateDebugWindow("System", "Hierarchy");
 	DebugM.CreateDebugWindow("System", "Inspector");
-	DebugM.CreateDebugWindow("Camera", "Editor");
+	DebugM.AddToolBarMenu("System", "Reset ImGui Layout", []()
+		{
+			ImGui::LoadIniSettingsFromDisk("Assets/Debug/imgui_layout.ini");
+		});
+
+	DebugM.AddToolBarMenu("Camera", "Editor", []()
+		{
+			auto scene = SceneManager::GetInstance().GetCurrentScene();
+			if (scene)
+			{
+				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
+				if(!CamObj)
+					return;
+				auto camera = CamObj->GetComponent<Camera>();
+				auto context = RenderManager::GetInstance().GetRenderContext("Main");
+				if (camera && context)
+				{
+					context->GetCamera()->SetActive(false);
+					context->SwapCamera(camera);
+					CamObj->SetActive(true);
+				}
+			}
+		});
+	DebugM.AddToolBarMenu("Camera", "Game", []()
+		{
+			auto scene = SceneManager::GetInstance().GetCurrentScene();
+			if (scene)
+			{
+				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
+				if (!CamObj)
+					return;
+				auto camera = CamObj->GetComponent<Camera>();
+				auto context = RenderManager::GetInstance().GetRenderContext("Main");
+				if (camera && context)
+				{
+					context->GetCamera()->GetGameObject()->SetActive(false);
+					context->SwapCamera(camera);
+					CamObj->SetActive(true);
+				}
+			}
+		});
 
 	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly, true);
 }
