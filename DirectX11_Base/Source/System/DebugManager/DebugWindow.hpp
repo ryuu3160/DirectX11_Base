@@ -41,14 +41,14 @@ public:
 	void ClearItems();
 
 	std::string GetName() const noexcept { return m_Name; }
+	std::string GetGroupName() const noexcept { return m_GroupName; }
 
 	bool NotDummy() const noexcept { return !m_IsDummy; }
 
 	bool IsOpen() const noexcept { return m_IsOpen; }
 
 	void SetIsOpen(_In_ const bool In_IsOpen) noexcept { m_IsOpen = In_IsOpen; }
-	void EnableOpen() noexcept { m_IsOpen = true; }
-	void DisableOpen() noexcept { m_IsOpen = false; }
+	void ToggleIsOpen() noexcept { m_IsOpen = !m_IsOpen; }
 
 private:
 
@@ -66,6 +66,7 @@ private:
 private:
 	bool m_IsOpen;
 	bool m_IsDummy;
+	std::string m_GroupName;
 	std::string m_Name;
 	std::vector<DebugItem *> m_Items;
 };

@@ -38,13 +38,10 @@ DebugManager::~DebugManager()
 
 	for (auto &itr : m_DebugWindows)
 	{
-		for (const auto &window : itr.second)
-		{
-			delete window;
-		}
-		itr.second.clear();
+		delete itr;
 	}
 	m_DebugWindows.clear();
+	m_ToolBarFuncs.clear();
 }
 
 void DebugManager::Init()
@@ -73,18 +70,15 @@ void DebugManager::Draw() noexcept
 		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 		if (ImGui::BeginMenuBar())
 		{
-			for (const auto &itr : m_DebugWindows)
+			for (const auto &itr : m_ToolBarFuncs)
 			{
 				if (ImGui::BeginMenu(itr.first.c_str()))
 				{
-					for (const auto &window : itr.second)
+					for (const auto &menu : itr.second)
 					{
-						if (!window)
-							continue;
-						bool isOpen = window->IsOpen();
-						if (ImGui::MenuItem(window->GetName().c_str(), nullptr, isOpen))
+						if (ImGui::MenuItem(menu.Name.c_str(), nullptr))
 						{
-							window->SetIsOpen(!isOpen);
+							menu.Func();
 						}
 					}
 					ImGui::EndMenu();
@@ -97,54 +91,78 @@ void DebugManager::Draw() noexcept
 	}
 	ImGui::End();
 
-	for (const auto &itr : m_DebugWindows)
+	for (const auto &window : m_DebugWindows)
 	{
-		for(const auto &window : itr.second)
-		{
-			if (!window)
-				continue;
+		if (!window)
+			continue;
 
-			if (window->IsOpen())
-			{
-				std::string name = itr.first + "/" + window->GetName();
-				ImGui::Begin(name.c_str());
-				window->Draw();
-				ImGui::End();
-			}
+		if (window->IsOpen())
+		{
+			std::string name = window->GetGroupName() + "/" + window->GetName();
+			ImGui::Begin(name.c_str());
+			window->Draw();
+			ImGui::End();
 		}
 	}
 }
 
 DebugWindow *DebugManager::CreateDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
 {
-	auto itr = m_DebugWindows.try_emplace(In_GroupName.data());
+	auto itr = m_ToolBarFuncs.try_emplace(In_GroupName.data());
 
-	auto WinItr = std::find_if(itr.first->second.begin(), itr.first->second.end(),
+	auto WinItr = std::find_if(m_DebugWindows.begin(), m_DebugWindows.end(),
 		[&](DebugWindow *window)
 		{
-			return window->GetName() == In_Name;
+			return window->m_GroupName == In_GroupName && window->GetName() == In_Name;
 		});
 
-	if (WinItr != itr.first->second.end())
+	if (WinItr != m_DebugWindows.end())
 		return *WinItr;
 
 	DebugWindow *NewWindow = new DebugWindow(In_Name);
+	NewWindow->m_GroupName = std::string(In_GroupName);
 	std::string Path = In_GroupName.data();
 	Path += "/";
 	WindowDataRead(Path, NewWindow);
 
-	itr.first->second.push_back(NewWindow);
+	m_DebugWindows.push_back(NewWindow);
+
+	auto menu = m_ToolBarFuncs.try_emplace(In_GroupName.data());
+	ToolBarMenu NewMenu;
+	NewMenu.Name = In_Name.data();
+	NewMenu.Func = [NewWindow]() { NewWindow->ToggleIsOpen(); };
+	menu.first->second.push_back(NewMenu);
+
 	return NewWindow;
+}
+
+void DebugManager::AddToolBarMenu(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name, _In_ std::function<void()> In_Func)
+{
+	auto menu = m_ToolBarFuncs.try_emplace(In_GroupName.data());
+
+	auto FindItr = std::find_if(menu.first->second.begin(), menu.first->second.end(),
+		[&](const ToolBarMenu &item)
+		{
+			return item.Name == In_Name;
+		});
+	if (FindItr != menu.first->second.end())
+		return;
+
+	ToolBarMenu NewMenu;
+	NewMenu.Name = In_Name.data();
+	NewMenu.Func = In_Func;
+	menu.first->second.push_back(NewMenu);
 }
 
 DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
 {
-	auto itr = m_DebugWindows.find(In_GroupName.data());
-	if (itr != m_DebugWindows.end())
+	auto itr = m_ToolBarFuncs.find(In_GroupName.data());
+
+	if (itr != m_ToolBarFuncs.end())
 	{
-		for (const auto &window : itr->second)
+		for (const auto &window : m_DebugWindows)
 		{
-			if (window && window->GetName() == In_Name)
+			if (window && window->m_GroupName == In_GroupName && window->GetName() == In_Name)
 			{
 				return window;
 			}
@@ -167,25 +185,20 @@ void DebugManager::SaveDebugData()
 	{
 		std::string data;
 
-		for (auto &WindowGroup : m_DebugWindows)
+		for (auto &window : m_DebugWindows)
 		{
-			std::string GroupName = WindowGroup.first;
-			for (auto &window : WindowGroup.second)
+			std::string path = window->m_GroupName + "/";
+
+			WindowDataWrite(data, path, window);
+
+			path += window->GetName() + "/";
+
+			for (auto &item : window->m_Items)
 			{
-				std::string path = GroupName + "/";
-
-				WindowDataWrite(data, path, window);
-
-				path += window->GetName() + "/";
-
-				for (auto &item : window->m_Items)
-				{
-					DataWrite(data, path, item);
-				}
-
-				delete window;
+				DataWrite(data, path, item);
 			}
-			WindowGroup.second.clear();
+
+			delete window;
 		}
 		m_DebugWindows.clear();
 

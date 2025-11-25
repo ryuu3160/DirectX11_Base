@@ -26,6 +26,14 @@ namespace
 class DebugManager : public Singleton<DebugManager>
 {
 	friend class Singleton<DebugManager>;
+
+	struct ToolBarMenu
+	{
+		std::string Name;
+
+		std::function<void()> Func;
+	};
+
 public:
 	struct SaveData
 	{
@@ -52,7 +60,15 @@ public:
 	DebugWindow *CreateDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
 	/// <summary>
-	/// 指定した名前に対応するデバッグウィンドウを取得します。
+	/// ツールバーにメニュー項目を追加する
+	/// </summary>
+	/// <param name="[In_GroupName]">グループ名</param>
+	/// <param name="[In_Name]">追加するメニュー項目の表示名</param>
+	/// <param name="[In_Func]">メニュー項目が選択されたときに実行されるコールバック関数（引数なし、戻り値なし）。</param>
+	void AddToolBarMenu(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name, _In_ std::function<void()> In_Func);
+
+	/// <summary>
+	/// 指定した名前に対応するデバッグウィンドウを取得する
 	/// </summary>
 	/// <param name="[In_Name]">検索するデバッグウィンドウの名前を示す読み取り専用の std::string_view。</param>
 	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合は nullptr を返します。</returns>
@@ -105,7 +121,7 @@ private:
 
 private:
 	ImGuiWindowFlags m_ToolBarFlags;
-	std::unordered_map<std::string, std::function<void()>> m_ToolBarFuncs;
-	std::unordered_map<std::string, std::vector<DebugWindow*>> m_DebugWindows;
+	std::unordered_map<std::string, std::vector<ToolBarMenu>> m_ToolBarFuncs;
+	std::vector<DebugWindow*> m_DebugWindows;
 	std::vector<SaveData> m_SaveData;
 };
