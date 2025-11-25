@@ -163,6 +163,7 @@ void Main::InitializeDebugWindows() noexcept
 	auto log = DebugM.CreateDebugWindow("System", "Log");
 	DebugM.CreateDebugWindow("System", "Hierarchy");
 	DebugM.CreateDebugWindow("System", "Inspector");
+	DebugM.CreateDebugWindow("Camera", "Editor");
 
 	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly, true);
 }

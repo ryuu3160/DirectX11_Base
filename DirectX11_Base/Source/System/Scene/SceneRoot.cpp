@@ -110,7 +110,7 @@ void SceneRoot::Init()
 	FadeManager::GetInstance().StartFadeIn("TestFade");
 
 	// レンダーターゲットスプライトテスト
-	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720);
+	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1280, 720);
 	auto DSV = RenderTargetManager::GetInstance().CreateDepthStencil("GameDSV", 1280, 720,false);
 
 	CameraBaseObj *pGameCam = CreateObject<CameraBaseObj>("GameCamera");

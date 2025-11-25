@@ -105,6 +105,7 @@ private:
 
 private:
 	ImGuiWindowFlags m_ToolBarFlags;
+	std::unordered_map<std::string, std::function<void()>> m_ToolBarFuncs;
 	std::unordered_map<std::string, std::vector<DebugWindow*>> m_DebugWindows;
 	std::vector<SaveData> m_SaveData;
 };

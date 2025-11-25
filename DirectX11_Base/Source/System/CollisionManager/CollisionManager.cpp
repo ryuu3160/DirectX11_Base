@@ -24,7 +24,7 @@ void CollisionManager::AddColliderComponent(_In_ ColliderBase *In_Collider) noex
 	m_ColliderList.push_back(In_Collider);
 }
 
-void CollisionManager::RemoveColliderComponent(ColliderBase *In_Collider)
+void CollisionManager::RemoveColliderComponent(_In_ ColliderBase *In_Collider)
 {
 	// コライダーリストから削除
 	auto itr = std::find(m_ColliderList.begin(), m_ColliderList.end(), In_Collider);

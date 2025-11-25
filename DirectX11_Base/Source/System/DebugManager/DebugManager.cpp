@@ -106,7 +106,8 @@ void DebugManager::Draw() noexcept
 
 			if (window->IsOpen())
 			{
-				ImGui::Begin(window->GetName().c_str());
+				std::string name = itr.first + "/" + window->GetName();
+				ImGui::Begin(name.c_str());
 				window->Draw();
 				ImGui::End();
 			}

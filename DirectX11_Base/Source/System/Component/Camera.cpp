@@ -119,7 +119,7 @@ DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 	return pos;
 }
 
-void Camera::RegisterDebugInspector(DebugWindow *In_pWindow)
+void Camera::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 	auto *group = In_pWindow->CreateItem<ItemGroup>("Camera Component");
 	group->CreateGroupItem<ItemBind>("is3D", DebugItem::Kind::Bool, &m_bIs3D);
