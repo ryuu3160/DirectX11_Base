@@ -193,11 +193,19 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			char buffer[4096];
 			strncpy_s(buffer, pText->GetText().c_str(), 4096);
 			float height = ImGui::GetTextLineHeight();
+			float width = ImGui::GetContentRegionAvail().x;
+			std::string label;
+			if (pText->IsHideLabel())
+				label = std::string("##");
+			else
+				width -= ImGui::CalcTextSize(In_Item->GetCStrName()).x + ImGui::GetStyle().ItemSpacing.x;
+
+			label += In_Item->GetName();
 			if (pText->GetLineCount() > 0)
 				height *= pText->GetLineCount();
 			else
 				height = ImGui::GetContentRegionAvail().y;
-			if (ImGui::InputTextMultiline(In_Item->GetCStrName(), buffer, 4096, ImVec2(-FLT_MIN, height), pText->GetFlags()))
+			if (ImGui::InputTextMultiline(label.c_str(), buffer, 4096, ImVec2(width, height), pText->GetFlags()))
 				pText->GetText() = buffer;
 		}
 		else

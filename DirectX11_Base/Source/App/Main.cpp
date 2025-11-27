@@ -208,5 +208,5 @@ void Main::InitializeDebugWindows() noexcept
 			}
 		});
 
-	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly, true);
+	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly,true, true);
 }

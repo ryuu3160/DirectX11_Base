@@ -234,12 +234,13 @@ ItemValue::~ItemValue()
 //  ItemText
 // ==============================
 
-ItemText::ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool In_IsSave)
+ItemText::ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave)
 {
 	m_Name = In_Name;
 	m_Kind = Kind::InputStr;
 	m_Flags = In_Flags;
 	m_IsMultiline = In_IsMultiline;
+	m_IsHideLabel = Is_HideLabel;
 	m_IsSave = In_IsSave;
 	m_LineCount = 0;
 }

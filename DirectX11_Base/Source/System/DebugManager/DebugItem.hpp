@@ -127,12 +127,13 @@ private:
 class ItemText : public DebugItem
 {
 public:
-	ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool In_IsSave);
+	ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
 	~ItemText();
 
 	std::string &GetText() { return m_Text; }
 	ImGuiInputTextFlags GetFlags() const { return m_Flags; }
 	bool IsMultiline() const { return m_IsMultiline; }
+	bool IsHideLabel() const { return m_IsHideLabel; }
 	bool IsSave() const { return m_IsSave; }
 	int GetLineCount() const { return m_LineCount; }
 
@@ -148,6 +149,7 @@ private:
 	ImGuiInputTextFlags m_Flags;
 	int m_LineCount;
 	bool m_IsMultiline;
+	bool m_IsHideLabel;
 	bool m_IsSave;
 };
 
