@@ -30,6 +30,7 @@ using Microsoft::WRL::ComPtr;
 #include <sstream>
 #include <string>
 #include <cstring>
+#include <chrono>
 #include <iostream>
 #include <iomanip>
 #include <typeindex>

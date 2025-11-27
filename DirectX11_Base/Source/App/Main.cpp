@@ -126,8 +126,6 @@ void Main::Update(_In_ float In_Tick)
 	// シーン切り替えの更新
 	SceneM.UpdateSceneChange();
 
-	DebugManager::GetInstance().DebugLog("Frame Start");
-
 	// Inputの更新終了処理
 	Input::EndUpdate();
 }

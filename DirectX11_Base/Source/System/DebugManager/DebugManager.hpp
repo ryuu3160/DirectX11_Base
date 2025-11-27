@@ -37,7 +37,7 @@ class DebugManager : public Singleton<DebugManager>
 public:
 	struct SaveData
 	{
-		DebugItem::Kind kind;
+		DebugItem::Kind kind = DebugItem::Label;
 		std::string path;
 		std::string value;
 	};
@@ -113,7 +113,7 @@ private:
 
 	void SaveDebugData();
 	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item);
-	void WindowDataWrite(_Inout_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugWindow *In_Window);
+	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugWindow *In_Window);
 
 	void LoadDebugData();
 

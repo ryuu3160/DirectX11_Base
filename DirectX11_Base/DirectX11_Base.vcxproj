@@ -282,6 +282,7 @@
     <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp" />
+    <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\IME_Controller\IME.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\Observer\Observer.cpp" />
     <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp" />
@@ -442,6 +443,7 @@
     <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\MultiComparison\MultiComparison.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp" />

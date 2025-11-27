@@ -395,10 +395,11 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 		break;
 	case DebugItem::Float2:
 		{
-		const char *top[] = {
-			DataItr->value.c_str(),
-			strstr(top[0], "/") + 1,
-		};
+		const char *top[2];
+		top[0] = DataItr->value.c_str();
+		const char* delim1 = strstr(top[0], "/");
+		top[1] = (delim1 != nullptr) ? delim1 + 1 : top[0]; // ‹æØ‚è•¶Žš‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Ítop[0]‚ðÄ—˜—p
+
 		pValue->GetValue() = DirectX::XMFLOAT2(
 			strtof(top[0], nullptr),
 			strtof(top[1], nullptr)
@@ -406,12 +407,15 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 	} break;
 	case DebugItem::Color:
 	{
-		const char *top[] = {
-			DataItr->value.c_str(),
-			strstr(top[0], "/") + 1,
-			strstr(top[1], "/") + 1,
-			strstr(top[2], "/") + 1,
-		};
+		const char *top[4];
+		top[0] = DataItr->value.c_str();
+		const char* delim2 = strstr(top[0], "/");
+		top[1] = (delim2 != nullptr) ? delim2 + 1 : top[0];
+		const char* delim3 = strstr(top[1], "/");
+		top[2] = (delim3 != nullptr) ? delim3 + 1 : top[1];
+		const char* delim4 = strstr(top[2], "/");
+		top[3] = (delim4 != nullptr) ? delim4 + 1 : top[2];
+
 		pValue->GetValue() = DirectX::XMFLOAT4(
 			strtof(top[0], nullptr),
 			strtof(top[1], nullptr),
@@ -431,11 +435,13 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 		break;
 	case DebugItem::Vector:
 	{
-		const char *top[] = {
-			DataItr->value.c_str(),
-			strstr(top[0], "/") + 1,
-			strstr(top[1], "/") + 1,
-		};
+		const char *top[3];
+		top[0] = DataItr->value.c_str();
+		const char* delim5 = strstr(top[0], "/");
+		top[1] = (delim5 != nullptr) ? delim5 + 1 : top[0];
+		const char* delim6 = strstr(top[1], "/");
+		top[2] = (delim6 != nullptr) ? delim6 + 1 : top[1];
+
 		pValue->GetValue() = DirectX::XMFLOAT3(
 			strtof(top[0], nullptr),
 			strtof(top[1], nullptr),

@@ -116,6 +116,9 @@
     <Filter Include="リソース ファイル\Shader\PixelShader\Shadow">
       <UniqueIdentifier>{c4c2ac24-3e8d-40fb-b82f-7d6324137349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\ryuu_lib\FrameManager\Timer">
+      <UniqueIdentifier>{738996eb-eb5b-40e9-802d-3865f6c2d792}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -324,6 +327,9 @@
     </ClCompile>
     <ClCompile Include="Source\System\DebugManager\InitializeImGui.cpp">
       <Filter>Source\System\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp">
+      <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -552,8 +558,9 @@
     <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
       <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
-    <ClInclude Include="Concept.hpp">
-      <Filter>Source</Filter>
+    <ClInclude Include="Source\Concept.hpp" />
+    <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
+      <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
