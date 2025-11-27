@@ -17,8 +17,6 @@
 
 void FrameManager::Init(_In_ float In_fFps, _In_ bool In_YieldWhenWaiting)
 {
-	timeBeginPeriod(1);	// 分解能の設定
-
 	// ------------------------------
 	// メインフレームデータの設定
 	// ------------------------------
@@ -72,8 +70,8 @@ bool FrameManager::UpdateMain()
 	}
 	else
 	{
-		// まだ時間が来ていない -> 非ブロッキングで false を返す
-		// ただし CPU 負荷を下げたい場合は少しだけヒントを出す（yield）
+		// まだ時間が来ていない -> 非ブロッキングでfalse を返す
+		// ただしCPU負荷を下げたい場合はヒントを出す（yield）
 		if (m_bYieldWhenWaiting)
 		{
 			std::this_thread::yield();
@@ -98,8 +96,6 @@ double FrameManager::GetNowTimeMilliSec() const
 	return std::chrono::duration<double, std::milli>(clock::now().time_since_epoch()).count();
 }
 
-
-
 FrameManager::FrameManager()
 	: m_fMainFps(0.0f), m_bInitialized(false), m_FrameCount(0), m_LastFps(0.0)
 	, m_TargetDuration(std::chrono::duration<double>(0.0)), m_bYieldWhenWaiting(true)
@@ -111,5 +107,4 @@ FrameManager::FrameManager()
 FrameManager::~FrameManager()
 {
 	m_bInitialized = false;
-	timeEndPeriod(1);	// 分解能の解除
 }
