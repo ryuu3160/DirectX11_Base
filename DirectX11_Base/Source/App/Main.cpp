@@ -122,9 +122,16 @@ void Main::Update(_In_ float In_Tick)
 	SceneM.RootUpdate(In_Tick);
 	SpriteManager::GetInstance().Update();
 	DebugManager::GetInstance().Update();
+}
 
+void Main::FixedUpdate(_In_ double In_FixedTick)
+{
+}
+
+void Main::ChangeScene()
+{
 	// シーン切り替えの更新
-	SceneM.UpdateSceneChange();
+	SceneManager::GetInstance().UpdateSceneChange();
 
 	// Inputの更新終了処理
 	Input::EndUpdate();

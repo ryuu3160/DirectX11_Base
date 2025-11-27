@@ -23,6 +23,8 @@ namespace Main
 	HRESULT Init();
 	void Uninit();
 	void Update(_In_ float In_Tick);
+	void FixedUpdate(_In_ double In_FixedTick);
+	void ChangeScene();
 	void Draw();
 
 	void InitializeDebugWindows() noexcept;

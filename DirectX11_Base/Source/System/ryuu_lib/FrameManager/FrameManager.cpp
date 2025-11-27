@@ -103,7 +103,8 @@ double FrameManager::GetNowTimeMilliSec() const
 FrameManager::FrameManager()
 	: m_fMainFps(0.0f), m_bInitialized(false), m_FrameCount(0), m_LastFps(0.0)
 	, m_TargetDuration(std::chrono::duration<double>(0.0)), m_bYieldWhenWaiting(true)
-	, m_fTick(0.0f)
+	, m_fTick(0.0f), m_FixedDeltaTime(0.02), m_AccumulatedTime(0.0), m_MaxStepCount(5)
+	, m_fTimeScale(1.0f)
 {
 }
 

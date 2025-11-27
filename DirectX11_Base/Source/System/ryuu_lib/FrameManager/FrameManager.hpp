@@ -61,6 +61,47 @@ public:
 	/// <returns>現在の時刻をミリ秒単位で表した double 型の値を返します。</returns>
 	double GetNowTimeMilliSec() const;
 
+	// ------------------------------
+	//  固定フレーム用
+	// ------------------------------
+
+	double GetFixedDeltaTime() const { return m_FixedDeltaTime; }
+
+	void SetFixedDeltaTime(_In_ double In_DeltaTime) { m_FixedDeltaTime = In_DeltaTime; }
+
+	void ResetFixedDeltaTime() { m_FixedDeltaTime = 0.02; }
+
+	int GetMaxStepCount() const { return m_MaxStepCount; }
+	void SetMaxStepCount(_In_ int In_MaxStepCount) { m_MaxStepCount = In_MaxStepCount; }
+	void ResetMaxStepCount() { m_MaxStepCount = 5; }
+
+	const double &GetAccumulatedTime() const { return m_AccumulatedTime; }
+	void AddAccumulatedTime(_In_ double In_DeltaTime) { m_AccumulatedTime += In_DeltaTime; }
+	void SubAccumulatedTime(_In_ double In_DeltaTime) { m_AccumulatedTime -= In_DeltaTime; }
+	void SetAccumulatedTime(_In_ double In_Time) { m_AccumulatedTime = In_Time; }
+	void ResetAccumulatedTime() { m_AccumulatedTime = 0.0; }
+
+	// ------------------------------
+	//  タイムスケール用
+	// ------------------------------
+
+	/// <summary>
+	/// 現在のタイムスケール（倍率）を取得する
+	/// </summary>
+	/// <returns>現在のタイムスケールを表すfloat値</returns>
+	float GetTimeScale() const { return m_fTimeScale; }
+
+	/// <summary>
+	/// タイムスケール（時間の進行倍率）を設定する
+	/// </summary>
+	/// <param name="[In_fTimeScale]">設定するタイムスケールの値。時間の進行倍率（例：1.0で通常、0.5で半速、2.0で倍速）を指定する</param>
+	void SetTimeScale(_In_ float In_fTimeScale) { m_fTimeScale = In_fTimeScale; }
+
+	/// <summary>
+	/// 時間スケールを1.0（標準速度）にリセットします。
+	/// </summary>
+	void ResetTimeScale() { m_fTimeScale = 1.0f; }
+
 #ifdef _DEBUG
 	/// <summary>
 	/// fpsを表示するウィンドウのハンドルを設定(デバッグ用)
@@ -92,6 +133,14 @@ private:
 	float m_fTick;
 	int m_FrameCount;
 	bool m_bInitialized;
+
+	// 固定フレーム用
+	double m_FixedDeltaTime;
+	double m_AccumulatedTime;
+	int m_MaxStepCount;
+
+	// タイムスケール
+	float m_fTimeScale;
 
 	// デバッグ用
 #ifdef _DEBUG

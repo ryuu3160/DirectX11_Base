@@ -93,15 +93,9 @@ public:
 
 					// •¶Žš”§ŒÀ
 					if (TextItem->IsMultiline())
-					{
-						if (text.length() > 4096)
-							text = text.substr(text.find('\n') + 1);
-					}
+						text = CharacterLimitRecursion(text, 4096);
 					else
-					{
-						if (text.length() > 256)
-							text = text.substr(text.find('\n'));
-					}
+						text = CharacterLimitRecursion(text, 256);
 				}
 			}
 		}
@@ -118,6 +112,8 @@ private:
 	void LoadDebugData();
 
 	void WindowDataRead(_In_ std::string In_Path, _Inout_ DebugWindow *Inout_Window);
+
+	std::string CharacterLimitRecursion(_In_ std::string In_Text, _In_ int In_LimitNum);
 
 private:
 	ImGuiWindowFlags m_ToolBarFlags;

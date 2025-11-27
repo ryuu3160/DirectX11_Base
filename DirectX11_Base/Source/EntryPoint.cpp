@@ -44,6 +44,8 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		Main::Uninit();
 		// Singletonオブジェクトの解放
 		SingletonController::Release();
+		// ImGuiの終了処理
+		InitializeImGui::UninitImGui();
 		return 0;
 	}
 
@@ -56,7 +58,29 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			// fps制御
 			if (frame.UpdateMain())
 			{
-				Main::Update(frame.GetTick());	// 更新処理
+				float DeltaTime = frame.GetTick() * frame.GetTimeScale();
+				double FixedDeltaTime = frame.GetFixedDeltaTime();
+				frame.AddAccumulatedTime(DeltaTime);
+
+				// スパイラル回避
+				frame.SetAccumulatedTime(std::min(frame.GetAccumulatedTime(), FixedDeltaTime * frame.GetMaxStepCount()));
+				int Steps = 0;
+				while (frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < frame.GetMaxStepCount())
+				{
+					// 物理前処理（力の適用・入力を velocity 等に反映する等）
+					//Main::PrePhysics(FixedDeltaTime);
+
+					// 固定刻みで物理更新（衝突検出・解決を含む）
+					Main::FixedUpdate(FixedDeltaTime);
+
+					// 衝突イベントをキューに貯める場合はここでキューへ追加
+					//Main::EnqueueCollisionEvents();
+
+					frame.SubAccumulatedTime(FixedDeltaTime);
+					++Steps;
+				}
+				Main::Update(DeltaTime);	// 更新処理
+				Main::ChangeScene();			// シーン切り替え処理
 				Main::Draw();	// 描画処理
 			}
 		}

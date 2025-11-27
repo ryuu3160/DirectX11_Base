@@ -346,6 +346,17 @@ void DebugManager::WindowDataRead(_In_ std::string In_Path, _Inout_ DebugWindow 
 	Inout_Window->SetIsOpen(atoi(DataItr->value.c_str()) > 0);
 }
 
+std::string DebugManager::CharacterLimitRecursion(_In_ std::string In_Text, _In_ int In_LimitNum)
+{
+	if (In_Text.length() >= In_LimitNum)
+	{
+		std::string text;
+		text = In_Text.substr(In_Text.find('\n') + 1);
+		return CharacterLimitRecursion(text, In_LimitNum);
+	}
+	return In_Text;
+}
+
 void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item)
 {
 	if (Inout_Item->GetKind() == DebugItem::Kind::Group)
