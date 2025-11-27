@@ -13,15 +13,32 @@
 #include "HashGenerator.hpp"
 
 // ==============================
-//	’è”’è‹`
+//	Ã“I•Ï”‚Ì’è‹`
 // ==============================
-constexpr int CRC32_TABLE_SIZE = 256;
+uint32_t HashGenerator::m_ui32Crc32Table[CRC32_TABLE_SIZE] = { 0 };
+bool HashGenerator::m_bInitialized = false;
 
 HashGenerator::HashGenerator()
-	: m_pui32Crc32Table(nullptr)
 {
-	m_pui32Crc32Table = new uint32_t[CRC32_TABLE_SIZE];
+	if (!m_bInitialized)
+	{
+		InitializeCrc32Table();
+		m_bInitialized = true;
+	}
+}
 
+uint32_t HashGenerator::GenerateHash(_In_ std::string_view In_String) const noexcept
+{
+	uint32_t c = 0xFFFFFFFF;
+	for (size_t i = 0; i < In_String.length(); i++)
+	{
+		c = m_ui32Crc32Table[(c ^ In_String[i]) & 0xFF] ^ (c >> 8);
+	}
+	return c ^ 0xFFFFFFFF;
+}
+
+void HashGenerator::InitializeCrc32Table()
+{
 	for (uint32_t i = 0; i < 256; i++)
 	{
 		uint32_t c = i;
@@ -29,25 +46,6 @@ HashGenerator::HashGenerator()
 		{
 			c = (c & 1) ? (0xedb83620L ^ (c >> 1)) : (c >> 1);
 		}
-		m_pui32Crc32Table[i] = c;
+		m_ui32Crc32Table[i] = c;
 	}
-}
-
-HashGenerator::~HashGenerator()
-{
-	if (m_pui32Crc32Table != nullptr)
-	{
-		delete[] m_pui32Crc32Table;
-		m_pui32Crc32Table = nullptr;
-	}
-}
-
-uint32_t HashGenerator::GenerateHash(std::string In_String)
-{
-	uint32_t c = 0xFFFFFFFF;
-	for (size_t i = 0; i < In_String.length(); i++)
-	{
-		c = m_pui32Crc32Table[(c ^ In_String[i]) & 0xFF] ^ (c >> 8);
-	}
-	return c ^ 0xFFFFFFFF;
 }
