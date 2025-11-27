@@ -156,6 +156,36 @@ void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 	LateUpdate(In_Tick);
 }
 
+void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
+{
+	// シーンが所持しているオブジェクトの固定更新
+	for (auto &itr : m_Items)
+	{
+		auto obj = m_Objects.find(itr);
+		// 型チェック
+		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		{
+			obj->second->ExecuteFixedUpdate(In_FixedTick);
+		}
+	}
+	// シーン自体の固定更新
+	FixedUpdate(In_FixedTick);
+}
+
+void SceneBase::_ExecuteDestroyObjectsComponents() noexcept
+{
+	// シーンが所持しているオブジェクトのコンポーネント破棄処理を実行
+	for (auto &itr : m_Items)
+	{
+		auto obj = m_Objects.find(itr);
+		// 型チェック
+		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		{
+			obj->second->ExecuteDestroyComponents();
+		}
+	}
+}
+
 void SceneBase::_RootDraw() noexcept
 {
 	// シーン自体の描画

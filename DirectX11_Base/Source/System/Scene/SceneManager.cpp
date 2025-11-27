@@ -55,6 +55,22 @@ void SceneManager::SceneObjectsInit() noexcept
 	}
 }
 
+void SceneManager::RootFixedUpdate(_In_ double In_FixedTick) noexcept
+{
+	// メインシーンの更新
+	if (m_pCurrentScene)
+		m_pCurrentScene->_RootFixedUpdate(In_FixedTick);
+	// サブシーンの更新
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_RootFixedUpdate(In_FixedTick);
+	}
+
+	// 当たり判定の更新
+	m_CollisionManager.CheckAllCollisions();
+}
+
 void SceneManager::RootUpdate(_In_ float In_Tick) noexcept
 {
 	// 初期化されていないオブジェクトの初期化
@@ -63,10 +79,11 @@ void SceneManager::RootUpdate(_In_ float In_Tick) noexcept
 	// メインの更新
 	_RootUpdateMain(In_Tick);
 
-	m_CollisionManager.CheckAllCollisions();
-
 	// 遅延更新
 	_RootUpdateLate(In_Tick);
+
+	// コンポーネント削除予約リストの処理
+	_ExecuteDestroyObjectsComponents();
 
 	// フェードの処理
 	m_FadeManager.Update(In_Tick);
@@ -190,6 +207,17 @@ void SceneManager::_RootUpdateLate(_In_ float In_Tick) noexcept
 	{
 		if (itr.second)
 			itr.second->_RootUpdateLate(In_Tick);
+	}
+}
+
+void SceneManager::_ExecuteDestroyObjectsComponents() noexcept
+{
+	if (m_pCurrentScene)
+		m_pCurrentScene->_ExecuteDestroyObjectsComponents();
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_ExecuteDestroyObjectsComponents();
 	}
 }
 

@@ -103,6 +103,7 @@ GameObject::~GameObject()
 	for (itr = m_Components.begin(); itr != m_Components.end();itr++)
 	{
 		delete (*itr);
+		(*itr) = nullptr;
 	}
 
 	for (auto &child : m_ChildObjects)
@@ -165,9 +166,18 @@ void GameObject::ExecuteLateUpdate(_In_ float In_Tick) noexcept
 	}
 	// 継承先オブジェクトの遅延処理
 	LateUpdate(In_Tick);
+}
 
-	// 破棄予約されたコンポーネントの破棄処理
-	ExecuteDestroyComponents();
+void GameObject::ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept
+{
+	// コンポーネントの処理
+	for (auto &itr : m_Components)
+	{
+		if(itr->m_IsActive)
+			itr->FixedUpdate(In_FixedTick);
+	}
+	// 継承先オブジェクトの固定間隔更新処理
+	FixedUpdate(In_FixedTick);
 }
 
 void GameObject::RemoveComponent(_In_ std::string In_Name)

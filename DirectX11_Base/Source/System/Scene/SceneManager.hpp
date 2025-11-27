@@ -30,6 +30,8 @@ public:
 
 	void SceneObjectsInit() noexcept;
 
+	void RootFixedUpdate(_In_ double In_FixedTick) noexcept;
+
 	/// <summary>
 	/// シーンのアップデート
 	/// </summary>
@@ -92,6 +94,8 @@ private:
 
 	void _RootUpdateMain(_In_ float In_Tick) noexcept;
 	void _RootUpdateLate(_In_ float In_Tick) noexcept;
+
+	void _ExecuteDestroyObjectsComponents() noexcept;
 
 	/// <summary>
 	/// 削除予約リストに追加されたサブシーンを削除します。

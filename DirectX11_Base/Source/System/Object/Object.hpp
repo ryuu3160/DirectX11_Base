@@ -35,6 +35,7 @@ public:
 	virtual void Init() noexcept = 0;
 	virtual void Update(_In_ float In_Tick) noexcept {};
 	virtual void LateUpdate(_In_ float In_Tick) noexcept {};
+	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept {};
 
 protected:
 

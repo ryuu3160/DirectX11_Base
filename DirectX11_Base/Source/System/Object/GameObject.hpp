@@ -45,6 +45,12 @@ public:
 	/// </summary>
 	void ExecuteLateUpdate(_In_ float In_Tick) noexcept;
 
+	/// <summary>
+	/// 固定間隔更新処理
+	/// </summary>
+	/// <param name="In_FixedTick"></param>
+	void ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept;
+
 	// コンポーネントの生成
 	template<typename T>
 	requires std::derived_from<T, Component>
@@ -127,6 +133,7 @@ protected:
 	virtual void Init() noexcept override {}
 	virtual void Update(_In_ float In_Tick) noexcept override {}
 	virtual void LateUpdate(_In_ float In_Tick) noexcept override {}
+	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override {}
 
 private:
 	void InitializeComponents() noexcept;
