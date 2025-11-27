@@ -21,6 +21,13 @@
 #include "System/ImGui/imgui_impl_win32.h"
 
 // ==============================
+//  プロトタイプ宣言
+// ==============================
+void Update(_In_ float In_Tick);
+void FixedUpdate(_In_ double In_FixedTick);
+void Draw();
+
+// ==============================
 //  グローバル変数
 // ==============================
 
@@ -71,7 +78,9 @@ HRESULT Main::Init()
 	Instance.AddCustomProc(Input::InputCustomProc);
 
 	// シーンの初期化
-	auto pScene = SceneManager::GetInstance().Init<SceneRoot>();
+	auto &SceneM = SceneManager::GetInstance();
+	auto pScene = SceneM.Init<SceneRoot>();
+	SceneM.SceneObjectsInit();
 
 	// 初期リソース作成
 	auto [RTV,DSV] = RenderTargetManager::GetInstance().InitializeDefaultResources(Instance.GetWidth(), Instance.GetHeight());
@@ -115,29 +124,61 @@ void Main::Uninit()
 	Input::Uninit();
 }
 
-void Main::Update(_In_ float In_Tick)
+void Main::GameLoop(_In_ FrameManager &In_Frame)
+{
+	// fps制御
+	if (In_Frame.UpdateMain())
+	{
+		float DeltaTime = In_Frame.GetTick() * In_Frame.GetTimeScale();
+		double FixedDeltaTime = In_Frame.GetFixedDeltaTime();
+		In_Frame.AddAccumulatedTime(DeltaTime);
+
+		// スパイラル回避
+		In_Frame.SetAccumulatedTime(std::min(In_Frame.GetAccumulatedTime(), FixedDeltaTime * In_Frame.GetMaxStepCount()));
+		int Steps = 0;
+
+		// Inputの更新
+		Input::Update();
+
+		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
+		{
+			// 物理前処理（力の適用・入力を velocity 等に反映する等）
+			//PrePhysics(FixedDeltaTime);
+
+			// 固定刻みで物理更新（衝突検出・解決を含む）
+			FixedUpdate(FixedDeltaTime);
+
+			// 衝突イベントをキューに貯める場合はここでキューへ追加
+			//EnqueueCollisionEvents();
+
+			In_Frame.SubAccumulatedTime(FixedDeltaTime);
+			++Steps;
+		}
+
+		DebugManager::GetInstance().DebugLog("DeltaTime: {:.6f}", DeltaTime);
+		Update(DeltaTime);	// 更新処理
+		// シーン切り替えの更新
+		SceneManager::GetInstance().UpdateSceneChange();
+		// Inputの更新終了処理
+		Input::EndUpdate();
+		Draw();	// 描画処理
+	}
+}
+
+void FixedUpdate(_In_ double In_FixedTick)
+{
+	SceneManager::GetInstance().RootFixedUpdate(In_FixedTick);
+}
+
+void Update(_In_ float In_Tick)
 {
 	auto &SceneM = SceneManager::GetInstance();
-	Input::Update();
 	SceneM.RootUpdate(In_Tick);
 	SpriteManager::GetInstance().Update();
 	DebugManager::GetInstance().Update();
 }
 
-void Main::FixedUpdate(_In_ double In_FixedTick)
-{
-}
-
-void Main::ChangeScene()
-{
-	// シーン切り替えの更新
-	SceneManager::GetInstance().UpdateSceneChange();
-
-	// Inputの更新終了処理
-	Input::EndUpdate();
-}
-
-void Main::Draw()
+void Draw()
 {
 	auto &SceneM = SceneManager::GetInstance();
 	DX11_Core &DX11 = DX11_Core::GetInstance();

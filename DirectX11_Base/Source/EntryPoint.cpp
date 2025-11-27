@@ -30,7 +30,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// FrameManagerの初期化
 	// ------------------------------
 	FrameManager &frame = FrameManager::GetInstance();	// インスタンス生成
-	frame.Init(60);										// フレームレートを60fpsに設定して初期化
+	frame.Init(60,false);										// フレームレートを60fpsに設定して初期化
 #ifdef _DEBUG
 	frame._SetHwnd(window.GetHwnd());					// ウィンドウハンドルの設定
 	frame._SetWindowTitle(window.GetTitleName());		// ウィンドウタイトルの設定
@@ -55,34 +55,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// ウィンドウのメッセージループ処理
 		if (window.MessageLoop())
 		{
-			// fps制御
-			if (frame.UpdateMain())
-			{
-				float DeltaTime = frame.GetTick() * frame.GetTimeScale();
-				double FixedDeltaTime = frame.GetFixedDeltaTime();
-				frame.AddAccumulatedTime(DeltaTime);
-
-				// スパイラル回避
-				frame.SetAccumulatedTime(std::min(frame.GetAccumulatedTime(), FixedDeltaTime * frame.GetMaxStepCount()));
-				int Steps = 0;
-				while (frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < frame.GetMaxStepCount())
-				{
-					// 物理前処理（力の適用・入力を velocity 等に反映する等）
-					//Main::PrePhysics(FixedDeltaTime);
-
-					// 固定刻みで物理更新（衝突検出・解決を含む）
-					Main::FixedUpdate(FixedDeltaTime);
-
-					// 衝突イベントをキューに貯める場合はここでキューへ追加
-					//Main::EnqueueCollisionEvents();
-
-					frame.SubAccumulatedTime(FixedDeltaTime);
-					++Steps;
-				}
-				Main::Update(DeltaTime);	// 更新処理
-				Main::ChangeScene();			// シーン切り替え処理
-				Main::Draw();	// 描画処理
-			}
+			Main::GameLoop(frame);
 		}
 	}
 
