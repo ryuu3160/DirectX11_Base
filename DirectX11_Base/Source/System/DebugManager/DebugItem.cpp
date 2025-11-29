@@ -659,7 +659,7 @@ void ItemConsole::DrawImGui()
 		ImGui::Spacing();
 		// レベル表示切替ボタン(右揃えで表示)
 		float LevelPos = ImGui::GetContentRegionAvail().x;
-		for(int i = m_Levels.size() - 1; i >= 0; --i)
+		for(int i = static_cast<int>(m_Levels.size()) - 1; i >= 0; --i)
 		{
 			auto level = m_Levels.begin();
 			std::advance(level, i);

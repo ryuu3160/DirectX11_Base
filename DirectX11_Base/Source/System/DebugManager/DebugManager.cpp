@@ -11,6 +11,7 @@
 #include "DebugManager.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "DirectX11/System/RenderManager.hpp"
+#include "System/ryuu_lib/FrameManager/FrameManager.hpp"
 
 // ==============================
 //	定数定義
@@ -19,30 +20,6 @@ namespace
 {
 	constexpr float cx_fToolBarHeight = 5.0f;
 	static DebugWindow *c_NullWindow;
-}
-
-DebugManager::DebugManager()
-	: m_ToolBarFlags(0)
-{
-	c_NullWindow = new DebugWindow("NullWindow");
-	c_NullWindow->m_IsDummy = true;
-}
-
-DebugManager::~DebugManager()
-{
-	c_NullWindow->m_IsDummy = false;
-	delete c_NullWindow;
-	c_NullWindow = nullptr;
-
-	// データの保存
-	SaveDebugData();
-
-	for (auto &itr : m_DebugWindows)
-	{
-		delete itr;
-	}
-	m_DebugWindows.clear();
-	m_ToolBarFuncs.clear();
 }
 
 void DebugManager::Init()
@@ -61,12 +38,26 @@ void DebugManager::Init()
 
 	// デフォルトウィンドウの作成
 	auto log = CreateDebugWindow("System", "Log");
+	auto DebugMenu = CreateDebugWindow("System", "DebugMenu");
 	// フレームレート表示ウィンドウ
 	CreateDebugWindow("System", "Hierarchy");
 	CreateDebugWindow("System", "Inspector");
-	AddToolBarMenu("System", "Reset ImGui Layout", []()
+	// ツールバーメニューの初期設定
+	AddToolBarMenu("System", "Show All Debug Windows", [this]()
 		{
-			ImGui::LoadIniSettingsFromDisk("Assets/DebugResource/imgui_layout.ini");
+			ShowAllWindows();
+		});
+	AddToolBarMenu("System", "Hide All Debug Windows", [this]()
+		{
+			HideAllWindows();
+		});
+	AddToolBarMenu("System", "Reset ImGui Layout", [this]()
+		{
+			m_IsRequestLoadLayout = true;
+		});
+	AddToolBarMenu("System", "Save ImGui Layout", [this]()
+		{
+			m_IsRequestSaveLayout = true;
 		});
 
 	// ログウィンドウの初期設定
@@ -110,6 +101,20 @@ void DebugManager::Init()
 				}
 			}
 		});
+
+	// デバッグメニューの初期設定
+	DebugMenu->CreateItem<ItemCallback>("Pause", DebugItem::Kind::Bool,
+		[](bool IsSet, void *ptr)
+		{
+			if (IsSet)
+			{
+				FrameManager::GetInstance().SetTimeScale(0.0f);
+			}
+			else
+			{
+				FrameManager::GetInstance().SetTimeScale(1.0f);
+			}
+		});
 }
 
 void DebugManager::Update() noexcept
@@ -125,6 +130,7 @@ void DebugManager::Draw() noexcept
 	if (ImGui::Begin("ToolBar",nullptr, m_ToolBarFlags))
 	{
 		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+		ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.06f, 0.06f, 0.06f, 1.0f));
 		if (ImGui::BeginMenuBar())
 		{
 			for (const auto &itr : m_ToolBarFuncs)
@@ -144,6 +150,7 @@ void DebugManager::Draw() noexcept
 
 			ImGui::EndMenuBar();
 		}
+		ImGui::PopStyleColor();
 		ImGui::PopItemWidth();
 	}
 	ImGui::End();
@@ -160,6 +167,17 @@ void DebugManager::Draw() noexcept
 			window->Draw();
 			ImGui::End();
 		}
+	}
+
+	if (m_IsRequestSaveLayout)
+	{
+		ImGui::SaveIniSettingsToDisk("Assets/DebugResource/imgui_layout.ini");
+		m_IsRequestSaveLayout = false;
+	}
+	if (m_IsRequestLoadLayout)
+	{
+		ImGui::LoadIniSettingsFromDisk("Assets/DebugResource/imgui_layout.ini");
+		m_IsRequestLoadLayout = false;
 	}
 }
 
@@ -228,14 +246,61 @@ DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupNa
 	return c_NullWindow;
 }
 
+DebugManager::DebugManager()
+	: m_ToolBarFlags(0), m_IsRequestLoadLayout(false), m_IsRequestSaveLayout(false)
+{
+	c_NullWindow = new DebugWindow("NullWindow");
+	c_NullWindow->m_IsDummy = true;
+}
+
+DebugManager::~DebugManager()
+{
+	c_NullWindow->m_IsDummy = false;
+	delete c_NullWindow;
+	c_NullWindow = nullptr;
+
+	// データの保存
+	SaveDebugData();
+
+	for (auto &itr : m_DebugWindows)
+	{
+		delete itr;
+	}
+	m_DebugWindows.clear();
+	m_ToolBarFuncs.clear();
+}
+
+void DebugManager::HideAllWindows()
+{
+	for (const auto &window : m_DebugWindows)
+	{
+		if (window)
+		{
+			window->SetIsOpen(false);
+		}
+	}
+}
+
+void DebugManager::ShowAllWindows()
+{
+	for (const auto &window : m_DebugWindows)
+	{
+		if (window)
+		{
+			window->SetIsOpen(true);
+		}
+	}
+}
+
+
 void DebugManager::SaveDebugData()
 {
-	std::fstream file("Assets\\Debug\\DebugManagerData.csv", std::ios::out | std::ios::trunc);
+	std::fstream file("Assets\\DebugResource\\DebugManagerData.csv", std::ios::out | std::ios::trunc);
 
 	if (!file.is_open())
 	{
-		std::filesystem::create_directory("Assets\\Debug\\");
-		file.open("Assets\\Debug\\DebugManagerData.csv", std::ios::out | std::ios::trunc);
+		std::filesystem::create_directory("Assets\\DebugResource\\");
+		file.open("Assets\\DebugResource\\DebugManagerData.csv", std::ios::out | std::ios::trunc);
 	}
 
 	if (file.is_open())
@@ -374,7 +439,7 @@ void DebugManager::WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std
 
 void DebugManager::LoadDebugData()
 {
-	std::fstream file("Assets\\Debug\\DebugManagerData.csv", std::ios::in);
+	std::fstream file("Assets\\DebugResource\\DebugManagerData.csv", std::ios::in);
 
 	if (file.is_open())
 	{

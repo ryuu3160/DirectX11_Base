@@ -43,9 +43,6 @@ public:
 	};
 
 public:
-	DebugManager();
-	~DebugManager();
-
 	void Init();
 
 	void Update() noexcept;
@@ -135,6 +132,11 @@ public:
 	void DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item);
 
 private:
+	DebugManager();
+	~DebugManager();
+
+	void HideAllWindows();
+	void ShowAllWindows();
 
 	void SaveDebugData();
 	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item);
@@ -151,4 +153,6 @@ private:
 	std::unordered_map<std::string, std::vector<ToolBarMenu>> m_ToolBarFuncs;
 	std::vector<DebugWindow*> m_DebugWindows;
 	std::vector<SaveData> m_SaveData;
+	bool m_IsRequestLoadLayout;
+	bool m_IsRequestSaveLayout;
 };
