@@ -270,29 +270,26 @@ DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
 	// Še—v‘f‚Ìs—ñ‚ðŽæ“¾
-	DirectX::XMMATRIX T;
-	DirectX::XMMATRIX R;
-	DirectX::XMMATRIX S;
-
-	auto Pos = m_Pos;
-	auto Quat = m_Quat;
-	auto Scale = m_Scale;
-
-	if (m_bIsChild && m_pParent)
-	{
-		Pos = Pos + m_pParent->m_Pos;
-		Quat = QuaternionMultiply(Quat, m_pParent->m_Quat);
-		Scale = Scale * m_pParent->m_Scale;
-	}
-
-	T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
-	R = DirectX::XMMatrixRotationQuaternion(
-		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
+		DirectX::XMVectorSet(m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w)
 	);
-	S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
 
 	// s—ñ‚Ì‡ŽZ
 	DirectX::XMMATRIX M = S * R * T;
+
+	if (m_bIsChild && m_pParent)
+	{
+		T = DirectX::XMMatrixTranslation(m_pParent->m_Pos.x, m_pParent->m_Pos.y, m_pParent->m_Pos.z);
+		R = DirectX::XMMatrixRotationQuaternion(
+			DirectX::XMVectorSet(m_pParent->m_Quat.x, m_pParent->m_Quat.y, m_pParent->m_Quat.z, m_pParent->m_Quat.w)
+		);
+		S = DirectX::XMMatrixScaling(m_pParent->m_Scale.x, m_pParent->m_Scale.y, m_pParent->m_Scale.z);
+
+		M = M * (S * R * T);
+	}
+
 	// “]’u
 	if (In_IsTranspose)
 		M = DirectX::XMMatrixTranspose(M);
