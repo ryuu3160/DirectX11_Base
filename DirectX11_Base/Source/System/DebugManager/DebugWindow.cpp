@@ -38,7 +38,8 @@ void DebugWindow::Draw() noexcept
 {
 	for (const auto &item : m_Items)
 	{
-		DrawImgui(item);
+		item->DrawImGui();
+		//DrawImgui(item);
 	}
 }
 
@@ -109,7 +110,7 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 		// 整数項目の表示
 	case DebugItem::Int:
 		if (pValue)
-			ImGui::InputInt(In_Item->GetCStrName(), &std::get<int>(pCallback->GetValue()));
+			ImGui::InputInt(In_Item->GetCStrName(), &std::get<int>(pValue->GetValue()));
 		else if (pBind)
 			ImGui::InputInt(In_Item->GetCStrName(), pBind->GetPtr<int>());
 		else if (pCallback)
@@ -144,6 +145,7 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 			if (ImGui::InputFloat2(In_Item->GetCStrName(), &std::get<DirectX::XMFLOAT2>(pCallback->GetValue()).x, "%.2f"))
 				pCallback->CallFunc(true, &std::get<DirectX::XMFLOAT2>(pCallback->GetValue()).x);
 		}
+		break;
 		// ベクトル項目の表示
 	case DebugItem::Vector:
 		if (pValue)
@@ -172,14 +174,14 @@ void DebugWindow::DrawImgui(_In_ DebugItem *In_Item) noexcept
 		break;
 		// パス項目の表示
 	case DebugItem::Path:
-		if (typeid(ItemValue) == typeid(*In_Item)) // 通常表示
+		if (pValue) // 通常表示
 		{
 			char buffer[MAX_PATH];
 			strncpy_s(buffer, std::get<std::string>(pValue->GetValue()).c_str(), MAX_PATH);
 			if(ImGui::InputText(In_Item->GetCStrName(), buffer, MAX_PATH))
 				std::get<std::string>(pValue->GetValue()) = buffer;
 		}
-		else // 紐づけ項目の表示
+		else if (pBind) // 紐づけ項目の表示
 			ImGui::InputText(In_Item->GetCStrName(), pBind->GetPtr<char>(), MAX_PATH);
 		break;
 		// 入力文字列項目の表示

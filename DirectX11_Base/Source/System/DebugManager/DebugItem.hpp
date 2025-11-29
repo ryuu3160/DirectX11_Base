@@ -92,6 +92,8 @@ public:
 	void AddListItem(_In_ const std::string_view In_Name);
 	void RemoveListItem(_In_ const std::string_view In_Name);
 
+	virtual void DrawImGui() {};
+
 public:
 	// ï∂éöóÒÇ©ÇÁçÄñ⁄ÇÃéÌï ÇéÊìæ
 	static Kind StrToKind(_In_ std::string In_Str);
@@ -109,6 +111,8 @@ class ItemValue : public DebugItem
 public:
 	ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave = false);
 	~ItemValue();
+
+	void DrawImGui() override;
 
 	Value &GetValue() { return m_Value; }
 
@@ -129,6 +133,8 @@ class ItemText : public DebugItem
 public:
 	ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
 	~ItemText();
+
+	void DrawImGui() override;
 
 	std::string &GetText() { return m_Text; }
 	ImGuiInputTextFlags GetFlags() const { return m_Flags; }
@@ -159,6 +165,8 @@ public:
 	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void* In_Ptr);
 	~ItemBind();
 
+	void DrawImGui() override;
+
 	template <typename T>
 	T *GetPtr()
 	{
@@ -175,6 +183,8 @@ public:
 	ItemCallback(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func);
 	~ItemCallback();
 
+	void DrawImGui() override;
+
 	Value &GetValue() { return m_Value; }
 	void CallFunc(_In_ bool In_IsSet, _In_ void *In_Ptr) { m_Func(In_IsSet, In_Ptr); }
 
@@ -190,6 +200,8 @@ public:
 	ItemGroup(_In_ std::string In_Name);
 	~ItemGroup();
 
+	void DrawImGui() override;
+
 	std::vector<DebugItem *> &GetGroupItems() { return m_Items; }
 
 private:
@@ -201,6 +213,8 @@ class ItemList : public DebugItem
 public:
 	ItemList(_In_ std::string In_Name, _In_ ConstCallback In_Func = nullptr, _In_ bool In_IsSave = false);
 	~ItemList();
+
+	void DrawImGui() override;
 
 	int &GetSelectNo() { return m_SelectNo; }
 	std::list<std::string> &GetList() { return m_List; }

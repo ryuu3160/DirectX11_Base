@@ -230,6 +230,52 @@ ItemValue::~ItemValue()
 {
 }
 
+void ItemValue::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// 項目名のみの表示
+	case DebugItem::Label:
+		ImGui::Text("%s", m_Name.c_str());
+		break;
+		// チェックフラグの表示
+	case DebugItem::Bool:
+		ImGui::Checkbox(m_Name.c_str(), &std::get<bool>(m_Value));
+		break;
+		// 整数項目の表示
+	case DebugItem::Int:
+		ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value));
+		break;
+		// 小数項目の表示
+	case DebugItem::Float:
+		ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value));
+		break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+		ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f");
+		break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+		ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f");
+		break;
+		// 色項目の表示
+	case DebugItem::Color:
+		ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x);
+		break;
+		// パス項目の表示
+	case DebugItem::Path:
+	{
+		char buffer[MAX_PATH];
+		strncpy_s(buffer, std::get<std::string>(m_Value).c_str(), MAX_PATH);
+		if (ImGui::InputText(m_Name.c_str(), buffer, MAX_PATH))
+			std::get<std::string>(m_Value) = buffer;
+	}
+	break;
+	default:
+		break;
+	}
+}
+
 // ==============================
 //  ItemText
 // ==============================
@@ -247,6 +293,49 @@ ItemText::ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGu
 
 ItemText::~ItemText()
 {
+}
+
+void ItemText::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// 入力文字列項目の表示
+	case DebugItem::InputStr:
+	{
+		if (m_IsMultiline)
+		{
+			// 複数行入力
+			char buffer[4096];
+			strncpy_s(buffer,m_Text.c_str(), 4096);
+			float height = ImGui::GetTextLineHeight();
+			float width = ImGui::GetContentRegionAvail().x;
+			std::string label;
+			if (m_IsHideLabel)
+				label = std::string("##");
+			else
+				width -= ImGui::CalcTextSize(m_Name.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
+
+			label += m_Name;
+			if (m_LineCount > 0)
+				height *= m_LineCount;
+			else
+				height = ImGui::GetContentRegionAvail().y;
+			if (ImGui::InputTextMultiline(label.c_str(), buffer, 4096, ImVec2(width, height), m_Flags))
+				m_Text = buffer;
+		}
+		else
+		{
+			// 単一行入力
+			char buffer[256];
+			strncpy_s(buffer, m_Text.c_str(), 256);
+			if (ImGui::InputText(m_Name.c_str(), buffer, 256, m_Flags))
+				m_Text = buffer;
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
 
 // ==============================
@@ -269,6 +358,52 @@ ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Pt
 
 ItemBind::~ItemBind()
 {
+}
+
+void ItemBind::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// 項目名のみの表示
+	case DebugItem::Label:
+	{
+		char str[256];
+		sprintf_s(str, "%s : %s", m_Name.c_str(), this->GetPtr<char>());
+		ImGui::Text("%s", str);
+	}
+	break;
+		// チェックフラグの表示
+	case DebugItem::Bool:
+		ImGui::Checkbox(m_Name.c_str(), this->GetPtr<bool>());
+		break;
+		// 整数項目の表示
+	case DebugItem::Int:
+		ImGui::InputInt(m_Name.c_str(), this->GetPtr<int>());
+		break;
+		// 小数項目の表示
+	case DebugItem::Float:
+		ImGui::InputFloat(m_Name.c_str(), this->GetPtr<float>());
+		break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+		ImGui::InputFloat2(m_Name.c_str(), this->GetPtr<float>(), "%.2f");
+		break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+		ImGui::InputFloat3(m_Name.c_str(), this->GetPtr<float>(), "%.2f");
+		break;
+		// 色項目の表示
+	case DebugItem::Color:
+		ImGui::ColorEdit4(m_Name.c_str(), this->GetPtr<float>());
+		break;
+		// パス項目の表示
+	case DebugItem::Path:
+		// 紐づけ項目の表示
+		ImGui::InputText(m_Name.c_str(), this->GetPtr<char>(), MAX_PATH);
+		break;
+	default:
+		break;
+	}
 }
 
 // ==============================
@@ -315,6 +450,72 @@ ItemCallback::~ItemCallback()
 {
 }
 
+void ItemCallback::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// 項目名のみの表示
+	case DebugItem::Label:
+		ImGui::Text("%s", m_Name.c_str());
+		break;
+		// チェックフラグの表示
+	case DebugItem::Bool:
+	{
+		this->CallFunc(false, &std::get<bool>(m_Value));
+		if (ImGui::Checkbox(m_Name.c_str(), &std::get<bool>(m_Value)))
+			this->CallFunc(true, &std::get<bool>(m_Value));
+	}
+	break;
+		// 整数項目の表示
+	case DebugItem::Int:
+	{
+		this->CallFunc(false, &std::get<int>(m_Value));
+		if (ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value)))
+			this->CallFunc(true, &std::get<int>(m_Value));
+	}
+	break;
+		// 小数項目の表示
+	case DebugItem::Float:
+	{
+		this->CallFunc(false, &std::get<float>(m_Value));
+		if (ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value)))
+			this->CallFunc(true, &std::get<float>(m_Value));
+	}
+	break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT2>(m_Value));
+		if (ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT2>(m_Value).x);
+	}
+	break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT3>(m_Value));
+		if (ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT3>(m_Value).x);
+	}
+	break;
+		// 色項目の表示
+	case DebugItem::Color:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT4>(m_Value).x);
+		if (ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT4>(m_Value).x);
+	}
+	break;
+	// ボタンの表示
+	case DebugItem::Kind::Command:
+		if (ImGui::Button(m_Name.c_str()) && this)
+			this->CallFunc(false, nullptr);
+		break;
+	default:
+		break;
+	}
+}
+
 // ==============================
 //  ItemGroup
 // ==============================
@@ -334,6 +535,31 @@ ItemGroup::~ItemGroup()
 	m_Items.clear();
 }
 
+void ItemGroup::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// グループ項目の表示
+	case DebugItem::Group:
+	{
+		// 表示項目がなければ表示しない
+		if (m_Items.empty()) break;
+
+		// グループが展開されてなければ表示しない
+		if (!ImGui::CollapsingHeader(m_Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) break;
+
+		// グループ内の項目を再帰で表示
+		for (auto &itr : m_Items)
+		{
+			itr->DrawImGui();
+		}
+	}
+	break;
+	default:
+		break;
+	}
+}
+
 // ==============================
 //  ItemList
 // ==============================
@@ -350,4 +576,33 @@ ItemList::ItemList(_In_ std::string In_Name, _In_ ConstCallback In_Func, _In_ bo
 ItemList::~ItemList()
 {
 	m_List.clear();
+}
+
+void ItemList::DrawImGui()
+{
+	switch (m_Kind)
+	{	// リスト項目の表示
+	case DebugItem::List:
+	{
+		// 表示項目がなければ表示しない
+		if (m_List.empty()) break;
+
+		// 表示項目の構築
+		static const char *pList[100];
+		auto it = m_List.begin();
+		for (int i = 0; i < m_List.size() && i < 100; ++i, ++it)
+			pList[i] = it->c_str();
+
+		// 表示
+		if (ImGui::ListBox(m_Name.c_str(), &m_SelectNo, pList, static_cast<int>(m_List.size())))
+		{
+			// 関数があれば選択時処理を実行
+			if (m_Func && m_SelectNo >= 0)
+				m_Func(pList[m_SelectNo]);
+		}
+	}
+	break;
+	default:
+		break;
+	}
 }
