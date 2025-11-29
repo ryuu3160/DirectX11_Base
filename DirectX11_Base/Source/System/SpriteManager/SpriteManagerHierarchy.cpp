@@ -14,7 +14,7 @@
 #include "System/ImGui/imgui_impl_win32.h"
 
 SpriteManagerHierarchy::SpriteManagerHierarchy()
-	: SpriteManagerWindow("Sprite_Hierarchy")
+	: SpriteManagerWindow("Hierarchy##SpriteManager")
 {
 	m_WindowType = Hierarchy;
 }
@@ -41,6 +41,6 @@ void SpriteManagerHierarchy::Draw(_In_ std::list<std::string> In_2DSpriteNames, 
 			items_3D[i] = itr2->c_str();
 	}
 
-	ImGui::ListBox("Hierarchy_2D", Inout_2DIndex, items_2D, static_cast<int>(In_2DSpriteNames.size()));
-	ImGui::ListBox("Hierarchy_3D", Inout_3DIndex, items_3D, static_cast<int>(In_3DSpriteNames.size()));
+	ImGui::ListBox("Hierarchy##2D", Inout_2DIndex, items_2D, static_cast<int>(In_2DSpriteNames.size()));
+	ImGui::ListBox("Hierarchy##3D", Inout_3DIndex, items_3D, static_cast<int>(In_3DSpriteNames.size()));
 }

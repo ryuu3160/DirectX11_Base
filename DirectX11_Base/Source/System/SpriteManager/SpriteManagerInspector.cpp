@@ -12,7 +12,7 @@
 #include "SpriteManager.hpp"
 
 SpriteManagerInspector::SpriteManagerInspector()
-	: SpriteManagerWindow("Sprite_Inspector")
+	: SpriteManagerWindow("Inspector##SpriteManager")
 	, m_Pos2D(0.0f, 0.0f, 0.0f), m_Scale2D(1.0f, 1.0f, 1.0f), m_Rotation2D(0.0f, 0.0f, 0.0f), m_Layer2D(0)
 	, m_Pos3D(0.0f, 0.0f, 0.0f), m_Scale3D(1.0f, 1.0f, 1.0f), m_Rotation3D(0.0f, 0.0f, 0.0f), m_Layer3D(0)
 	, m_bIsBillBoard(false)
@@ -42,16 +42,16 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 
 		if (ImGui::CollapsingHeader(In_2DSprite->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::InputFloat3("Position", &m_Pos2D.x, "%.2f");
-			ImGui::InputFloat3("Scale", &m_Scale2D.x, "%.2f");
-			ImGui::InputFloat3("Rotation", &m_Rotation2D.x, "%.2f");
-			ImGui::InputInt("Layer", &m_Layer2D);
-			ImGui::InputText("2DTexturePath", m_cFilePath2D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat3("Position##2D", &m_Pos2D.x, "%.2f");
+			ImGui::InputFloat3("Scale##2D", &m_Scale2D.x, "%.2f");
+			ImGui::InputFloat3("Rotation##2D", &m_Rotation2D.x, "%.2f");
+			ImGui::InputInt("Layer##2D", &m_Layer2D);
+			ImGui::InputText("TexturePath##2D", m_cFilePath2D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
 
 			if (ImGui::Button("Convert to 3D"))
 				SpriteManager::GetInstance().ConvertTo3D();
 
-			if (ImGui::Button("Delete Sprite"))
+			if (ImGui::Button("Delete Sprite##2D"))
 			{
 				SpriteManager::GetInstance().DeleteSprite(In_2DSprite->GetName());
 			}
@@ -77,17 +77,17 @@ void SpriteManagerInspector::Draw(_In_opt_ GameObject *In_2DSprite = nullptr, _I
 
 		if (ImGui::CollapsingHeader(In_3DSprite->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::InputFloat3("3DPosition", &m_Pos3D.x, "%.2f");
-			ImGui::InputFloat3("3DScale", &m_Scale3D.x, "%.2f");
-			ImGui::InputFloat3("3DRotation", &m_Rotation3D.x, "%.2f");
-			ImGui::InputInt("3DLayer", &m_Layer3D);
-			ImGui::Checkbox("Is BillBoard", &m_bIsBillBoard);
-			ImGui::InputText("3DTexturePath", m_cFilePath3D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputFloat3("Position##3D", &m_Pos3D.x, "%.2f");
+			ImGui::InputFloat3("Scale##3D", &m_Scale3D.x, "%.2f");
+			ImGui::InputFloat3("Rotation##3D", &m_Rotation3D.x, "%.2f");
+			ImGui::InputInt("Layer##3D", &m_Layer3D);
+			ImGui::Checkbox("Is BillBoard##3D", &m_bIsBillBoard);
+			ImGui::InputText("TexturePath##3D", m_cFilePath3D, cx_MaxStringLength, ImGuiInputTextFlags_ReadOnly);
 
 			if(ImGui::Button("Convert to 2D"))
 				SpriteManager::GetInstance().ConvertTo2D();
 
-			if(ImGui::Button("Delete Sprite3D"))
+			if(ImGui::Button("Delete Sprite##3D"))
 				SpriteManager::GetInstance().DeleteSprite(In_3DSprite->GetName());
 		}
 

@@ -12,7 +12,7 @@
 #include "SpriteManager.hpp"
 
 SpriteManagerSceneSelecter::SpriteManagerSceneSelecter()
-	: SpriteManagerWindow("SceneSelecter")
+	: SpriteManagerWindow("SceneSelecter## SpriteManager")
 {
 	m_WindowType = SceneSelecter;
 	m_NewSceneName[0] = '\0';

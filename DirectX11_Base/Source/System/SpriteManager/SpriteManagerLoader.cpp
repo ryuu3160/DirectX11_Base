@@ -12,7 +12,7 @@
 #include "SpriteManager.hpp"
 
 SpriteManagerLoader::SpriteManagerLoader()
-	: SpriteManagerWindow("Loader")
+	: SpriteManagerWindow("Loader##SpriteManager")
 {
 	m_WindowType = Loader;
 	// ‰Šú‰»
