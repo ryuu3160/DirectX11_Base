@@ -216,7 +216,7 @@ void Main::InitializeDebugWindows() noexcept
 	DebugM.CreateDebugWindow("System", "Inspector");
 	DebugM.AddToolBarMenu("System", "Reset ImGui Layout", []()
 		{
-			ImGui::LoadIniSettingsFromDisk("Assets/Debug/imgui_layout.ini");
+			ImGui::LoadIniSettingsFromDisk("Assets/DebugResource/imgui_layout.ini");
 		});
 
 	DebugM.AddToolBarMenu("Camera", "Editor", []()
