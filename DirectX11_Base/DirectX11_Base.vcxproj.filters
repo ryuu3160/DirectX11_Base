@@ -331,6 +331,9 @@
     <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\InputSystem.cpp">
+      <Filter>Source\System\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -561,6 +564,9 @@
     <ClInclude Include="Source\Concept.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\InputSystem.hpp">
+      <Filter>Source\System\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

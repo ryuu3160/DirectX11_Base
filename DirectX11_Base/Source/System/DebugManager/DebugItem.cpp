@@ -606,3 +606,206 @@ void ItemList::DrawImGui()
 		break;
 	}
 }
+
+// ==============================
+//  ItemConsole
+// ==============================
+
+ItemConsole::ItemConsole(_In_ std::string In_Name)
+	: m_IsShowClearButton(true), m_IsShowAutoScrollButton(true), m_IsAutoScroll(true), m_IsShowSerchBox(true)
+	, m_ScrollToBottom(false)
+{
+	m_Name = In_Name;
+	m_Kind = Kind::Console;
+	m_SerchBuffer[0] = '\0';
+	LevelData DefaultLevel;
+	DefaultLevel.Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	DefaultLevel.IsShow = true;
+	m_Levels.try_emplace("Default",DefaultLevel);
+}
+
+ItemConsole::~ItemConsole()
+{
+}
+
+void ItemConsole::DrawImGui()
+{
+	switch (m_Kind)
+	{
+		// 文字列表示項目の表示
+	case DebugItem::Console:
+	{
+		// ツールバー
+		if (m_IsShowClearButton)
+		{
+			if (ImGui::Button("Clear"))
+			{
+				std::lock_guard<std::mutex> lock(m_Mutex);
+				m_Outputs.clear();
+			}
+			ImGui::SameLine();
+		}
+		if (m_IsShowAutoScrollButton)
+		{
+			ImGui::Checkbox("Auto Scroll", &m_IsAutoScroll);
+			ImGui::SameLine();
+		}
+		if (m_IsShowSerchBox)
+		{
+			ImGui::SetNextItemWidth(200.0f);
+			ImGui::InputTextWithHint("##search", "Search...", m_SerchBuffer, IM_ARRAYSIZE(m_SerchBuffer));
+			ImGui::SameLine();
+		}
+		ImGui::Spacing();
+		// レベル表示切替ボタン(右揃えで表示)
+		float LevelPos = ImGui::GetContentRegionAvail().x;
+		for(int i = m_Levels.size() - 1; i >= 0; --i)
+		{
+			auto level = m_Levels.begin();
+			std::advance(level, i);
+			LevelPos -= ImGui::GetStyle().ItemSpacing.x + ImGui::CalcTextSize(level->first.c_str()).x + ImGui::GetFrameHeight();
+			ImGui::SameLine(LevelPos);
+			if (ImGui::Checkbox(level->first.c_str(), &level->second.IsShow))
+			{
+			}
+		}
+
+		ImGui::Separator();
+		// 出力内容表示領域
+		ImGui::BeginChild("OutputRegion", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+		{
+			ImVec2 regionMin = ImGui::GetCursorScreenPos();
+			ImDrawList *draw_list = ImGui::GetWindowDrawList();
+			ImFont *font = ImGui::GetFont();
+			float fontSize = ImGui::GetFontSize();
+
+			// Copy snapshot to avoidロックを長時間保持
+			std::vector<OutputData> snapshot;
+			{
+				std::lock_guard<std::mutex> lock(m_Mutex);
+				snapshot = m_Outputs;
+			}
+
+			// 検索/フィルタ処理（簡易）
+			std::vector<int> indices; indices.reserve(snapshot.size());
+			for (int i = 0; i < (int)snapshot.size(); ++i)
+			{
+				const OutputData &e = snapshot[i];
+				if (!m_Levels.find(e.Level)->second.IsShow) continue;
+				if (m_SerchBuffer[0] != '\0')
+				{
+					std::string s = m_SerchBuffer;
+					// 小文字化して簡易検索（必要なら強化）
+					std::string hay = e.Text;
+					std::transform(hay.begin(), hay.end(), hay.begin(), ::tolower);
+					std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+					if (hay.find(s) == std::string::npos) continue;
+				}
+				indices.push_back(i);
+			}
+
+			// 大量行のときは ListClipper を使う
+			ImGuiListClipper clipper;
+			clipper.Begin((int)indices.size());
+			while (clipper.Step())
+			{
+				for (int line = clipper.DisplayStart; line < clipper.DisplayEnd; ++line)
+				{
+					int idx = indices[line];
+					const OutputData &e = snapshot[idx];
+
+					// 行全体を Selectable にして行選択を実装（行単位コピー用）
+					ImGui::PushID(line);
+					ImVec4 col = e.Color;
+					// 時刻とレベルを先頭に表示するフォーマット例
+					std::string prefix = "[" + e.TimeStr + "] ";
+					std::string LevelStr = e.Level + ": ";
+					if (LevelStr == "Default: ") // defaultレベルの場合はレベル表示しない
+					{
+						LevelStr = "";
+					}
+					ImGui::TextUnformatted(prefix.c_str()); ImGui::SameLine();
+					ImGui::PushStyleColor(ImGuiCol_Text, m_Levels.find(e.Level)->second.Color);
+					ImGui::TextUnformatted(LevelStr.c_str()); ImGui::PopStyleColor(); ImGui::SameLine();
+
+					// カラーテキストを単純に描く（必要なら BeginGroup/EndGroup で整形）
+					ImGui::PushStyleColor(ImGuiCol_Text, col);
+					// Selectable はテキストを表示しつつ選択可能にする：幅をフルに取るため ImGui::GetContentRegionAvail().x を利用
+					float availW = ImGui::GetContentRegionAvail().x;
+					// 改行の可能性があるので TextWrapped で折り返し表示する（ただし Selectable 内での折返しは難しいため単純実装）
+					ImGui::TextWrapped("%s", e.Text.c_str());
+					ImGui::PopStyleColor();
+
+					// 行のクリックでクリップボードにコピー
+					if (ImGui::IsItemClicked())
+					{
+						ImGui::SetClipboardText(e.Text.c_str());
+					}
+					ImGui::PopID();
+				}
+			}
+
+			// 自動スクロール
+			if (m_IsAutoScroll && (ImGui::GetScrollY() >= ImGui::GetScrollMaxY() - 1.0f || m_ScrollToBottom))
+			{
+				ImGui::SetScrollHereY(1.0f);
+				m_ScrollToBottom = false;
+			}
+		}
+		ImGui::EndChild();
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void ItemConsole::AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec4 &In_Color)
+{
+	std::lock_guard<std::mutex> lock(m_Mutex);
+	LevelData Data;
+	Data.Color = In_Color;
+	Data.IsShow = true;
+	m_Levels.try_emplace(In_Name.data(), Data);
+}
+
+void ItemConsole::AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color, _In_ const std::string_view In_Level)
+{
+	std::lock_guard<std::mutex> lock(m_Mutex);
+	// デフォルトレベルの場合は無条件で追加
+	if (std::strcmp(In_Level.data(), "Default") == 0)
+	{
+		m_Outputs.push_back({ In_Text.data(), this->CurrentTimeString(), In_Level.data(), In_Color });
+		return;
+	}
+
+	// レベルが存在しない場合は追加しない
+	auto itr = m_Levels.find(In_Level.data());
+	if (itr == m_Levels.end())
+		return;
+	m_Outputs.push_back({ In_Text.data(), this->CurrentTimeString(), In_Level.data(), In_Color });
+}
+
+std::string ItemConsole::CurrentTimeString()
+{
+	std::time_t t = std::time(nullptr);
+	std::tm tm{};
+
+	localtime_s(&tm, &t);
+	char buf[16];
+	std::snprintf(buf, sizeof(buf), "%02d:%02d:%02d", tm.tm_hour, tm.tm_min, tm.tm_sec);
+	return std::string(buf);
+}
+
+int ItemConsole::GetButtonCount() const
+{
+	int count = 0;
+	if (m_IsShowClearButton)
+		++count;
+	if (m_IsShowAutoScrollButton)
+		++count;
+	if (m_IsShowSerchBox)
+		++count;
+
+	return count;
+}

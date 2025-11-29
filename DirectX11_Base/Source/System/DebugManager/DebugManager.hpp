@@ -83,19 +83,50 @@ public:
 		if(window->NotDummy())
 		{
 			auto &item = (*window)["LogText"];
-			if (item.GetKind() == DebugItem::Kind::InputStr)
+			if (item.GetKind() == DebugItem::Kind::Console)
 			{
-				auto TextItem = dynamic_cast<ItemText *>(&item);
+				auto TextItem = dynamic_cast<ItemConsole *>(&item);
 				if (TextItem)
 				{
-					std::string &text = TextItem->GetText();
-					text += msg + "\n";
+					TextItem->AddOutput(msg);
+				}
+			}
+		}
+	}
 
-					// •¶Žš”§ŒÀ
-					if (TextItem->IsMultiline())
-						text = CharacterLimitRecursion(text, 4096);
-					else
-						text = CharacterLimitRecursion(text, 256);
+	template<typename ...Args>
+	void DebugLogWarning(_In_ const char *In_Format, Args&& ...args)
+	{
+		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		auto window = GetDebugWindow("System", "Log");
+		if (window->NotDummy())
+		{
+			auto &item = (*window)["LogText"];
+			if (item.GetKind() == DebugItem::Kind::Console)
+			{
+				auto TextItem = dynamic_cast<ItemConsole *>(&item);
+				if (TextItem)
+				{
+					TextItem->AddOutput(msg, ImVec4(1.0f, 1.0f, 0.3f, 1.0f), "Warning");
+				}
+			}
+		}
+	}
+
+	template<typename ...Args>
+	void DebugLogError(_In_ const char *In_Format, Args&& ...args)
+	{
+		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		auto window = GetDebugWindow("System", "Log");
+		if (window->NotDummy())
+		{
+			auto &item = (*window)["LogText"];
+			if (item.GetKind() == DebugItem::Kind::Console)
+			{
+				auto TextItem = dynamic_cast<ItemConsole *>(&item);
+				if (TextItem)
+				{
+					TextItem->AddOutput(msg, ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Error");
 				}
 			}
 		}

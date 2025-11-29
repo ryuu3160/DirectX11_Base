@@ -52,6 +52,7 @@ public:
 		Color,		// 色入力
 		Path,		// ファイルパスの指定
 		InputStr,	// 文字列入力
+		Console,	// 文字列表示
 		Command,	// ボタン
 		Group,		// 表示項目をまとめる
 		List,		// 一覧表示
@@ -113,6 +114,8 @@ public:
 	~ItemValue();
 
 	void DrawImGui() override;
+
+	bool IsSave() const { return m_IsSave; }
 
 	Value &GetValue() { return m_Value; }
 
@@ -186,7 +189,7 @@ public:
 	void DrawImGui() override;
 
 	Value &GetValue() { return m_Value; }
-	void CallFunc(_In_ bool In_IsSet, _In_ void *In_Ptr) { m_Func(In_IsSet, In_Ptr); }
+	void CallFunc(_In_ bool In_IsSet, _In_opt_ void *In_Ptr) { m_Func(In_IsSet, In_Ptr); }
 
 private:
 	Value m_Value;
@@ -227,6 +230,54 @@ private:
 	ConstCallback			m_Func;		// 項目選択時のコールバック
 	bool					m_IsSave;	// 選択番号の保存
 };
+
+class ItemConsole : public DebugItem
+{
+public:
+	ItemConsole(_In_ std::string In_Name);
+	~ItemConsole();
+	void DrawImGui() override;
+
+	void AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	void AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f), _In_ const std::string_view In_Level = "Default");
+
+private:
+	struct OutputData
+	{
+		std::string Text;
+		std::string TimeStr;
+		std::string Level;
+		ImVec4 Color;
+	};
+
+	struct LevelData
+	{
+		ImVec4 Color;
+		bool IsShow{ true };
+	};
+
+	std::string CurrentTimeString();
+	int GetButtonCount() const;
+
+private:
+	std::vector<OutputData> m_Outputs;
+	std::unordered_map<std::string, LevelData> m_Levels;
+
+	std::mutex m_Mutex;
+	char m_SerchBuffer[256];
+	bool m_IsShowClearButton;
+	bool m_IsShowAutoScrollButton;
+	bool m_IsShowSerchBox;
+	bool m_IsAutoScroll;
+	bool m_ScrollToBottom;
+};
+
+
+
+// -------------------------------
+//	テンプレート関数実装
+// -------------------------------
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, DebugItem>

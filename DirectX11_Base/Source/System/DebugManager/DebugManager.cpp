@@ -9,6 +9,8 @@
 //	include
 // ==============================
 #include "DebugManager.hpp"
+#include "System/Object/CameraDCC.hpp"
+#include "DirectX11/System/RenderManager.hpp"
 
 // ==============================
 //	定数定義
@@ -56,6 +58,58 @@ void DebugManager::Init()
 
 	// データの読み込み
 	LoadDebugData();
+
+	// デフォルトウィンドウの作成
+	auto log = CreateDebugWindow("System", "Log");
+	// フレームレート表示ウィンドウ
+	CreateDebugWindow("System", "Hierarchy");
+	CreateDebugWindow("System", "Inspector");
+	AddToolBarMenu("System", "Reset ImGui Layout", []()
+		{
+			ImGui::LoadIniSettingsFromDisk("Assets/DebugResource/imgui_layout.ini");
+		});
+
+	// ログウィンドウの初期設定
+	auto Output = log->CreateItem<ItemConsole>("LogText");
+	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
+	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
+
+	AddToolBarMenu("Camera", "Editor", []()
+		{
+			auto scene = SceneManager::GetInstance().GetCurrentScene();
+			if (scene)
+			{
+				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
+				if (!CamObj)
+					return;
+				auto camera = CamObj->GetComponent<Camera>();
+				auto context = RenderManager::GetInstance().GetRenderContext("Main");
+				if (camera && context)
+				{
+					context->GetCamera()->SetActive(false);
+					context->SwapCamera(camera);
+					CamObj->SetActive(true);
+				}
+			}
+		});
+	AddToolBarMenu("Camera", "Game", []()
+		{
+			auto scene = SceneManager::GetInstance().GetCurrentScene();
+			if (scene)
+			{
+				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
+				if (!CamObj)
+					return;
+				auto camera = CamObj->GetComponent<Camera>();
+				auto context = RenderManager::GetInstance().GetRenderContext("Main");
+				if (camera && context)
+				{
+					context->GetCamera()->GetGameObject()->SetActive(false);
+					context->SwapCamera(camera);
+					CamObj->SetActive(true);
+				}
+			}
+		});
 }
 
 void DebugManager::Update() noexcept
@@ -232,11 +286,18 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	// 保存フラグが立っていれば保存する
 	ItemValue *pValue = dynamic_cast<ItemValue *>(In_Item);
 	ItemList *pList = nullptr;
+	ItemText *pText = nullptr;
 
 	if(!pValue)
 		pList = dynamic_cast<ItemList *>(In_Item);
 
 	if (!pValue && !pList)
+		pText = dynamic_cast<ItemText *>(In_Item);
+
+	if(!pValue && !pList && !pText)
+		return;
+
+	if(!((pValue && pValue->IsSave()) || (pList && pList->IsSave()) || (pText && pText->IsSave())))
 		return;
 
 	// 種類保存
@@ -276,6 +337,14 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().z) + "/";
 			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().w);
 		}
+		break;
+	case DebugItem::Path:
+		if (pValue)
+			Inout_Data += pValue->GetValue<std::string>();
+		break;
+	case DebugItem::InputStr:
+		if(pText)
+			Inout_Data += pText->GetText();
 		break;
 	case DebugItem::List:
 		if (pList)
@@ -437,6 +506,18 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 			strtof(top[3], nullptr)
 		);
 	} break;
+	case DebugItem::Path:
+		pValue->GetValue() = DataItr->value;
+		break;
+	case DebugItem::InputStr:
+	{
+		ItemText *pText = dynamic_cast<ItemText *>(Inout_Item);
+		if (pText)
+		{
+			pText->GetText() = DataItr->value;
+		}
+	}
+	break;
 	case DebugItem::List:
 		pList->GetSelectNo() = atoi(DataItr->value.c_str());
 		if (pList->GetFunc())

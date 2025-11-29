@@ -57,8 +57,6 @@ HRESULT Main::Init()
 	auto &DebugM = DebugManager::GetInstance();
 	// DebugManagerの初期化
 	DebugM.Init();
-	// 通常のデバッグウィンドウを追加
-	InitializeDebugWindows();
 
 	// よく使うシェーダーの読み込み
 	std::vector<std::string> shaders = {
@@ -155,7 +153,7 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 			++Steps;
 		}
 
-		DebugManager::GetInstance().DebugLog("DeltaTime: {:.6f}", DeltaTime);
+		DebugManager::GetInstance().DebugLogWarning("DeltaTime: {:.6f}", DeltaTime);
 		Update(DeltaTime);	// 更新処理
 		// シーン切り替えの更新
 		SceneManager::GetInstance().UpdateSceneChange();
@@ -205,56 +203,4 @@ void Draw()
 	DX11.Swap();
 
 	fut.get(); // 破棄が終わるまで待機
-}
-
-void Main::InitializeDebugWindows() noexcept
-{
-	auto &DebugM = DebugManager::GetInstance();
-	// フレームレート表示ウィンドウ
-	auto log = DebugM.CreateDebugWindow("System", "Log");
-	DebugM.CreateDebugWindow("System", "Hierarchy");
-	DebugM.CreateDebugWindow("System", "Inspector");
-	DebugM.AddToolBarMenu("System", "Reset ImGui Layout", []()
-		{
-			ImGui::LoadIniSettingsFromDisk("Assets/DebugResource/imgui_layout.ini");
-		});
-
-	DebugM.AddToolBarMenu("Camera", "Editor", []()
-		{
-			auto scene = SceneManager::GetInstance().GetCurrentScene();
-			if (scene)
-			{
-				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
-				if(!CamObj)
-					return;
-				auto camera = CamObj->GetComponent<Camera>();
-				auto context = RenderManager::GetInstance().GetRenderContext("Main");
-				if (camera && context)
-				{
-					context->GetCamera()->SetActive(false);
-					context->SwapCamera(camera);
-					CamObj->SetActive(true);
-				}
-			}
-		});
-	DebugM.AddToolBarMenu("Camera", "Game", []()
-		{
-			auto scene = SceneManager::GetInstance().GetCurrentScene();
-			if (scene)
-			{
-				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
-				if (!CamObj)
-					return;
-				auto camera = CamObj->GetComponent<Camera>();
-				auto context = RenderManager::GetInstance().GetRenderContext("Main");
-				if (camera && context)
-				{
-					context->GetCamera()->GetGameObject()->SetActive(false);
-					context->SwapCamera(camera);
-					CamObj->SetActive(true);
-				}
-			}
-		});
-
-	log->CreateItem<ItemText>("LogText", true, ImGuiInputTextFlags_ReadOnly,true, true);
 }

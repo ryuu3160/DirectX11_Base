@@ -232,6 +232,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\InputSystem.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
       <SubType>
       </SubType>
@@ -388,6 +392,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\InputSystem.hpp">
       <SubType>
       </SubType>
     </ClInclude>

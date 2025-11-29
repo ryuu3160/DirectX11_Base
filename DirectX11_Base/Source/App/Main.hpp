@@ -23,6 +23,4 @@ namespace Main
 	HRESULT Init();
 	void Uninit();
 	void GameLoop(_In_ FrameManager &In_Frame);
-
-	void InitializeDebugWindows() noexcept;
 }
