@@ -18,6 +18,7 @@
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
+#include "System/Component/InputSystem.hpp"
 
 // ==============================
 //  定数
@@ -67,6 +68,32 @@ void SceneRoot::Init()
 	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+
+	// F15Eの移動処理
+	auto input = pModel->AddComponent<InputSystem>();
+	input->RegisterKeyCallBack('W', InputSystem::KeyState::Press, [pModel2]() {
+		auto pos = pModel2->GetPosition();
+		pos.z += 0.1f;
+		pModel2->SetPosition(pos);
+		});
+	input->RegisterKeyCallBack('S', InputSystem::KeyState::Press, [pModel2]()
+		{
+			auto pos = pModel2->GetPosition();
+			pos.z -= 0.1f;
+			pModel2->SetPosition(pos);
+		});
+	input->RegisterKeyCallBack('A', InputSystem::KeyState::Press, [pModel2]()
+		{
+			auto pos = pModel2->GetPosition();
+			pos.x -= 0.1f;
+			pModel2->SetPosition(pos);
+		});
+	input->RegisterKeyCallBack('D', InputSystem::KeyState::Press, [pModel2]()
+		{
+			auto pos = pModel2->GetPosition();
+			pos.x += 0.1f;
+			pModel2->SetPosition(pos);
+		});
 
 	pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
