@@ -15,8 +15,7 @@
 // ==============================
 namespace
 {
-	constexpr float cx_fTitleBarHeight = 80.0f;
-	constexpr float cx_fToolBarHeight = 15.0f;
+	constexpr float cx_fToolBarHeight = 5.0f;
 	static DebugWindow *c_NullWindow;
 }
 
@@ -50,6 +49,10 @@ void DebugManager::Init()
 	m_ToolBarFlags |= ImGuiWindowFlags_NoCollapse;
 	m_ToolBarFlags |= ImGuiWindowFlags_NoMove;
 	m_ToolBarFlags |= ImGuiWindowFlags_NoResize;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoTitleBar;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoScrollbar;
+	m_ToolBarFlags |= ImGuiWindowFlags_NoDocking;
+	m_ToolBarFlags |= ImGuiWindowFlags_AlwaysAutoResize;
 
 	// ƒf[ƒ^‚Ì“Ç‚Ýž‚Ý
 	LoadDebugData();
@@ -62,9 +65,9 @@ void DebugManager::Update() noexcept
 void DebugManager::Draw() noexcept
 {
 	ImGuiViewport *vp = ImGui::GetMainViewport();
-	ImVec2 pos = ImVec2(vp->WorkPos.x, vp->WorkPos.y - cx_fTitleBarHeight);
+	ImVec2 pos = ImVec2(vp->WorkPos.x, vp->WorkPos.y);
 	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(cx_nWINDOW_WIDTH, cx_fToolBarHeight), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(cx_nWINDOW_WIDTH, cx_fToolBarHeight));
 	if (ImGui::Begin("ToolBar",nullptr, m_ToolBarFlags))
 	{
 		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
