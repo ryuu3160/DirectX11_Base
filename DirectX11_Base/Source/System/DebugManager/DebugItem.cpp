@@ -766,7 +766,10 @@ void ItemConsole::AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec
 	LevelData Data;
 	Data.Color = In_Color;
 	Data.IsShow = true;
-	m_Levels.try_emplace(In_Name.data(), Data);
+	auto itr = m_Levels.try_emplace(In_Name.data(), Data);
+
+	if(!itr.second)
+		DebugManager::GetInstance().DebugLogWarning("ItemConsole::AddLevel: Level already exists: %s", In_Name.data());
 }
 
 void ItemConsole::AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color, _In_ const std::string_view In_Level)
