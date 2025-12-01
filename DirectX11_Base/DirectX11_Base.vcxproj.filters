@@ -337,9 +337,6 @@
     <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\LinearTreeManager.cpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClCompile>
@@ -578,9 +575,6 @@
       <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\CollisionManager\OctreeCell.hpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\LinearTreeManager.hpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">

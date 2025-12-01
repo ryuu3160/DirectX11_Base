@@ -153,7 +153,9 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 			++Steps;
 		}
 
-		DebugManager::GetInstance().DebugLogWarning("DeltaTime: {:.6f}", DeltaTime);
+		DebugManager::GetInstance().DebugLog("DeltaTime: {:.6f}", DeltaTime);
+		DebugManager::GetInstance().DebugLogWarning("hoge");
+		DebugManager::GetInstance().DebugLogError("Error Test!");
 		Update(DeltaTime);	// 更新処理
 		// シーン切り替えの更新
 		SceneManager::GetInstance().UpdateSceneChange();

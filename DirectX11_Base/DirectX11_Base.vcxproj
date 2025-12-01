@@ -216,10 +216,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\LinearTreeManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
       <SubType>
       </SubType>
@@ -385,10 +381,6 @@
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
     <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\LinearTreeManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>
