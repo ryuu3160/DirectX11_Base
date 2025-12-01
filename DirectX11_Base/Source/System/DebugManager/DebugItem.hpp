@@ -231,16 +231,27 @@ private:
 	bool					m_IsSave;	// 選択番号の保存
 };
 
+/// <summary>
+/// ItemConsoleクラス
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_IsOutputLogFile]">ログファイルに出力するかどうかのbool値</param>
 class ItemConsole : public DebugItem
 {
 public:
-	ItemConsole(_In_ std::string In_Name);
+	ItemConsole(_In_ std::string In_Name, _In_ bool In_IsOutputLogFile);
 	~ItemConsole();
 	void DrawImGui() override;
 
 	void AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	void AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f), _In_ const std::string_view In_Level = "Default");
+
+	void SetShowClearButton(_In_ bool In_IsShow) { m_IsShowClearButton = In_IsShow; }
+	void SetShowAutoScrollButton(_In_ bool In_IsShow) { m_IsShowAutoScrollButton = In_IsShow; }
+	void SetShowSerchBox(_In_ bool In_IsShow) { m_IsShowSerchBox = In_IsShow; }
+
+	void SetOutputFolderPath(_In_ const std::string_view In_FolderPath) { m_FolderPath = In_FolderPath.data(); }
 
 private:
 	struct OutputData
@@ -260,9 +271,12 @@ private:
 	std::string CurrentTimeString();
 	int GetButtonCount() const;
 
+	void WriteLogToFile();
+
 private:
 	std::vector<OutputData> m_Outputs;
 	std::unordered_map<std::string, LevelData> m_Levels;
+	std::string m_FolderPath;
 
 	std::mutex m_Mutex;
 	char m_SerchBuffer[256];
@@ -271,6 +285,8 @@ private:
 	bool m_IsShowSerchBox;
 	bool m_IsAutoScroll;
 	bool m_ScrollToBottom;
+
+	bool m_IsOutputLogFile;
 };
 
 

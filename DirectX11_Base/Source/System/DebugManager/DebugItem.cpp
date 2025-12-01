@@ -16,6 +16,7 @@
 namespace
 {
 	static DebugItem *s_NullItem = nullptr;
+	inline constexpr size_t cx_MaxConsoleLines = 5000;
 }
 
 DebugItem::DebugItem()
@@ -611,9 +612,9 @@ void ItemList::DrawImGui()
 //  ItemConsole
 // ==============================
 
-ItemConsole::ItemConsole(_In_ std::string In_Name)
+ItemConsole::ItemConsole(_In_ std::string In_Name, _In_ bool In_IsOutputLogFile)
 	: m_IsShowClearButton(true), m_IsShowAutoScrollButton(true), m_IsAutoScroll(true), m_IsShowSerchBox(true)
-	, m_ScrollToBottom(false)
+	, m_ScrollToBottom(false), m_IsOutputLogFile(In_IsOutputLogFile)
 {
 	m_Name = In_Name;
 	m_Kind = Kind::Console;
@@ -622,10 +623,14 @@ ItemConsole::ItemConsole(_In_ std::string In_Name)
 	DefaultLevel.Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	DefaultLevel.IsShow = true;
 	m_Levels.try_emplace("Default",DefaultLevel);
+	m_FolderPath = "Assets/DebugResource/LogFile";
 }
 
 ItemConsole::~ItemConsole()
 {
+	if (m_IsOutputLogFile)
+		WriteLogToFile();
+	m_Outputs.clear();
 }
 
 void ItemConsole::DrawImGui()
@@ -720,13 +725,12 @@ void ItemConsole::DrawImGui()
 					// 時刻とレベルを先頭に表示するフォーマット例
 					std::string prefix = "[" + e.TimeStr + "] ";
 					std::string LevelStr = e.Level + ": ";
-					if (LevelStr == "Default: ") // defaultレベルの場合はレベル表示しない
-					{
-						LevelStr = "";
-					}
 					ImGui::TextUnformatted(prefix.c_str()); ImGui::SameLine();
-					ImGui::PushStyleColor(ImGuiCol_Text, m_Levels.find(e.Level)->second.Color);
-					ImGui::TextUnformatted(LevelStr.c_str()); ImGui::PopStyleColor(); ImGui::SameLine();
+					if (LevelStr != "Default: ") // defaultレベルの場合はレベル表示しない
+					{
+						ImGui::PushStyleColor(ImGuiCol_Text, m_Levels.find(e.Level)->second.Color);
+						ImGui::TextUnformatted(LevelStr.c_str()); ImGui::PopStyleColor(); ImGui::SameLine();
+					}
 
 					// カラーテキストを単純に描く（必要なら BeginGroup/EndGroup で整形）
 					ImGui::PushStyleColor(ImGuiCol_Text, col);
@@ -757,6 +761,16 @@ void ItemConsole::DrawImGui()
 	break;
 	default:
 		break;
+	}
+
+	// コンソール内容が最大行数を超えたら古い行を削除
+	if(m_Outputs.size() > cx_MaxConsoleLines)
+	{
+		if (m_IsOutputLogFile)
+			this->WriteLogToFile();
+
+		std::lock_guard<std::mutex> lock(m_Mutex);
+		m_Outputs.clear();
 	}
 }
 
@@ -791,6 +805,7 @@ void ItemConsole::AddOutput(_In_ const std::string_view In_Text, _In_ const ImVe
 
 std::string ItemConsole::CurrentTimeString()
 {
+	return FrameManager::GetInstance().GetNowTimeString();
 	std::time_t t = std::time(nullptr);
 	std::tm tm{};
 
@@ -811,4 +826,39 @@ int ItemConsole::GetButtonCount() const
 		++count;
 
 	return count;
+}
+
+void ItemConsole::WriteLogToFile()
+{
+	std::lock_guard<std::mutex> lock(m_Mutex);
+	if (m_Outputs.empty())
+		return;
+	// ファイル名を生成
+	auto now = std::chrono::system_clock::now();
+	std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+	std::stringstream date;
+	std::tm dateTm{};
+	localtime_s(&dateTm, &currentTime);
+	date << std::put_time(&dateTm, "%Y-%m-%d_%H%M%S");
+	std::string FilePath = m_FolderPath + "/Log_" + m_Name + "_" + date.str() + ".log";
+
+
+	std::fstream file(FilePath, std::ios::out | std::ios::trunc);
+
+	if (!file.is_open())
+	{
+		std::filesystem::create_directories(m_FolderPath);
+		file.open(FilePath, std::ios::out | std::ios::trunc);
+		if (!file.is_open())
+			return;
+	}
+
+	for (const auto &output : m_Outputs)
+	{
+		file << "[" << output.TimeStr << "] ";
+		if (output.Level != "Default")
+			file << output.Level << ": ";
+		file << output.Text << std::endl;
+	}
+	file.close();
 }

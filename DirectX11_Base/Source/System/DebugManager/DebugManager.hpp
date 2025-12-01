@@ -72,14 +72,14 @@ public:
 	DebugWindow *GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
 	template<typename ...Args>
-	void DebugLog(_In_ const char* In_Format, Args&& ...args)
+	inline void DebugLog(_In_ const char* In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
 
 		auto window = GetDebugWindow("System", "Log");
 		if(window->NotDummy())
 		{
-			auto &item = (*window)["LogText"];
+			auto &item = (*window)["ConsoleLog"];
 			if (item.GetKind() == DebugItem::Kind::Console)
 			{
 				auto TextItem = dynamic_cast<ItemConsole *>(&item);
@@ -92,13 +92,13 @@ public:
 	}
 
 	template<typename ...Args>
-	void DebugLogWarning(_In_ const char *In_Format, Args&& ...args)
+	inline void DebugLogWarning(_In_ const char *In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
 		auto window = GetDebugWindow("System", "Log");
 		if (window->NotDummy())
 		{
-			auto &item = (*window)["LogText"];
+			auto &item = (*window)["ConsoleLog"];
 			if (item.GetKind() == DebugItem::Kind::Console)
 			{
 				auto TextItem = dynamic_cast<ItemConsole *>(&item);
@@ -111,13 +111,13 @@ public:
 	}
 
 	template<typename ...Args>
-	void DebugLogError(_In_ const char *In_Format, Args&& ...args)
+	inline void DebugLogError(_In_ const char *In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
 		auto window = GetDebugWindow("System", "Log");
 		if (window->NotDummy())
 		{
-			auto &item = (*window)["LogText"];
+			auto &item = (*window)["ConsoleLog"];
 			if (item.GetKind() == DebugItem::Kind::Console)
 			{
 				auto TextItem = dynamic_cast<ItemConsole *>(&item);

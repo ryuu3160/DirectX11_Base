@@ -61,7 +61,7 @@ void DebugManager::Init()
 		});
 
 	// ログウィンドウの初期設定
-	auto Output = log->CreateItem<ItemConsole>("LogText");
+	auto Output = log->CreateItem<ItemConsole>("ConsoleLog",true);
 	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
 	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
 
