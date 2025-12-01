@@ -241,9 +241,6 @@
     <ClCompile Include="Source\System\CollisionManager\CollisionManager.cpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\ColliderBase.cpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClCompile>
@@ -333,6 +330,18 @@
     </ClCompile>
     <ClCompile Include="Source\System\Component\InputSystem.cpp">
       <Filter>Source\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp">
+      <Filter>Source\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
+      <Filter>Source\System\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\CollisionManager\LinearTreeManager.cpp">
+      <Filter>Source\System\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
+      <Filter>Source\System\CollisionManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -471,9 +480,6 @@
     <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\ColliderBase.hpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Component\Collider\SphereCollider.hpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
@@ -567,6 +573,18 @@
     </ClInclude>
     <ClInclude Include="Source\System\Component\InputSystem.hpp">
       <Filter>Source\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp">
+      <Filter>Source\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\CollisionManager\OctreeCell.hpp">
+      <Filter>Source\System\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\CollisionManager\LinearTreeManager.hpp">
+      <Filter>Source\System\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
+      <Filter>Source\System\CollisionManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

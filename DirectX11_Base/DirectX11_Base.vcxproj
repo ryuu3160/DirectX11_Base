@@ -212,11 +212,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\ColliderBase.cpp">
+    <ClCompile Include="Source\System\CollisionManager\CollisionManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\CollisionManager.cpp">
+    <ClCompile Include="Source\System\CollisionManager\LinearTreeManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -224,6 +232,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp" />
     <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
       <SubType>
       </SubType>
@@ -375,11 +384,19 @@
     </ClInclude>
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
-    <ClInclude Include="Source\System\CollisionManager\ColliderBase.hpp">
+    <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
+    <ClInclude Include="Source\System\CollisionManager\LinearTreeManager.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\CollisionManager\OctreeCell.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -387,6 +404,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp" />
     <ClInclude Include="Source\System\Component\Collider\SphereCollider.hpp">
       <SubType>
       </SubType>
