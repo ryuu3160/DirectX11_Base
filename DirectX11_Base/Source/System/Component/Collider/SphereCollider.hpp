@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/CollisionManager/ColliderBase.hpp"
+#include "System/Component/Collider/ColliderBase.hpp"
 
 /// <summary>
 /// SphereColliderƒNƒ‰ƒX

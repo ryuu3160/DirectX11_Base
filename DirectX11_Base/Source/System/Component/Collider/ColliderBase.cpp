@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "ColliderBase.hpp"
-#include "CollisionManager.hpp"
+#include "System/CollisionManager/CollisionManager.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
