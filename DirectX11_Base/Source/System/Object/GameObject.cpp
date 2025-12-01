@@ -222,7 +222,7 @@ void GameObject::DestroySelf() noexcept
 
 DirectX::XMFLOAT3 GameObject::GetRotation() const noexcept
 {
-	return QuaternionToRollPitchYaw(m_Quat);
+	return DX11Math::QuaternionToRollPitchYaw(m_Quat);
 }
 
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
@@ -393,7 +393,7 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 			}
 			else
 			{
-				DirectX::XMFLOAT3 rot = QuaternionToRollPitchYaw(m_Quat);
+				DirectX::XMFLOAT3 rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
 				pVec->x = DirectX::XMConvertToDegrees(rot.x);
 				pVec->y = DirectX::XMConvertToDegrees(rot.y);
 				pVec->z = DirectX::XMConvertToDegrees(rot.z);

@@ -837,7 +837,7 @@ void SpriteManager::CursorHit3DSprite() noexcept
 	if (Input::IsKeyPress('3') && Input::IsKeyTrigger(VK_LBUTTON))
 	{
 		// マウス座標(スクリーン座標)をワールド座標に変換
-		DirectX::XMVECTOR mousePos = ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
+		DirectX::XMVECTOR mousePos = DX11Math::ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
 		// カメラの位置を取得
 		DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
 		DirectX::XMVECTOR vCam = DirectX::XMLoadFloat3(&CamPos);
@@ -879,7 +879,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 			// ------- 毎フレームのマウス座標更新処理 -------
 
 			// マウス座標(スクリーン座標)をワールド座標に変換
-			DirectX::XMVECTOR Mouse = ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
+			DirectX::XMVECTOR Mouse = DX11Math::ScreenToWorldPos(Input::GetMouseRelativePos(), 0.5f, m_pCamera->GetView(false), m_pCamera->GetProj(false));
 			// カメラの位置を取得
 			DirectX::XMFLOAT3 CamPos = m_pCameraObj->GetPosition();
 			DirectX::XMVECTOR vCam = DirectX::XMLoadFloat3(&CamPos);
@@ -894,7 +894,7 @@ void SpriteManager::MouseControl3DSprite() noexcept
 			float fRayLength;
 
 			// レイと平面の交差判定を行う
-			bool result = IntersectRayPlane(vCam, vRayDir, pos, scale, qua, fRayLength);
+			bool result = DX11Math::IntersectRayPlane(vCam, vRayDir, pos, scale, qua, fRayLength);
 
 			if(result)
 				m_fRayLength = std::abs(fRayLength); // レイの長さを保存
@@ -945,7 +945,7 @@ void SpriteManager::SerchHitRay3DSprite(_In_ DirectX::XMVECTOR In_vRayPos, _In_ 
 
 		float fRayLength;
 
-		bool result = IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPosition(), scale, (*itr)->GetQuat(), fRayLength);
+		bool result = DX11Math::IntersectRayPlane(In_vRayPos, In_vRayDir, (*itr)->GetPosition(), scale, (*itr)->GetQuat(), fRayLength);
 
 		if (result)
 		{
