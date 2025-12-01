@@ -20,6 +20,7 @@ void FrameManager::Init(_In_ float In_fFps, _In_ bool In_YieldWhenWaiting)
 	// ------------------------------
 	// メインフレームデータの設定
 	// ------------------------------
+	m_StartTime = clock::now();
 	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(1e-6f, In_fFps)));
 
 	m_LastTime = clock::now() - std::chrono::duration_cast<clock::duration>(m_TargetDuration);
@@ -86,14 +87,44 @@ void FrameManager::ChangeMainFps(_In_ float In_fFps)
 	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(1e-6f, In_fFps)));
 }
 
-float FrameManager::GetNowTimeSecond() const
+float FrameManager::GetElapsedSeconds() const
 {
-	return static_cast<float>(std::chrono::duration<double>(clock::now().time_since_epoch()).count());
+	return static_cast<float>(std::chrono::duration<double>(clock::now() - m_StartTime).count());
 }
 
-double FrameManager::GetNowTimeMilliSec() const
+double FrameManager::GetElapsedMilliSeconds() const
 {
-	return std::chrono::duration<double, std::milli>(clock::now().time_since_epoch()).count();
+	return std::chrono::duration<double, std::milli>(clock::now() - m_StartTime).count();
+}
+
+std::string FrameManager::GetNowTimeString() const
+{
+	std::string result;
+	result.clear();
+	// 現在のシステム時刻を取得
+	auto now = std::chrono::system_clock::now();
+
+	// フォーマットして表示
+#if defined(_MSC_VER)
+#if _MSC_VER >= 1950 // Visual Studio 2026
+	// 現地時刻（タイムゾーン考慮）
+	std::chrono::zoned_time zt{ std::chrono::current_zone(), now };
+	auto local_tp = zt.get_local_time(); // システムタイム->ローカルタイム
+
+	// 秒未満を切り捨て（ミリ秒以下を切る）
+	auto local_sec = std::chrono::floor<std::chrono::seconds>(local_tp);
+	result = std::format("{:%H:%M:%S}", local_sec);
+#elif _MSC_VER >= 1930 // Visual Studio 2022
+	// std::format の代わりに std::put_time + std::ostringstream を使う
+	std::time_t t = std::chrono::system_clock::to_time_t(now);
+	std::tm local_tm{};
+	localtime_s(&local_tm, &t);
+	std::ostringstream oss;
+	oss << std::put_time(&local_tm, "%H:%M:%S");
+	result = oss.str();
+#endif
+#endif
+	return result;
 }
 
 FrameManager::FrameManager()

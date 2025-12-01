@@ -50,16 +50,22 @@ public:
 	void SetYieldWhenWaiting(_In_ bool In_bYield) { m_bYieldWhenWaiting = In_bYield; }
 
 	/// <summary>
-	/// 経過時間を取得
+	/// 起動してからの経過時間（秒）を取得する
 	/// </summary>
-	/// <returns>経過時間（秒）</returns>
-	float GetNowTimeSecond() const;
+	/// <returns>経過した秒数を浮動小数点数（秒）で返します。</returns>
+	float GetElapsedSeconds() const;
 
 	/// <summary>
-	/// 現在の時刻をミリ秒単位で取得します。
+	/// 起動してからの経過時間をミリ秒単位で取得します。
 	/// </summary>
-	/// <returns>現在の時刻をミリ秒単位で表した double 型の値を返します。</returns>
-	double GetNowTimeMilliSec() const;
+	/// <returns>経過時間をミリ秒単位で表した double 値。</returns>
+	double GetElapsedMilliSeconds() const;
+
+	/// <summary>
+	/// 現在の時刻を文字列として取得する(HH:MM:SS形式)
+	/// </summary>
+	/// <returns>現在の時刻を表す std::string を返します。</returns>
+	std::string GetNowTimeString() const;
 
 	// ------------------------------
 	//  固定フレーム用
@@ -124,6 +130,7 @@ private:
 	// メインのフレームデータ
 	std::chrono::duration<double> m_TargetDuration;
 	std::chrono::steady_clock::time_point m_LastTime;
+	clock::time_point m_StartTime;
 
 	bool m_bYieldWhenWaiting;
 
