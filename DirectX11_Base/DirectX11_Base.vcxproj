@@ -319,13 +319,16 @@
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
     <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
+    <ClCompile Include="Source\System\Utility\Utility.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\Main.hpp">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\Concept.hpp" />
     <ClInclude Include="Source\Defines.hpp">
       <SubType>
       </SubType>
@@ -491,6 +494,11 @@
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerLoader.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
     <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp" />
+    <ClInclude Include="Source\System\Utility\Concept.hpp" />
+    <ClInclude Include="Source\System\Utility\Utility.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

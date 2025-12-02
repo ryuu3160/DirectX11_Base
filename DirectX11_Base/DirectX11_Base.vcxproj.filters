@@ -119,6 +119,9 @@
     <Filter Include="Source\System\ryuu_lib\FrameManager\Timer">
       <UniqueIdentifier>{738996eb-eb5b-40e9-802d-3865f6c2d792}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\Utility">
+      <UniqueIdentifier>{49e24936-1e7c-492c-a078-c9a38aa48fe3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -339,6 +342,9 @@
     </ClCompile>
     <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
       <Filter>Source\System\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Utility\Utility.cpp">
+      <Filter>Source\System\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -579,8 +585,11 @@
     <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
       <Filter>Source\System\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Concept.hpp">
-      <Filter>Source</Filter>
+    <ClInclude Include="Source\System\Utility\Concept.hpp">
+      <Filter>Source\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Utility\Utility.hpp">
+      <Filter>Source\System\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

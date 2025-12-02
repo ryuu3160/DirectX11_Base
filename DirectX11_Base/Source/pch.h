@@ -87,9 +87,10 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 //  Original
 // ------------------------------
-#include "Concept.hpp"
+#include "System/Utility/Concept.hpp"
 #include "App/Main.hpp"
 #include "Defines.hpp"
+#include "System/Utility/Utility.hpp"
 #include "DirectX11/DX11_Core.hpp"
 #include "DirectX11/ResourceManager/RenderTargetManager.hpp"
 #include "System/Object/GameObject.hpp"
