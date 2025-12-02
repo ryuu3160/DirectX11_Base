@@ -564,7 +564,6 @@
     <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
       <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Concept.hpp" />
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClInclude>
@@ -579,6 +578,9 @@
     </ClInclude>
     <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
       <Filter>Source\System\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Concept.hpp">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
