@@ -251,7 +251,8 @@ void Material::LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexce
 		ShaderParamInfo Info{};
 		// -の位置で分割してパラメータ名とスロット番号を取得
 		Info.ParamName = ParamStr.substr(0, ParamStr.find('-'));
-		Info.SlotNum = std::stoi(ParamStr.substr(ParamStr.find('-') + 1));
+		std::string SlotStr = ParamStr.substr(ParamStr.find('-') + 1);
+		std::from_chars(SlotStr.data(), SlotStr.data() + SlotStr.size(), Info.SlotNum);
 
 		// リストに追加
 		m_vecShaderParamList.push_back(Info);

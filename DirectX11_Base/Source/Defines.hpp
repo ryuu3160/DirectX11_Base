@@ -105,3 +105,31 @@ inline bool NullCheck(_In_opt_ void *In_pData,_In_ NullpCheckMode In_Mode = Null
     }
     return false;
 }
+
+template<TypePOD T>
+std::string ToString(_In_ T In_Value) noexcept
+{
+    std::string result;
+	int size = std::numeric_limits<T>::digits10 + 2; // 符号と終端文字分を追加
+	result.resize(size);
+	std::to_chars(result.data(), result.data() + result.size(), In_Value);
+    return result;
+}
+
+template<TypePOD T>
+std::string ToString(_In_ T In_Value, _In_ int In_Precision) noexcept
+{
+    std::string result;
+    int size = std::numeric_limits<T>::digits10 + 2; // 符号と終端文字分を追加
+    result.resize(size);
+    std::to_chars(result.data(), result.data() + result.size(), In_Value, std::chars_format::fixed, In_Precision);
+    return result;
+}
+
+template<typename T>
+T FromString(_In_ const std::string_view &In_Str) noexcept
+{
+    T result{};
+    std::from_chars(In_Str.data(), In_Str.data() + In_Str.size(), result);
+    return result;
+}

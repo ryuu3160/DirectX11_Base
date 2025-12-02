@@ -16,7 +16,7 @@
 // ==============================
 namespace
 {
-	inline constexpr int cx_MaxLevel = 8;
+	inline constexpr int cx_MaxLevel = 7;
 	inline constexpr int cx_DivisionNumber = 8; // オクツリーの分割数
 }
 
@@ -67,17 +67,13 @@ private:
 	int m_MaxCellNum; // オクツリーの最大セル数
 	int m_ParentShift; // 親ノードを求めるためのシフト量
 
-	float m_OffsetLeft;
-	float m_OffsetBottom;
-	float m_OffsetFront;
+	DirectX::XMFLOAT3 m_OffsetLeftTopFront;
 	float m_Width;
 	float m_Height;
 	float m_Depth;
-	float m_UnitWidth;	// オクツリーの1ユニットの幅
-	float m_UnitHeight;	// オクツリーの1ユニットの高さ
-	float m_UnitDepth;	// オクツリーの1ユニットの奥行き
+	DirectX::XMFLOAT3 m_Unit; // 奥ツリーの1ユニットの大きさ
 
-	std::array<int, cx_MaxLevel + 2> m_Pow; // 8の累乗を格納する配列
+	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
 	std::vector<OctreeCell<ColliderBase*>> m_OctreeCells; // オクツリーセルの配列
 

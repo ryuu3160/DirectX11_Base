@@ -100,7 +100,9 @@ void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 	// 表示オブジェクト作成
 	for (int i = 0; i < In_ModelNum; ++i)
 	{
-		std::string name = m_Name + "Model" + std::to_string(i);
+		std::string IndexStr;
+		IndexStr = ToString(i);
+		std::string name = m_Name + "Model" + IndexStr;
 		GameObject *obj = CreateObject<GameObject>(name.c_str());
 		ModelRenderer *renderer = obj->AddComponent<ModelRenderer>();
 	}

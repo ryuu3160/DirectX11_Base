@@ -34,10 +34,12 @@ std::shared_ptr<Mesh> ModelManager::CreateMesh(_In_ const aiMesh *In_Mesh, _In_ 
 	std::string MeshName;
 	std::string MatName;
 	std::string FbxName = std::string(In_File);
+	std::string MeshIndexStr;
 	FbxName = FbxName.substr(FbxName.find_last_of('/') + 1);
 	MatName = In_Material->GetMaterialName();
 	MatName = MatName.substr(MatName.find_first_of('_') + 1); // ƒ}ƒeƒŠƒAƒ‹–¼‚©‚çFBX–¼‚ğœ‹
-	MeshName = FbxName + "_" + MatName + "_" + std::to_string(In_MeshIndex);
+	MeshIndexStr = ToString(In_MeshIndex);
+	MeshName = FbxName + "_" + MatName + "_" + MeshIndexStr;
 
 	std::shared_ptr<Mesh> mesh = GetMesh(MeshName);
 

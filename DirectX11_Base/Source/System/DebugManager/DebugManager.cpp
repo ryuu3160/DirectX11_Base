@@ -381,26 +381,44 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 		break;
 	case DebugItem::Int:
 		if (pValue)
-			Inout_Data += std::to_string(pValue->GetValue<int>());
+		{
+			std::string ValueStr;
+			ValueStr = ToString(pValue->GetValue<int>());
+			Inout_Data += ValueStr;
+		}
 		break;
 	case DebugItem::Float:
 		if (pValue)
-			Inout_Data += std::to_string(pValue->GetValue<float>());
+		{
+			std::string ValueStr;
+			ValueStr = ToString(pValue->GetValue<float>());
+			Inout_Data += ValueStr;
+		}
 		break;
 	case DebugItem::Float2:
 		if(pValue)
 		{
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT2>().x) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT2>().y);
+			std::string ValueStrX;
+			std::string ValueStrY;
+			DirectX::XMFLOAT2 vec2 = pValue->GetValue<DirectX::XMFLOAT2>();
+			ValueStrX = ToString(vec2.x);
+			ValueStrY = ToString(vec2.y);
+			Inout_Data += ValueStrX + "/" + ValueStrY;
 		}
 		break;
 	case DebugItem::Color:
 		if (pValue)
 		{
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().x) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().y) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().z) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT4>().w);
+			std::string ValueStrX;
+			std::string ValueStrY;
+			std::string ValueStrZ;
+			std::string ValueStrW;
+			DirectX::XMFLOAT4 color = pValue->GetValue<DirectX::XMFLOAT4>();
+			ValueStrX = ToString(color.x);
+			ValueStrY = ToString(color.y);
+			ValueStrZ = ToString(color.z);
+			ValueStrW = ToString(color.w);
+			Inout_Data += ValueStrX + "/" + ValueStrY + "/" + ValueStrZ + "/" + ValueStrW;
 		}
 		break;
 	case DebugItem::Path:
@@ -413,14 +431,23 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 		break;
 	case DebugItem::List:
 		if (pList)
-			Inout_Data += std::to_string(pList->GetSelectNo());
+		{
+			std::string ValueStr;
+			ValueStr = ToString(pList->GetSelectNo());
+			Inout_Data += ValueStr;
+		}
 		break;
 	case DebugItem::Vector:
 		if (pValue)
 		{
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT3>().x) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT3>().y) + "/";
-			Inout_Data += std::to_string(pValue->GetValue<DirectX::XMFLOAT3>().z);
+			std::string ValueStrX;
+			std::string ValueStrY;
+			std::string ValueStrZ;
+			DirectX::XMFLOAT3 vec = pValue->GetValue<DirectX::XMFLOAT3>();
+			ValueStrX = ToString(vec.x);
+			ValueStrY = ToString(vec.y);
+			ValueStrZ = ToString(vec.z);
+			Inout_Data += ValueStrX + "/" + ValueStrY + "/" + ValueStrZ;
 		}
 	}
 	Inout_Data += "\n";

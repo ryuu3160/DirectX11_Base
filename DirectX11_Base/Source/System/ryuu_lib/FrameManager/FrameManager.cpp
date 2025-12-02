@@ -62,7 +62,9 @@ bool FrameManager::UpdateMain()
 			if (m_hWnd != nullptr)
 			{
 				std::string title = m_lpcTitleName;
-				title += " [fps]:" + std::to_string(static_cast<int>(m_LastFps + 0.5));
+				std::string fpsStr;
+				fpsStr = ToString(static_cast<int>(m_LastFps + 0.5));
+				title += " [fps]:" + fpsStr;
 				SetWindowTextA(m_hWnd, title.c_str());
 			}
 		}

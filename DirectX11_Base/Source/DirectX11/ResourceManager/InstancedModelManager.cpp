@@ -36,10 +36,14 @@ std::shared_ptr<InstancedMesh> InstancedModelManager::CreateMesh(_In_ const aiMe
 	std::string MeshName;
 	std::string MatName;
 	std::string FbxName = std::string(In_File);
+	std::string InstanceDataStr;
+	std::string MeshIndexStr;
 	FbxName = FbxName.substr(FbxName.find_last_of('/') + 1);
 	MatName = In_Material->GetMaterialName();
 	MatName = MatName.substr(MatName.find_first_of('_') + 1); // ƒ}ƒeƒŠƒAƒ‹–¼‚©‚çFBX–¼‚ğœ‹
-	MeshName = FbxName + "_" + MatName + "_" + std::to_string(In_InstanceData.CountX * In_InstanceData.CountZ * In_InstanceData.CountY) + "_" + std::to_string(In_MeshIndex);
+	InstanceDataStr = ToString(In_InstanceData.CountX * In_InstanceData.CountZ * In_InstanceData.CountY);
+	MeshIndexStr = ToString(In_MeshIndex);
+	MeshName = FbxName + "_" + MatName + "_" + InstanceDataStr + "_" + MeshIndexStr;
 
 	std::shared_ptr<InstancedMesh> mesh = GetMesh(MeshName);
 

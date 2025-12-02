@@ -20,7 +20,8 @@ namespace
 CollisionManager::CollisionManager()
 	: m_OctreeLevel(0), m_MaxCellNum(0)
 	, m_Width(0.0f), m_Height(0.0f), m_Depth(0.0f)
-	, m_UnitWidth(0.0f), m_UnitHeight(0.0), m_UnitDepth(0.0f), m_Pow{}
+	, m_Unit{ 0.0f,0.0f,0.0f }, m_OffsetLeftTopFront{ 0.0f,0.0f,0.0f }
+	, m_Pow{}
 {
 }
 
@@ -40,7 +41,7 @@ void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFr
 	// ルートは1、その子は4、さらにその子（孫）は16、と4^nで増えていく
 	// ※ Octreeの場合は底が8となり、1, 8, 64, 512・・となる。
 	m_Pow[0] = 1;
-	for (int i = 1; i <= cx_MaxLevel + 1; i++)
+	for (int i = 1; i < cx_MaxLevel + 1; i++)
 	{
 		m_Pow[i] = m_Pow[i - 1] * cx_DivisionNumber;
 	}
@@ -57,9 +58,7 @@ void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFr
 
 	// 有効領域を登録
 	// 左上手前の座標と幅、高さ、深度を保持
-	m_OffsetLeft = In_LeftTopFront.x;
-	m_OffsetBottom = In_RightBottomBack.y;
-	m_OffsetFront = In_LeftTopFront.z;
+	m_OffsetLeftTopFront = In_LeftTopFront;
 	m_Width = In_RightBottomBack.x - In_LeftTopFront.x;
 	m_Height = In_LeftTopFront.y - In_RightBottomBack.y;
 	m_Depth = In_RightBottomBack.z - In_LeftTopFront.z;
@@ -70,9 +69,9 @@ void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFr
 	// e.g.)
 	// 0レベルなら分割は1、1レベルなら分割は2（2^1）、2レベルなら4（2^2）
 	int unit = 1 << In_Level;
-	m_UnitWidth = m_Width / unit;
-	m_UnitHeight = m_Height / unit;
-	m_UnitDepth = m_Depth / unit;
+	m_Unit.x = m_Width / unit;
+	m_Unit.y = m_Height / unit;
+	m_Unit.z = m_Depth / unit;
 
 	m_OctreeLevel = In_Level;
 
@@ -112,9 +111,9 @@ void CollisionManager::CheckAllCollisions() noexcept
 
 CollisionManager::MortonInfo CollisionManager::GetMortonInfo(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack)
 {
-	int ltd_x = static_cast<int>(In_LeftTopFront.x / m_UnitWidth);
-	int ltd_y = static_cast<int>(In_LeftTopFront.y / m_UnitHeight);
-	int ltd_z = static_cast<int>(In_LeftTopFront.z / m_UnitDepth);
+	int ltd_x = static_cast<int>(In_LeftTopFront.x / m_Unit.x);
+	int ltd_y = static_cast<int>(In_LeftTopFront.y / m_Unit.y);
+	int ltd_z = static_cast<int>(In_LeftTopFront.z / m_Unit.z);
 	int ltd = Get3DMortonOrder(static_cast<BYTE>(ltd_x), static_cast<BYTE>(ltd_y), static_cast<BYTE>(ltd_z));
 
 	return {};
