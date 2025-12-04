@@ -12,6 +12,11 @@
 #include "System/Component/Component.hpp"
 
 // ==============================
+//  前方宣言
+// ==============================
+class TreeData;
+
+// ==============================
 //  列挙型定義
 // ==============================
 enum ColliderType
@@ -40,6 +45,8 @@ public:
 
 	void Update(_In_ float In_Tick) noexcept override;
 
+	void FixedUpdate(_In_ double In_FixedTick) noexcept override;
+
 	virtual void CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
 
 	ColliderType GetType() const noexcept { return m_Type; }
@@ -55,7 +62,10 @@ public:
 
 	void SetIsCollision(_In_ const bool &In_IsCollision) noexcept { m_IsCollision = In_IsCollision; }
 
+	std::shared_ptr<TreeData> GetTreeData() noexcept { return m_pTreeData; }
+
 protected:
+	std::shared_ptr<TreeData> m_pTreeData; // オクツリー用データ
 	ColliderType m_Type; // コライダーの形状
 	bool m_IsTrigger; // トリガーかどうか
 	bool m_IsCollision; // 衝突しているかどうか

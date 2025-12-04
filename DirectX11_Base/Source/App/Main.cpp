@@ -11,6 +11,7 @@
 #include "Main.hpp"
 #include "DirectX11/System/Geometory.hpp"
 #include "DirectX11/System/RenderManager.hpp"
+#include "System/CollisionManager/CollisionManager.hpp"
 #include "System/DebugManager/InitializeImGui.hpp"
 #include "System/DebugManager/DebugManager.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
@@ -45,6 +46,7 @@ HRESULT Main::Init()
 
 	// 各種機能の初期化
 	auto &RenderM = RenderManager::GetInstance();
+	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
 	Geometory::GetInstance().Init();
 	SceneManager::GetInstance();
@@ -74,6 +76,9 @@ HRESULT Main::Init()
 
 	// Input用のカスタムウィンドウプロシージャを登録
 	Instance.AddCustomProc(Input::InputCustomProc);
+
+	// 衝突空間の初期化
+	CollM.InitOctreeSpace(DirectX::XMFLOAT3(-1000.0f, 2000.0f, -1000.0f), DirectX::XMFLOAT3(1000.0f, 0.0f, 1000.0f), 6);
 
 	// シーンの初期化
 	auto &SceneM = SceneManager::GetInstance();

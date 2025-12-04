@@ -325,6 +325,22 @@ void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 	m_Quat = In_Quat;
 }
 
+DirectX::XMFLOAT3 GameObject::GetLeftTopFrontPosition() const noexcept
+{
+	float Left = m_Pos.x - (m_Scale.x / 2.0f);
+	float Top = m_Pos.y + (m_Scale.y / 2.0f);
+	float Front = m_Pos.z - (m_Scale.z / 2.0f);
+	return DirectX::XMFLOAT3(Left, Top, Front);
+}
+
+DirectX::XMFLOAT3 GameObject::GetRightBottomBackPosition() const noexcept
+{
+	float Right = m_Pos.x + (m_Scale.x / 2.0f);
+	float Bottom = m_Pos.y - (m_Scale.y / 2.0f);
+	float Back = m_Pos.z + (m_Scale.z / 2.0f);
+	return DirectX::XMFLOAT3(Right, Bottom, Back);
+}
+
 void GameObject::InitializeComponents() noexcept
 {
 	for (auto &itr : m_InitComponents)

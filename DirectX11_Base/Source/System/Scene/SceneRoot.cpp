@@ -19,6 +19,7 @@
 #include "System/Object/SkyBoxObj.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "System/Component/InputSystem.hpp"
+#include "System/Component/Collider/SphereCollider.hpp"
 
 // ==============================
 //  定数
@@ -68,6 +69,7 @@ void SceneRoot::Init()
 	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+	pModel2->AddComponent<SphereCollider>();
 
 	// F15Eの移動処理
 	auto input = pModel->AddComponent<InputSystem>();

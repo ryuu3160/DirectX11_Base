@@ -45,21 +45,30 @@ public:
 	void RemoveColliderComponent(_In_ ColliderBase *In_Collider);
 
 	/// <summary>
+	/// 指定したコライダーに関連する衝突セル情報を更新する
+	/// </summary>
+	/// <param name="[In_Collider]">更新対象のコライダーを指すポインタ。呼び出し側は有効な ColliderBase オブジェクトへのポインタを渡すことが想定されます</param>
+	void UpdateCollisionCells(_In_ ColliderBase *In_Collider);
+
+	/// <summary>
 	/// すべての衝突を検査します。
 	/// </summary>
 	void CheckAllCollisions() noexcept;
 
 private:
 
-	struct MortonInfo
-	{
-		int BelongLevel;
-		int MortonNumber;
-	};
+	bool CreateNewCell(_In_ int In_MortonNumber);
 
-	MortonInfo GetMortonInfo(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack);
+	int GetMortonNumber(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack);
 
 	int Get3DMortonOrder(_In_ BYTE In_X, _In_ BYTE In_Y, _In_ BYTE In_Z) const noexcept;
+
+	// 座標->線形8分木要素番号変換
+	int GetPointElem(_In_ const DirectX::XMFLOAT3 In_Point) const noexcept;
+
+	int GetMortonNumberOfCollider(_In_ ColliderBase *In_Collider) noexcept;
+
+	bool RegisterObjectToOctree(_In_ ColliderBase *In_Collider) noexcept;
 
 private:
 
@@ -67,7 +76,8 @@ private:
 	int m_MaxCellNum; // オクツリーの最大セル数
 	int m_ParentShift; // 親ノードを求めるためのシフト量
 
-	DirectX::XMFLOAT3 m_OffsetLeftTopFront;
+	DirectX::XMFLOAT3 m_LeftTopFront;
+	DirectX::XMFLOAT3 m_RightBottomBack;
 	float m_Width;
 	float m_Height;
 	float m_Depth;
@@ -75,7 +85,7 @@ private:
 
 	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
-	std::vector<OctreeCell<ColliderBase*>> m_OctreeCells; // オクツリーセルの配列
+	std::vector<OctreeCell*> m_OctreeCells; // オクツリーセルの配列
 
 	std::vector<ColliderBase *> m_ColliderList; // コライダーリスト
 };

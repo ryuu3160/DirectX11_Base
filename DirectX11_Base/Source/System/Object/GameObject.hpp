@@ -128,6 +128,17 @@ public:
 	void SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept;
 	void SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept;
 
+	/// <summary>
+	/// オブジェクトの左下前方の位置を返します
+	/// </summary>
+	/// <returns>左下前方の位置を表すDirectX::XMFLOAT3構造体。</returns>
+	DirectX::XMFLOAT3 GetLeftTopFrontPosition() const noexcept;
+	/// <summary>
+	/// オブジェクトの右上奥の位置を返します
+	/// </summary>
+	/// <returns>右上奥の位置を表す DirectX::XMFLOAT3。</returns>
+	DirectX::XMFLOAT3 GetRightBottomBackPosition() const noexcept;
+
 protected:
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}

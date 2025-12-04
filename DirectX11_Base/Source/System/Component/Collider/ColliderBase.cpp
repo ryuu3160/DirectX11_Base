@@ -10,12 +10,16 @@
 // ==============================
 #include "ColliderBase.hpp"
 #include "System/CollisionManager/CollisionManager.hpp"
+#include "System/CollisionManager/TreeData.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
 	, m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
 	, m_CollisionManager(CollisionManager::GetInstance())
+	, m_pTreeData(nullptr)
 {
+	m_pTreeData = std::make_shared<TreeData>();
+	m_pTreeData->m_pCollider = this;
 }
 
 ColliderBase::~ColliderBase()
@@ -35,4 +39,9 @@ void ColliderBase::Init() noexcept
 
 void ColliderBase::Update(_In_ float In_Tick) noexcept
 {
+}
+
+void ColliderBase::FixedUpdate(_In_ double In_FixedTick) noexcept
+{
+	m_CollisionManager.UpdateCollisionCells(this);
 }

@@ -11,6 +11,11 @@
 // ==============================
 
 // ==============================
+//  前方宣言
+// ==============================
+class TreeData;
+
+// ==============================
 //	定数定義
 // ==============================
 namespace
@@ -20,22 +25,23 @@ namespace
 /// <summary>
 /// OctreeCellクラス
 /// </summary>
-template<typename T>
 class OctreeCell
 {
 public:
-	OctreeCell() = default;
-	~OctreeCell() = default;
+	OctreeCell();
+	~OctreeCell();
 
-	// ------------------------------
-	//  Getter
-	// ------------------------------
+	void ResetLink(_In_ std::shared_ptr<TreeData> In_spTree) noexcept;
 
+	bool Push(_In_ std::shared_ptr<TreeData> In_spTree, _In_ int In_MortonNum) noexcept;
 
-	// ------------------------------
-	//  Setter
-	// ------------------------------
+	std::shared_ptr<TreeData> GetFirstObj() noexcept
+	{
+		return m_spLatest;
+	}
+
+	bool OnRemove(_In_ TreeData *In_pTree) noexcept;
 
 private:
-
+	std::shared_ptr<TreeData> m_spLatest; // 最新のTreeDataへのスマートポインタ
 };
