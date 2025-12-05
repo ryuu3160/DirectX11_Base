@@ -62,7 +62,7 @@ public:
 
 	void SetIsCollision(_In_ const bool &In_IsCollision) noexcept { m_IsCollision = In_IsCollision; }
 
-	std::shared_ptr<TreeData> GetTreeData() noexcept { return m_pTreeData; }
+	TreeData *GetTreeData() noexcept { return m_pTreeData.get(); }
 
 protected:
 	std::shared_ptr<TreeData> m_pTreeData; // オクツリー用データ

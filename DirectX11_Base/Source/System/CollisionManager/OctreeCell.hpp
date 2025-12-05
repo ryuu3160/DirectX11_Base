@@ -31,11 +31,11 @@ public:
 	OctreeCell();
 	~OctreeCell();
 
-	void ResetLink(_In_ std::shared_ptr<TreeData> In_spTree) noexcept;
+	void ResetLink(_In_ TreeData *In_spTree) noexcept;
 
-	bool Push(_In_ std::shared_ptr<TreeData> In_spTree, _In_ int In_MortonNum) noexcept;
+	bool Push(_In_ TreeData *In_spTree, _In_ int In_MortonNum) noexcept;
 
-	std::shared_ptr<TreeData> GetFirstObj() noexcept
+	TreeData *GetFirstObj() noexcept
 	{
 		return m_spLatest;
 	}
@@ -43,5 +43,5 @@ public:
 	bool OnRemove(_In_ TreeData *In_pTree) noexcept;
 
 private:
-	std::shared_ptr<TreeData> m_spLatest; // 最新のTreeDataへのスマートポインタ
+	TreeData *m_spLatest; // 最新のTreeDataへのスマートポインタ
 };

@@ -19,6 +19,7 @@ namespace
 }
 
 OctreeCell::OctreeCell()
+	: m_spLatest(nullptr)
 {
 }
 
@@ -26,21 +27,21 @@ OctreeCell::~OctreeCell()
 {
 }
 
-void OctreeCell::ResetLink(_In_ std::shared_ptr<TreeData> In_spTree) noexcept
+void OctreeCell::ResetLink(_In_ TreeData *In_spTree) noexcept
 {
-	if(In_spTree->GetNextTree().get() != nullptr)
+	if(In_spTree->GetNextTree() != nullptr)
 		ResetLink(In_spTree->GetNextTree());
-	In_spTree.reset();
+	In_spTree = nullptr;
 }
 
-bool OctreeCell::Push(_In_ std::shared_ptr<TreeData> In_spTree, _In_ int In_MortonNum) noexcept
+bool OctreeCell::Push(_In_ TreeData *In_spTree, _In_ int In_MortonNum) noexcept
 {
-	if (In_spTree.get() == nullptr)
+	if (In_spTree == nullptr)
 		return false; // 無効オブジェクトは登録しない
 	if (In_spTree->CompareCell(this))
 		return false; // すでに登録されている場合は登録しない
 
-	if (m_spLatest.get() != nullptr)
+	if (m_spLatest == nullptr)
 	{
 		m_spLatest = In_spTree;
 	}
@@ -57,10 +58,10 @@ bool OctreeCell::Push(_In_ std::shared_ptr<TreeData> In_spTree, _In_ int In_Mort
 
 bool OctreeCell::OnRemove(_In_ TreeData *In_pTree) noexcept
 {
-	if (m_spLatest.get() == In_pTree)
+	if (m_spLatest == In_pTree)
 	{
 		// 次のオブジェクトにすげ替え
-		if(m_spLatest.get() != nullptr)
+		if(m_spLatest != nullptr)
 			m_spLatest = m_spLatest->GetNextTree();
 	}
 	return true;

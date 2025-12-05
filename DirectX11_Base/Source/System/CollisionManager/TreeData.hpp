@@ -40,7 +40,7 @@ public:
 	// ------------------------------
 	//  Getter
 	// ------------------------------
-	inline std::shared_ptr<TreeData> GetNextTree() noexcept
+	inline TreeData *GetNextTree() noexcept
 	{
 		return m_spNext;
 	}
@@ -52,21 +52,18 @@ public:
 
 	inline bool CompareCell(_In_ OctreeCell *In_pCell) const noexcept
 	{
-		if(m_pCell == nullptr || In_pCell == nullptr)
-			return false;
-
 		return m_pCell == In_pCell;
 	}
 
 	// ------------------------------
 	// Setter
 	// ------------------------------
-	inline void SetNextTree(_In_ std::shared_ptr<TreeData> In_spNext) noexcept
+	inline void SetNextTree(_In_ TreeData *In_spNext) noexcept
 	{
 		m_spNext = In_spNext;
 	}
 
-	inline void SetPrevTree(_In_ std::shared_ptr<TreeData> In_spPrev) noexcept
+	inline void SetPrevTree(_In_ TreeData *In_spPrev) noexcept
 	{
 		m_spPrev = In_spPrev;
 	}
@@ -75,6 +72,6 @@ private:
 	int m_MortonNumber; // モートン番号
 	OctreeCell *m_pCell; // 登録されている空間
 	ColliderBase *m_pCollider; // 登録されているコライダー
-	std::shared_ptr<TreeData> m_spPrev; // 前のTreeDataへのスマートポインタ
-	std::shared_ptr<TreeData> m_spNext; // 次のTreeDataへのスマートポインタ
+	TreeData* m_spPrev; // 前のTreeDataへのスマートポインタ
+	TreeData* m_spNext; // 次のTreeDataへのスマートポインタ
 };

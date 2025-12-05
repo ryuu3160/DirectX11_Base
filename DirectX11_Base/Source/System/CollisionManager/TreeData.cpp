@@ -20,6 +20,8 @@ namespace
 
 TreeData::TreeData()
 	: m_pCell(nullptr), m_pCollider(nullptr)
+	, m_spPrev(nullptr), m_spNext(nullptr)
+	, m_MortonNumber(-1)
 {
 }
 
@@ -41,15 +43,15 @@ bool TreeData::Remove()
 
 	// 逸脱処理
 	// 前後のオブジェクトを結び付ける
-	if (m_spPrev.get() != nullptr)
+	if (m_spPrev != nullptr)
 	{
 		m_spPrev->m_spNext = m_spNext;
-		m_spPrev.reset();
+		m_spPrev = nullptr;
 	}
-	if (m_spNext.get() != nullptr)
+	if (m_spNext != nullptr)
 	{
 		m_spNext->m_spPrev = m_spPrev;
-		m_spNext.reset();
+		m_spNext = nullptr;
 	}
 	m_pCell = nullptr;
 	return true;

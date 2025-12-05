@@ -72,7 +72,7 @@ void SceneRoot::Init()
 	pModel2->AddComponent<SphereCollider>();
 
 	// F15E‚ÌˆÚ“®ˆ—
-	auto input = pModel->AddComponent<InputSystem>();
+	auto input = pModel2->AddComponent<InputSystem>();
 	input->RegisterKeyCallBack('W', InputSystem::KeyState::Press, [pModel2]() {
 		auto pos = pModel2->GetPosition();
 		pos.z += 0.1f;

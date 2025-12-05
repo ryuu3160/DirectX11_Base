@@ -91,7 +91,7 @@ void CollisionManager::AddColliderComponent(_In_ ColliderBase *In_Collider) noex
 void CollisionManager::RemoveColliderComponent(_In_ ColliderBase *In_Collider)
 {
 	// コライダーリストから削除
-	In_Collider->GetTreeData().get()->Remove();
+	In_Collider->GetTreeData()->Remove();
 
 	auto itr = std::find(m_ColliderList.begin(), m_ColliderList.end(), In_Collider);
 	if(itr != m_ColliderList.end())
@@ -130,7 +130,18 @@ void CollisionManager::CheckAllCollisions() noexcept
 
 bool CollisionManager::CreateNewCell(_In_ int In_MortonNumber)
 {
-	return false;
+	// 引数の要素番号
+	while (!m_OctreeCells[In_MortonNumber])
+	{
+		// 指定の要素番号に空間を新規作成
+		m_OctreeCells[In_MortonNumber] = new OctreeCell;
+
+		// 親空間にジャンプ
+		In_MortonNumber = (In_MortonNumber - 1) >> 3;
+		if (In_MortonNumber >= m_MaxCellNum || In_MortonNumber < 0)
+			break;
+	}
+	return true;
 }
 
 int CollisionManager::GetMortonNumber(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack)

@@ -30,6 +30,7 @@ ColliderBase::~ColliderBase()
 
 void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
 {
+	In_Data->Access<bool>(&m_IsTrigger);
 }
 
 void ColliderBase::Init() noexcept
