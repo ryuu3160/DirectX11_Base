@@ -27,9 +27,6 @@ class CollisionManager : public Singleton<CollisionManager>
 {
 	friend class Singleton<CollisionManager>;
 public:
-	CollisionManager();
-	~CollisionManager();
-
 	void InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack, _In_ const int In_Level) noexcept;
 
 	/// <summary>
@@ -56,6 +53,8 @@ public:
 	void CheckAllCollisions() noexcept;
 
 private:
+	CollisionManager();
+	~CollisionManager();
 
 	bool CreateNewCell(_In_ int In_MortonNumber);
 

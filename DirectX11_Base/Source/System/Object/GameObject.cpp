@@ -41,7 +41,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 			std::memcpy(&m_Scale, ptr + sizeof(m_Pos) + sizeof(m_Quat), sizeof(m_Scale));
 			ptr += sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale);
 		}
-		size_t size;
+		size_t size = 0;
 		// データのキーと値が保存されている個所へのポインタを取得
 		for (;ptr - m_Datas[0].value < fileSize;ptr += size)
 		{

@@ -19,19 +19,6 @@ namespace
 {
 }
 
-CollisionManager::CollisionManager()
-	: m_OctreeLevel(0), m_MaxCellNum(0), m_ParentShift(0)
-	, m_Width(0.0f), m_Height(0.0f), m_Depth(0.0f)
-	, m_Unit{ 0.0f,0.0f,0.0f }, m_LeftTopFront{ 0.0f,0.0f,0.0f }, m_RightBottomBack{ 0.0f,0.0f,0.0f }
-	, m_Pow{}
-{
-}
-
-CollisionManager::~CollisionManager()
-{
-
-}
-
 void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFront, _In_ const DirectX::XMFLOAT3 In_RightBottomBack, _In_ const int In_Level) noexcept
 {
 	if (In_Level < 0 || In_Level >= cx_MaxLevel)
@@ -128,6 +115,27 @@ void CollisionManager::CheckAllCollisions() noexcept
 	m_ColliderList.clear();
 }
 
+CollisionManager::CollisionManager()
+	: m_OctreeLevel(0), m_MaxCellNum(0), m_ParentShift(0)
+	, m_Width(0.0f), m_Height(0.0f), m_Depth(0.0f)
+	, m_Unit{ 0.0f,0.0f,0.0f }, m_LeftTopFront{ 0.0f,0.0f,0.0f }, m_RightBottomBack{ 0.0f,0.0f,0.0f }
+	, m_Pow{}
+{
+}
+
+CollisionManager::~CollisionManager()
+{
+	for(auto &cell : m_OctreeCells)
+	{
+		if (cell)
+		{
+			delete cell;
+			cell = nullptr;
+		}
+	}
+	m_OctreeCells.clear();
+}
+
 bool CollisionManager::CreateNewCell(_In_ int In_MortonNumber)
 {
 	// ˆø”‚Ì—v‘f”Ô†
@@ -161,7 +169,18 @@ int CollisionManager::GetMortonNumber(_In_ const DirectX::XMFLOAT3 In_LeftTopFro
 			HiLevel = i + 1;
 	}
 	int SpaceNum = RB >> (HiLevel * 3);
-	int AddNum = (m_Pow[m_OctreeLevel - static_cast<int>(HiLevel)] - 1) / (cx_DivisionNumber - 1);
+
+	// C³: “Yš‚ª•‰‚â”ÍˆÍŠO‚É‚È‚ç‚È‚¢‚æ‚¤‚Éƒ`ƒFƒbƒN
+	int powIndex = m_OctreeLevel - static_cast<int>(HiLevel);
+	if (powIndex < 0 || powIndex > cx_MaxLevel)
+		return 0xffffffff;
+
+	// ƒI[ƒo[ƒtƒ[–h~‚Ì‚½‚ß64bit‚ÅŒvZ
+	int64_t numerator = static_cast<int64_t>(m_Pow[powIndex]) - 1;
+	int64_t denominator = static_cast<int64_t>(cx_DivisionNumber) - 1;
+	if (denominator == 0) return 0xffffffff; // 0œZ–h~
+
+	int AddNum = static_cast<int>(numerator / denominator);
 	SpaceNum += AddNum;
 
 	if (SpaceNum > m_MaxCellNum)
