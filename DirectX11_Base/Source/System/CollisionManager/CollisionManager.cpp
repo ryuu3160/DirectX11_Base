@@ -57,7 +57,6 @@ void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFr
 	// 分割数に応じた単位幅と単位高を求める
 	// 分割数はlevelを指数とした2の累乗分増えてくため、
 	// シフトで求めた数で割ることで単位を求める
-	// e.g.)
 	// 0レベルなら分割は1、1レベルなら分割は2（2^1）、2レベルなら4（2^2）
 	int unit = 1 << In_Level;
 	m_Unit.x = m_Width / unit;
