@@ -122,6 +122,9 @@
     <Filter Include="Source\System\Utility">
       <UniqueIdentifier>{49e24936-1e7c-492c-a078-c9a38aa48fe3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\System\CPON">
+      <UniqueIdentifier>{48d9f31c-8e52-4fac-80ee-2471ab33b1f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -345,6 +348,12 @@
     </ClCompile>
     <ClCompile Include="Source\System\Utility\Utility.cpp">
       <Filter>Source\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\CPON\cpon.cpp">
+      <Filter>Source\System\CPON</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\CPON\cpon_object.cpp">
+      <Filter>Source\System\CPON</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -590,6 +599,12 @@
     </ClInclude>
     <ClInclude Include="Source\System\Utility\Utility.hpp">
       <Filter>Source\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\CPON\cpon_object.hpp">
+      <Filter>Source\System\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\CPON\cpon.hpp">
+      <Filter>Source\System\CPON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

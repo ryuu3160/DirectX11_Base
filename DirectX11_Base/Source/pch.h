@@ -43,6 +43,8 @@ using Microsoft::WRL::ComPtr;
 #include <cmath>
 #include <random>
 #include <future>
+#include <optional>
+#include <stdexcept>
 
 // C++20以降の機能を利用するための条件付きインクルード
 #if __cplusplus >= 202002L

@@ -241,6 +241,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\CPON\cpon.cpp" />
+    <ClCompile Include="Source\System\CPON\cpon_object.cpp" />
     <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
       <SubType>
       </SubType>
@@ -412,6 +414,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Source\System\CPON\cpon.hpp" />
+    <ClInclude Include="Source\System\CPON\cpon_object.hpp" />
     <ClInclude Include="Source\System\DebugManager\DebugItem.hpp">
       <SubType>
       </SubType>
