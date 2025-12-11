@@ -212,3 +212,11 @@ void SceneBase::_DestroyObjects() noexcept
 	// 破棄予定リストをクリア
 	m_DeadItems.clear();
 }
+
+void SceneBase::DataSave()
+{
+	for (const auto &itr : m_Objects)
+	{
+
+	}
+}

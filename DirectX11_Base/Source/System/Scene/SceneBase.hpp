@@ -140,6 +140,9 @@ private:
 	/// </summary>
 	void _DestroyObjects() noexcept;
 
+	void DataSave();
+	void DataLoad();
+
 private:
 	static Objects m_Objects;
 #ifdef _DEBUG
@@ -147,6 +150,7 @@ private:
 #endif // _DEBUG
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
+	cpon m_Data; // シーンデータ
 
 protected:
 	Items m_Items;

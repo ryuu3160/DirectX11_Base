@@ -13,6 +13,8 @@
 Component::Component(_In_ std::string In_Name)
 	: m_Name(In_Name), m_pTransform(nullptr)
 {
+	m_Data = std::make_shared<cpon_object>(0);
+
 }
 
 Component::~Component()
@@ -44,4 +46,9 @@ void Component::DestroySelf() noexcept
 
 void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
+}
+
+void Component::DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock)
+{
+	In_pCponBlock->AddObject(m_Data);
 }

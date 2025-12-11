@@ -148,9 +148,13 @@ protected:
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
 #endif // _DEBUG
 
+private:
+	void DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock);
+
 protected:
 	GameObject *m_pTransform;
 	std::string m_Name;
 private:
+	cpon_block::Object m_Data; // ï€ë∂ÉfÅ[É^
 	bool m_IsDestroyed = false;
 };

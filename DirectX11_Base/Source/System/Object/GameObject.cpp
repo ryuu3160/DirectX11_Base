@@ -391,6 +391,20 @@ void GameObject::ExecuteDestroyComponents() noexcept
 	m_DeadComponents.clear();
 }
 
+void GameObject::DataWrite(_In_ cpon *In_pCpon)
+{
+	auto obj = In_pCpon->CreateObject(m_Name);
+	auto block = obj.CreateDataBlock();
+	block->CreateArray<float>("Position", { m_Pos.x, m_Pos.y, m_Pos.z });
+	block->CreateArray<float>("Quaternion", { m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w });
+	block->CreateArray<float>("Scale", { m_Scale.x, m_Scale.y, m_Scale.z });
+
+	for (auto &itr : m_Components)
+	{
+		itr->DataWrite(block);
+	}
+}
+
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 	// トランスフォームグループの作成

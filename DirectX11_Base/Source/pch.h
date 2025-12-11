@@ -90,6 +90,7 @@ using Microsoft::WRL::ComPtr;
 //  Original
 // ------------------------------
 #include "System/Utility/Concept.hpp"
+#include "System/CPON/cpon.hpp"
 #include "App/Main.hpp"
 #include "Defines.hpp"
 #include "System/Utility/Utility.hpp"

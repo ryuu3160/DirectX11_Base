@@ -13,6 +13,10 @@
 // ==============================
 //	’è”’è‹`
 // ==============================
+
+// GetObjectƒ}ƒNƒ‚Ì‰e‹¿‚ğ”rœ
+#undef GetObject
+
 namespace
 {
 	template<typename T>
