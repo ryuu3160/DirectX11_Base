@@ -106,7 +106,7 @@ void cpon_block::CreateHints(_In_ const std::string_view In_TagName, _In_ DataIt
 		auto array = std::get<cpon_block::Array>(In_Data);
 
 		m_BlockHintsRef += "array";
-
+		
 		if (VariantArrayCheckType<std::string>(array))
 			m_BlockHintsRef += "<string>";
 		else if (VariantArrayCheckType<int>(array))
@@ -149,4 +149,11 @@ std::shared_ptr<cpon_block> cpon_object::CreateDataBlock()
 	m_Data.push_back(newBlock);
 	++m_DataCount;
 	return m_Data.back();
+}
+
+void cpon_object::ClearData() noexcept
+{
+	m_Data.clear();
+	m_DataCount = 0;
+	m_BlockHints.clear();
 }

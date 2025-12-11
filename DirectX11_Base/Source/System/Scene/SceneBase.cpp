@@ -25,10 +25,13 @@ SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
 {
+	DataLoad();
 }
 
 SceneBase::~SceneBase()
 {
+	DataSave();
+
 	// 全てのオブジェクトを削除予約に追加
 	for (auto &itr : m_Items)
 	{
@@ -36,6 +39,12 @@ SceneBase::~SceneBase()
 	}
 	// 破棄処理
 	_DestroyObjects();
+
+	if (m_Data)
+	{
+		delete m_Data;
+		m_Data = nullptr;
+	}
 }
 
 void SceneBase::CommonProcessScene() noexcept
@@ -78,6 +87,8 @@ template<> GameObject
 
 	GameObject *ptr = new GameObject(In_Name);
 	ptr->m_pScene = this; // 所属シーンを設定
+	ptr->m_Data = m_Data->TryCreateObject(In_Name); // CPONデータ作成
+	ptr->DataRead();
 	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
@@ -217,6 +228,21 @@ void SceneBase::DataSave()
 {
 	for (const auto &itr : m_Objects)
 	{
-
+		itr.second->DataWrite(m_Data);
 	}
+
+	// ディレクトリが存在しなければ作成
+	if(!std::filesystem::exists("Assets/Data/Scene/"))
+		std::filesystem::create_directories("Assets/Data/Scene/");
+
+	// ファイルに書き込み
+	m_Data->WriteToFile("Assets/Data/Scene/" + m_Name + ".cpon");
+}
+
+void SceneBase::DataLoad()
+{
+	m_Data = new cpon();
+
+	// ファイルから読み込み
+	m_Data->LoadFromFile("Assets/Data/Scene/" + m_Name + ".cpon");
 }

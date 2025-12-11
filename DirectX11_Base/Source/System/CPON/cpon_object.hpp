@@ -9,14 +9,18 @@
 // ==============================
 //	include
 // ==============================
-
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <charconv>
+#include <variant>
+#include <memory>
+#include <stdexcept>
+#include <iostream>
+#include <optional>
 // ==============================
 //	定数定義
 // ==============================
-
-// GetObjectマクロの影響を排除
-#undef GetObject
-
 namespace
 {
 	template<typename T>
@@ -40,7 +44,10 @@ public:
 		: m_BlockHintsRef(In_BlockHints), m_NestedLevel(In_NestedLevel)
 	{
 	}
-	~cpon_block() = default;
+	~cpon_block()
+	{
+		m_BlockData.clear();
+	}
 
 	/// <summary>
 	/// 指定したキーに対応する値への参照を返します
@@ -250,7 +257,10 @@ public:
 		: m_NestedLevel(In_NestedLevel)
 	{
 	}
-	~cpon_object() = default;
+	~cpon_object()
+	{
+		ClearData();
+	}
 
 	/// <summary>
 	/// 指定したインデックスに対応する要素への参照を返す配列アクセス演算子。
@@ -275,6 +285,11 @@ public:
 	/// <param name="[In_ObjectName]">設定するオブジェクト名</param>
 	void SetObjectName(_In_ const std::string_view In_ObjectName) { m_ObjectName = std::string(In_ObjectName); }
 
+	/// <summary>
+	/// オブジェクトデータをクリアします
+	/// </summary>
+	void ClearData() noexcept;
+
 private:
 
 	std::string GetHints() const noexcept { return m_BlockHints; }
@@ -282,7 +297,7 @@ private:
 	void SetDataCount(_In_ const int In_Count) noexcept { m_DataCount = In_Count; }
 
 	std::vector<std::shared_ptr<cpon_block>> &GetDataBlocks() noexcept { return m_Data; }
-
+	
 	int m_NestedLevel = 0;
 	int m_DataCount = 0;
 	std::string m_ObjectName;

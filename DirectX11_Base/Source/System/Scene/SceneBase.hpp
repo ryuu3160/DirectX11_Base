@@ -150,7 +150,7 @@ private:
 #endif // _DEBUG
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
-	cpon m_Data; // シーンデータ
+	cpon* m_Data; // シーンデータ
 
 protected:
 	Items m_Items;
@@ -180,6 +180,8 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	// オブジェクト生成
 	T *ptr = new T();
 	ptr->m_pScene = this; // 所属シーンを設定
+	ptr->m_Data = m_Data->TryCreateObject(In_Name); // CPONデータ作成
+	ptr->DataRead();
 	m_Objects.insert(std::pair<std::string, T*>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
@@ -208,6 +210,8 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	// オブジェクト生成
 	T *ptr = new T(args...);
 	ptr->m_pScene = this; // 所属シーンを設定
+	ptr->m_Data = m_Data->TryCreateObject(In_Name); // CPONデータ作成
+	ptr->DataRead();
 	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);

@@ -158,7 +158,7 @@ private:
 	void ExecuteDestroyComponents() noexcept;
 
 	void DataWrite(_In_ cpon *In_pCpon);
-	void DataRead(_In_ cpon *In_pCpon);
+	void DataRead();
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
@@ -181,7 +181,7 @@ private:
 	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
 	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
 	ChildObjects		m_ChildObjects;		// 子オブジェクトの一覧
-	cpon_object 		m_Data;				// 保存データ
+	std::shared_ptr<cpon_object> 		m_Data;				// 保存データ
 	Datas				m_Datas;			// 保存データ
 	std::string			m_Name;				// オブジェクト名
 	std::string			m_ChildNameSaffix;	// 子オブジェクト名のサフィックス

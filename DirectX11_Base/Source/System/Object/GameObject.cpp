@@ -15,6 +15,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_bIsChild(false)
 	, m_pScene(nullptr), m_IsDestroySelf(false), m_pParent(nullptr)
+	, m_Data(nullptr)
 {
 	// オブジェクト名に応じて、保存ファイルの読み込み
     std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
@@ -62,42 +63,43 @@ GameObject::GameObject(_In_ std::string In_Name)
 
 GameObject::~GameObject()
 {
-	// 保存データの削除
-	if (!m_Datas.empty())
-		delete[] m_Datas[0].value;
-
+	m_Data = nullptr;
 	auto itr = m_Components.begin();
-#ifdef _DEBUG
-	// データの保存
-	std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
-    FilePath path = pathStr;
-	std::fstream file;
-	file.open(path.data(), std::ios::out | std::ios::binary);
-	if (file.is_open())
-	{
-		// ゲームオブジェクトのデータを保存
-		file.write(reinterpret_cast<const char *>(&m_Pos), sizeof(m_Pos));
-		file.write(reinterpret_cast<const char *>(&m_Quat), sizeof(m_Quat));
-		file.write(reinterpret_cast<const char *>(&m_Scale), sizeof(m_Scale));
-
-		// コンポーネントのデータを保存
-		for (itr = m_Components.begin();itr != m_Components.end();itr++)
-		{
-			const char *name = typeid(**itr).name();
-			Component::DataAccessor accessor(nullptr);
-			(*itr)->ReadWrite(&accessor);
-			// データのキーを保存
-			size_t size = strlen(name);
-			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-			file.write(name, size);
-			// データの保存
-			size = accessor.GetWriteSize();
-			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-			file.write(accessor.GetData(), size);
-		}
-		file.close();
-	}
-#endif
+//	// 保存データの削除
+//	if (!m_Datas.empty())
+//		delete[] m_Datas[0].value;
+//
+//#ifdef _DEBUG
+//	// データの保存
+//	std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
+//    FilePath path = pathStr;
+//	std::fstream file;
+//	file.open(path.data(), std::ios::out | std::ios::binary);
+//	if (file.is_open())
+//	{
+//		// ゲームオブジェクトのデータを保存
+//		file.write(reinterpret_cast<const char *>(&m_Pos), sizeof(m_Pos));
+//		file.write(reinterpret_cast<const char *>(&m_Quat), sizeof(m_Quat));
+//		file.write(reinterpret_cast<const char *>(&m_Scale), sizeof(m_Scale));
+//
+//		// コンポーネントのデータを保存
+//		for (itr = m_Components.begin();itr != m_Components.end();itr++)
+//		{
+//			const char *name = typeid(**itr).name();
+//			Component::DataAccessor accessor(nullptr);
+//			(*itr)->ReadWrite(&accessor);
+//			// データのキーを保存
+//			size_t size = strlen(name);
+//			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
+//			file.write(name, size);
+//			// データの保存
+//			size = accessor.GetWriteSize();
+//			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
+//			file.write(accessor.GetData(), size);
+//		}
+//		file.close();
+//	}
+//#endif
 
 	// コンポーネントの削除
 	for (itr = m_Components.begin(); itr != m_Components.end();itr++)
@@ -393,8 +395,10 @@ void GameObject::ExecuteDestroyComponents() noexcept
 
 void GameObject::DataWrite(_In_ cpon *In_pCpon)
 {
-	auto obj = In_pCpon->CreateObject(m_Name);
-	auto block = obj.CreateDataBlock();
+	// 保存データのクリア
+	m_Data->ClearData();
+
+	auto block = m_Data->CreateDataBlock();
 	block->CreateArray<float>("Position", { m_Pos.x, m_Pos.y, m_Pos.z });
 	block->CreateArray<float>("Quaternion", { m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w });
 	block->CreateArray<float>("Scale", { m_Scale.x, m_Scale.y, m_Scale.z });
@@ -403,6 +407,19 @@ void GameObject::DataWrite(_In_ cpon *In_pCpon)
 	{
 		itr->DataWrite(block);
 	}
+
+	In_pCpon->AddObject(m_Data);
+}
+
+void GameObject::DataRead()
+{
+	auto block = (*m_Data)[0];
+	auto posArray = block->GetArray<float>("Position");
+	m_Pos = DirectX::XMFLOAT3(posArray[0], posArray[1], posArray[2]);
+	auto quatArray = block->GetArray<float>("Quaternion");
+	m_Quat = DirectX::XMFLOAT4(quatArray[0], quatArray[1], quatArray[2], quatArray[3]);
+	auto scaleArray = block->GetArray<float>("Scale");
+	m_Scale = DirectX::XMFLOAT3(scaleArray[0], scaleArray[1], scaleArray[2]);
 }
 
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
