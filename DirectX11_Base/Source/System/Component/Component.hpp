@@ -15,6 +15,8 @@
 // ==============================
 class GameObject;
 
+#undef GetObject
+
 /// <summary>
 /// Componentクラス
 /// </summary>
@@ -25,104 +27,56 @@ public:
 	class DataAccessor
 	{
 	public:
-		// ptrがnullptrだった場合bool型がfalseとなる(これめっちゃ頭いい)
-		DataAccessor(char *ptr) : m_IsRead(ptr), m_nSize(64), m_cur(0)
+		DataAccessor(_In_ cpon_block::Object In_Object)
 		{
-			// ptrがnullptrであれば書き込み用のメモリを確保
-			// それ以外は読み込み用のポインタとして利用
-			m_ptr = m_IsRead ? ptr : new char[m_nSize];
+			m_IsWrite = In_Object->IsEmpty();
+			m_Data = In_Object;
 		}
-		~DataAccessor() { if (!m_IsRead) { delete[] m_ptr; } }
-		// データの読み書きを実行(POD型のみ対応)
-		template<typename T, typename std::enable_if<std::is_trivial<T>::value && std::is_standard_layout<T>::value>::type * = nullptr>
-		void Access(T *ptr)
+		~DataAccessor()
 		{
-			// 書き込みか読み込みかを判定
-			if (m_IsRead)
-				Read<T>(ptr);
-			else
-				Write<T>(ptr);
+			m_Data.reset();
 		}
 
-		template<typename T, typename std::enable_if<std::is_same<T,std::string>::value>::type * = nullptr>
-		void Access(T *ptr)
+		template<TypeValue T>
+		void AccessValue(_In_ const std::string_view In_Key, _Inout_opt_ T *Inout_Value)
 		{
-			// 書き込みか読み込みかを判定
-			if(m_IsRead)
-				ReadString(ptr);
-			else
-				WriteString(ptr);
-		}
-
-		/// <summary>
-		/// 現在の書き込みサイズを取得します。
-		/// </summary>
-		/// <returns>現在の書き込みサイズを表す整数値。</returns>
-		inline int GetWriteSize() const noexcept { return m_cur; }
-
-		/// <summary>
-		/// データへのポインタを取得します。
-		/// </summary>
-		/// <returns>データを指す char 型ポインタ。</returns>
-		char *GetData() const noexcept { return m_ptr; }
-	private:
-		// 読み込み
-		template<class T> void Read(T *ptr)
-		{
-			// サイズを取得してメモリをコピー
-			int size = sizeof(T);
-			memcpy(ptr, m_ptr, size);
-			m_ptr += size;
-		}
-		// 書き込み
-		template<class T> void Write(T *ptr)
-		{
-			int size = sizeof(T);
-			// 確保済みのサイズより大きくなりそうであれば再確保
-			if (m_nSize < m_cur + size)
+			if (m_IsWrite)
 			{
-				char *work = m_ptr;
-				m_ptr = new char[m_nSize <<= 1];
-				memcpy(m_ptr, work, m_cur);
-				delete[] work;
+				(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
 			}
-			memcpy(m_ptr + m_cur, ptr, size);
-			m_cur += size;
+			else
+			{
+				Inout_Value = (*m_Data)[0]->GetValuePtr<T>(In_Key);
+			}
 		}
 
-		void ReadString(std::string *ptr)
+		template<TypeValue T>
+		void AccessArray(_In_ const std::string_view In_Key, _Inout_opt_ std::vector<T> *Inout_Array)
 		{
-			// サイズを取得してメモリをコピー
-			size_t len = 0;
-			int size = sizeof(len);
-			memcpy(&len, m_ptr, size);
-			m_ptr += size;
-			ptr->resize(len);
-			memcpy(ptr->data(), m_ptr, len);
-			m_ptr += len;
-		}
-		void WriteString(std::string *ptr)
-		{
-			size_t len = ptr->size();
-			int size = sizeof(len);
-			// 確保済みのサイズより大きくなりそうであれば再確保
-			if (m_nSize < m_cur + len + size)
+			if (m_IsWrite)
 			{
-				char *work = m_ptr;
-				m_ptr = new char[m_nSize <<= 1];
-				memcpy(m_ptr, work, m_cur);
-				delete[] work;
+				(*m_Data)[0]->CreateArray(In_Key, *Inout_Array);
 			}
-			memcpy(m_ptr + m_cur, &len,size);
-			m_cur += size;
-			memcpy(m_ptr + m_cur, ptr->data(), len);
-			m_cur += static_cast<int>(len);
+			else
+			{
+				Inout_Array = (*m_Data)[0]->GetArrayPtr<T>(In_Key);
+			}
+		}
+
+		void AccessObject(_In_ const std::string_view In_Key, _Inout_opt_ cpon_block::Object Inout_Object)
+		{
+			if (m_IsWrite)
+			{
+				(*m_Data)[0]->AddObject(Inout_Object);
+			}
+			else
+			{
+				Inout_Object = (*m_Data)[0]->GetObject(In_Key);
+			}
 		}
 	private:
-		bool m_IsRead;	// 読み込みか書き込みかを判定するフラグ
-		char *m_ptr;	// データのポインタ
-		int m_nSize;	// 確保済みのサイズ
-		int m_cur;		// 現在の書き込み位置
+		cpon_block::Object m_Data;
+		bool m_IsWrite; // 書き込みモードか読み込みモードか
 	};
 
 public:
@@ -134,7 +88,7 @@ public:
 	virtual void LateUpdate(_In_ float In_Tick) noexcept override;
 	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override;
 
-	virtual void ReadWrite(_In_ DataAccessor *In_Data);
+	virtual void SaveLoad(_In_ DataAccessor *In_Data) {}
 
 	GameObject *GetGameObject() const noexcept { return m_pTransform; }
 
@@ -150,11 +104,11 @@ protected:
 
 private:
 	void DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock);
+	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
 
 protected:
 	GameObject *m_pTransform;
 	std::string m_Name;
 private:
-	cpon_block::Object m_Data; // 保存データ
 	bool m_IsDestroyed = false;
 };

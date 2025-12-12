@@ -43,6 +43,18 @@ cpon_object &cpon::operator[](_In_ std::string In_ObjectName)
 	throw std::out_of_range("指定された名前のオブジェクトが存在しません: " + In_ObjectName);
 }
 
+std::shared_ptr<cpon_object> cpon::GetObjectPtr(_In_ std::string In_ObjectName)
+{
+	auto itr = std::find_if(m_Objects.begin(), m_Objects.end(),
+		[&In_ObjectName](const std::shared_ptr<cpon_object> &obj)
+		{
+			return obj->GetObjectName() == In_ObjectName;
+		});
+	if(itr != m_Objects.end())
+		return *itr;
+	return nullptr;
+}
+
 std::shared_ptr<cpon_object> cpon::CreateObject(_In_ const std::string_view In_ObjectName)
 {
 	auto newObject = std::make_shared<cpon_object>();
@@ -51,7 +63,7 @@ std::shared_ptr<cpon_object> cpon::CreateObject(_In_ const std::string_view In_O
 	return newObject;
 }
 
-std::shared_ptr<cpon_object> cpon::TryCreateObject(std::string In_ObjectName)
+std::shared_ptr<cpon_object> cpon::TryCreateObject(_In_ std::string In_ObjectName)
 {
 	auto itr = std::find_if(m_Objects.begin(), m_Objects.end(),
 		[&In_ObjectName](const std::shared_ptr<cpon_object> &obj)
@@ -63,7 +75,7 @@ std::shared_ptr<cpon_object> cpon::TryCreateObject(std::string In_ObjectName)
 	return CreateObject(In_ObjectName);
 }
 
-void cpon::AddObject(std::shared_ptr<cpon_object> In_Object) noexcept
+void cpon::AddObject(_In_ std::shared_ptr<cpon_object> In_Object) noexcept
 {
 	m_Objects.push_back(In_Object);
 }
@@ -162,7 +174,7 @@ bool cpon::LoadFromFile(_In_ const std::string_view In_FilePath)
 			// オブジェクト作成
 			auto Obj = CreateObject(ObjName);
 
-			if(ReadObject(File, line, Obj, In_FilePath))
+			if(!ReadObject(File, line, Obj, In_FilePath))
 				return false;
 		}
 		else
@@ -186,7 +198,11 @@ void cpon::CreateFileHeader()
 
 void cpon::WriteObjectHeader(_In_ std::ofstream &In_File, _In_ std::shared_ptr<cpon_object> In_Object)
 {
-	In_File << In_Object->GetObjectName() << "[" << In_Object->GetDataCount() << "]" << "{" << In_Object->GetHints() << "}:\n";
+	// ブロック内のオブジェクトはキーがオブジェクト名として描き込まれるため、名前の出力をスキップ
+	if(In_Object->m_NestedLevel == 0)
+		In_File << In_Object->GetObjectName();
+
+	In_File << "[" << In_Object->GetDataCount() << "]" << "{" << In_Object->GetHints() << "}:\n";
 }
 
 void cpon::WriteDataBlocks(_In_ std::ofstream &In_File, _In_ std::shared_ptr<cpon_object> In_Object)
@@ -308,6 +324,10 @@ bool cpon::ReadObject(_In_ std::ifstream &In_File, _In_ std::string_view In_Line
 			{
 				auto IDPos = line.find(HintID);
 
+				// 空行の場合はスキップ
+				if(line.empty())
+					continue;
+
 				// データが存在しないので、ヒントを更新して再検索
 				if(IsStringNpos(IDPos))
 				{
@@ -356,8 +376,6 @@ bool cpon::ReadObject(_In_ std::ifstream &In_File, _In_ std::string_view In_Line
 		if(In_Object->m_NestedLevel == 0)
 			std::getline(In_File, line); // 空白行を飛ばすために読み取る
 	}
-	if(In_Object->m_NestedLevel == 0)
-		std::getline(In_File, line); // 空白行を飛ばすために読み取る
 	return true;
 }
 

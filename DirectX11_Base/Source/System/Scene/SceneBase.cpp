@@ -87,8 +87,7 @@ template<> GameObject
 
 	GameObject *ptr = new GameObject(In_Name);
 	ptr->m_pScene = this; // 所属シーンを設定
-	ptr->m_Data = m_Data->TryCreateObject(In_Name); // CPONデータ作成
-	ptr->DataRead();
+	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
 	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_InitObjects.push_back(ptr);
@@ -226,9 +225,16 @@ void SceneBase::_DestroyObjects() noexcept
 
 void SceneBase::DataSave()
 {
-	for (const auto &itr : m_Objects)
+	m_Data->ClearObjectsData();
+
+	// 自シーンが持つオブジェクトのデータを書き込み
+	for(const auto &name : m_Items)
 	{
-		itr.second->DataWrite(m_Data);
+		auto itr = m_Objects.find(name);
+		if (itr != m_Objects.end())
+		{
+			itr->second->DataWrite(m_Data);
+		}
 	}
 
 	// ディレクトリが存在しなければ作成

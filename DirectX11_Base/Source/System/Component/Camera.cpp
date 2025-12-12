@@ -32,17 +32,17 @@ void Camera::Init() noexcept
 {
 }
 
-void Camera::ReadWrite(_In_ DataAccessor *In_Data)
+void Camera::SaveLoad(_In_ DataAccessor *In_Data)
 {
-	In_Data->Access<bool>(&m_bIs3D);
-	In_Data->Access<float>(&m_fFovy);
-	In_Data->Access<float>(&m_fWidth);
-	In_Data->Access<float>(&m_fNear);
-	In_Data->Access<float>(&m_fFar);
-	In_Data->Access<float>(&m_fAspect);
-	In_Data->Access<float>(&m_fFocus);
+	In_Data->AccessValue<bool>("Is3D", & m_bIs3D);
+	In_Data->AccessValue<float>("Fovy", &m_fFovy);
+	In_Data->AccessValue<float>("Width", &m_fWidth);
+	In_Data->AccessValue<float>("Near", &m_fNear);
+	In_Data->AccessValue<float>("Far", &m_fFar);
+	In_Data->AccessValue<float>("Aspect", &m_fAspect);
+	In_Data->AccessValue<float>("Focus", &m_fFocus);
 #ifdef _DEBUG
-	In_Data->Access<bool>(&m_bIsShow);
+	In_Data->AccessValue<bool>("IsShow", & m_bIsShow);
 #endif
 }
 

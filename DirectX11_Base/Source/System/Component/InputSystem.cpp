@@ -26,7 +26,7 @@ InputSystem::~InputSystem()
 {
 }
 
-void InputSystem::ReadWrite(_In_ DataAccessor *In_Data)
+void InputSystem::SaveLoad(_In_ DataAccessor *In_Data)
 {
 }
 

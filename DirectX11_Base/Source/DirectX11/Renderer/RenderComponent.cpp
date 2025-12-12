@@ -54,7 +54,7 @@ void RenderComponent::Update(_In_ float In_Tick) noexcept
 {
 }
 
-void RenderComponent::ReadWrite(_In_ DataAccessor *In_Data)
+void RenderComponent::SaveLoad(_In_ DataAccessor *In_Data)
 {
-	In_Data->Access<FilePathHold>(&m_AssetPath);
+	In_Data->AccessValue<FilePathHold>("AssetPath", &m_AssetPath);
 }

@@ -97,7 +97,7 @@ void SceneRoot::Init()
 			pModel2->SetPosition(pos);
 		});
 
-	pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
+	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
 
 	// スカイボックスを作成

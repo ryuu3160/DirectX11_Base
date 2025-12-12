@@ -22,7 +22,7 @@ public:
 
 	virtual void Init() noexcept override;
 
-	void ReadWrite(_In_ DataAccessor *In_Data) final;
+	void SaveLoad(_In_ DataAccessor *In_Data) final;
 #if _DEBUG
 	void Draw() const noexcept;
 #endif

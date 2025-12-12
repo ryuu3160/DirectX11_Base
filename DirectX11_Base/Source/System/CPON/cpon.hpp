@@ -44,6 +44,13 @@ public:
 	cpon_object &operator[](_In_ std::string In_ObjectName);
 
 	/// <summary>
+	/// 指定された名前のオブジェクトへのシェアポインタを返します
+	/// </summary>
+	/// <param name="[In_ObjectName]">取得するオブジェクトの名前</param>
+	/// <returns>指定された名前のcpon_objectへのシェアポインタ</returns>
+	std::shared_ptr<cpon_object> GetObjectPtr(_In_ std::string In_ObjectName);
+
+	/// <summary>
 	/// 指定された名前のオブジェクトを作成し、その参照を返します
 	/// </summary>
 	/// <param name="[In_ObjectName]">作成するオブジェクトの名前を表す文字列ビュー</param>
@@ -74,6 +81,12 @@ public:
 	/// オブジェクトデータをすべてクリアします
 	/// </summary>
 	void ClearObjectsData() noexcept;
+
+	/// <summary>
+	/// オブジェクトデータが空であるかを確認します
+	/// </summary>
+	/// <returns>オブジェクトデータが空である場合はtrue、そうでない場合はfalseを返します</returns>
+	[[nodiscard]] bool IsEmpty() const noexcept { return m_Objects.empty(); }
 
 	/// <summary>
 	/// <para>指定したファイルパスにデータを書き込みます</para>

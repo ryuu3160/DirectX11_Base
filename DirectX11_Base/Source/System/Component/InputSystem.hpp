@@ -35,7 +35,7 @@ public:
 	InputSystem();
 	~InputSystem() override;
 
-	void ReadWrite(_In_ DataAccessor *In_Data) final;
+	void SaveLoad(_In_ DataAccessor *In_Data) final;
 
 	virtual void Init() noexcept override;
 

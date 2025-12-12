@@ -18,6 +18,9 @@
 #include <stdexcept>
 #include <iostream>
 #include <optional>
+
+#undef GetObject
+
 // ==============================
 //	定数定義
 // ==============================
@@ -84,6 +87,34 @@ public:
 	}
 
 	template<TypeValue T>
+	T* GetValuePtr(_In_ const std::string_view In_Key)
+	{
+		auto itr = m_BlockData.find(std::string(In_Key));
+		if(itr != m_BlockData.end())
+		{
+			if(std::holds_alternative<DataValue>(itr->second))
+			{
+				auto &value = std::get<DataValue>(itr->second);
+				if(std::holds_alternative<T>(value))
+					return &(std::get<T>(value));
+				else
+				{
+					std::cerr << "保持している型と指定した型が違います" << std::endl << "T : " << typeid(T).name() << std::endl
+						<< "保持している型 : " << typeid(std::decay_t<decltype(value)>).name() << std::endl;
+					return nullptr;
+				}
+			}
+			else
+				throw std::bad_variant_access();
+		}
+		else
+		{
+			std::cerr << "キーが見つかりませんでした : " << In_Key << std::endl;
+			return nullptr;
+		}
+	}
+
+	template<TypeValue T>
 	std::vector<T> &GetArray(_In_ const std::string_view In_Key)
 	{
 		auto itr = m_BlockData.find(std::string(In_Key));
@@ -109,6 +140,35 @@ public:
 		{
 			std::cerr << "キーが見つかりませんでした : " << In_Key << std::endl;
 			return *(std::vector<T> *)nullptr;
+		}
+	}
+
+	template<TypeValue T>
+	std::vector<T> *GetArrayPtr(_In_ const std::string_view In_Key)
+	{
+		auto itr = m_BlockData.find(std::string(In_Key));
+		if(itr != m_BlockData.end())
+		{
+			if(std::holds_alternative<Array>(itr->second))
+			{
+				auto &array = std::get<Array>(itr->second);
+				if(VariantArrayCheckType<T>(array))
+					return &(VariantArrayToVector<T>(array));
+				else
+				{
+					std::cerr << "配列が保持している型と指定した型が違います" << std::endl;
+					return nullptr;
+				}
+			}
+			else
+			{
+				throw std::bad_variant_access();
+			}
+		}
+		else
+		{
+			std::cerr << "キーが見つかりませんでした : " << In_Key << std::endl;
+			return nullptr;
 		}
 	}
 
@@ -181,6 +241,12 @@ public:
 	/// <para>※キーが見つからない場合の挙動は実装依存です</para>
 	/// </returns>
 	Object GetObject(_In_ const std::string_view In_Key);
+
+	/// <summary>
+	/// ブロックデータが空であるかを確認します
+	/// </summary>
+	/// <returns>ブロックデータが空である場合はtrue、そうでない場合はfalseを返します</returns>
+	[[nodiscard]] bool IsEmpty() const noexcept { return m_BlockData.empty(); }
 
 private:
 	struct GetElementAsStringVisitor
@@ -280,6 +346,12 @@ public:
 	[[nodiscard]] const std::string &GetBlockHints() const noexcept { return m_BlockHints; }
 
 	/// <summary>
+	/// オブジェクトデータが空であるかを確認します
+	/// </summary>
+	/// <returns>オブジェクトデータが空である場合はtrue、そうでない場合はfalseを返します</returns>
+	[[nodiscard]] bool IsEmpty() const noexcept { return m_Data.empty(); }
+
+	/// <summary>
 	/// オブジェクト名を設定します
 	/// </summary>
 	/// <param name="[In_ObjectName]">設定するオブジェクト名</param>
@@ -295,6 +367,8 @@ private:
 	std::string GetHints() const noexcept { return m_BlockHints; }
 	std::string SetHints(_In_ const std::string_view In_Hints) noexcept { return m_BlockHints = std::string(In_Hints); }
 	void SetDataCount(_In_ const int In_Count) noexcept { m_DataCount = In_Count; }
+
+	void ResetBlockNestedLevel() noexcept;
 
 	std::vector<std::shared_ptr<cpon_block>> &GetDataBlocks() noexcept { return m_Data; }
 	

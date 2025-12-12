@@ -13,8 +13,6 @@
 Component::Component(_In_ std::string In_Name)
 	: m_Name(In_Name), m_pTransform(nullptr)
 {
-	m_Data = std::make_shared<cpon_object>(0);
-
 }
 
 Component::~Component()
@@ -34,10 +32,6 @@ void Component::FixedUpdate(_In_ double In_FixedTick) noexcept
 {
 }
 
-void Component::ReadWrite(_In_ DataAccessor *In_Data)
-{
-}
-
 void Component::DestroySelf() noexcept
 {
 	m_IsDestroyed = true;
@@ -50,5 +44,15 @@ void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 
 void Component::DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock)
 {
-	In_pCponBlock->AddObject(m_Data);
+	cpon_block::Object Data = std::make_shared<cpon_object>();
+	Data->SetObjectName(m_Name);
+	DataAccessor accessor(Data);
+	SaveLoad(&accessor);
+	In_pCponBlock->AddObject(Data);
+}
+
+void Component::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
+{
+	DataAccessor accessor(In_pCponObj);
+	SaveLoad(&accessor);
 }

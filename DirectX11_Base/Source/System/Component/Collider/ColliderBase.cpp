@@ -28,9 +28,9 @@ ColliderBase::~ColliderBase()
 
 }
 
-void ColliderBase::ReadWrite(_In_ DataAccessor *In_Data)
+void ColliderBase::SaveLoad(_In_ DataAccessor *In_Data)
 {
-	In_Data->Access<bool>(&m_IsTrigger);
+	In_Data->AccessValue<bool>("IsTrigger", & m_IsTrigger);
 }
 
 void ColliderBase::Init() noexcept

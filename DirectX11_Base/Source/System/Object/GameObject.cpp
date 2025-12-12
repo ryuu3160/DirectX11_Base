@@ -17,48 +17,50 @@ GameObject::GameObject(_In_ std::string In_Name)
 	, m_pScene(nullptr), m_IsDestroySelf(false), m_pParent(nullptr)
 	, m_Data(nullptr)
 {
-	// オブジェクト名に応じて、保存ファイルの読み込み
-    std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
-    FilePath path = pathStr;
-	std::fstream file;
-	file.open(path.data(), std::ios::in | std::ios::binary);
-	if (file.is_open())
-	{
-		// ファイルが開けた場合、データを読み込む
-		file.seekg(0, std::ios::end);
-		long fileSize = static_cast<long>(file.tellg());
-		file.seekg(0, std::ios::beg);
-		char *ptr = new char[fileSize];
-		file.read(ptr, fileSize); // ファイルの内容を一括で読み込む
-		m_Datas.push_back({ "data", ptr }); // 一括で読み込んだデータを保存
-		file.close();
+	m_Data = std::make_shared<cpon_object>();
+	m_Data->SetObjectName(m_Name);
+	//// オブジェクト名に応じて、保存ファイルの読み込み
+ //   std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
+ //   FilePath path = pathStr;
+	//std::fstream file;
+	//file.open(path.data(), std::ios::in | std::ios::binary);
+	//if (file.is_open())
+	//{
+	//	// ファイルが開けた場合、データを読み込む
+	//	file.seekg(0, std::ios::end);
+	//	long fileSize = static_cast<long>(file.tellg());
+	//	file.seekg(0, std::ios::beg);
+	//	char *ptr = new char[fileSize];
+	//	file.read(ptr, fileSize); // ファイルの内容を一括で読み込む
+	//	m_Datas.push_back({ "data", ptr }); // 一括で読み込んだデータを保存
+	//	file.close();
 
-		// ゲームオブジェクト内のデータの読み込み
-        // ファイルサイズが十分かどうかをチェックしてからmemcpyを実行
-		if (fileSize >= sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale))
-		{
-			std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
-			std::memcpy(&m_Quat, ptr + sizeof(m_Pos), sizeof(m_Quat));
-			std::memcpy(&m_Scale, ptr + sizeof(m_Pos) + sizeof(m_Quat), sizeof(m_Scale));
-			ptr += sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale);
-		}
-		size_t size = 0;
-		// データのキーと値が保存されている個所へのポインタを取得
-		for (;ptr - m_Datas[0].value < fileSize;ptr += size)
-		{
-			char *data[2]; // キー,値
-			for (int i = 0; i < 2; ++i)
-			{
-				// データサイズ
-				size = *reinterpret_cast<size_t *>(ptr);
-				ptr += sizeof(size);
-				// データ
-				data[i] = ptr;
-				ptr += size;
-			}
-			m_Datas.push_back({ data[0], data[1] });
-		}
-	}
+	//	// ゲームオブジェクト内のデータの読み込み
+ //       // ファイルサイズが十分かどうかをチェックしてからmemcpyを実行
+	//	if (fileSize >= sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale))
+	//	{
+	//		std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
+	//		std::memcpy(&m_Quat, ptr + sizeof(m_Pos), sizeof(m_Quat));
+	//		std::memcpy(&m_Scale, ptr + sizeof(m_Pos) + sizeof(m_Quat), sizeof(m_Scale));
+	//		ptr += sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale);
+	//	}
+	//	size_t size = 0;
+	//	// データのキーと値が保存されている個所へのポインタを取得
+	//	for (;ptr - m_Datas[0].value < fileSize;ptr += size)
+	//	{
+	//		char *data[2]; // キー,値
+	//		for (int i = 0; i < 2; ++i)
+	//		{
+	//			// データサイズ
+	//			size = *reinterpret_cast<size_t *>(ptr);
+	//			ptr += sizeof(size);
+	//			// データ
+	//			data[i] = ptr;
+	//			ptr += size;
+	//		}
+	//		m_Datas.push_back({ data[0], data[1] });
+	//	}
+	//}
 }
 
 GameObject::~GameObject()
@@ -368,8 +370,7 @@ void GameObject::_addComponent(_In_ Component *In_pComponent)
 	if (it == m_Datas.end()) return;
 
 	// 保存されている情報を設定
-	Component::DataAccessor accessor(it->value);
-	In_pComponent->ReadWrite(&accessor);
+	In_pComponent->DataRead(m_Data);
 }
 
 void GameObject::_destroySelf() noexcept
@@ -411,15 +412,24 @@ void GameObject::DataWrite(_In_ cpon *In_pCpon)
 	In_pCpon->AddObject(m_Data);
 }
 
-void GameObject::DataRead()
+void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 {
-	auto block = (*m_Data)[0];
-	auto posArray = block->GetArray<float>("Position");
-	m_Pos = DirectX::XMFLOAT3(posArray[0], posArray[1], posArray[2]);
-	auto quatArray = block->GetArray<float>("Quaternion");
-	m_Quat = DirectX::XMFLOAT4(quatArray[0], quatArray[1], quatArray[2], quatArray[3]);
-	auto scaleArray = block->GetArray<float>("Scale");
-	m_Scale = DirectX::XMFLOAT3(scaleArray[0], scaleArray[1], scaleArray[2]);
+	if(!In_pCponObj || In_pCponObj->IsEmpty())
+		return;
+
+	*m_Data = *In_pCponObj;
+
+	auto block = (*In_pCponObj)[0];
+	auto PosArray = block->GetArrayPtr<float>("Position");
+	auto QuatArray = block->GetArrayPtr<float>("Quaternion");
+	auto ScaleArray = block->GetArrayPtr<float>("Scale");
+
+	if (!PosArray || !QuatArray || !ScaleArray)
+		return;
+
+	m_Pos = DirectX::XMFLOAT3((*PosArray)[0], (*PosArray)[1], (*PosArray)[2]);
+	m_Quat = DirectX::XMFLOAT4((*QuatArray)[0], (*QuatArray)[1], (*QuatArray)[2], (*QuatArray)[3]);
+	m_Scale = DirectX::XMFLOAT3((*ScaleArray)[0], (*ScaleArray)[1], (*ScaleArray)[2]);
 }
 
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)

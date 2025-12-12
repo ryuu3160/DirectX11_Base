@@ -158,7 +158,7 @@ private:
 	void ExecuteDestroyComponents() noexcept;
 
 	void DataWrite(_In_ cpon *In_pCpon);
-	void DataRead();
+	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;

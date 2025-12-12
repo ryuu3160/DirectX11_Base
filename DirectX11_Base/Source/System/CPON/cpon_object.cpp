@@ -48,6 +48,7 @@ cpon_block::Object cpon_block::AddObject(_In_ Object In_Object)
 	std::string key = In_Object->GetObjectName();
 	auto res = this->m_BlockData.try_emplace(std::string(key), In_Object);
 	In_Object->m_NestedLevel = this->m_NestedLevel;
+	In_Object->ResetBlockNestedLevel();
 	if(!res.second)
 		m_BlockData[std::string(key)] = In_Object;
 	else
@@ -106,7 +107,7 @@ void cpon_block::CreateHints(_In_ const std::string_view In_TagName, _In_ DataIt
 		auto array = std::get<cpon_block::Array>(In_Data);
 
 		m_BlockHintsRef += "array";
-		
+
 		if (VariantArrayCheckType<std::string>(array))
 			m_BlockHintsRef += "<string>";
 		else if (VariantArrayCheckType<int>(array))
@@ -156,4 +157,12 @@ void cpon_object::ClearData() noexcept
 	m_Data.clear();
 	m_DataCount = 0;
 	m_BlockHints.clear();
+}
+
+void cpon_object::ResetBlockNestedLevel() noexcept
+{
+	for(auto &block : m_Data)
+	{
+		block->m_NestedLevel = m_NestedLevel + 1;
+	}
 }

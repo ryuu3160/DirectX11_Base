@@ -39,7 +39,7 @@ public:
 	ColliderBase(_In_ std::string In_Name);
 	virtual ~ColliderBase();
 
-	void ReadWrite(_In_ DataAccessor *In_Data) final;
+	void SaveLoad(_In_ DataAccessor *In_Data) final;
 
 	void Init() noexcept override;
 
