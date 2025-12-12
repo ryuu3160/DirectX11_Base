@@ -71,17 +71,6 @@ void SpriteManager::Update() noexcept
 	SpriteController();
 }
 
-void SpriteManager::Draw() noexcept
-{
-	//for (int i = 0; i < _MAX_RENDER_MODE; ++i)
-	//{
-	//	for (auto &itr : m_SpriteObjects[i])
-	//	{
-	//		itr->ExecuteDraw();
-	//	}
-	//}
-}
-
 std::list<GameObject *> SpriteManager::Get2DSprites() noexcept
 {
 	return m_SpriteObjects[_2D];
@@ -102,23 +91,6 @@ GameObject *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName)
 				return itr;
 		}
 	}
-
-	//for(auto &itr : m_Sprites[_2D])
-	//{
-	//	for (auto &sprite : itr.second)
-	//	{
-	//		if (sprite && sprite->GetName() == In_SpriteName.data())
-	//			return sprite;
-	//	}
-	//}
-	//for (auto &itr : m_Sprites[_3D])
-	//{
-	//	for (auto &sprite : itr.second)
-	//	{
-	//		if (sprite && sprite->GetName() == In_SpriteName.data())
-	//			return sprite;
-	//	}
-	//}
 
 	return nullptr;
 }
@@ -143,7 +115,6 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	if (scene == nullptr) return nullptr;
 	// メインのシーンでスプライトオブジェクトを作成
 	std::string name = In_SpriteName.data();
-	name += "_SpriteManager";
 	GameObject *obj = scene->CreateObject<GameObject>(name);
 
 	// オブジェクトを作成できなかった場合はnullptrを返す
@@ -185,7 +156,6 @@ void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noe
 				itr->DestroySelf();
 				m_SpriteObjects[i].remove(itr);
 				std::string name = In_SpriteName.data();
-				name = name.substr(0, name.find_last_of("_SpriteManager") - 13);
 				m_SpriteNames[i].remove(name);
 				return;
 			}
@@ -568,7 +538,6 @@ void SpriteManager::SaveSprites() const noexcept
 			auto SR = itr->GetComponent<SpriteRenderer>();
 			json work;
 			std::string name = itr->GetName();
-			name = name.substr(0, name.find_last_of("_SpriteManager") - 13); // "_SpriteManager"を除いた名前を保存
 			work[Name]["Name"] = name;
 			work[Name]["FilePath"] = SR->GetAssetPath();
 			work[Name]["Position"] = { itr->GetPosition().x, itr->GetPosition().y, itr->GetPosition().z };

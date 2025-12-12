@@ -63,8 +63,6 @@ public:
 	/// </summary>
 	void Update() noexcept;
 
-	void Draw() noexcept;
-
 	/// <summary>
 	/// 操作中ディレクトリの2Dスプライトリストを取得します。
 	/// </summary>
