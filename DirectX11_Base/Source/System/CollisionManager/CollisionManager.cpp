@@ -229,3 +229,78 @@ bool CollisionManager::RegisterObjectToOctree(_In_ ColliderBase *In_Collider) no
 	}
 	return false;
 }
+
+int CollisionManager::GetAllCollisionList(_In_ std::vector<ColliderBase *> &In_ColVect)
+{
+	// リスト（配列）は必ず初期化します
+	In_ColVect.clear();
+
+	// ルート空間の存在をチェック
+	if(m_OctreeCells[0] == nullptr)
+		return 0;	// 空間が存在していない
+
+	// ルート空間を処理
+	std::list<ColliderBase *> ColStac;
+	GetCollisionList(0, In_ColVect, ColStac);
+
+	return static_cast<int>(In_ColVect.size());
+}
+
+bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vector<ColliderBase *> &Inout_ColVect, _Inout_opt_ std::list<ColliderBase *> &Inout_ColStac)
+{
+	std::list<ColliderBase *>::iterator itr;
+	// ① 空間内のオブジェクト同士の衝突リスト作成
+	TreeData* Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
+	while(Tree1 != nullptr)
+	{
+		TreeData* Tree2 = Tree1->GetNextTree();
+		while(Tree2 != nullptr)
+		{
+			// 衝突リスト作成
+			Inout_ColVect.push_back(Tree1->GetCollider());
+			Inout_ColVect.push_back(Tree2->GetCollider());
+			Tree2 = Tree2->GetNextTree();
+		}
+		// ② 衝突スタックとの衝突リスト作成
+		for(itr = Inout_ColStac.begin(); itr != Inout_ColStac.end(); ++itr)
+		{
+			Inout_ColVect.push_back(Tree1->GetCollider());
+			Inout_ColVect.push_back(*itr);
+		}
+		Tree1 = Tree1->GetNextTree();
+	}
+
+	bool ChildFlag = false;
+	// ③ 子空間に移動
+	int ObjNum = 0;
+	int i, NextElem;
+	for(i = 0; i < 8; i++)
+	{
+		NextElem = In_Elem * 8 + 1 + i;
+		if(NextElem < m_MaxCellNum && m_OctreeCells[In_Elem * 8 + 1 + i])
+		{
+			if(!ChildFlag)
+			{
+				// ④ 登録オブジェクトをスタックに追加
+				Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
+				while(Tree1)
+				{
+					Inout_ColStac.push_back(Tree1->GetCollider());
+					ObjNum++;
+					Tree1 = Tree1->GetNextTree();
+				}
+			}
+			ChildFlag = true;
+			GetCollisionList(In_Elem * 8 + 1 + i, Inout_ColVect, Inout_ColStac);	// 子空間へ
+		}
+	}
+
+	// ⑤ スタックからオブジェクトを外す
+	if(ChildFlag)
+	{
+		for(i = 0; i < ObjNum; ++i)
+			Inout_ColStac.pop_back();
+	}
+
+	return true;
+}

@@ -65,9 +65,56 @@ private:
 	// 座標->線形8分木要素番号変換
 	int GetPointElem(_In_ const DirectX::XMFLOAT3 In_Point) const noexcept;
 
+	/// <summary>
+	/// コライダーのモートン番号を取得する関数
+	/// </summary>
+	/// <param name="[In_Collider]">モートン番号を取得する対象のコライダーへのポインタ</param>
+	/// <returns>コライダーが属するモートン番号を返します。</returns>
 	int GetMortonNumberOfCollider(_In_ ColliderBase *In_Collider) noexcept;
 
+	/// <summary>
+	/// オクツリーにオブジェクトを登録する関数
+	/// </summary>
+	/// <param name="[In_Collider]">登録するコライダーへのポインタ</param>
+	/// <returns>登録が成功した場合は true、失敗した場合は false を返します。</returns>
 	bool RegisterObjectToOctree(_In_ ColliderBase *In_Collider) noexcept;
+
+	// 衝突判定リストを作成する
+	int GetAllCollisionList(_In_ std::vector<ColliderBase *> &In_ColVect);
+
+	// 空間内で衝突リストを作成する
+	bool GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vector<ColliderBase *> &Inout_ColVect, _Inout_opt_ std::list<ColliderBase *> &Inout_ColStac);
+
+private:
+
+	struct ColliderPair
+	{
+		ColliderBase *pColliderA;
+		ColliderBase *pColliderB;
+		bool bIsHit;
+		bool bIsHitPrev;
+
+		ColliderPair(_In_ ColliderBase *In_pColl1, _In_ ColliderBase *In_pColl2)
+			: bIsHit(false), bIsHitPrev(false)
+		{
+			if (In_pColl1 < In_pColl2)
+			{
+				pColliderA = In_pColl1;
+				pColliderB = In_pColl2;
+			}
+			else
+			{
+				pColliderA = In_pColl2;
+				pColliderB = In_pColl1;
+			}
+		}
+		~ColliderPair()
+		{
+			pColliderA = nullptr;
+			pColliderB = nullptr;
+		}
+	};
+
 
 private:
 
@@ -85,6 +132,7 @@ private:
 	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
 	std::vector<OctreeCell*> m_OctreeCells; // オクツリーセルの配列
+	std::vector<ColliderPair> m_ColliderPairList; // 衝突判定リスト
 
 	std::vector<ColliderBase *> m_ColliderList; // コライダーリスト
 };

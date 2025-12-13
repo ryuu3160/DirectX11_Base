@@ -55,6 +55,11 @@ public:
 		return m_pCell == In_pCell;
 	}
 
+	inline ColliderBase *GetCollider() const noexcept
+	{
+		return m_pCollider;
+	}
+
 	// ------------------------------
 	// Setter
 	// ------------------------------
