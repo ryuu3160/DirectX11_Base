@@ -20,14 +20,14 @@ SphereCollider::~SphereCollider()
 {
 }
 
-void SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
+bool SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 {
 	// ‘ŠŽè‚ª‚¢‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
 	if (!In_Other)
-		return;
+		return false;
 	// Ž©•ªŽ©g‚Æ‚Í“–‚½‚ç‚È‚¢
 	if (In_Other == this)
-		return;
+		return false;
 
 	switch(In_Other->GetType())
 	{
@@ -37,6 +37,13 @@ void SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 		{
 			m_IsCollision = true;
 			In_Other->SetIsCollision(true);
+			return true;
+		}
+		else
+		{
+			m_IsCollision = false;
+			In_Other->SetIsCollision(false);
+			return false;
 		}
 		break;
 
@@ -45,6 +52,8 @@ void SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 		// –¢ŽÀ‘•
 		break;
 	}
+
+	return false;
 }
 
 bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) const noexcept

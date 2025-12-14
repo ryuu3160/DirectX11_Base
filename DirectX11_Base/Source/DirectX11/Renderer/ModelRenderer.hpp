@@ -48,16 +48,16 @@ public:
 	void SetWriteParam(_In_ const std::shared_ptr<T> &In_Param);
 
 	/// <summary>
-	/// マテリアルシェーダーの使用状態を設定します。
+	/// マテリアルシェーダーの使用状態を設定します
 	/// </summary>
-	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値。</param>
+	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値</param>
 	inline void IsUseMaterialShader(_In_ const bool &In_IsUse) noexcept { m_bUseMaterialShader = In_IsUse; }
 
 	/// <summary>
-	/// 指定されたインデックスのメッシュを取得します。
+	/// 指定されたインデックスのメッシュを取得します
 	/// </summary>
-	/// <param name="[In_Index]">取得したいメッシュのインデックス。</param>
-	/// <returns>インデックスが有効な場合は対応するMeshオブジェクトへのポインタ。無効な場合はnullptrを返します。</returns>
+	/// <param name="[In_Index]">取得したいメッシュのインデックス</param>
+	/// <returns>インデックスが有効な場合は対応するMeshオブジェクトへのポインタ、無効な場合はnullptrを返します</returns>
 	inline const std::shared_ptr<Mesh> GetMesh(_In_ const unsigned int &In_Index) const noexcept
 	{
 		if (In_Index < 0 || m_vecMeshes.size() <= In_Index)
@@ -70,37 +70,43 @@ public:
 	/// <summary>
 	/// メッシュの数を取得します
 	/// </summary>
-	/// <returns>メッシュの数を表す定数参照（unsigned int型）を返します。</returns>
+	/// <returns>メッシュの数を表す定数参照(unsigned int型)を返します</returns>
 	inline const unsigned int &GetMeshNum() const noexcept { return static_cast<uint32_t>(m_vecMeshes.size()); }
 
 
 	/// <summary>
-	/// ファイルを指定されたパスから読み込み、スケールと反転オプションを適用します。
+	/// ファイルを指定されたパスから読み込み、スケールと反転オプションを適用します
 	/// </summary>
-	/// <param name="[In_File]">読み込むファイルのパス。</param>
-	/// <param name="[In_Scale]">適用するスケール係数（デフォルトは1.0f）。</param>
-	/// <param name="[In_IsFlip]">ファイルを反転して読み込むかどうか（デフォルトはfalse）。</param>
-	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します。</returns>
+	/// <param name="[In_File]">読み込むファイルのパス</param>
+	/// <param name="[In_Scale]">適用するスケール係数（デフォルトは1.0f）</param>
+	/// <param name="[In_IsFlip]">ファイルを反転して読み込むかどうか（デフォルトはfalse）</param>
+	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します</returns>
 	bool Load(_In_ const FilePath &In_File, _In_ const float &In_Scale = 1.0f, _In_ const bool &In_IsFlip = false);
 
 	/// <summary>
-	/// 既に設定されているアセットパスとスケールを使用してファイルを読み込みます。
+	/// 既に設定されているアセットパスとスケールを使用してファイルを読み込みます
 	/// </summary>
-	/// <param name="[In_IsFlip]">ロード時にアセットを反転するかどうかを指定します。デフォルトは false です。</param>
-	/// <returns>ロードが成功した場合は true、失敗した場合は false を返します。</returns>
+	/// <param name="[In_IsFlip]">ロード時にアセットを反転するかどうかを指定します</param>
+	/// <returns>ロードが成功した場合はtrue、失敗した場合はfalseを返します</returns>
 	bool Load(_In_ const bool &In_IsFlip = false) { return this->Load(m_AssetPath, m_fScale, In_IsFlip); }
 
 	/// <summary>
-	/// 指定されたテクスチャスロットに描画を行います。
+	/// 指定されたテクスチャスロットに描画を行います
 	/// </summary>
 	void Draw(_In_ RenderContext *In_RenderContext) noexcept override final;
 
 	/// <summary>
-	/// 頂点データを再生成するための関数を呼び出します。
+	/// 頂点データを再生成するための関数を呼び出します
 	/// </summary>
-	/// <param name="[In_VtxSize]">再生成する頂点データのサイズ。</param>
-	/// <param name="[In_Func]">RemakeInfo 構造体への参照を受け取り、頂点データの再生成処理を行うコールバック関数。</param>
+	/// <param name="[In_VtxSize]">再生成する頂点データのサイズ</param>
+	/// <param name="[In_Func]">RemakeInfo構造体への参照を受け取り、頂点データの再生成処理を行うコールバック関数</param>
 	void RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func);
+
+	/// <summary>
+	/// モデル全体のスケールを設定します
+	/// </summary>
+	/// <param name="[In_Scale]">設定するスケール値</param>
+	void SetScale(_In_ const float &In_Scale) noexcept { m_fScale = In_Scale; }
 
 //#if _DEBUG
 //    void Debug(debug::Window *window) final;

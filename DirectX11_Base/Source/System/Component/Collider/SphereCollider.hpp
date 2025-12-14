@@ -26,7 +26,7 @@ public:
 	/// <param name="[In_Radius]">İ’è‚·‚é”¼Œa‚Ì’lB</param>
 	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
 
-	void CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
+	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
 
 private:
 

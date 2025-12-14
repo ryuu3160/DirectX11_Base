@@ -132,6 +132,8 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 	// fps制御
 	if (In_Frame.UpdateMain())
 	{
+		auto &CollM = CollisionManager::GetInstance();
+
 		float DeltaTime = In_Frame.GetTick() * In_Frame.GetTimeScale();
 		double FixedDeltaTime = In_Frame.GetFixedDeltaTime();
 		In_Frame.AddAccumulatedTime(DeltaTime);
@@ -150,6 +152,9 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 
 			// 固定刻みで物理更新（衝突検出・解決を含む）
 			FixedUpdate(FixedDeltaTime);
+
+			// 当たり判定処理
+			CollM.CheckAllCollisions();
 
 			// 衝突イベントをキューに貯める場合はここでキューへ追加
 			//EnqueueCollisionEvents();

@@ -47,7 +47,7 @@ public:
 
 	void FixedUpdate(_In_ double In_FixedTick) noexcept override;
 
-	virtual void CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
+	virtual bool CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
 
 	ColliderType GetType() const noexcept { return m_Type; }
 

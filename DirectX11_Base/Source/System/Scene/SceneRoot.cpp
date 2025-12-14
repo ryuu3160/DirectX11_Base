@@ -54,6 +54,7 @@ void SceneRoot::Init()
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
 	pModel->SetPosition({ 0.0f, 1.0f, 0.0f });
+	pModel->AddComponent<SphereCollider>();
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();
@@ -69,6 +70,7 @@ void SceneRoot::Init()
 	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+	Component2->SetScale(0.005f);
 	pModel2->AddComponent<SphereCollider>();
 
 	// F15Eの移動処理
@@ -98,7 +100,7 @@ void SceneRoot::Init()
 		});
 
 	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
-	pModel2->SetScale({ 0.005f, 0.005f, 0.005f });
+	pModel2->SetScale({ 1.0f, 1.0f, 1.0f });
 
 	// スカイボックスを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");

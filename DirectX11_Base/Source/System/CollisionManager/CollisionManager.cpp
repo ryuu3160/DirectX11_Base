@@ -44,7 +44,7 @@ void CollisionManager::InitOctreeSpace(_In_ const DirectX::XMFLOAT3 In_LeftTopFr
 	// 割る数は分割数から1を引いた値。等比数列を利用して求める。
 	int denom = cx_DivisionNumber - 1;
 	m_MaxCellNum = (m_Pow[In_Level + 1] - 1) / denom;
-	m_OctreeCells.reserve(m_MaxCellNum);
+	m_OctreeCells.resize(m_MaxCellNum);
 
 	// 有効領域を登録
 	// 左上手前の座標と幅、高さ、深度を保持
@@ -76,14 +76,10 @@ void CollisionManager::AddColliderComponent(_In_ ColliderBase *In_Collider) noex
 
 void CollisionManager::RemoveColliderComponent(_In_ ColliderBase *In_Collider)
 {
+	// 衝突ペアリストから削除
+	RemoveColliderPair(In_Collider);
 	// コライダーリストから削除
 	In_Collider->GetTreeData()->Remove();
-
-	auto itr = std::find(m_ColliderList.begin(), m_ColliderList.end(), In_Collider);
-	if(itr != m_ColliderList.end())
-	{
-		m_ColliderList.erase(itr);
-	}
 }
 
 void CollisionManager::UpdateCollisionCells(_In_ ColliderBase *In_Collider)
@@ -101,17 +97,43 @@ void CollisionManager::UpdateCollisionCells(_In_ ColliderBase *In_Collider)
 
 void CollisionManager::CheckAllCollisions() noexcept
 {
-	for(int i = 0; i < static_cast<int>(m_ColliderList.size()); ++i)
+	ColliderPairSet ColPairs;
+	int ColNum = 0;
+	// 衝突判定リストを作成する
+	ColNum = GetAllCollisionList(ColPairs);
+
+	// 既に登録されているペアを更新
+	m_ColliderPairList.merge(ColPairs);
+
+	// コライダー同士の当たり判定をチェック
+	for(auto itr = m_ColliderPairList.begin(); itr != m_ColliderPairList.end();)
 	{
-		for(int j = i + 1; j < static_cast<int>(m_ColliderList.size()); ++j)
+		if(itr->first.pColliderA->CheckCollision(itr->first.pColliderB))
 		{
-			// コライダー同士の当たり判定をチェック
-			m_ColliderList[i]->CheckCollision(m_ColliderList[j]);
+			// 前回も当たっていた場合は継続フラグを立てる
+			if(itr->second.bIsHit)
+			{
+				itr->second.bIsHitPrev = true;
+			}
+			else
+			{
+				itr->second.bIsHit = true;
+			}
+			++itr;
+		}
+		else
+		{
+			// 前回も当たっていなかった場合はPrevフラグもリセット
+			if(!itr->second.bIsHit)
+			{
+				itr->second.bIsHitPrev = false;
+			}
+			// 当たっていなかった場合はフラグをリセット
+			itr->second.bIsHit = false;
+
+			itr = m_ColliderPairList.erase(itr);
 		}
 	}
-
-	// チェックが終わったらリストをクリア
-	m_ColliderList.clear();
 }
 
 CollisionManager::CollisionManager()
@@ -230,10 +252,10 @@ bool CollisionManager::RegisterObjectToOctree(_In_ ColliderBase *In_Collider) no
 	return false;
 }
 
-int CollisionManager::GetAllCollisionList(_In_ std::vector<ColliderBase *> &In_ColVect)
+int CollisionManager::GetAllCollisionList(_In_ ColliderPairSet &In_ColPairs)
 {
 	// リスト（配列）は必ず初期化します
-	In_ColVect.clear();
+	In_ColPairs.clear();
 
 	// ルート空間の存在をチェック
 	if(m_OctreeCells[0] == nullptr)
@@ -241,12 +263,12 @@ int CollisionManager::GetAllCollisionList(_In_ std::vector<ColliderBase *> &In_C
 
 	// ルート空間を処理
 	std::list<ColliderBase *> ColStac;
-	GetCollisionList(0, In_ColVect, ColStac);
+	GetCollisionList(0, In_ColPairs, ColStac);
 
-	return static_cast<int>(In_ColVect.size());
+	return static_cast<int>(In_ColPairs.size());
 }
 
-bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vector<ColliderBase *> &Inout_ColVect, _Inout_opt_ std::list<ColliderBase *> &Inout_ColStac)
+bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairSet &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac)
 {
 	std::list<ColliderBase *>::iterator itr;
 	// ① 空間内のオブジェクト同士の衝突リスト作成
@@ -257,15 +279,18 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vecto
 		while(Tree2 != nullptr)
 		{
 			// 衝突リスト作成
-			Inout_ColVect.push_back(Tree1->GetCollider());
-			Inout_ColVect.push_back(Tree2->GetCollider());
+			// unordered_setを使って重複登録を防止
+			ColliderPairKey Pair(Tree1->GetCollider(), Tree2->GetCollider());
+			ColliderPairInfo Info;
+			Inout_ColPairs.emplace(Pair,Info);
 			Tree2 = Tree2->GetNextTree();
 		}
 		// ② 衝突スタックとの衝突リスト作成
 		for(itr = Inout_ColStac.begin(); itr != Inout_ColStac.end(); ++itr)
 		{
-			Inout_ColVect.push_back(Tree1->GetCollider());
-			Inout_ColVect.push_back(*itr);
+			ColliderPairKey Pair(Tree1->GetCollider(), *itr);
+			ColliderPairInfo Info;
+			Inout_ColPairs.emplace(Pair, Info);
 		}
 		Tree1 = Tree1->GetNextTree();
 	}
@@ -277,6 +302,10 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vecto
 	for(i = 0; i < 8; i++)
 	{
 		NextElem = In_Elem * 8 + 1 + i;
+
+		if(m_OctreeCells.size() <= static_cast<size_t>(NextElem))
+			continue;
+
 		if(NextElem < m_MaxCellNum && m_OctreeCells[In_Elem * 8 + 1 + i])
 		{
 			if(!ChildFlag)
@@ -291,7 +320,7 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vecto
 				}
 			}
 			ChildFlag = true;
-			GetCollisionList(In_Elem * 8 + 1 + i, Inout_ColVect, Inout_ColStac);	// 子空間へ
+			GetCollisionList(In_Elem * 8 + 1 + i, Inout_ColPairs, Inout_ColStac);	// 子空間へ
 		}
 	}
 
@@ -303,4 +332,16 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vecto
 	}
 
 	return true;
+}
+
+void CollisionManager::RemoveColliderPair(_In_ ColliderBase *In_Collider)
+{
+	// 指定されたコライダーに関連するペアをすべて削除
+	for(auto itr = m_ColliderPairList.begin(); itr != m_ColliderPairList.end(); )
+	{
+		if(itr->first.pColliderA == In_Collider || itr->first.pColliderB == In_Collider)
+			itr = m_ColliderPairList.erase(itr);
+		else
+			++itr;
+	}
 }

@@ -53,6 +53,50 @@ public:
 	void CheckAllCollisions() noexcept;
 
 private:
+
+	struct ColliderPairKey
+	{
+		ColliderBase *pColliderA;
+		ColliderBase *pColliderB;
+
+		ColliderPairKey(_In_ ColliderBase *In_pColl1, _In_ ColliderBase *In_pColl2)
+		{
+			if(In_pColl1 < In_pColl2)
+			{
+				pColliderA = In_pColl1;
+				pColliderB = In_pColl2;
+			}
+			else
+			{
+				pColliderA = In_pColl2;
+				pColliderB = In_pColl1;
+			}
+		}
+		bool operator==(_In_ const ColliderPairKey &In_Other) const noexcept
+		{
+			return (pColliderA == In_Other.pColliderA) && (pColliderB == In_Other.pColliderB);
+		}
+	};
+	struct ColliderPairHash
+	{
+		size_t operator()(_In_ ColliderPairKey const &In_CollPair) const noexcept
+		{
+			// ColliderBaseへのポインタをuintptr_tに変換してハッシュ合成
+			auto ha = std::hash<uintptr_t>()(reinterpret_cast<uintptr_t>(In_CollPair.pColliderA));
+			auto hb = std::hash<uintptr_t>()(reinterpret_cast<uintptr_t>(In_CollPair.pColliderB));
+			return ha ^ (hb + 0x9e3779b97f4a7c15ULL + (ha << 6) + (ha >> 2));
+		}
+	};
+
+	struct ColliderPairInfo
+	{
+		bool bIsHit = false;
+		bool bIsHitPrev = false;
+	};
+
+	using ColliderPairSet = std::unordered_map<ColliderPairKey, ColliderPairInfo, ColliderPairHash>;
+
+private:
 	CollisionManager();
 	~CollisionManager();
 
@@ -80,41 +124,16 @@ private:
 	bool RegisterObjectToOctree(_In_ ColliderBase *In_Collider) noexcept;
 
 	// 衝突判定リストを作成する
-	int GetAllCollisionList(_In_ std::vector<ColliderBase *> &In_ColVect);
+	int GetAllCollisionList(_In_ ColliderPairSet &In_ColPairs);
 
 	// 空間内で衝突リストを作成する
-	bool GetCollisionList(_In_ int In_Elem, _Inout_opt_ std::vector<ColliderBase *> &Inout_ColVect, _Inout_opt_ std::list<ColliderBase *> &Inout_ColStac);
-
-private:
-
-	struct ColliderPair
-	{
-		ColliderBase *pColliderA;
-		ColliderBase *pColliderB;
-		bool bIsHit;
-		bool bIsHitPrev;
-
-		ColliderPair(_In_ ColliderBase *In_pColl1, _In_ ColliderBase *In_pColl2)
-			: bIsHit(false), bIsHitPrev(false)
-		{
-			if (In_pColl1 < In_pColl2)
-			{
-				pColliderA = In_pColl1;
-				pColliderB = In_pColl2;
-			}
-			else
-			{
-				pColliderA = In_pColl2;
-				pColliderB = In_pColl1;
-			}
-		}
-		~ColliderPair()
-		{
-			pColliderA = nullptr;
-			pColliderB = nullptr;
-		}
-	};
-
+	bool GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairSet &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac);
+	
+	/// <summary>
+	/// 指定したコライダーに関連する衝突ペアを削除する関数
+	/// </summary>
+	/// <param name="[In_Collider]">削除するコライダーのポインタ</param>
+	void RemoveColliderPair(_In_ ColliderBase *In_Collider);
 
 private:
 
@@ -132,7 +151,5 @@ private:
 	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
 	std::vector<OctreeCell*> m_OctreeCells; // オクツリーセルの配列
-	std::vector<ColliderPair> m_ColliderPairList; // 衝突判定リスト
-
-	std::vector<ColliderBase *> m_ColliderList; // コライダーリスト
+	ColliderPairSet m_ColliderPairList; // 衝突判定リスト
 };
