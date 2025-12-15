@@ -199,7 +199,6 @@ void SkyBoxRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	}
 
 	// 深度テストの状態を元に戻す
-	auto now = Dx11.GetNowDepthState();
 	Dx11.SetDepthTest(PrevDepth);
 	Dx11.SetCullingMode(D3D11_CULL_BACK);
 	Dx11.SetRenderTargets(1, &rtv, dsv);

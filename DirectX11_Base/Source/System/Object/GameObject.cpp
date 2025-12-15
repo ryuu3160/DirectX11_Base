@@ -457,6 +457,7 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 			}
 		});
 	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+	In_pWindow->CreateItem<ItemBind>("IsActive", DebugItem::Kind::Bool, &m_IsActive);
 
 	// コンポーネントのインスペクター登録
 	for (auto &itr : m_Components)

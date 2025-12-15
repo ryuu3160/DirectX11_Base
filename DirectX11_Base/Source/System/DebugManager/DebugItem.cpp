@@ -344,6 +344,7 @@ void ItemText::DrawImGui()
 // ==============================
 
 ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
+	: m_IsString(false)
 {
 	m_Name = In_Name;
 
@@ -355,6 +356,12 @@ ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Pt
 
 	m_Kind = In_Kind;
 	m_vPtr = In_Ptr;
+}
+
+ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ std::string *In_Ptr)
+	: ItemBind(In_Name, In_Kind, static_cast<void *>(In_Ptr))
+{
+	m_IsString = true;
 }
 
 ItemBind::~ItemBind()
@@ -375,36 +382,69 @@ void ItemBind::DrawImGui()
 	break;
 		// チェックフラグの表示
 	case DebugItem::Bool:
-		ImGui::Checkbox(m_Name.c_str(), this->GetPtr<bool>());
+		if(ImGui::Checkbox(m_Name.c_str(), this->GetPtr<bool>()))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 整数項目の表示
 	case DebugItem::Int:
-		ImGui::InputInt(m_Name.c_str(), this->GetPtr<int>());
+		if(ImGui::InputInt(m_Name.c_str(), this->GetPtr<int>()))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 小数項目の表示
 	case DebugItem::Float:
-		ImGui::InputFloat(m_Name.c_str(), this->GetPtr<float>());
+		if(ImGui::InputFloat(m_Name.c_str(), this->GetPtr<float>()))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 2Dベクトル項目の表示
 	case DebugItem::Float2:
-		ImGui::InputFloat2(m_Name.c_str(), this->GetPtr<float>(), "%.2f");
+		if(ImGui::InputFloat2(m_Name.c_str(), this->GetPtr<float>(), "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// ベクトル項目の表示
 	case DebugItem::Vector:
-		ImGui::InputFloat3(m_Name.c_str(), this->GetPtr<float>(), "%.2f");
+		if(ImGui::InputFloat3(m_Name.c_str(), this->GetPtr<float>(), "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 色項目の表示
 	case DebugItem::Color:
-		ImGui::ColorEdit4(m_Name.c_str(), this->GetPtr<float>());
+		if(ImGui::ColorEdit4(m_Name.c_str(), this->GetPtr<float>()))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// パス項目の表示
 	case DebugItem::Path:
 		// 紐づけ項目の表示
-		ImGui::InputText(m_Name.c_str(), this->GetPtr<char>(), MAX_PATH);
+		if(ImGui::InputText(m_Name.c_str(), this->GetPtr<char>(), MAX_PATH))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 	default:
 		break;
 	}
+}
+
+void ItemBind::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
+{
+	m_Notice = In_NoticeFunc;
 }
 
 // ==============================

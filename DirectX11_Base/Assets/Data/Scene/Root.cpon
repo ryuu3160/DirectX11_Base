@@ -1,7 +1,7 @@
 #ObjNum : 9
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]3.7599888, 6.6266828, -8.372694
-  Quaternion:[4]0.28624043, -0.21929027, 0.12708674, 0.92401737
+  Position:[3]5.988664, 6.8267217, -5.8735685
+  Quaternion:[4]0.21579951, -0.36749664, 0.10303433, 0.8987143
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -13,17 +13,19 @@ EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
     Focus:1
     IsShow:false
 
-RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
   Position:[3]0, 1, 0
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
 
 RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object,InputSystem:object}:
-  Position:[3]-3, 0, 0
+  Position:[3]-2, 0, 0
   Quaternion:[4]0, 0, 0, 1
-  Scale:[3]0.005, 0.005, 0.005
+  Scale:[3]1, 1, 1
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/F15E.fbx
   SphereCollider:[1]{IsTrigger:bool}:
@@ -38,7 +40,7 @@ RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<floa
     AssetPath:Assets/Model/spot/spot.fbx
 
 SkyBoxObj[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]3.7599888, 6.6266828, -8.372694
+  Position:[3]5.988664, 6.8267217, -5.8735685
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   SkyBoxRenderer:[1]{AssetPath:string}:
@@ -72,7 +74,7 @@ RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTS
   RTSpriteRenderer:[1]{AssetPath:string}:
     AssetPath:
 
-test_SpriteManager[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SpriteRenderer:object}:
+test[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SpriteRenderer:object}:
   Position:[3]1.8914125, 0.6160152, 0
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1

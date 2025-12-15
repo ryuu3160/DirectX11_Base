@@ -165,7 +165,8 @@ private:
 class ItemBind : public DebugItem
 {
 public:
-	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void* In_Ptr);
+	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr);
+	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ std::string* In_Ptr);
 	~ItemBind();
 
 	void DrawImGui() override;
@@ -176,8 +177,22 @@ public:
 		return reinterpret_cast<T *>(m_vPtr);
 	}
 
+	template<typename T>
+	requires std::is_same_v<T,char>
+	T *GetPtr()
+	{
+		if(m_IsString)
+			return reinterpret_cast<T *>(static_cast<std::string *>(m_vPtr)->data());
+		else
+			return reinterpret_cast<T *>(m_vPtr);
+	}
+
+	void SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept;
+
 private:
 	void *m_vPtr;
+	bool m_IsString;
+	std::function<void()> m_Notice;
 };
 
 class ItemCallback : public DebugItem

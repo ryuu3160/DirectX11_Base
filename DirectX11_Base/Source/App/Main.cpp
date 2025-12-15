@@ -74,17 +74,6 @@ HRESULT Main::Init()
 	};
 	ShaderManager::GetInstance().SetupShaders(shaders);
 
-	// Input用のカスタムウィンドウプロシージャを登録
-	Instance.AddCustomProc(Input::InputCustomProc);
-
-	// 衝突空間の初期化
-	CollM.InitOctreeSpace(DirectX::XMFLOAT3(-1000.0f, 2000.0f, -1000.0f), DirectX::XMFLOAT3(1000.0f, 0.0f, 1000.0f), 6);
-
-	// シーンの初期化
-	auto &SceneM = SceneManager::GetInstance();
-	auto pScene = SceneM.Init<SceneRoot>();
-	SceneM.SceneObjectsInit();
-
 	// 初期リソース作成
 	auto [RTV,DSV] = RenderTargetManager::GetInstance().InitializeDefaultResources(Instance.GetWidth(), Instance.GetHeight());
 
@@ -95,6 +84,17 @@ HRESULT Main::Init()
 	}
 
 	DX11_Core::GetInstance().SetRenderTargets(1, &RTV, DSV);
+
+	// Input用のカスタムウィンドウプロシージャを登録
+	Instance.AddCustomProc(Input::InputCustomProc);
+
+	// 衝突空間の初期化
+	CollM.InitOctreeSpace(DirectX::XMFLOAT3(-10000.0f, 10000.0f, -10000.0f), DirectX::XMFLOAT3(10000.0f, -10000.0f, 10000.0f), 6);
+
+	// シーンの初期化
+	auto &SceneM = SceneManager::GetInstance();
+	auto pScene = SceneM.Init<SceneRoot>();
+	SceneM.SceneObjectsInit();
 
 	// メインのレンダーコンテキスト作成
 	Camera *CameraCmp = nullptr;
@@ -163,9 +163,6 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 			++Steps;
 		}
 
-		DebugManager::GetInstance().DebugLog("DeltaTime: {:.6f}", DeltaTime);
-		DebugManager::GetInstance().DebugLogWarning("hoge");
-		DebugManager::GetInstance().DebugLogError("Error Test!");
 		Update(DeltaTime);	// 更新処理
 		// シーン切り替えの更新
 		SceneManager::GetInstance().UpdateSceneChange();

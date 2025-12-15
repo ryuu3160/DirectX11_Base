@@ -142,7 +142,7 @@ void RenderManager::DrawAll() noexcept
 		if(!ctx->second->IsMainContext())
 		{
 			// メインコンテキスト以外ではクリア処理を実行
-			float color[4] = { 1.0f,1.0f,1.0f,1.0f };
+			float color[4] = { 0.0f,0.0f,0.0f,0.0f };
 			rtv->Clear(color);
 			dsv->Clear();
 		}
@@ -160,7 +160,7 @@ void RenderManager::DrawAll() noexcept
 			for (auto &itr : layer.second)
 			{
 				// RenderComopnentがnullptrじゃない場合のみDrawを呼び出す
-				if (itr)
+				if (itr && itr->GetGameObject()->IsActive())
 					itr->Draw(ctx->second);
 			}
 		}
@@ -219,6 +219,7 @@ void RenderManager::ExecuteLayerGroupSort() noexcept
 				*layer = nullptr; // 移動元の要素をnullptrに設定
 				RemoveRenderComponentRequest(itr); // 削除も要求
 				LayerSortRequest(NewGroup); // レイヤーソートも要求
+				layer = m_RenderComponents[itr].erase(layer); // イテレータを更新して次へ
 			}
 			else
 			{

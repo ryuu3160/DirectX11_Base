@@ -89,8 +89,19 @@ public:
 	virtual void Draw(_In_ RenderContext *In_RenderContext) noexcept = 0;
 
 protected:
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
+
+private:
+	
+	void CheckLayerGroupChange();
+	void CallLayerSortRequest();
+
+protected:
 	FilePathHold m_AssetPath;				// アセットパス
 	LayerGroup m_LayerGroup;				// レイヤーグループ
+	LayerGroup m_PrevLayerGroup;			// 前回のレイヤーグループ
 	int m_nLayer;							// レイヤー番号
 
 	std::shared_ptr<Shader> m_defVS;	// デフォルトの頂点シェーダー

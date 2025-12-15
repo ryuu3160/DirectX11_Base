@@ -42,7 +42,8 @@ public:
 		{
 			if (m_IsWrite)
 			{
-				(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
+				if(Inout_Value != nullptr)
+					(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
 			}
 			else
 			{
