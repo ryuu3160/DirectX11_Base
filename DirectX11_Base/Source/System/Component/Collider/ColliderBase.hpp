@@ -65,6 +65,11 @@ public:
 	TreeData *GetTreeData() noexcept { return m_pTreeData.get(); }
 
 protected:
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
+
+protected:
 	std::shared_ptr<TreeData> m_pTreeData; // オクツリー用データ
 	ColliderType m_Type; // コライダーの形状
 	bool m_IsTrigger; // トリガーかどうか

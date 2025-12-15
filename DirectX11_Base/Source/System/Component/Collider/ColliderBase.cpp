@@ -11,6 +11,7 @@
 #include "ColliderBase.hpp"
 #include "System/CollisionManager/CollisionManager.hpp"
 #include "System/CollisionManager/TreeData.hpp"
+#include "System/DebugManager/DebugItem.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
@@ -45,3 +46,11 @@ void ColliderBase::FixedUpdate(_In_ double In_FixedTick) noexcept
 {
 	m_CollisionManager.UpdateCollisionCells(this);
 }
+
+#ifdef _DEBUG
+void ColliderBase::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>(m_Name);
+	group->CreateGroupItem<ItemBind>("IsTrigger", DebugItem::Kind::Bool, &m_IsTrigger);
+}
+#endif
