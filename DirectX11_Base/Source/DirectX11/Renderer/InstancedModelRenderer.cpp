@@ -31,7 +31,7 @@ InstancedModelRenderer::InstancedModelRenderer()
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
-	, m_pShaderParams{}
+	, m_pShaderParamsPS{}, m_pShaderParamsVS{}
 	, m_AlignInstanceData{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
@@ -43,13 +43,15 @@ InstancedModelRenderer::InstancedModelRenderer()
 
 	m_vecMeshes.clear();
 
-	m_pShaderParams.clear();
+	m_pShaderParamsPS.clear();
+	m_pShaderParamsVS.clear();
 }
 
 InstancedModelRenderer::~InstancedModelRenderer()
 {
 	m_vecMeshes.clear();
-	m_pShaderParams.clear();
+	m_pShaderParamsPS.clear();
+	m_pShaderParamsVS.clear();
 }
 
 void InstancedModelRenderer::Update(_In_ float In_Tick) noexcept
@@ -148,12 +150,14 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 			{
 				pVS->WriteBuffer(0, mat);
 				pVS->SetInstanceSRV(itr->GetMesh()->GetInstanceSRV());
+				// ToDo: マテリアルごとのシェーダーにパラメーターを書き込む
+
 				pVS->Bind();
 			}
 			if (pPS)
 			{
 				// マテリアルごとのシェーダーにパラメーターを書き込む
-				for (auto &PsPara : m_pShaderParams)
+				for (auto &PsPara : m_pShaderParamsPS)
 				{
 					std::string_view name = PsPara->GetParamName();
 					int slot = PsPara->GetSlotNum();
@@ -169,7 +173,7 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 				}
 
 				pPS->Bind();
-				m_pShaderParams.clear();
+				m_pShaderParamsPS.clear();
 			}
 		}
 		else
@@ -178,10 +182,20 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 			// 1つ目の引数はバッファの番号
 			m_pVS->WriteBuffer(0, mat);
 			m_pVS->SetInstanceSRV(itr->GetMesh()->GetInstanceSRV());
+
+			// 設定されたパラメーターをVSに書き込む
+			for (auto &itr : m_pShaderParamsVS)
+			{
+				if (itr)
+				{
+					m_pVS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
+				}
+			}
 			m_pVS->Bind();
+			m_pShaderParamsVS.clear();
 
 			// 設定されたパラメーターをPSに書き込む
-			for (auto &itr : m_pShaderParams)
+			for (auto &itr : m_pShaderParamsPS)
 			{
 				if (itr)
 				{
@@ -189,7 +203,7 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 				}
 			}
 			m_pPS->Bind();
-			m_pShaderParams.clear();
+			m_pShaderParamsPS.clear();
 		}
 
 		// 設定されているテクスチャをシェーダーに設定

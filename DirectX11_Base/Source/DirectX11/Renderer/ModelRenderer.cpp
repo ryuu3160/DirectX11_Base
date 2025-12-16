@@ -32,7 +32,7 @@ ModelRenderer::ModelRenderer()
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
 	, m_bUseMaterialShader(false)
-	, m_pShaderParams{}
+	, m_pShaderParamsPS{}, m_pShaderParamsVS{}
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
@@ -43,12 +43,14 @@ ModelRenderer::ModelRenderer()
 
 	m_vecMeshes.clear();
 
-	m_pShaderParams.clear();
+	m_pShaderParamsPS.clear();
+	m_pShaderParamsVS.clear();
 }
 
 ModelRenderer::~ModelRenderer()
 {
-	m_pShaderParams.clear();
+	m_pShaderParamsPS.clear();
+	m_pShaderParamsVS.clear();
 	m_vecMeshes.clear();
 }
 
@@ -143,19 +145,27 @@ void ModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 		// 1つ目の引数はバッファの番号
 		m_pVS->WriteBuffer(0, mat);
 
+		// 設定されたパラメーターをVSに書き込む
+		for (auto &itr : m_pShaderParamsVS)
+		{
+			if (itr)
+			{
+				m_pVS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
+			}
+		}
 		m_pVS->Bind();
+		m_pShaderParamsVS.clear();
 
 		// 設定されたパラメーターをPSに書き込む
-		for (auto &itr : m_pShaderParams)
+		for (auto &itr : m_pShaderParamsPS)
 		{
 			if (itr)
 			{
 				m_pPS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
-				// パラメーターの解放
 			}
 		}
 		m_pPS->Bind();
-		m_pShaderParams.clear();
+		m_pShaderParamsPS.clear();
 	}
 
 	for (auto &itr : m_vecMeshes)
@@ -168,12 +178,14 @@ void ModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 			if (pVS)
 			{
 				pVS->WriteBuffer(0, mat);
+				// ToDo: マテリアルごとのVSにパラメーターを書き込む
+
 				pVS->Bind();
 			}
 			if (pPS)
 			{
 				// マテリアルごとのシェーダーにパラメーターを書き込む
-				for (auto &PsPara : m_pShaderParams)
+				for (auto &PsPara : m_pShaderParamsPS)
 				{
 					std::string_view name = PsPara->GetParamName();
 					int slot = PsPara->GetSlotNum();
@@ -189,7 +201,7 @@ void ModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 				}
 
 				pPS->Bind();
-				m_pShaderParams.clear();
+				m_pShaderParamsPS.clear();
 			}
 		}
 
