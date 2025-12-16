@@ -238,6 +238,16 @@ HRESULT DX11_Core::Init()
 	return m_hr;
 }
 
+void DX11_Core::BeginDraw() const
+{
+	auto &RTVManager = RenderTargetManager::GetInstance();
+	auto rtv = RTVManager.GetDefaultRTV();
+	auto dsv = RTVManager.GetDefaultDSV();
+
+	GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), &m_WindowColor.x);
+	GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
 void DX11_Core::Swap()
 {
 	// ï`âÊäÆóπéûÇ…âÊñ Ç÷èoóÕ
@@ -263,38 +273,38 @@ DepthState DX11_Core::GetNowDepthState() const noexcept
 
 void DX11_Core::SetWindowColor(_In_ const float &In_fR, _In_ const float &In_fG, _In_ const float &In_fB, _In_ const float &In_fA) noexcept
 {
-	m_WindowColor[0] = In_fR;
-	m_WindowColor[1] = In_fG;
-	m_WindowColor[2] = In_fB;
-	m_WindowColor[3] = In_fA;
+	m_WindowColor.x = In_fR;
+	m_WindowColor.y = In_fG;
+	m_WindowColor.z = In_fB;
+	m_WindowColor.w = In_fA;
 }
 
 void DX11_Core::SetWindowColor(_In_ const DirectX::XMFLOAT4 &In_arrRgba) noexcept
 {
-	m_WindowColor[0] = In_arrRgba.x;
-	m_WindowColor[1] = In_arrRgba.y;
-	m_WindowColor[2] = In_arrRgba.z;
-	m_WindowColor[3] = In_arrRgba.w;
+	m_WindowColor.x = In_arrRgba.x;
+	m_WindowColor.y = In_arrRgba.y;
+	m_WindowColor.z = In_arrRgba.z;
+	m_WindowColor.w = In_arrRgba.w;
 }
 
 void DX11_Core::SetWindowColor_R(_In_ const float &In_fR) noexcept
 {
-	m_WindowColor[0] = In_fR;
+	m_WindowColor.x = In_fR;
 }
 
 void DX11_Core::SetWindowColor_G(_In_ const float &In_fG) noexcept
 {
-	m_WindowColor[1] = In_fG;
+	m_WindowColor.y = In_fG;
 }
 
 void DX11_Core::SetWindowColor_B(_In_ const float &In_fB) noexcept
 {
-	m_WindowColor[2] = In_fB;
+	m_WindowColor.z = In_fB;
 }
 
 void DX11_Core::SetWindowColor_A(_In_ const float &In_fA) noexcept
 {
-	m_WindowColor[3] = In_fA;
+	m_WindowColor.w = In_fA;
 }
 
 void DX11_Core::_SetRefreshRate_Numerator(_In_ const UINT &In_unNum) noexcept

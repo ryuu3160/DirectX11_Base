@@ -1,7 +1,7 @@
 #ObjNum : 9
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]5.988664, 6.8267217, -5.8735685
-  Quaternion:[4]0.21579951, -0.36749664, 0.10303433, 0.8987143
+  Quaternion:[4]0.104179755, -0.36826283, 0.058296874, 0.9219852
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true

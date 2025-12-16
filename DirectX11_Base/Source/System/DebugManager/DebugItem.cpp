@@ -44,84 +44,77 @@ DebugItem::Kind DebugItem::GetKind() const
 	return m_Kind;
 }
 
-bool DebugItem::GetBool() const
+bool DebugItem::GetBool()
 {
 	if (m_Kind == Kind::Bool)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if(ptr)
 			return std::get<bool>(ptr->GetValue());
 	}
 	return false;
 }
 
-int DebugItem::GetInt() const
+int DebugItem::GetInt()
 {
 	if (m_Kind == Kind::Int)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if (ptr)
 			return std::get<int>(ptr->GetValue());
 	}
 	return 0;
 }
 
-float DebugItem::GetFloat() const
+float DebugItem::GetFloat()
 {
 	if (m_Kind == Kind::Float)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if (ptr)
 			return std::get<float>(ptr->GetValue());
 	}
 	return 0.0f;
 }
 
-DirectX::XMFLOAT2 DebugItem::GetVector2() const
+DirectX::XMFLOAT2 DebugItem::GetVector2()
 {
 	if(m_Kind == Kind::Float2)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if(ptr)
 			return std::get<DirectX::XMFLOAT2>(ptr->GetValue());
 	}
 	return DirectX::XMFLOAT2{};
 }
 
-DirectX::XMFLOAT3 DebugItem::GetVector() const
+DirectX::XMFLOAT3 DebugItem::GetVector()
 {
 	if (m_Kind == Kind::Vector)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if(ptr)
 			return std::get<DirectX::XMFLOAT3>(ptr->GetValue());
 	}
 	return DirectX::XMFLOAT3{};
 }
 
-DirectX::XMFLOAT4 DebugItem::GetColor() const
+DirectX::XMFLOAT4 DebugItem::GetColor()
 {
 	if (m_Kind == Kind::Color)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if(ptr)
 			return std::get<DirectX::XMFLOAT4>(ptr->GetValue());
 	}
 	return DirectX::XMFLOAT4{};
 }
 
-std::string DebugItem::GetStr() const
+std::string DebugItem::GetStr()
 {
 	if (m_Kind == Label || m_Kind == Path)
 	{
-		auto me = *this;
-		auto ptr = dynamic_cast<ItemValue *>(&me);
+		auto ptr = dynamic_cast<ItemValue *>(this);
 		if(ptr)
 			return std::get<std::string>(ptr->GetValue());
 	}
@@ -214,7 +207,7 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 
 
 ItemValue::ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave)
-	: m_Value(), m_IsSave(In_IsSave)
+	: m_Value(), m_IsSave(In_IsSave), m_Notice(nullptr)
 {
 	m_Name = In_Name;
 
@@ -225,6 +218,30 @@ ItemValue::ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_I
 	}
 
 	m_Kind = In_Kind;
+
+	switch(m_Kind)
+	{
+	case Kind::Label:
+	case Kind::Path:
+	case Kind::InputStr:
+		m_Value = std::string{};
+		break;
+	case Kind::Bool:
+		m_Value = false;
+		break;
+	case Kind::Int:
+		m_Value = 0;
+		break;
+	case Kind::Float:
+		m_Value = 0.0f;
+		break;
+	case Kind::Vector:
+		m_Value = DirectX::XMFLOAT3{};
+		break;
+	case Kind::Color:
+		m_Value = DirectX::XMFLOAT4{};
+		break;
+	}
 }
 
 ItemValue::~ItemValue()
@@ -241,40 +258,73 @@ void ItemValue::DrawImGui()
 		break;
 		// チェックフラグの表示
 	case DebugItem::Bool:
-		ImGui::Checkbox(m_Name.c_str(), &std::get<bool>(m_Value));
+		if(ImGui::Checkbox(m_Name.c_str(), &std::get<bool>(m_Value)))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 整数項目の表示
 	case DebugItem::Int:
-		ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value));
+		if(ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value)))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 小数項目の表示
 	case DebugItem::Float:
-		ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value));
+		if(ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value)))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 2Dベクトル項目の表示
 	case DebugItem::Float2:
-		ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f");
+		if(ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// ベクトル項目の表示
 	case DebugItem::Vector:
-		ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f");
+		if(ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// 色項目の表示
 	case DebugItem::Color:
-		ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x);
+		if(ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
 		break;
 		// パス項目の表示
 	case DebugItem::Path:
 	{
 		char buffer[MAX_PATH];
 		strncpy_s(buffer, std::get<std::string>(m_Value).c_str(), MAX_PATH);
-		if (ImGui::InputText(m_Name.c_str(), buffer, MAX_PATH))
+		if(ImGui::InputText(m_Name.c_str(), buffer, MAX_PATH))
+		{
 			std::get<std::string>(m_Value) = buffer;
+			if(m_Notice)
+				m_Notice();
+		}
 	}
 	break;
 	default:
 		break;
 	}
+}
+
+void ItemValue::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
+{
+	m_Notice = In_NoticeFunc;
 }
 
 // ==============================
@@ -344,7 +394,7 @@ void ItemText::DrawImGui()
 // ==============================
 
 ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
-	: m_IsString(false)
+	: m_IsString(false), m_Notice(nullptr)
 {
 	m_Name = In_Name;
 
