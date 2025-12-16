@@ -113,6 +113,12 @@ public:
 	/// <param name="[In_Func]">RemakeInfo 構造体への参照を受け取り、頂点データの再生成処理を行うコールバック関数。</param>
 	void RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<void(RemakeInfo &data)> In_Func);
 
+	/// <summary>
+	/// モデル全体のスケールを設定します
+	/// </summary>
+	/// <param name="[In_Scale]">設定するスケール値</param>
+	void SetScale(_In_ const float &In_Scale) noexcept { m_fScale = In_Scale; }
+
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成
