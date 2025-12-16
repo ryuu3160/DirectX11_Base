@@ -91,7 +91,7 @@ bool InstancedModelRenderer::Load(_In_ const FilePath &In_File, _In_ const Insta
 	const aiScene *pScene = importer.ReadFile(In_File.data(), flag);
 	if (!pScene)
 	{
-		Error(importer.GetErrorString());
+		DebugManager::GetInstance().DebugLogError(importer.GetErrorString());
 		return false;
 	}
 

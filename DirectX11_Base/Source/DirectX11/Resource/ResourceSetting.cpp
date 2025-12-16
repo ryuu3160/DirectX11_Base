@@ -30,7 +30,7 @@ namespace ResourceSetting
 		size_t pos = FbxName.find('_');
 		if (pos == std::string::npos)
 		{
-			Error("Invalid material name format. Expected format: 'FbxName_MaterialName'.");
+			DebugManager::GetInstance().DebugLogError("Invalid material name format. Expected format: 'FbxName_MaterialName'.");
 			return "";
 		}
 

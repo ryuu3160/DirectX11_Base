@@ -89,7 +89,7 @@ bool SkyBoxRenderer::Load(_In_ const FilePath &In_File, _In_ const float &In_Sca
 	const aiScene *pScene = importer.ReadFile(In_File.data(), flag);
 	if (!pScene)
 	{
-		Error(importer.GetErrorString());
+		DebugManager::GetInstance().DebugLogError(importer.GetErrorString());
 		return false;
 	}
 

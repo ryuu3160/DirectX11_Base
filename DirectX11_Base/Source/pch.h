@@ -91,6 +91,7 @@ using Microsoft::WRL::ComPtr;
 // ------------------------------
 #include "System/Utility/Concept.hpp"
 #include "System/CPON/cpon.hpp"
+#include "System/DebugManager/DebugManager.hpp"
 #include "App/Main.hpp"
 #include "Defines.hpp"
 #include "System/Utility/Utility.hpp"
@@ -103,4 +104,3 @@ using Microsoft::WRL::ComPtr;
 #include "System/FadeManager/FadeManager.hpp"
 #include "System/Scene/SceneManager.hpp"
 #include "System/Sound/SoundManager.hpp"
-#include "System/DebugManager/DebugManager.hpp"

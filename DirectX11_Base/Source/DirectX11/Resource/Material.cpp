@@ -110,7 +110,7 @@ void Material::Load(_In_ const aiMaterial *In_pMaterial, _In_ const FilePath &In
 			ErrorMsg += "Failed to load texture from material.";
 		else
 			ErrorMsg += path.C_Str();
-		Error(ErrorMsg);
+		DebugManager::GetInstance().DebugLogError(ErrorMsg.c_str());
 	}
 
 	// シェーダーの取得
@@ -337,7 +337,8 @@ void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory)
 
 	if (!file.is_open())
 	{
-		Error("Failed to open file for saving material shader info: " + path);
+		std::string msg = "Failed to open file for saving material shader info: " + path;
+		DebugManager::GetInstance().DebugLogError(msg.c_str());
 		return;
 	}
 
