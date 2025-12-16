@@ -168,7 +168,7 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 	{
 		for (int z = StartZ,IdxZ = 0; z < MaxZ; ++z, ++IdxZ)
 		{
-			for (int x = StartX,IdxX = 0; x < MaxZ; ++x, ++IdxX)
+			for (int x = StartX,IdxX = 0; x < MaxX; ++x, ++IdxX)
 			{
 				int Idx = IdxX + (IdxZ * In_InstanceData.CountX) + (IdxY * In_InstanceData.CountX * In_InstanceData.CountZ);
 				instance[Idx].pos = {
