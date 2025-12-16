@@ -95,7 +95,7 @@ void InstancedMesh::ReplaceMeshBuffer(_In_ std::shared_ptr<InstancedMeshBuffer> 
 	}
 	else
 	{
-		Error("MeshBuffer is nullptr.");
+		DebugManager::GetInstance().DebugLogError("MeshBuffer is nullptr.");
 	}
 }
 

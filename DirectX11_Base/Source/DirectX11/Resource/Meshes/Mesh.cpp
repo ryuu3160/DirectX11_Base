@@ -83,7 +83,7 @@ void Mesh::ReplaceMeshBuffer(_In_ std::shared_ptr<MeshBuffer> In_MeshBuffer) noe
 	}
 	else
 	{
-		Error("MeshBuffer is nullptr.");
+		DebugManager::GetInstance().DebugLogError("MeshBuffer is nullptr.");
 	}
 }
 

@@ -233,7 +233,7 @@ SoundManager::SoundManager() noexcept
 	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 	{
-		Error("error: COMオブジェクトの初期化に失敗しました : " + hr);
+		DebugManager::GetInstance().DebugLogError("COMオブジェクトの初期化に失敗しました : " + hr);
 		return;
 	}
 
@@ -241,7 +241,7 @@ SoundManager::SoundManager() noexcept
 	hr = XAudio2Create(&m_pXAudio);
 	if (FAILED(hr))
 	{
-		Error("error: XAUDIO2の初期化に失敗しました : " + hr);
+		DebugManager::GetInstance().DebugLogError("XAUDIO2の初期化に失敗しました : " + hr);
 		return;
 	}
 
@@ -250,7 +250,7 @@ SoundManager::SoundManager() noexcept
 
 	if (FAILED(hr))
 	{
-		Error("error: マスターボイス(ソース)作成に失敗しました : " + hr);
+		DebugManager::GetInstance().DebugLogError("マスターボイス(ソース)作成に失敗しました : " + hr);
 		return;
 	}
 }
