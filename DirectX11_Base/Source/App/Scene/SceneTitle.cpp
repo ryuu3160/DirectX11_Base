@@ -36,7 +36,9 @@ void SceneTitle::Init()
 	auto pCameraComp = pCamera->GetComponent<Camera>();
 
 	// 波のオブジェクト作成
-
+	auto WaveObj = CreateObject<GameObject>("WaveObject1");
+	auto WaveRenderer = WaveObj->AddComponent<ModelRenderer>();
+	WaveRenderer->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
 }
 
 void SceneTitle::Uninit()
