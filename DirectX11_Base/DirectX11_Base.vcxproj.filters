@@ -355,6 +355,9 @@
     <ClCompile Include="Source\System\CPON\cpon_object.cpp">
       <Filter>Source\System\CPON</Filter>
     </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneTitle.cpp">
+      <Filter>Source\App\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -605,6 +608,9 @@
     </ClInclude>
     <ClInclude Include="Source\System\CPON\cpon.hpp">
       <Filter>Source\System\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneTitle.hpp">
+      <Filter>Source\App\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

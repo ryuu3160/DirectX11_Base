@@ -20,6 +20,7 @@
 #include "System/Scene/SceneRoot.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/ImGui/imgui_impl_win32.h"
+#include "App/Scene/SceneTitle.hpp"
 
 // ==============================
 //  プロトタイプ宣言
@@ -93,7 +94,7 @@ HRESULT Main::Init()
 
 	// シーンの初期化
 	auto &SceneM = SceneManager::GetInstance();
-	auto pScene = SceneM.Init<SceneRoot>();
+	auto pScene = SceneM.Init<SceneTitle>();
 	SceneM.SceneObjectsInit();
 
 	// メインのレンダーコンテキスト作成

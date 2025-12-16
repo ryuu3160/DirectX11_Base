@@ -161,6 +161,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\App\Scene\SceneTitle.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -328,6 +332,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App\Main.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\App\Scene\SceneTitle.hpp">
       <SubType>
       </SubType>
     </ClInclude>
