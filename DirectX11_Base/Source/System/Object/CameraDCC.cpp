@@ -20,7 +20,12 @@ enum CameraDCCKind
 };
 
 CameraDCC::CameraDCC()
-	: CameraBaseObj("CameraDCC")
+	: CameraDCC("CameraDCC")
+{
+}
+
+CameraDCC::CameraDCC(_In_ std::string In_Name)
+	: CameraBaseObj(In_Name)
 	, m_nState(CAM_DCC_NONE)
 	, m_OldPos{ 0, 0 }
 {

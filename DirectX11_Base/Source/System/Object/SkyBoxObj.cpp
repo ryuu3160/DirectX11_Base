@@ -13,7 +13,12 @@
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 
 SkyBoxObj::SkyBoxObj()
-	: GameObject("SkyBoxObj")
+	: SkyBoxObj("SkyBoxObj")
+{
+}
+
+SkyBoxObj::SkyBoxObj(std::string In_Name)
+	: GameObject(In_Name)
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)
 {

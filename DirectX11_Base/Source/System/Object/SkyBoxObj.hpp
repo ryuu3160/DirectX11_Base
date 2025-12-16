@@ -19,6 +19,7 @@ class SkyBoxObj : public GameObject
 {
 public:
 	SkyBoxObj();
+	SkyBoxObj(_In_ std::string In_Name);
 	~SkyBoxObj();
 
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
