@@ -65,14 +65,18 @@ void DebugManager::Init()
 	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
 	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
 
-	AddToolBarMenu("Camera", "Editor", []()
+	AddToolBarMenu("Camera", "Editor", [this]()
 		{
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
 			{
 				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
 				if (!CamObj)
+				{
+					std::string msg = ShiftJISToUTF8("EditorCamera‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+					DebugLogError(msg.c_str());
 					return;
+				}
 				auto camera = CamObj->GetComponent<Camera>();
 				auto context = RenderManager::GetInstance().GetRenderContext("Main");
 				if (camera && context)
@@ -83,14 +87,18 @@ void DebugManager::Init()
 				}
 			}
 		});
-	AddToolBarMenu("Camera", "Game", []()
+	AddToolBarMenu("Camera", "Game", [this]()
 		{
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
 			{
 				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
 				if (!CamObj)
+				{
+					std::string msg = ShiftJISToUTF8("GameCamera‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+					DebugLogError(msg.c_str());
 					return;
+				}
 				auto camera = CamObj->GetComponent<Camera>();
 				auto context = RenderManager::GetInstance().GetRenderContext("Main");
 				if (camera && context)
