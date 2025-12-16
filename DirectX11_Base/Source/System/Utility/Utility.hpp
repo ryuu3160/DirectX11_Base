@@ -18,7 +18,6 @@ enum class NullpCheckMode : unsigned char
     NONE = 0,		// 何も表示しない
     OUTPUT,	    // コンソールに出力する
     MSGBOX,		// メッセージボックスを表示する
-	CONSOLE,    // コンソールウィンドウを表示して出力する
 };
 using NCMode = NullpCheckMode; // NullpCheckModeのエイリアス
 
@@ -84,9 +83,6 @@ namespace Util
             case NullpCheckMode::MSGBOX:
                 MessageBoxA(nullptr, In_strMessage.data(), "Error", MB_OK);
                 return true;
-            case NullpCheckMode::CONSOLE:
-				DebugManager::GetInstance().DebugLogError(In_strMessage.data());
-				return true;
             default:
                 return true;
             }

@@ -75,7 +75,7 @@ public:
 	inline void DebugLog(_In_ const char* In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
-
+		msg = ShiftJISToUTF8(msg);
 		auto window = GetDebugWindow("System", "Log");
 		if(window->NotDummy())
 		{
@@ -95,6 +95,7 @@ public:
 	inline void DebugLogWarning(_In_ const char *In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		msg = ShiftJISToUTF8(msg);
 		auto window = GetDebugWindow("System", "Log");
 		if (window->NotDummy())
 		{
@@ -114,6 +115,7 @@ public:
 	inline void DebugLogError(_In_ const char *In_Format, Args&& ...args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		msg = ShiftJISToUTF8(msg);
 		auto window = GetDebugWindow("System", "Log");
 		if (window->NotDummy())
 		{

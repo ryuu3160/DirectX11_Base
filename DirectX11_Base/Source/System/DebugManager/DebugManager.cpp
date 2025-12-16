@@ -73,8 +73,7 @@ void DebugManager::Init()
 				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
 				if (!CamObj)
 				{
-					std::string msg = ShiftJISToUTF8("EditorCameraが見つかりません。");
-					DebugLogError(msg.c_str());
+					DebugLogError("EditorCameraが見つかりません。");
 					return;
 				}
 				auto camera = CamObj->GetComponent<Camera>();
@@ -95,8 +94,7 @@ void DebugManager::Init()
 				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
 				if (!CamObj)
 				{
-					std::string msg = ShiftJISToUTF8("GameCameraが見つかりません。");
-					DebugLogError(msg.c_str());
+					DebugLogError("GameCameraが見つかりません。");
 					return;
 				}
 				auto camera = CamObj->GetComponent<Camera>();
