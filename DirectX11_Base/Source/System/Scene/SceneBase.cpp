@@ -24,6 +24,7 @@ ItemList *SceneBase::m_Hierarchy = nullptr;
 SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
+	, m_Data(nullptr)
 {
 	DataLoad();
 }
@@ -247,6 +248,14 @@ void SceneBase::DataSave()
 
 void SceneBase::DataLoad()
 {
+	// 既にデータが存在する場合は削除
+	if (m_Data)
+	{
+		delete m_Data;
+		m_Data = nullptr;
+	}
+
+	// CPONデータの作成
 	m_Data = new cpon();
 
 	// ファイルから読み込み
