@@ -174,7 +174,7 @@ void SceneRoot::Update(_In_ float In_Tick)
 	std::shared_ptr<ShaderParam> pPatternScaleParam = std::make_shared<ShaderParam>("PatternScale", 0, &ps, 1);
 	auto pPatternScale = GetObject<GameObject>("PatternScale");
 	auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
-	PatternScaleComp->SetWriteParam(pPatternScaleParam);
+	PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
 
 	//ResourceSetting::PBR_Param pbr;
 	//pbr.Metallic = 0.8f;
@@ -196,9 +196,9 @@ void SceneRoot::Update(_In_ float In_Tick)
 
 	auto pModel = GetObject<GameObject>("Instanced");
 	/*auto Component = pModel->GetComponent<InstancedModelRenderer>();
-	Component->SetWriteParam(LightParam);
-	Component->SetWriteParam(PBRParam);
-	Component->SetWriteParam(POMParam);*/
+	Component->SetWriteParamForPS(LightParam);
+	Component->SetWriteParamForPS(PBRParam);
+	Component->SetWriteParamForPS(POMParam);*/
 	//pModel->SetPosition(pModel->GetPosition() + DirectX::XMFLOAT3(0.0f, 0.0f, 0.01f));
 }
 

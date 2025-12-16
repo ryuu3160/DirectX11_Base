@@ -45,7 +45,11 @@ public:
 
 	template<typename T>
 	requires std::derived_from<T, ShaderParam>
-	void SetWriteParam(_In_ const std::shared_ptr<T> &In_Param);
+	void SetWriteParamForPS(_In_ const std::shared_ptr<T> &In_Param);
+
+	template<typename T>
+	requires std::derived_from<T, ShaderParam>
+	void SetWriteParamForVS(_In_ const std::shared_ptr<T> &In_Param);
 
 	/// <summary>
 	/// マテリアルシェーダーの使用状態を設定します
@@ -130,18 +134,32 @@ private:
     float m_fScale;
 	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 
-	std::vector<std::shared_ptr<ShaderParam>> m_pShaderParams; // シェーダーパラメータ
+	std::vector<std::shared_ptr<ShaderParam>> m_pShaderParamsPS; // PS用のシェーダーパラメータ
+	std::vector<std::shared_ptr<ShaderParam>> m_pShaderParamsVS; // VS用のシェーダーパラメータ
 };
 
 /// <summary>
-/// 指定されたシェーダーパラメータをスロット番号に基づいて設定します。
+/// 指定されたシェーダーパラメータを設定します
 /// </summary>
 /// <typeparam name="[T]">ShaderParamを継承した型。</typeparam>
-/// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ。</param>
+/// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ</param>
 template<typename T>
 requires std::derived_from<T, ShaderParam>
-inline void ModelRenderer::SetWriteParam(const std::shared_ptr<T> &In_Param)
+inline void ModelRenderer::SetWriteParamForPS(const std::shared_ptr<T> &In_Param)
 {
 	if(In_Param)
-		m_pShaderParams.push_back(std::move(In_Param));
+		m_pShaderParamsPS.push_back(std::move(In_Param));
+}
+
+/// <summary>
+/// 指定されたシェーダーパラメータを設定します
+/// </summary>
+/// <typeparam name="[T]">ShaderParamを継承した型。</typeparam>
+/// <param name="[In_Param]">設定するシェーダーパラメータへのポインタ</param>
+template<typename T>
+requires std::derived_from<T, ShaderParam>
+inline void ModelRenderer::SetWriteParamForVS(const std::shared_ptr<T> &In_Param)
+{
+	if(In_Param)
+		m_pShaderParamsVS.push_back(std::move(In_Param));
 }
