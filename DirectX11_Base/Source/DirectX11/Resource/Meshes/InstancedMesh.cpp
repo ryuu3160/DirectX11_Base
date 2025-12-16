@@ -134,9 +134,9 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 		MaxZ = static_cast<float>(In_InstanceData.CountZ);
 		break;
 	case AnchorZ::Center:
-		StartZ = -static_cast<float>(In_InstanceData.CountY / 2.0f);
+		StartZ = -static_cast<float>(In_InstanceData.CountZ / 2.0f);
 		StartZ += 0.5f;
-		MaxZ = (static_cast<float>(In_InstanceData.CountY / 2.0f)) - 0.5f;
+		MaxZ = (static_cast<float>(In_InstanceData.CountZ / 2.0f)) - 0.5f;
 		break;
 	case AnchorZ::Front:
 		StartZ = static_cast<float>(-In_InstanceData.CountZ + 1);
@@ -151,9 +151,9 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 		MaxX = static_cast<float>(In_InstanceData.CountX);
 		break;
 	case AnchorX::Center:
-		StartX = -static_cast<float>(In_InstanceData.CountY / 2.0f);
+		StartX = -static_cast<float>(In_InstanceData.CountX / 2.0f);
 		StartX += 0.5f;
-		MaxX = (static_cast<float>(In_InstanceData.CountY / 2.0f)) - 0.5f;
+		MaxX = (static_cast<float>(In_InstanceData.CountX / 2.0f)) - 0.5f;
 		break;
 	case AnchorX::Right:
 		StartX = static_cast<float>(-In_InstanceData.CountX + 1);
