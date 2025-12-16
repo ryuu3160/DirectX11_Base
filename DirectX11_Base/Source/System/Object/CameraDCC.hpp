@@ -29,6 +29,7 @@ private:
 	};
 public:
 	CameraDCC();
+	CameraDCC(_In_ std::string In_Name);
 	~CameraDCC();
 
 	/// <summary>

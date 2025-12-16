@@ -39,7 +39,7 @@ RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<floa
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/spot/spot.fbx
 
-SkyBoxObj[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
+SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
   Position:[3]5.988664, 6.8267217, -5.8735685
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
@@ -53,7 +53,7 @@ PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/plane/plane.fbx
 
-CameraBaseObj[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
+GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]0, 5, 0
   Quaternion:[4]-8.4293696e-08, 0.70710665, -0.7071067, -8.429369e-08
   Scale:[3]1, 1, 1
