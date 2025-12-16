@@ -105,25 +105,24 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 	instance.resize(In_InstanceData.CountX * In_InstanceData.CountY * In_InstanceData.CountZ);
 
 	// オフセットの計算
-	int StartY, MaxY;
-	int StartZ, MaxZ;
-	int StartX, MaxX;
+	float StartY, MaxY;
+	float StartZ, MaxZ;
+	float StartX, MaxX;
 
 	switch (In_InstanceData.AnchorPoint.y)
 	{
 	default:
 	case AnchorY::Bottom:
 		StartY = 0;
-		MaxY = In_InstanceData.CountY;
+		MaxY = static_cast<float>(In_InstanceData.CountY);
 		break;
 	case AnchorY::Center:
-		StartY = -(In_InstanceData.CountY / 2);
-		if (In_InstanceData.CountY % 2 == 0)
-			StartY += 1;
-		MaxY = (In_InstanceData.CountY / 2) + 1;
+		StartY = -static_cast<float>(In_InstanceData.CountY / 2.0f);
+		StartY += 0.5f;
+		MaxY = (static_cast<float>(In_InstanceData.CountY / 2.0f)) - 0.5f;
 		break;
 	case AnchorY::Top:
-		StartY = -In_InstanceData.CountY + 1;
+		StartY = static_cast<float>(-In_InstanceData.CountY + 1);
 		MaxY = 1;
 		break;
 	}
@@ -132,16 +131,15 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 	default:
 	case AnchorZ::Back:
 		StartZ = 0;
-		MaxZ = In_InstanceData.CountZ;
+		MaxZ = static_cast<float>(In_InstanceData.CountZ);
 		break;
 	case AnchorZ::Center:
-		StartZ = -(In_InstanceData.CountZ / 2);
-		if (In_InstanceData.CountZ % 2 == 0)
-			StartZ += 1;
-		MaxZ = (In_InstanceData.CountZ / 2) + 1;
+		StartZ = -static_cast<float>(In_InstanceData.CountY / 2.0f);
+		StartZ += 0.5f;
+		MaxZ = (static_cast<float>(In_InstanceData.CountY / 2.0f)) - 0.5f;
 		break;
 	case AnchorZ::Front:
-		StartZ = -In_InstanceData.CountZ + 1;
+		StartZ = static_cast<float>(-In_InstanceData.CountZ + 1);
 		MaxZ = 1;
 		break;
 	}
@@ -150,31 +148,30 @@ std::vector<InstancedMesh::PerInstanceData> InstancedMesh::CreateAlignInstanceDa
 	default:
 	case AnchorX::Left:
 		StartX = 0;
-		MaxX = In_InstanceData.CountX;
+		MaxX = static_cast<float>(In_InstanceData.CountX);
 		break;
 	case AnchorX::Center:
-		StartX = -(In_InstanceData.CountX / 2);
-		if (In_InstanceData.CountX % 2 == 0)
-			StartX += 1;
-		MaxX = (In_InstanceData.CountX / 2) + 1;
+		StartX = -static_cast<float>(In_InstanceData.CountY / 2.0f);
+		StartX += 0.5f;
+		MaxX = (static_cast<float>(In_InstanceData.CountY / 2.0f)) - 0.5f;
 		break;
 	case AnchorX::Right:
-		StartX = -In_InstanceData.CountX + 1;
+		StartX = static_cast<float>(-In_InstanceData.CountX + 1);
 		MaxX = 1;
 		break;
 	}
 	int IdxY = 0, IdxZ = 0, IdxX = 0;
-	for (int y = StartY,IdxY = 0; y < MaxY; ++y,++IdxY)
+	for (float y = StartY,IdxY = 0; y < MaxY; ++y,++IdxY)
 	{
-		for (int z = StartZ,IdxZ = 0; z < MaxZ; ++z, ++IdxZ)
+		for (float z = StartZ,IdxZ = 0; z < MaxZ; ++z, ++IdxZ)
 		{
-			for (int x = StartX,IdxX = 0; x < MaxX; ++x, ++IdxX)
+			for (float x = StartX,IdxX = 0; x < MaxX; ++x, ++IdxX)
 			{
-				int Idx = IdxX + (IdxZ * In_InstanceData.CountX) + (IdxY * In_InstanceData.CountX * In_InstanceData.CountZ);
+				int Idx = static_cast<int>(IdxX + (IdxZ * In_InstanceData.CountX) + (IdxY * In_InstanceData.CountX * In_InstanceData.CountZ));
 				instance[Idx].pos = {
-					In_InstanceData.StartPos.x + (In_InstanceData.ShiftPosOffset.x * static_cast<float>(x)),
-					In_InstanceData.StartPos.y + (In_InstanceData.ShiftPosOffset.y * static_cast<float>(y)),
-					In_InstanceData.StartPos.z + (In_InstanceData.ShiftPosOffset.z * static_cast<float>(z))
+					In_InstanceData.StartPos.x + (In_InstanceData.ShiftPosOffset.x * x),
+					In_InstanceData.StartPos.y + (In_InstanceData.ShiftPosOffset.y * y),
+					In_InstanceData.StartPos.z + (In_InstanceData.ShiftPosOffset.z * z)
 				};
 				instance[Idx].scale = In_InstanceData.Scale;
 				instance[Idx].quaternion = In_InstanceData.Quaternion;
