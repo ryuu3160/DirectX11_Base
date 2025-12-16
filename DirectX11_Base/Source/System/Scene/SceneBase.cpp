@@ -12,6 +12,7 @@
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Scene/SceneManager.hpp"
+#include "System/SpriteManager/SpriteManager.hpp"
 
 // ==============================
 //  前方宣言
@@ -64,9 +65,16 @@ void SceneBase::CommonProcessScene() noexcept
 			itr->second->RegisterDebugInspector(window);
 		});
 #endif
+	// データの読み込み
+	DataLoad();
 
 	// メインカメラの作成
-	CreateObject<CameraDCC>("EditorCamera");
+	auto CamObj = CreateObject<CameraDCC>("EditorCamera");
+	auto CamCmp = CamObj->GetComponent<Camera>();
+
+	// スプライトマネージャーにカメラを設定
+	SpriteManager::GetInstance().SetCamera(CamCmp);
+	SpriteManager::GetInstance().SetCameraObject(CamObj);
 
 }
 
