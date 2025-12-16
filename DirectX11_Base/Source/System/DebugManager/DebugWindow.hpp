@@ -77,7 +77,7 @@ inline T *DebugWindow::CreateItem(const std::string_view In_Name, Args && ...arg
 {
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
 
-	DebugManager::GetInstance().DataRead(m_Name + "/", item);
+	DebugManager::GetInstance().DataRead(m_GroupName + "/" + m_Name + "/", item);
 
 	m_Items.push_back(item);
 	return item;

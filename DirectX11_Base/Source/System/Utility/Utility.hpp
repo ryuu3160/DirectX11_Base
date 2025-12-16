@@ -119,6 +119,11 @@ namespace Util
     {
         std::string result;
         int size = std::numeric_limits<T>::digits10 + 2; // 符号と終端文字分を追加
+
+		// 小数点以下の桁数に応じてサイズを調整
+        if(In_Precision > size - 2)
+			size += In_Precision - (size - 2);
+
         result.resize(size);
         auto res = std::to_chars(result.data(), result.data() + result.size(), In_Value, std::chars_format::fixed, In_Precision);
 		result.resize(res.ptr - result.data()); // 実際に使用されたサイズに調整

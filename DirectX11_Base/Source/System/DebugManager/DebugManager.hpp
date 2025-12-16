@@ -67,9 +67,18 @@ public:
 	/// <summary>
 	/// 指定した名前に対応するデバッグウィンドウを取得する
 	/// </summary>
-	/// <param name="[In_Name]">検索するデバッグウィンドウの名前を示す読み取り専用の std::string_view。</param>
-	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合は nullptr を返します。</returns>
+	/// <param name="[In_GroupName]">検索するデバッグウィンドウの所属するグループ名</param>
+	/// <param name="[In_Name]">検索するデバッグウィンドウの名前を示す読み取り専用のstd::string_view</param>
+	/// <returns>該当する DebugWindow へのポインタ。指定した名前のウィンドウが見つからない場合はnullptrを返します</returns>
 	DebugWindow *GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
+
+	/// <summary>
+	/// 指定した名前に対応するデバッグウィンドウへの参照を取得する
+	/// </summary>
+	/// <param name="[In_GroupName]">グループ名</param>
+	/// <param name="[In_Name]">>ウィンドウ名</param>
+	/// <returns></returns>
+	DebugWindow &GetDebugWindowRef(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name);
 
 	template<typename ...Args>
 	inline void DebugLog(_In_ const char* In_Format, Args&& ...args)

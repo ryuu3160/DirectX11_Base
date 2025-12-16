@@ -188,15 +188,10 @@ void Update(_In_ float In_Tick)
 
 void Draw()
 {
-	auto &SceneM = SceneManager::GetInstance();
 	DX11_Core &DX11 = DX11_Core::GetInstance();
-	auto &RTVManager = RenderTargetManager::GetInstance();
-	auto rtv = RTVManager.GetDefaultRTV();
-	auto dsv = RTVManager.GetDefaultDSV();
-	float color[4] = { 0.1f, 0.2f, 0.3f, 1.0f };
+	auto &SceneM = SceneManager::GetInstance();
 
-	DX11.GetDeviceContext()->ClearRenderTargetView(rtv->GetView(), color);
-	DX11.GetDeviceContext()->ClearDepthStencilView(dsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	DX11.BeginDraw();
 
 	SceneM.RootDraw();
 

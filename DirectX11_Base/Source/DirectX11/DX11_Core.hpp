@@ -85,6 +85,12 @@ public:
 	/// </summary>
 	/// <returns>FAILEDマクロで判定</returns>
 	HRESULT Init();
+
+	/// <summary>
+	/// 描画開始処理
+	/// </summary>
+	void BeginDraw() const;
+
 	/// <summary>
 	/// 描画終了処理
 	/// </summary>
@@ -122,6 +128,12 @@ public:
 	/// </summary>
 	/// <returns>現在の深度状態を表す DepthState オブジェクト。</returns>
 	DepthState GetNowDepthState() const noexcept;
+
+	/// <summary>
+	/// WindowColorを取得する
+	/// </summary>
+	/// <returns>WindowColorの値</returns>
+	inline DirectX::XMFLOAT4 GetWindowColor() const noexcept { return m_WindowColor; }
 
 	/// <summary>
 	/// WindowColorをセットする
@@ -282,6 +294,6 @@ private:
 	UINT m_nuCreateDeviceFlags;
 
 	//ウィンドウの色情報
-	float m_WindowColor[4];	// 背景色
+	DirectX::XMFLOAT4 m_WindowColor; // 背景色
 	float m_BlendFactor[4];
 };

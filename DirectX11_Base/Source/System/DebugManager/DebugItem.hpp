@@ -74,13 +74,13 @@ public:
 	/// <returns>種類</returns>
 	Kind GetKind() const;
 
-	bool GetBool() const;
-	int GetInt() const;
-	float GetFloat() const;
-	DirectX::XMFLOAT2 GetVector2() const;
-	DirectX::XMFLOAT3 GetVector() const;
-	DirectX::XMFLOAT4 GetColor() const;
-	std::string GetStr() const;
+	bool GetBool();
+	int GetInt();
+	float GetFloat();
+	DirectX::XMFLOAT2 GetVector2();
+	DirectX::XMFLOAT3 GetVector();
+	DirectX::XMFLOAT4 GetColor();
+	std::string GetStr();
 
 	// グループで使用する関数
 	template <typename T, typename ...Args>
@@ -126,8 +126,15 @@ public:
 		return std::get<T>(m_Value);
 	}
 
+	/// <summary>
+	/// 値が変更された際に呼ばれる関数を設定
+	/// </summary>
+	/// <param name="[In_NoticeFunc]">対象関数へのポインタ</param>
+	void SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept;
+
 private:
 	Value m_Value;
+	std::function<void()> m_Notice;
 	bool m_IsSave;
 };
 
@@ -187,6 +194,10 @@ public:
 			return reinterpret_cast<T *>(m_vPtr);
 	}
 
+	/// <summary>
+	/// 値が変更された際に呼ばれる関数を設定
+	/// </summary>
+	/// <param name="[In_NoticeFunc]">対象関数へのポインタ</param>
 	void SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept;
 
 private:

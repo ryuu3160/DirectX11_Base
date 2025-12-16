@@ -121,6 +121,14 @@ void DebugManager::Init()
 				FrameManager::GetInstance().SetTimeScale(1.0f);
 			}
 		});
+	auto ScreenColor = DebugMenu->CreateItem<ItemValue>("ScreenColor", DebugItem::Kind::Color, true);
+	DX11_Core::GetInstance().SetWindowColor(ScreenColor->GetColor());
+	ScreenColor->SetNoticeFunc([]()
+		{
+			auto& DX11Core = DX11_Core::GetInstance();
+			auto color = DebugManager::GetInstance().GetDebugWindowRef("System", "DebugMenu")["ScreenColor"].GetColor();
+			DX11Core.SetWindowColor(color);
+		});
 }
 
 void DebugManager::Update() noexcept
@@ -250,6 +258,11 @@ DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupNa
 		}
 	}
 	return c_NullWindow;
+}
+
+DebugWindow &DebugManager::GetDebugWindowRef(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
+{
+	return *GetDebugWindow(In_GroupName, In_Name);
 }
 
 DebugManager::DebugManager()
@@ -420,10 +433,10 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 			std::string ValueStrZ;
 			std::string ValueStrW;
 			DirectX::XMFLOAT4 color = pValue->GetValue<DirectX::XMFLOAT4>();
-			ValueStrX = ToString(color.x);
-			ValueStrY = ToString(color.y);
-			ValueStrZ = ToString(color.z);
-			ValueStrW = ToString(color.w);
+			ValueStrX = ToString(color.x,10);
+			ValueStrY = ToString(color.y,10);
+			ValueStrZ = ToString(color.z,10);
+			ValueStrW = ToString(color.w,10);
 			Inout_Data += ValueStrX + "/" + ValueStrY + "/" + ValueStrZ + "/" + ValueStrW;
 		}
 		break;
@@ -566,43 +579,49 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 	switch (Inout_Item->GetKind())
 	{
 	case DebugItem::Bool:
-		pValue->GetValue() = std::atoi(DataItr->value.c_str()) > 0;
+		pValue->GetValue() = FromString<int>(DataItr->value) > 0;
 		break;
 	case DebugItem::Int:
-		pValue->GetValue() = atoi(DataItr->value.c_str());
+		pValue->GetValue() = FromString<int>(DataItr->value);
 		break;
 	case DebugItem::Float:
-		pValue->GetValue() = strtof(DataItr->value.c_str(), nullptr);
+		pValue->GetValue() = FromString<float>(DataItr->value);
 		break;
 	case DebugItem::Float2:
 		{
-		const char *top[2];
-		top[0] = DataItr->value.c_str();
-		const char* delim1 = strstr(top[0], "/");
-		top[1] = (delim1 != nullptr) ? delim1 + 1 : top[0]; // ‹æØ‚è•¶Žš‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Ítop[0]‚ðÄ—˜—p
+		std::string value = DataItr->value;
 
-		pValue->GetValue() = DirectX::XMFLOAT2(
-			strtof(top[0], nullptr),
-			strtof(top[1], nullptr)
-		);
+		if(value.empty())
+			return;
+
+		std::string elem = value;
+		DirectX::XMFLOAT2 vec2;
+		vec2.x = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		vec2.y = FromString<float>(elem);
+		pValue->GetValue() = vec2;
 	} break;
 	case DebugItem::Color:
 	{
-		const char *top[4];
-		top[0] = DataItr->value.c_str();
-		const char* delim2 = strstr(top[0], "/");
-		top[1] = (delim2 != nullptr) ? delim2 + 1 : top[0];
-		const char* delim3 = strstr(top[1], "/");
-		top[2] = (delim3 != nullptr) ? delim3 + 1 : top[1];
-		const char* delim4 = strstr(top[2], "/");
-		top[3] = (delim4 != nullptr) ? delim4 + 1 : top[2];
+		std::string value = DataItr->value;
 
-		pValue->GetValue() = DirectX::XMFLOAT4(
-			strtof(top[0], nullptr),
-			strtof(top[1], nullptr),
-			strtof(top[2], nullptr),
-			strtof(top[3], nullptr)
-		);
+		if(value.empty())
+			return;
+
+		std::string elem = value;
+		DirectX::XMFLOAT4 color;
+		color.x = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		color.y = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		color.z = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		color.w = FromString<float>(elem);
+		pValue->GetValue() = color;
 	} break;
 	case DebugItem::Path:
 		pValue->GetValue() = DataItr->value;
@@ -628,18 +647,19 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 		break;
 	case DebugItem::Vector:
 	{
-		const char *top[3];
-		top[0] = DataItr->value.c_str();
-		const char* delim5 = strstr(top[0], "/");
-		top[1] = (delim5 != nullptr) ? delim5 + 1 : top[0];
-		const char* delim6 = strstr(top[1], "/");
-		top[2] = (delim6 != nullptr) ? delim6 + 1 : top[1];
-
-		pValue->GetValue() = DirectX::XMFLOAT3(
-			strtof(top[0], nullptr),
-			strtof(top[1], nullptr),
-			strtof(top[2], nullptr)
-		);
+		std::string value = DataItr->value;
+		if(value.empty())
+			return;
+		std::string elem = value;
+		DirectX::XMFLOAT3 vec;
+		vec.x = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		vec.y = FromString<float>(elem.erase(elem.find('/')));
+		value.erase(0, value.find('/') + 1);
+		elem = value;
+		vec.z = FromString<float>(elem);
+		pValue->GetValue() = vec;
 	}
 	break;
 	}
