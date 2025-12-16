@@ -61,12 +61,12 @@ namespace Util
 #endif
 
     /// <summary>
-    /// 指定されたポインタがヌルかどうかをチェックし、モードに応じてエラーメッセージを出力します。
+    /// 指定されたポインタがヌルかどうかをチェックし、モードに応じてエラーメッセージを出力します
     /// </summary>
-    /// <param name="[In_pData]">チェック対象のポインタ。</param>
-    /// <param name="[In_Mode]">ヌル時の動作モード（デフォルトはNullpCheckMode::NONE）。</param>
-    /// <param name="[In_strMessage]">エラー時に出力するメッセージ（省略可能）。</param>
-    /// <returns>ポインタがヌルの場合はtrue、それ以外はfalse。</returns>
+    /// <param name="[In_pData]">チェック対象のポインタ</param>
+    /// <param name="[In_Mode]">ヌル時の動作モード(デフォルトはNullpCheckMode::NONE)</param>
+    /// <param name="[In_strMessage]">エラー時に出力するメッセージ(省略可能)</param>
+    /// <returns>ポインタがヌルの場合はtrue、それ以外はfalse</returns>
     inline bool NullCheck(_In_opt_ void *In_pData, _In_ NullpCheckMode In_Mode = NullpCheckMode::NONE, _In_ std::string_view In_strMessage = "") noexcept
     {
         if (In_pData == nullptr)
@@ -95,11 +95,11 @@ namespace Util
     }
 
     /// <summary>
-	/// 値を文字列に変換して返します。
+	/// 値を文字列に変換して返します
     /// </summary>
-    /// <typeparam name="T">変換対象の型。TypePOD（POD／数値型など）という制約を満たす必要があります。</typeparam>
-    /// <param name="[In_Value]">変換する値。PODや数値型の引数を想定しています。</param>
-    /// <returns>In_Value の文字列表現を格納した std::string を返します。</returns>
+    /// <typeparam name="T">変換対象の型。TypePOD(POD／数値型など)という制約を満たす必要があります</typeparam>
+    /// <param name="[In_Value]">変換する値(PODや数値型の引数を想定しています)</param>
+    /// <returns>In_Value の文字列表現を格納した std::string を返します</returns>
     template<TypePOD T>
     std::string ToString(_In_ T In_Value) noexcept
     {
@@ -112,12 +112,12 @@ namespace Util
     }
 
     /// <summary>
-    /// 数値を指定した小数精度で固定表記にフォーマットし、文字列として返します。
+    /// 数値を指定した小数精度で固定表記にフォーマットし、文字列として返します
     /// </summary>
-    /// <typeparam name="T">変換する数値の型。POD の数値型を指定します。</typeparam>
-    /// <param name="[In_Value]">変換対象の数値。数値型（例: float, double, int）を想定します。</param>
-    /// <param name="[In_Precision]">小数点以下の桁数（表示する精度）。</param>
-    /// <returns>指定した精度で固定小数点表記に整形された std::string を返します。</returns>
+    /// <typeparam name="T">変換する数値の型(PODの数値型を指定します)</typeparam>
+    /// <param name="[In_Value]">変換対象の数値(数値型(例: float, double, int)を想定します)</param>
+    /// <param name="[In_Precision]">小数点以下の桁数(表示する精度)</param>
+    /// <returns>指定した精度で固定小数点表記に整形されたstd::stringを返します</returns>
     template<TypePOD T>
     std::string ToString(_In_ T In_Value, _In_ int In_Precision) noexcept
     {
@@ -130,11 +130,11 @@ namespace Util
     }
 
     /// <summary>
-    /// 文字列を型Tの値に変換します。
+    /// 文字列を型Tの値に変換します
     /// </summary>
-    /// <typeparam name="T">変換先の型（整数や浮動小数点など）。</typeparam>
-    /// <param name="[In_Str]">解析対象の入力文字列（std::string_view）。</param>
-    /// <returns>解析結果の値（POD型）。解析に失敗した場合は初期化されたTの値が返されます。</returns>
+    /// <typeparam name="T">変換先の型(整数や浮動小数点など)</typeparam>
+    /// <param name="[In_Str]">解析対象の入力文字列(std::string_view)</param>
+    /// <returns>解析結果の値(POD型)、解析に失敗した場合は初期化されたTの値が返されます</returns>
     template<TypePOD T>
     T FromString(_In_ const std::string_view &In_Str) noexcept
     {
@@ -142,6 +142,41 @@ namespace Util
         std::from_chars(In_Str.data(), In_Str.data() + In_Str.size(), result);
         return result;
     }
+
+    /// <summary>
+	/// ワイド文字列をUTF-8文字列に変換します
+    /// </summary>
+    /// <param name="[In_WideStr]">変換するワイド文字列(例:L"文字")</param>
+    /// <returns>UTF8に変換したstd::string型の文字列</returns>
+    std::string WideToUTF8(_In_ const std::wstring_view In_WideStr);
+
+	/// <summary>
+	/// UTF-8文字列をワイド文字列に変換します
+	/// </summary>
+    /// <param name="[In_UTF8Str]">変換するUTF-8文字列</param>
+	/// <returns>>ワイド文字列に変換したstd::wstring型の文字列</returns>
+	std::wstring UTF8ToWide(_In_ const std::string_view In_UTF8Str);
+
+	/// <summary>
+	/// UTF-16文字列をUTF-8文字列に変換します
+	/// </summary>
+	/// <param name="[In_UTF16Str]">>変換するUTF-16文字列</param>
+	/// <returns>>UTF8に変換したstd::string型の文字列</returns>
+	std::string UTF16ToUTF8(_In_ const std::u16string_view In_UTF16Str);
+
+	/// <summary>
+	/// UTF-8文字列をUTF-16文字列に変換します
+	/// </summary>
+	/// <param name="[In_UTF8Str]">変換するUTF-8文字列</param>
+	/// <returns>>UTF16に変換したstd::u16string型の文字列</returns>
+	std::u16string UTF8ToUTF16(_In_ const std::string_view In_UTF8Str);
+
+	/// <summary>
+	/// Shift-JIS文字列をUTF-8文字列に変換します
+	/// </summary>
+	/// <param name="[In_ShiftJISStr]">変換するShift-JIS文字列</param>
+	/// <returns>>UTF8に変換したstd::string型の文字列</returns>
+	std::string ShiftJISToUTF8(_In_ const std::string_view In_ShiftJISStr);
 }
 
 using namespace Util; // Util名前空間をグローバルに展開
