@@ -45,12 +45,14 @@ void SpriteManagerSceneSelecter::Draw(_In_ std::map<std::string, FilePathHold> I
 	for(int i = 0; i < 3;++i)
 		ImGui::Spacing();
 
-	ImGui::InputText("NewSceneName", m_NewSceneName, cx_MaxStringLength);
+	if(ImGui::InputText("NewSceneName", m_NewSceneName, cx_MaxStringLength))
+	{
+		int i = 0;
+	}
 
-	if (ImGui::Button("AddScene") && m_NewSceneName[0] != '\0')
+	if(ImGui::Button("AddScene") && m_NewSceneName[0] != '\0')
 	{
 		SpriteManager::GetInstance().CreateScene(m_NewSceneName);
-	}
-	else
 		m_NewSceneName[0] = '\0';
+	}
 }
