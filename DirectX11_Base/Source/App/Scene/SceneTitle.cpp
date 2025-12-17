@@ -37,6 +37,9 @@ void SceneTitle::Init()
 
 	auto &ShaderM = ShaderManager::GetInstance();
 
+	// シェーダー読み込み
+	
+
 	// 波のオブジェクト作成
 	auto WaveObj = CreateObject<GameObject>("WaveObject1");
 	auto WaveRenderer = WaveObj->AddComponent<ModelRenderer>();
