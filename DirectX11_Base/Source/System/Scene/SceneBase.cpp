@@ -99,6 +99,7 @@ template<> GameObject
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
 	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
+	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
 	return ptr;
 }
@@ -146,13 +147,12 @@ void SceneBase::_ObjectsInit() noexcept
 void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
 {
 	// シーンが所持しているオブジェクトの更新
-	for (auto &itr : m_Items)
+	for(auto &itr : m_SceneObjects)
 	{
-		auto obj = m_Objects.find(itr);
 		// アクティブかつ初期化済みなら更新を実行
-		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		if (itr && itr->m_IsActive && itr->m_IsInitialized)
 		{
-			obj->second->ExecuteUpdate(In_Tick);
+			itr->ExecuteUpdate(In_Tick);
 		}
 	}
 
@@ -163,13 +163,12 @@ void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
 void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 {
 	// シーンが所持しているオブジェクトの遅延更新
-	for (auto &itr : m_Items)
+	for(auto &itr : m_SceneObjects)
 	{
-		auto obj = m_Objects.find(itr);
-		// 型チェック
-		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		// アクティブかつ初期化済みなら更新を実行
+		if (itr && itr->m_IsActive && itr->m_IsInitialized)
 		{
-			obj->second->ExecuteLateUpdate(In_Tick);
+			itr->ExecuteLateUpdate(In_Tick);
 		}
 	}
 
@@ -180,15 +179,15 @@ void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
 {
 	// シーンが所持しているオブジェクトの固定更新
-	for (auto &itr : m_Items)
+	for(auto &itr : m_SceneObjects)
 	{
-		auto obj = m_Objects.find(itr);
-		// 型チェック
-		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		// アクティブかつ初期化済みなら更新を実行
+		if (itr && itr->m_IsActive && itr->m_IsInitialized)
 		{
-			obj->second->ExecuteFixedUpdate(In_FixedTick);
+			itr->ExecuteFixedUpdate(In_FixedTick);
 		}
 	}
+
 	// シーン自体の固定更新
 	FixedUpdate(In_FixedTick);
 }
@@ -196,13 +195,12 @@ void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
 void SceneBase::_ExecuteDestroyObjectsComponents() noexcept
 {
 	// シーンが所持しているオブジェクトのコンポーネント破棄処理を実行
-	for (auto &itr : m_Items)
+	for(auto &itr : m_SceneObjects)
 	{
-		auto obj = m_Objects.find(itr);
 		// 型チェック
-		if (obj != m_Objects.end() && obj->second->m_IsActive && obj->second->m_IsInitialized)
+		if (itr && itr->m_IsActive && itr->m_IsInitialized)
 		{
-			obj->second->ExecuteDestroyComponents();
+			itr->ExecuteDestroyComponents();
 		}
 	}
 }
@@ -221,6 +219,8 @@ void SceneBase::_DestroyObjects() noexcept
 		auto obj = m_Objects.find(name);
 		if (obj == m_Objects.end()) continue;
 
+		// シーンのオブジェクト保持リストから削除
+		m_SceneObjects.erase(obj->second);
 		// オブジェクトの削除
 		delete obj->second;
 
@@ -237,12 +237,11 @@ void SceneBase::DataSave()
 	m_Data->ClearObjectsData();
 
 	// 自シーンが持つオブジェクトのデータを書き込み
-	for(const auto &name : m_Items)
+	for(const auto &itr : m_SceneObjects)
 	{
-		auto itr = m_Objects.find(name);
-		if (itr != m_Objects.end())
+		if (itr)
 		{
-			itr->second->DataWrite(m_Data);
+			itr->DataWrite(m_Data);
 		}
 	}
 

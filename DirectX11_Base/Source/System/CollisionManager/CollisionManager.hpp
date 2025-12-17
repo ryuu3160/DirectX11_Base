@@ -94,7 +94,7 @@ private:
 		bool bIsHitPrev = false;
 	};
 
-	using ColliderPairSet = std::unordered_map<ColliderPairKey, ColliderPairInfo, ColliderPairHash>;
+	using ColliderPairMap = std::unordered_map<ColliderPairKey, ColliderPairInfo, ColliderPairHash>;
 
 private:
 	CollisionManager();
@@ -124,10 +124,10 @@ private:
 	bool RegisterObjectToOctree(_In_ ColliderBase *In_Collider) noexcept;
 
 	// 衝突判定リストを作成する
-	int GetAllCollisionList(_In_ ColliderPairSet &In_ColPairs);
+	int GetAllCollisionList(_In_ ColliderPairMap &In_ColPairs);
 
 	// 空間内で衝突リストを作成する
-	bool GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairSet &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac);
+	bool GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMap &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac);
 	
 	/// <summary>
 	/// 指定したコライダーに関連する衝突ペアを削除する関数
@@ -151,5 +151,5 @@ private:
 	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
 	std::vector<OctreeCell*> m_OctreeCells; // オクツリーセルの配列
-	ColliderPairSet m_ColliderPairList; // 衝突判定リスト
+	ColliderPairMap m_ColliderPairList; // 衝突判定リスト
 };
