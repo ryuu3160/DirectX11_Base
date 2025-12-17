@@ -32,7 +32,7 @@ class SceneBase
 {
 private:
 	friend class SceneManager; // シーンマネージャーをフレンドクラスに登録
-	using Objects = std::unordered_map<std::string, GameObject *, HashGenerator,StringEq>;
+	using Objects = std::unordered_map<std::string, GameObject *>;
 	using Items = std::list<std::string>;
 public:
 

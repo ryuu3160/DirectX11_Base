@@ -27,23 +27,32 @@ cbuffer WaveInfo : register(b1)
 	float waveSpeed; // 波の速度
 }
 
-VS_OUT VS(VS_IN input)
+VS_OUT main(VS_IN vin)
 {
-	VS_OUT output;
-
-    // サイン波の計算（頂点位置を動かす）
-	float wave = sin(input.pos.x * waveFrequency + time * waveSpeed);
-	input.pos.y += wave * waveAmplitude;
-
-    // 座標変換
-	float4 worldPos = mul(float4(input.pos, 1.0), world);
-	float4 viewPos = mul(worldPos, view);
-	output.pos = mul(viewPos, proj);
-
-	output.uv = input.uv; // UV座標はそのまま渡す
+	VS_OUT vout;
+	vout.pos = float4(vin.pos, 1.0f);
 	
-	//float generalWave = sin(worldPosition.x * GeneralFrequency + Time * GeneralSpeed) +
- //                       cos(worldPosition.z * GeneralFrequency + Time * GeneralSpeed);
+    // 画面の座標へ変換するための処理
+	vout.pos = mul(world, vout.pos); // ローカル → ワールドへ変換
+	vout.worldPos = vout.pos; // 計算途中のデータを格納
+	vout.pos = mul(view, vout.pos); // ワールド → ビューへ変換
+	vout.pos = mul(proj, vout.pos); // ビュー → プロジェクションへ変換
+    
+    // UVのデータはそのままピクセルシェーダーに渡す
+	vout.uv = vin.uv;
+    
+    // 法線はモデルが回転している場合、
+    // ピクセルシェーダーに渡す前に同じ回転をかけておく。
+    // float4x4では移動の成分も含まれるため、
+    // キャストすることで移動成分がない行列が作成できる
+	vout.normal = mul((float3x3) world, vin.normal);
+	
+    // サイン波の計算（頂点位置を動かす）
+	float generalWave = sin(vout.worldPos.x * waveFrequency + time * 1.0f) +
+						cos(vout.worldPos.z * waveFrequency + time * 1.0f);
+	
+	//float wave = sin(input.pos.x * waveFrequency + time * waveSpeed);
+	vout.pos.y += generalWave * waveAmplitude;
 
-	return output;
+	return vout;
 }

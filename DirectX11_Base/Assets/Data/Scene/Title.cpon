@@ -1,7 +1,7 @@
-#ObjNum : 4
+#ObjNum : 6
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]0.006707425, 0.4778516, -0.99709225
-  Quaternion:[4]0.043619387, 0, 0, 0.99904823
+  Position:[3]0, 1, -0.99709225
+  Quaternion:[4]0.02617695, 0, 0, 0.99965733
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -10,22 +10,36 @@ EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
     Near:0.2
     Far:1000
     Aspect:1.77778
-    Focus:1.14935
+    Focus:1
     IsShow:false
 
-WaveObject1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]0, 0, 0
-  Quaternion:[4]0, 0, 0, 1
+WaveInstancedObject0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
+  Position:[3]0, 0, -59.037704
+  Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
+  InstancedModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Ground/Ocean.fbx
+
+WaveInstancedObject1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
+  Position:[3]0, 0, 40.954933
+  Quaternion:[4]0, 0, 0, 0
+  Scale:[3]1, 1, 1
+  InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Ground/Ocean.fbx
 
 F15EGroup[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
-  Position:[3]0, 0.1, 0
+  Position:[3]0, 0.6, 0
   Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Character/F15E/F15E.fbx
+
+SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
+  Position:[3]0, 1, -0.99709225
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/SkyBox/sky.obj
 
 StartButton[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SpriteRenderer:object}:
   Position:[3]-0.0625, -3.8577778, 0

@@ -1,5 +1,5 @@
-Window,System/Log,1
-Window,System/DebugMenu,1
+Window,System/Log,0
+Window,System/DebugMenu,0
 Color,System/DebugMenu/ScreenColor,0.0470588244/0.7647058964/0.7921568751/1.0000000000
-Window,System/Hierarchy,1
-Window,System/Inspector,1
+Window,System/Hierarchy,0
+Window,System/Inspector,0

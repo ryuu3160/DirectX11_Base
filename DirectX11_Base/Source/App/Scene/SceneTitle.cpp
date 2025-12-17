@@ -38,14 +38,41 @@ void SceneTitle::Init()
 	auto &ShaderM = ShaderManager::GetInstance();
 
 	// シェーダー読み込み
-	
+	ShaderM.SetupShader("VS_Wave");
+	ShaderM.SetupShader("IVS_Wave");
 
-	// 波のオブジェクト作成
-	auto WaveObj = CreateObject<GameObject>("WaveObject1");
-	auto WaveRenderer = WaveObj->AddComponent<ModelRenderer>();
-	WaveRenderer->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-	WaveRenderer->SetVertexShader(ShaderM.GetShader("VS_Object"));
-	WaveRenderer->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	// 波のインスタンシングオブジェクト作成x2
+	for(int i = 0; i < 2; ++i)
+	{
+		std::string NumStr = ToString(i);
+		GameObject *pWaveInstanced = CreateObject<GameObject>("WaveInstancedObject" + NumStr);
+
+		float FirstPosZ = -2.0f;
+		float AddPosZ = 100.0f;
+		FirstPosZ += i * AddPosZ;
+
+		pWaveInstanced->SetPosition({ 0.0f,0.0f,FirstPosZ });
+		pWaveInstanced->SetScale({ 1.0f,1.0f,1.0f });
+		pWaveInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+		auto WaveInstancedComp = pWaveInstanced->AddComponent<InstancedModelRenderer>();
+		WaveInstancedComp->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
+		WaveInstancedComp->SetVertexShader(ShaderM.GetShader("IVS_Wave"));
+		WaveInstancedComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+		WaveInstancedComp->SetScale(1.0f);
+		WaveInstancedComp->IsUseMaterialShader(false);
+		InstancedMesh::AlignInstanceData waveInstanceData;
+		waveInstanceData.CountX = 100;
+		waveInstanceData.CountZ = 100;
+		waveInstanceData.CountY = 1;
+		waveInstanceData.StartPos = pWaveInstanced->GetPosition();
+		waveInstanceData.Scale = pWaveInstanced->GetScale();
+		waveInstanceData.Quaternion = pWaveInstanced->GetQuat();
+		waveInstanceData.IsWrite = true;
+		waveInstanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
+		waveInstanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Back };
+
+		WaveInstancedComp->SetAlignInstanceData(waveInstanceData);
+	}
 
 	// 戦闘機のインスタンシングオブジェクト作成
 	GameObject *pInstanced = CreateObject<GameObject>("F15EGroup");
@@ -70,6 +97,10 @@ void SceneTitle::Init()
 	instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
 
 	InstancedComp->SetAlignInstanceData(instanceData);
+
+	// スカイボックスを作成
+	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
+	pSkyBox->SetCamera(pCamera);
 }
 
 void SceneTitle::Uninit()
@@ -78,6 +109,46 @@ void SceneTitle::Uninit()
 
 void SceneTitle::Update(_In_ float In_Tick)
 {
+	static float Time = 0.0f;
+	Time += In_Tick;
+	float WaveParam[] = {
+		Time,
+		0.05f, // 波の振幅
+		10.0f,// 波の周期
+		1.0// 波の速度
+	};
+	// 波のインスタンシングオブジェクトにパラメータを設定&座標更新
+	for(int i = 0; i < 2; ++i)
+	{
+		// パラメータ設定
+		std::string NumStr = ToString(i);
+		auto WaveInstancedObj = GetObject<GameObject>("WaveInstancedObject" + NumStr);
+		auto WaveInstancedRenderer = WaveInstancedObj->GetComponent<InstancedModelRenderer>();
+		auto WaveParamVS = std::make_shared<ShaderParam>("WaveParam", 1, WaveParam, 4);
+		WaveInstancedRenderer->SetWriteParamForVS(WaveParamVS);
+
+		// 座標更新
+		float MoveSpeedZ = -1.0f;
+		auto Pos = WaveInstancedObj->GetPosition();
+		Pos.z += MoveSpeedZ * In_Tick;
+		if (Pos.z <= -100.0f)
+		{
+			Pos.z += 199.0f;
+		}
+		WaveInstancedObj->SetPosition(Pos);
+	}
+
+	// 各波オブジェクトにパラメータを設定
+	//for(int i = 0; i < 20; ++i)
+	//{
+	//	for(int j = 0; j < 10; ++j)
+	//	{
+	//		auto WaveObj = GetObject<GameObject>("WaveObject_" + std::to_string(i) + "_" + std::to_string(j));
+	//		auto WaveRenderer = WaveObj->GetComponent<ModelRenderer>();
+	//		auto WaveParamVS = std::make_shared<ShaderParam>("WaveParam", 1, WaveParam, 4);
+	//		WaveRenderer->SetWriteParamForVS(WaveParamVS);
+	//	}
+	//}
 }
 
 void SceneTitle::Draw()
