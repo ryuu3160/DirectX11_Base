@@ -31,9 +31,23 @@ namespace
 
 void SceneTitle::Init()
 {
+	// ランダムモジュール作成
+	m_Random = new Random();
+	m_Random->enableMT();
+
+	auto &Sound = SoundManager::GetInstance();
+	Sound.Load("TitleBGM", "Assets/Sound/BGM/TitleBGM.mp3", false, true);
+
 	// カメラ取得
+#ifdef _DEBUG
 	CameraDCC *pCamera = GetObject<CameraDCC>("EditorCamera");
+#else
+	auto pCamera = GetObject<CameraBaseObj>("MainCamera");
+#endif
 	auto pCameraComp = pCamera->GetComponent<Camera>();
+
+	// カメラのトランスフォーム設定
+	pCamera->SetPosition({ 0.0f,1.5f,-1.0f });
 
 	auto &ShaderM = ShaderManager::GetInstance();
 
@@ -76,6 +90,8 @@ void SceneTitle::Init()
 
 	// 戦闘機のインスタンシングオブジェクト作成
 	GameObject *pInstanced = CreateObject<GameObject>("F15EGroup");
+	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+
 	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
 	InstancedComp->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
 	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));
@@ -95,13 +111,38 @@ void SceneTitle::Init()
 
 	InstancedComp->SetAlignInstanceData(instanceData);
 
+	// 雲
+	for(int i = 0; i < 10; ++i)
+	{
+		GameObject *pCloud = CreateObject<GameObject>("CloudObject_" + ToString(i));
+		float PosX = m_Random->GetDecimalRange(40.0f, -40.0f, 2);
+		float PosY = m_Random->GetDecimalRange(5.0f, 0.1f, 2);
+		float Scale = m_Random->GetDecimalRange(7.0f, 3.0f, 2);
+		pCloud->SetPosition({ PosX ,PosY,60.0f * i });
+		pCloud->SetScale({ Scale,Scale,Scale });
+		pCloud->SetRotation({ 0.0f,90.0f,0.0f });
+		auto CloudComp = pCloud->AddComponent<ModelRenderer>();
+		CloudComp->SetAssetPath("Assets/Model/Cloud.fbx");
+		CloudComp->SetVertexShader(ShaderM.GetShader("VS_Object"));
+		CloudComp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+		CloudComp->SetScale(1.0f);
+		CloudComp->IsUseMaterialShader(true);
+	}
+
 	// スカイボックスを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
 	pSkyBox->SetCamera(pCamera);
+
+	Sound.SetVolume("TitleBGM", 0.5f);
+	Sound.Play("TitleBGM");
 }
 
 void SceneTitle::Uninit()
 {
+	SoundManager::GetInstance().Stop("TitleBGM");
+
+	delete m_Random;
+	m_Random = nullptr;
 }
 
 void SceneTitle::Update(_In_ float In_Tick)
@@ -135,17 +176,31 @@ void SceneTitle::Update(_In_ float In_Tick)
 		WaveInstancedObj->SetPosition(Pos);
 	}
 
-	// 各波オブジェクトにパラメータを設定
-	//for(int i = 0; i < 20; ++i)
-	//{
-	//	for(int j = 0; j < 10; ++j)
-	//	{
-	//		auto WaveObj = GetObject<GameObject>("WaveObject_" + std::to_string(i) + "_" + std::to_string(j));
-	//		auto WaveRenderer = WaveObj->GetComponent<ModelRenderer>();
-	//		auto WaveParamVS = std::make_shared<ShaderParam>("WaveParam", 1, WaveParam, 4);
-	//		WaveRenderer->SetWriteParamForVS(WaveParamVS);
-	//	}
-	//}
+	// 雲オブジェクトの座標更新
+	for(int i = 0; i < 10; ++i)
+	{
+		auto CloudObj = GetObject<GameObject>("CloudObject_" + ToString(i));
+		auto Pos = CloudObj->GetPosition();
+		float Scale = CloudObj->GetScale().x;
+		float MoveSpeedZ = -20.0f;
+		Pos.z += MoveSpeedZ * In_Tick;
+		if (Pos.z <= -5.0f)
+		{
+			Pos.z = 100.0f;
+			Pos.x = m_Random->GetDecimalRange(40.0f, -40.0f, 2);
+			Pos.y = m_Random->GetDecimalRange(5.0f, 0.1f, 2);
+			Scale = m_Random->GetDecimalRange(7.0f, 2.0f, 2);
+		}
+		CloudObj->SetPosition(Pos);
+		CloudObj->SetScale({ Scale,Scale,Scale });
+	}
+
+	// 戦闘機を左右にティルトさせる
+	auto F15EGroupObj = GetObject<GameObject>("F15EGroup");
+	auto F15EGroupRot = F15EGroupObj->GetRotation();
+	F15EGroupRot.z += std::sinf(Time) * 5.0f;
+	F15EGroupObj->SetRotation(F15EGroupRot);
+
 }
 
 void SceneTitle::Draw()

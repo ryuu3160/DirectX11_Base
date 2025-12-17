@@ -1,7 +1,7 @@
-#ObjNum : 6
+#ObjNum : 17
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]0, 1.5, -0.99709225
-  Quaternion:[4]0.02617695, 0, 0, 0.99965733
+  Position:[3]0, 1.5, -1
+  Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -13,38 +13,115 @@ EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
     Focus:1
     IsShow:false
 
+CloudObject_3[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]-3.25, 1.97, 115.99822
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]3.28, 3.28, 3.28
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
 WaveInstancedObject0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
-  Position:[3]0, 0, -10.93573
+  Position:[3]0, 0, -5.200083
   Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Ground/Ocean.fbx
 
+CloudObject_1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]23.25, 3.49, -4.0014706
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]3.42, 3.42, 3.42
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
 WaveInstancedObject1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
-  Position:[3]0, 0, 89.06253
+  Position:[3]0, 0, 94.79932
   Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Ground/Ocean.fbx
+
+CloudObject_0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]30, 4.9, 40.998444
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]4.15, 4.15, 4.15
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
 
 F15EGroup[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
   Position:[3]0, 0.6, 0
-  Quaternion:[4]0, 0, 0, 0
+  Quaternion:[4]0, 0, -0.0025823673, 0.99999666
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Character/F15E/F15E.fbx
 
+CloudObject_5[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]35.79, 3.22, 235.99742
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]3.8, 3.8, 3.8
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_2[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]39.3, 4.22, 55.99845
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]5.63, 5.63, 5.63
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_4[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]26.71, 1.58, 175.99817
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]5.57, 5.57, 5.57
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_6[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]35.79, 3.86, 295.9971
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]3.89, 3.89, 3.89
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_7[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]17.55, 2.16, 355.9971
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]6.31, 6.31, 6.31
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_8[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]4.36, 2.82, 415.9971
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]4.59, 4.59, 4.59
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
+CloudObject_9[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]-14.41, 2.91, 475.9993
+  Quaternion:[4]0, 0.70710677, 0, 0.7071067
+  Scale:[3]5.44, 5.44, 5.44
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/Cloud.fbx
+
 SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]0, 1.5, -0.99709225
+  Position:[3]0, 1.5, -1
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   SkyBoxRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/SkyBox/sky.obj
 
 StartButton[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SpriteRenderer:object}:
-  Position:[3]-0.0625, -3.8577778, 0
+  Position:[3]0, -4.153333, 0
   Quaternion:[4]0, 0, 0, 1
-  Scale:[3]9.14, 2, 1
+  Scale:[3]14, 2, 1
   SpriteRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Texture/GameTexture/StartButton.png
+
+TitleLogo[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SpriteRenderer:object}:
+  Position:[3]0, 1.8822223, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]15.75, 9, 1
+  SpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Texture/GameTexture/TitleLogo.png
 

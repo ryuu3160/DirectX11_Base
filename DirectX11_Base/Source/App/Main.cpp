@@ -53,13 +53,14 @@ HRESULT Main::Init()
 	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();
-
-	// デバッグ関連の初期化
 	InitializeImGui::InitImGui();
 	auto &SpriteM = SpriteManager::GetInstance();
-	auto &DebugM = DebugManager::GetInstance();
+
+#ifdef _DEBUG
 	// DebugManagerの初期化
+	auto &DebugM = DebugManager::GetInstance();
 	DebugM.Init();
+#endif
 
 	// よく使うシェーダーの読み込み
 	std::vector<std::string> shaders = {
@@ -102,7 +103,7 @@ HRESULT Main::Init()
 #ifdef _DEBUG
 	CameraCmp = pScene->GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
 #else
-
+	CameraCmp = pScene->GetObject<CameraBaseObj>("MainCamera")->GetComponent<Camera>();
 #endif
 	if(CameraCmp == nullptr)
 	{
@@ -183,7 +184,9 @@ void Update(_In_ float In_Tick)
 	auto &SceneM = SceneManager::GetInstance();
 	SceneM.RootUpdate(In_Tick);
 	SpriteManager::GetInstance().Update();
+#ifdef _DEBUG
 	DebugManager::GetInstance().Update();
+#endif
 }
 
 void Draw()
@@ -198,8 +201,10 @@ void Draw()
 	InitializeImGui::BeginImGuiFrame();
 	// スプライトマネージャーの描画
 	SpriteManager::GetInstance().DrawImGui();
+#ifdef _DEBUG
 	// デバッグマネージャーの描画
 	DebugManager::GetInstance().Draw();
+#endif
 	InitializeImGui::EndImGuiFrame();
 
 	// オブジェクトの破棄は非同期で行う

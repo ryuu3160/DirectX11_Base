@@ -1,3 +1,2 @@
-TitleScene
-RootScene,Assets\SpriteManager\RootScene.json
-TitleScene,Assets\SpriteManager\TitleSceneSprites.json
+
+Title,Assets\SpriteManager\TitleSprites.json

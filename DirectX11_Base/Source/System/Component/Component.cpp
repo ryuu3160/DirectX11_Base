@@ -38,9 +38,11 @@ void Component::DestroySelf() noexcept
 	m_pTransform->RemoveComponent(m_Name);
 }
 
+#ifdef _DEBUG
 void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 }
+#endif
 
 void Component::DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock)
 {

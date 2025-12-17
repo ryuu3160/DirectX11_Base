@@ -37,4 +37,5 @@ private:
 	void ChangeScene();
 private:
 	int m_Index = 0;
+	Random *m_Random;
 };

@@ -69,13 +69,19 @@ void SceneBase::CommonProcessScene() noexcept
 	DataLoad();
 
 	// メインカメラの作成
+#ifdef _DEBUG
 	auto CamObj = CreateObject<CameraDCC>("EditorCamera");
 	auto CamCmp = CamObj->GetComponent<Camera>();
-
 	// スプライトマネージャーにカメラを設定
 	SpriteManager::GetInstance().SetCamera(CamCmp);
 	SpriteManager::GetInstance().SetCameraObject(CamObj);
-
+#else
+	auto CamObj = CreateObject<CameraBaseObj>("MainCamera");
+	auto CamCmp = CamObj->GetComponent<Camera>();
+	// スプライトマネージャーにカメラを設定
+	SpriteManager::GetInstance().SetCamera(CamCmp);
+	SpriteManager::GetInstance().SetCameraObject(CamObj);
+#endif
 }
 
 template<> GameObject
