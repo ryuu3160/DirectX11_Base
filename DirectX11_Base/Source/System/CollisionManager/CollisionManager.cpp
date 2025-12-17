@@ -97,7 +97,7 @@ void CollisionManager::UpdateCollisionCells(_In_ ColliderBase *In_Collider)
 
 void CollisionManager::CheckAllCollisions() noexcept
 {
-	ColliderPairSet ColPairs;
+	ColliderPairMap ColPairs;
 	int ColNum = 0;
 	// 衝突判定リストを作成する
 	ColNum = GetAllCollisionList(ColPairs);
@@ -252,7 +252,7 @@ bool CollisionManager::RegisterObjectToOctree(_In_ ColliderBase *In_Collider) no
 	return false;
 }
 
-int CollisionManager::GetAllCollisionList(_In_ ColliderPairSet &In_ColPairs)
+int CollisionManager::GetAllCollisionList(_In_ ColliderPairMap &In_ColPairs)
 {
 	// リスト（配列）は必ず初期化します
 	In_ColPairs.clear();
@@ -268,7 +268,7 @@ int CollisionManager::GetAllCollisionList(_In_ ColliderPairSet &In_ColPairs)
 	return static_cast<int>(In_ColPairs.size());
 }
 
-bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairSet &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac)
+bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMap &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac)
 {
 	std::list<ColliderBase *>::iterator itr;
 	// ① 空間内のオブジェクト同士の衝突リスト作成
