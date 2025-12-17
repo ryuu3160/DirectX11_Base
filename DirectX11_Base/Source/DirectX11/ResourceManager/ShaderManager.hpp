@@ -20,10 +20,16 @@ class ShaderManager : public Singleton<ShaderManager>
 public:
 
 	/// <summary>
+	/// シェーダーファイルの読み込みとセットアップをまとめて行う
+	/// </summary>
+	/// <param name="[In_FileNames]">読みこむシェーダーファイルの名前が格納されたvector</param>
+	void SetupShaders(_In_ const std::vector<std::string> &In_FileNames) noexcept;
+
+	/// <summary>
 	/// シェーダーファイルの読み込みとセットアップを行う
 	/// </summary>
-	/// <param name="[In_FileNames]">読みこむシェーダーファイルの名前</param>
-	void SetupShaders(_In_ const std::vector<std::string> &In_FileNames) noexcept;
+	/// <param name="[In_FileName]">読みこむシェーダーファイルの名前</param>
+	void SetupShader(_In_ const std::string_view In_FileName) noexcept;
 
 	/// <summary>
 	/// 指定されたファイル名からシェーダーを取得します。
