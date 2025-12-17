@@ -155,6 +155,7 @@ private:
 protected:
 	Items m_Items;
 	Items m_DeadItems; // 破棄するオブジェクトの名前リスト
+	std::unordered_set<GameObject *> m_SceneObjects; // シーン内のオブジェクトリスト
 	SceneManager &m_SceneManager;
 };
 
@@ -183,6 +184,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
 	m_Objects.insert(std::pair<std::string, T*>(In_Name, ptr));
 	m_Items.push_back(In_Name);
+	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
 	return ptr;
 }
@@ -212,6 +214,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
 	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
+	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
 	return ptr;
 }
