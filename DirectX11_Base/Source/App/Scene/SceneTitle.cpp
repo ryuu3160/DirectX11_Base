@@ -76,9 +76,6 @@ void SceneTitle::Init()
 
 	// 戦闘機のインスタンシングオブジェクト作成
 	GameObject *pInstanced = CreateObject<GameObject>("F15EGroup");
-	pInstanced->SetPosition({ 0.0f,0.1f,0.0f });
-	pInstanced->SetScale({ 1.0f,1.0f,1.0f });
-	pInstanced->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 	auto InstancedComp = pInstanced->AddComponent<InstancedModelRenderer>();
 	InstancedComp->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
 	InstancedComp->SetVertexShader(ShaderM.GetShader("IVS_InstancedObject"));

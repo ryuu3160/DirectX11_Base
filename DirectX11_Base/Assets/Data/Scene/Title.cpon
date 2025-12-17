@@ -1,6 +1,6 @@
 #ObjNum : 6
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]0, 1, -0.99709225
+  Position:[3]0, 1.5, -0.99709225
   Quaternion:[4]0.02617695, 0, 0, 0.99965733
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
@@ -14,14 +14,14 @@ EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
     IsShow:false
 
 WaveInstancedObject0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
-  Position:[3]0, 0, -59.037704
+  Position:[3]0, 0, -10.93573
   Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/Ground/Ocean.fbx
 
 WaveInstancedObject1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,InstancedModelRenderer:object}:
-  Position:[3]0, 0, 40.954933
+  Position:[3]0, 0, 89.06253
   Quaternion:[4]0, 0, 0, 0
   Scale:[3]1, 1, 1
   InstancedModelRenderer:[1]{AssetPath:string}:
@@ -35,7 +35,7 @@ F15EGroup[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,In
     AssetPath:Assets/Model/Character/F15E/F15E.fbx
 
 SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]0, 1, -0.99709225
+  Position:[3]0, 1.5, -0.99709225
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   SkyBoxRenderer:[1]{AssetPath:string}:
