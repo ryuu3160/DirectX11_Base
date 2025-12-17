@@ -14,48 +14,53 @@ void ShaderManager::SetupShaders(_In_ const std::vector<std::string> &In_FileNam
 {
 	for (const auto &itr : In_FileNames)
 	{
-		Shader *shader = nullptr;
-		// シェーダーの種類を判定
-		if (itr.find("PS_") != std::string::npos)
-		{
-			shader = CreateShader<PixelShader>(itr);
-		}
-		else if (itr.find("IVS_") != std::string::npos)
-		{
-			shader = CreateShader<InstancedVertexShader>(itr);
-		}
-		else if(itr.find("VS_") != std::string::npos)
-		{
-			shader = CreateShader<VertexShader>(itr);
-		}
-		else if (itr.find("GS_") != std::string::npos)
-		{
-			shader = CreateShader<GeometryShader>(itr);
-		}
-		else if (itr.find("HS_") != std::string::npos)
-		{
-			shader = CreateShader<HullShader>(itr);
-		}
-		else if (itr.find("DS_") != std::string::npos)
-		{
-			shader = CreateShader<DomainShader>(itr);
-		}
-		else if (itr.find("CS_") != std::string::npos)
-		{
-			shader = CreateShader<ComputeShader>(itr);
-		}
-		else
-		{
-			MessageBoxA(NULL, itr.c_str(), "Shader name [VS_ / PS_]", MB_OK);
-		}
-		// csoファイルのパスを設定
-		std::string path = "Assets/Shader/";
-		path += itr;
-		path += ".cso";
-		if (shader && FAILED(shader->Load(path.c_str())))
-		{
-			MessageBoxA(NULL, itr.c_str(), "Shader Error", MB_OK);
-		}
+		SetupShader(itr);
+	}
+}
+
+void ShaderManager::SetupShader(_In_ const std::string_view In_FileName) noexcept
+{
+	Shader *shader = nullptr;
+	// シェーダーの種類を判定
+	if(In_FileName.find("PS_") != std::string::npos)
+	{
+		shader = CreateShader<PixelShader>(In_FileName);
+	}
+	else if(In_FileName.find("IVS_") != std::string::npos)
+	{
+		shader = CreateShader<InstancedVertexShader>(In_FileName);
+	}
+	else if(In_FileName.find("VS_") != std::string::npos)
+	{
+		shader = CreateShader<VertexShader>(In_FileName);
+	}
+	else if(In_FileName.find("GS_") != std::string::npos)
+	{
+		shader = CreateShader<GeometryShader>(In_FileName);
+	}
+	else if(In_FileName.find("HS_") != std::string::npos)
+	{
+		shader = CreateShader<HullShader>(In_FileName);
+	}
+	else if(In_FileName.find("DS_") != std::string::npos)
+	{
+		shader = CreateShader<DomainShader>(In_FileName);
+	}
+	else if(In_FileName.find("CS_") != std::string::npos)
+	{
+		shader = CreateShader<ComputeShader>(In_FileName);
+	}
+	else
+	{
+		DebugManager::GetInstance().DebugLogError("Shader name [VS_ / PS_] : {}", In_FileName);
+	}
+	// csoファイルのパスを設定
+	std::string path = "Assets/Shader/";
+	path += In_FileName;
+	path += ".cso";
+	if(shader && FAILED(shader->Load(path.c_str())))
+	{
+		DebugManager::GetInstance().DebugLogError("Shader Load Error : {}", In_FileName);
 	}
 }
 
