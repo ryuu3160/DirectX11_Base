@@ -14,13 +14,21 @@ MeshBuffer::MeshBuffer(_In_ const Description &In_Desc) noexcept
 	: m_pVtxBuffer(NULL), m_pIdxBuffer(NULL), m_Desc{}
 {
 	HRESULT hr = E_FAIL;
+	m_Desc = In_Desc; // コピー
+
+	if(In_Desc.vtxCount == 0)
+	{
+		m_Desc.pVtx = nullptr;
+		m_Desc.pIdx = nullptr;
+		return;
+	}
+
 	// 頂点バッファとインデックスバッファの作成
 	hr = CreateVertexBuffer(In_Desc.pVtx, In_Desc.vtxSize, In_Desc.vtxCount, In_Desc.isWrite);
-	if (In_Desc.pIdx)
+	if (In_Desc.pIdx && In_Desc.idxCount != 0)
 	{
 		hr = CreateIndexBuffer(In_Desc.pIdx, In_Desc.idxSize, In_Desc.idxCount);
 	}
-	m_Desc = In_Desc;
 
 	// 頂点とインデックスの情報をコピー
 	rsize_t vtxMemSize = In_Desc.vtxSize * In_Desc.vtxCount;
@@ -67,12 +75,14 @@ HRESULT MeshBuffer::RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const int In_VtxCo
 		hr = CreateIndexBuffer(In_pIdx ? In_pIdx : m_Desc.pIdx, m_Desc.idxSize, In_IdxCount);
 	}
 	// 頂点とインデックスの情報をコピー
-	delete[] m_Desc.pVtx;
+	if(m_Desc.pVtx)
+		delete[] m_Desc.pVtx;
 	rsize_t vtxMemSize = m_Desc.vtxSize * In_VtxCount;
 	void *pVtx = new char[vtxMemSize];
 	memcpy_s(pVtx, vtxMemSize, In_pVtx ? In_pVtx : m_Desc.pVtx, vtxMemSize);
 	m_Desc.pVtx = pVtx;
-	delete[] m_Desc.pIdx;
+	if(m_Desc.pIdx)
+		delete[] m_Desc.pIdx;
 	rsize_t idxMemSize = m_Desc.idxSize * In_IdxCount;
 	void *pIdx = new char[idxMemSize];
 	memcpy_s(pIdx, idxMemSize, In_pIdx ? In_pIdx : m_Desc.pIdx, idxMemSize);

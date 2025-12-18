@@ -15,7 +15,7 @@ GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
 	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_bIsChild(false)
-	, m_pScene(nullptr), m_IsDestroySelf(false), m_pParent(nullptr)
+	, m_pScene(nullptr), m_pParent(nullptr)
 	, m_Data(nullptr)
 {
 	m_Data = std::make_shared<cpon_object>();
@@ -132,6 +132,7 @@ void GameObject::OnDisable() noexcept
 	for (auto &itr : m_Components)
 	{
 		itr->OnDisable();
+		itr->SetActive(false);
 	}
 }
 
@@ -266,7 +267,7 @@ void GameObject::DestroyAllChildObjects() noexcept
 
 void GameObject::DestroySelf() noexcept
 {
-	m_IsDestroySelf = true;
+	Object::DestroySelf();
 
 	_destroySelf();
 
@@ -528,6 +529,9 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 		});
 	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
 	In_pWindow->CreateItem<ItemBind>("IsActive", DebugItem::Kind::Bool, &m_IsActive);
+
+	// 継承先オブジェクトのインスペクター登録
+	RegisterObjectDebugInspector(In_pWindow);
 
 	// コンポーネントのインスペクター登録
 	for (auto &itr : m_Components)

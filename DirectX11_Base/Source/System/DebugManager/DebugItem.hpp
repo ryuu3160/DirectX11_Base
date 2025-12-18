@@ -82,11 +82,6 @@ public:
 	DirectX::XMFLOAT4 GetColor();
 	std::string GetStr();
 
-	// グループで使用する関数
-	template <typename T, typename ...Args>
-		requires std::derived_from<T, DebugItem>
-	T *CreateGroupItem(_In_ const std::string_view In_Name, _In_ Args&& ...args);
-
 	DebugItem &operator[](_In_ const std::string_view In_Name);
 
 	// リストで使用する関数
@@ -103,10 +98,18 @@ public:
 
 
 protected:
+	std::string m_GroupName;
+	std::string m_WindowName;
 	std::string m_Name;
 	Kind m_Kind;
 };
 
+/// <summary>
+/// ItemValueクラス
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Kind]">保存する型を表すKind情報</param>
+/// <param name="[In_IsSave]">値を保存するかどうか</param>
 class ItemValue : public DebugItem
 {
 public:
@@ -169,6 +172,12 @@ private:
 	bool m_IsSave;
 };
 
+/// <summary>
+/// ItemBindクラス
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Kind]">紐づける型を表すKind情報</param>
+/// <param name="[In_IsSave]">紐づける値へのポインタ</param>
 class ItemBind : public DebugItem
 {
 public:
@@ -233,6 +242,13 @@ public:
 
 	std::vector<DebugItem *> &GetGroupItems() { return m_Items; }
 
+	// グループで使用する関数
+	template <typename T, typename ...Args>
+	requires std::derived_from<T, DebugItem>
+	T *CreateGroupItem(_In_ const std::string_view In_Name, _In_ Args&& ...args);
+
+private:
+	void DataRead(_In_ const std::string_view In_FullPath, _In_ DebugItem *In_pItem);
 private:
 	std::vector<DebugItem *> m_Items;
 };
@@ -323,12 +339,16 @@ private:
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, DebugItem>
-inline T *DebugItem::CreateGroupItem(const std::string_view In_Name, Args && ...args)
+inline T *ItemGroup::CreateGroupItem(const std::string_view In_Name, Args && ...args)
 {
 	if (m_Kind != Kind::Group)
 		return nullptr;
 
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
+
+	std::string Path = m_GroupName + "/" + m_WindowName + "/" + m_Name + "/";
+	DataRead(Path, item);
+
 	dynamic_cast<ItemGroup *>(this)->m_Items.push_back(static_cast<DebugItem *>(item));
 	return item;
 }

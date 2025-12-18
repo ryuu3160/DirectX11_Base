@@ -32,6 +32,8 @@ public:
 
 	DebugItem &operator[](_In_ std::string_view In_ItemName);
 
+	ItemGroup &GetGroupItem(_In_ std::string_view In_ItemName);
+
 	template <typename T, typename ...Args>
 	requires std::derived_from<T, DebugItem>
 	T *CreateItem(const std::string_view In_Name, Args&& ...args);
@@ -76,6 +78,8 @@ requires std::derived_from<T, DebugItem>
 inline T *DebugWindow::CreateItem(const std::string_view In_Name, Args && ...args)
 {
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
+	item->m_GroupName = m_GroupName;
+	item->m_WindowName = m_Name;
 
 	DebugManager::GetInstance().DataRead(m_GroupName + "/" + m_Name + "/", item);
 

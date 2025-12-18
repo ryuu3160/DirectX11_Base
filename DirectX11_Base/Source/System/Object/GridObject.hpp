@@ -29,11 +29,27 @@ public:
 	GridObject(_In_ std::string In_Name);
 	~GridObject();
 
+	void Init() noexcept override;
+
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 
-	void LateUpdate(_In_ float In_Tick) noexcept override final;
+	void Update(_In_ float In_Tick) noexcept override final;
+
+private:
+
+	void CreateGrid() noexcept;
 
 private:
 	GameObject *m_pCameraObj; // カメラオブジェクト
 	LineRenderer *m_pRenderComponent; // スカイボックス描画コンポーネント
+
+	float m_GridSize;
+	float m_GridMargin;
+	float m_GridSizePrev;
+	float m_GridMarginPrev;
+	bool m_GridAxis;
+	bool m_GridAxisPrev;
+	DirectX::XMFLOAT4 m_GridColor;
+	DirectX::XMFLOAT4 m_GridColorPrev;
+	ItemGroup *m_pDebugGroup;
 };

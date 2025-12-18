@@ -37,6 +37,9 @@ public:
 	virtual void LateUpdate(_In_ float In_Tick) noexcept {};
 	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept {};
 
+	virtual void DestroySelf() noexcept { m_IsDestroySelf = true;}
+	[[nodiscard]] bool IsDestroySelf() const noexcept { return m_IsDestroySelf; }
+
 protected:
 
 	// “–‚½‚è”»’è—p
@@ -54,4 +57,5 @@ protected:
 protected:
 	bool m_IsActive = true;
 	bool m_IsInitialized = false;
+	bool m_IsDestroySelf = false;
 };

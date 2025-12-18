@@ -52,6 +52,18 @@ DebugItem &DebugWindow::operator[](_In_ std::string_view In_ItemName)
 	return **itr;
 }
 
+ItemGroup &DebugWindow::GetGroupItem(std::string_view In_ItemName)
+{
+	auto itr = FindItem(In_ItemName);
+	if (itr == m_Items.end())
+		return *static_cast<ItemGroup *>(s_NullItem);
+
+	ItemGroup *pGroup = dynamic_cast<ItemGroup *>(*itr);
+	if (!pGroup)
+		return *static_cast<ItemGroup *>(s_NullItem);
+	return *pGroup;
+}
+
 void DebugWindow::RemoveItem(_In_ std::string_view In_Name)
 {
 	auto itr = FindItem(In_Name);

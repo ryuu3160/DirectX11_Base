@@ -204,6 +204,7 @@ void SceneRoot::Update(_In_ float In_Tick)
 
 void SceneRoot::Draw()
 {
+	return;
 #ifdef _DEBUG
 	Geometory &geometory = Geometory::GetInstance();
 	Camera *pCamera = GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();

@@ -17,7 +17,7 @@ SkyBoxObj::SkyBoxObj()
 {
 }
 
-SkyBoxObj::SkyBoxObj(std::string In_Name)
+SkyBoxObj::SkyBoxObj(_In_ std::string In_Name)
 	: GameObject(In_Name)
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)

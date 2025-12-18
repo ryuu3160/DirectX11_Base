@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "DebugItem.hpp"
+#include "DebugManager.hpp"
 
 // ==============================
 //	’è”’è‹`
@@ -649,6 +650,11 @@ void ItemGroup::DrawImGui()
 	default:
 		break;
 	}
+}
+
+void ItemGroup::DataRead(_In_ const std::string_view In_FullPath, _In_ DebugItem *In_pItem)
+{
+	DebugManager::GetInstance().DataRead(In_FullPath.data(), In_pItem);
 }
 
 // ==============================

@@ -12,6 +12,7 @@
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/GameObject.hpp"
 #include "System/Scene/SceneManager.hpp"
+#include "System/Object/GridObject.hpp"
 
 // ==============================
 //  前方宣言
@@ -66,8 +67,17 @@ void SceneBase::CommonProcessScene() noexcept
 #endif
 
 	// メインカメラの作成
-	CreateObject<CameraDCC>("EditorCamera");
+#ifdef _DEBUG
+	 auto pCamObj = CreateObject<CameraDCC>("EditorCamera");
+#else
 
+#endif
+
+#ifdef _DEBUG
+	// グリッドオブジェクトの作成
+	auto grid = CreateObject<GridObject>("GridObject");
+	grid->SetCamera(pCamObj);
+#endif
 }
 
 template<> GameObject

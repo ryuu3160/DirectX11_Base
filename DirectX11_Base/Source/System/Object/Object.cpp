@@ -17,4 +17,6 @@ void Object::SetActive(_In_ bool In_IsActive) noexcept
 	m_IsActive = In_IsActive;
 	if (m_IsActive)
 		OnEnable();
+	else
+		OnDisable();
 }

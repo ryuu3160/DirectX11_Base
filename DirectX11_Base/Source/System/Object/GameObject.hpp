@@ -110,7 +110,7 @@ public:
 	/// <summary>
 	/// 自身を所属しているシーンから破棄します。
 	/// </summary>
-	void DestroySelf() noexcept;
+	void DestroySelf() noexcept override final;
 
 	/// <summary>
 	/// 自身が所属しているシーンを取得します。
@@ -161,6 +161,11 @@ protected:
 	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept override;
 	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept override;
 
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
+	virtual void RegisterObjectDebugInspector(_In_ DebugWindow *In_pWindow) {};
+#endif // _DEBUG
+
 private:
 	void InitializeComponents() noexcept;
 
@@ -174,10 +179,6 @@ private:
 
 	void DataWrite(_In_ cpon *In_pCpon);
 	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
-
-#ifdef _DEBUG
-	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
-#endif // _DEBUG
 
 private:
 	// コンポーネントリスト
@@ -202,12 +203,10 @@ private:
 	std::string			m_ChildNameSaffix;	// 子オブジェクト名のサフィックス
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
 	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
-	bool				m_IsDestroySelf;	// 自身を破棄するかどうかのフラグ
 protected:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
-	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
-
+	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
 	bool				m_bIsChild; // 子オブジェクトかどうか
 };
 

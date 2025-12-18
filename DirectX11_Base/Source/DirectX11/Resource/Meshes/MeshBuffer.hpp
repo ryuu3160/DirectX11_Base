@@ -20,11 +20,11 @@ public:
 	/// </summary>
 	struct Description
 	{
-		const void *pVtx;
+		const void *pVtx = nullptr;
 		UINT vtxSize;
 		UINT vtxCount;
 		bool isWrite;
-		const void *pIdx;
+		const void *pIdx = nullptr;
 		UINT idxSize;
 		UINT idxCount;
 		D3D11_PRIMITIVE_TOPOLOGY topology;

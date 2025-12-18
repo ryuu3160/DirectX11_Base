@@ -93,9 +93,7 @@ public:
 
 	GameObject *GetGameObject() const noexcept { return m_pTransform; }
 
-	bool IsDestroyed() const noexcept { return m_IsDestroyed; }
-
-	void DestroySelf() noexcept;
+	void DestroySelf() noexcept override final;
 
 protected:
 
@@ -110,6 +108,4 @@ private:
 protected:
 	GameObject *m_pTransform;
 	std::string m_Name;
-private:
-	bool m_IsDestroyed = false;
 };

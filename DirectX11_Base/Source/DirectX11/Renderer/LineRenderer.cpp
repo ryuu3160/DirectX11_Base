@@ -21,6 +21,7 @@ namespace
 
 LineRenderer::LineRenderer()
 	: RenderComponent("LineRenderer")
+	, m_IsUpdate(false), m_IsClearLines(false)
 {
 	MakeDefaultShader();
 
@@ -43,16 +44,23 @@ LineRenderer::~LineRenderer()
 
 void LineRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
+	VertexShader *vs = dynamic_cast<VertexShader *>(In_Vs);
+	if(vs)
+		m_Data.pVS = vs;
 }
 
 void LineRenderer::SetPixelShader(_In_ Shader *In_Ps) noexcept
 {
+	PixelShader *ps = dynamic_cast<PixelShader *>(In_Ps);
+	if(ps)
+		m_Data.pPS = ps;
 }
 
 void LineRenderer::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
 {
 	m_Data.lineVtxs.emplace_back(Vertex{ In_Start, In_StartColor, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) });
 	m_Data.lineVtxs.emplace_back(Vertex{ In_End, In_EndColor, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) });
+	m_IsUpdate = true;
 }
 
 void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
@@ -60,8 +68,8 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	// 定数バッファに渡す行列の情報を作成
 	DirectX::XMFLOAT4X4 mat[3];
 	// カメラのビュー/プロジェクション行列を設定
-	mat[1] = In_RenderContext->GetView(false);
-	mat[2] = In_RenderContext->GetProj(false);
+	mat[1] = In_RenderContext->GetView();
+	mat[2] = In_RenderContext->GetProj();
 
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);
@@ -76,11 +84,21 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
 	m_Data.pVS->Bind();
 	m_Data.pPS->Bind();
-	m_Data.lineMesh->RemakeBuffer(m_Data.lineVtxs.data(), static_cast<int>(m_Data.lineVtxs.size()));
+	if(m_IsUpdate)
+	{
+		m_Data.lineMesh->RemakeBuffer(m_Data.lineVtxs.data(), static_cast<int>(m_Data.lineVtxs.size()));
+		m_IsUpdate = false;
+	}
 	m_Data.lineMesh->Draw(static_cast<int>(m_Data.lineVtxs.size()));
 
 	m_Data.param[0] = colorBackup;
 	m_Data.param[1].w = lightBackup;
+
+	if (m_IsClearLines)
+	{
+		m_Data.lineVtxs.clear();
+		m_IsClearLines = false;
+	}
 }
 
 

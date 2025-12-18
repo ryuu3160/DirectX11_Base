@@ -31,7 +31,14 @@ public:
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
+	void SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept { m_Data.param[0] = In_Color; }
+
 	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor = DefaultLineColor, _In_ DirectX::XMFLOAT4 In_EndColor = DefaultLineColor) noexcept;
+
+	/// <summary>
+	/// ライン情報をクリアします
+	/// </summary>
+	void ClearLines() noexcept { m_IsClearLines = true; }
 
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います
@@ -70,5 +77,6 @@ private:
 		std::shared_ptr<MeshBuffer> sphereMesh;
 	};
 	Data m_Data;
-
+	bool m_IsUpdate;
+	bool m_IsClearLines;
 };

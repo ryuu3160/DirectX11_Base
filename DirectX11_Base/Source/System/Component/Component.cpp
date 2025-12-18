@@ -34,7 +34,7 @@ void Component::FixedUpdate(_In_ double In_FixedTick) noexcept
 
 void Component::DestroySelf() noexcept
 {
-	m_IsDestroyed = true;
+	Object::DestroySelf();
 	m_pTransform->RemoveComponent(m_Name);
 }
 
