@@ -72,13 +72,8 @@ void InputSystem::RegisterKeyCallBack(_In_ BYTE In_Key, _In_ KeyState In_State, 
 		DebugManager::GetInstance().DebugLogWarning("InputSystem::AddInputCallback: Key %d is already registered.", In_Key);
 }
 
+#ifdef _DEBUG
 void InputSystem::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
-}
-
-#ifdef _DEBUG
-void RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
-{
-
 }
 #endif

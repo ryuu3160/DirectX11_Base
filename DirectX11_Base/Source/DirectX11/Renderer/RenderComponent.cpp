@@ -59,6 +59,7 @@ void RenderComponent::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<FilePathHold>("AssetPath", &m_AssetPath);
 }
 
+#ifdef _DEBUG
 void RenderComponent::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>(m_Name);
@@ -68,6 +69,7 @@ void RenderComponent::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	Bind2->SetNoticeFunc([this]() { CallLayerSortRequest(); });
 	group->CreateGroupItem<ItemBind>("AssetPath", DebugItem::Kind::Path, &m_AssetPath);
 }
+#endif
 
 void RenderComponent::CheckLayerGroupChange()
 {

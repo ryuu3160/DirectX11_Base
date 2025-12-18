@@ -24,11 +24,13 @@ class RenderManager;
 // ==============================
 enum LayerGroup : int
 {
-	LayerGroup_SkyBox = -1,	// スカイボックス
-	LayerGroup_Default,	// 通常オブジェクト
-	LayerGroup_UI,		// UIオブジェクト
-	LayerGroup_RenderTexture, // レンダーテクスチャ用オブジェクト
-	LayerGroup_Fade,	// フェード用オブジェクト
+	LayerGroup_SkyBox = -2,		// スカイボックス
+	LayerGroup_Grid,			// グリッド
+	LayerGroup_Default,			// 通常オブジェクト
+	LayerGroup_UI,				// UIオブジェクト
+	LayerGroup_Line,			// 線描画オブジェクト
+	LayerGroup_RenderTexture,	// レンダーテクスチャ用オブジェクト
+	LayerGroup_Fade,			// フェード用オブジェクト
 
 };
 

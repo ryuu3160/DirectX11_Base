@@ -501,6 +501,7 @@ void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 	m_Scale = DirectX::XMFLOAT3((*ScaleArray)[0], (*ScaleArray)[1], (*ScaleArray)[2]);
 }
 
+#ifdef _DEBUG
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 	// トランスフォームグループの作成
@@ -534,3 +535,4 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 		itr->RegisterDebugInspector(In_pWindow);
 	}
 }
+#endif
