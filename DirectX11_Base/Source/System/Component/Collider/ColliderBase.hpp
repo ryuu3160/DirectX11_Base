@@ -64,6 +64,11 @@ public:
 
 	TreeData *GetTreeData() noexcept { return m_pTreeData.get(); }
 
+	// “–‚½‚è”»’èŒÄ‚Ño‚µ—p
+	void CallOnEnter(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnStay(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnExit(_In_ ColliderBase *In_Other) noexcept;
+
 protected:
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;

@@ -69,7 +69,7 @@ void SceneRoot::Init()
 	Component2->SetAssetPath("Assets/Model/F15E.fbx");
 	Component2->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	Component2->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+	Component2->IsUseMaterialShader(false); // マテリアルシェーダーを使用する
 	Component2->SetScale(0.005f);
 	pModel2->AddComponent<SphereCollider>();
 

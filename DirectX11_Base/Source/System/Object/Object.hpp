@@ -43,6 +43,9 @@ protected:
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept {};
+	virtual void OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept {};
+	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept {};
+	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept {};
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) {};

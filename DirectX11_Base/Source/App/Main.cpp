@@ -156,9 +156,10 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 			// 当たり判定処理
 			CollM.CheckAllCollisions();
 
-			// 衝突イベントをキューに貯める場合はここでキューへ追加
-			//EnqueueCollisionEvents();
+			// 当たり判定のコールバック呼び出し
+			CollM.CallAllCollisionCallbacks();
 
+			// フレーム時間の減算＆ステップ数加算
 			In_Frame.SubAccumulatedTime(FixedDeltaTime);
 			++Steps;
 		}

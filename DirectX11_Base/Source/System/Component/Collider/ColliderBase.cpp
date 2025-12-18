@@ -47,6 +47,49 @@ void ColliderBase::FixedUpdate(_In_ double In_FixedTick) noexcept
 	m_CollisionManager.UpdateCollisionCells(this);
 }
 
+void ColliderBase::CallOnEnter(_In_ ColliderBase *In_Other) noexcept
+{
+	if(!m_pTransform || !m_pTransform->IsActive())
+		return;
+
+	if(m_IsTrigger)
+	{
+		m_pTransform->CallOnTriggerEnter(In_Other);
+	}
+	else
+	{
+		m_pTransform->CallOnCollisionEnter(In_Other);
+	}
+}
+
+void ColliderBase::CallOnStay(_In_ ColliderBase *In_Other) noexcept
+{
+	if(!m_pTransform || !m_pTransform->IsActive())
+		return;
+	if(m_IsTrigger)
+	{
+		m_pTransform->CallOnTriggerStay(In_Other);
+	}
+	else
+	{
+		m_pTransform->CallOnCollisionStay(In_Other);
+	}
+}
+
+void ColliderBase::CallOnExit(_In_ ColliderBase *In_Other) noexcept
+{
+	if(!m_pTransform || !m_pTransform->IsActive())
+		return;
+	if(m_IsTrigger)
+	{
+		m_pTransform->CallOnTriggerExit(In_Other);
+	}
+	else
+	{
+		m_pTransform->CallOnCollisionExit(In_Other);
+	}
+}
+
 #ifdef _DEBUG
 void ColliderBase::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {

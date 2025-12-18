@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "GameObject.hpp"
+#include "System/Component/Collider/ColliderBase.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
@@ -184,6 +185,55 @@ void GameObject::ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept
 	FixedUpdate(In_FixedTick);
 }
 
+void GameObject::CallOnCollisionEnter(_In_ ColliderBase *In_Other) noexcept
+{
+	OnCollisionEnter(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnCollisionEnter(In_Other);
+	}
+}
+void GameObject::CallOnCollisionStay(_In_ ColliderBase *In_Other) noexcept
+{
+	OnCollisionStay(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnCollisionStay(In_Other);
+	}
+}
+void GameObject::CallOnCollisionExit(_In_ ColliderBase *In_Other) noexcept
+{
+	OnCollisionExit(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnCollisionExit(In_Other);
+	}
+}
+void GameObject::CallOnTriggerEnter(_In_ ColliderBase *In_Other) noexcept
+{
+	OnTriggerEnter(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnTriggerEnter(In_Other);
+	}
+}
+void GameObject::CallOnTriggerStay(_In_ ColliderBase *In_Other) noexcept
+{
+	OnTriggerStay(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnTriggerStay(In_Other);
+	}
+}
+void GameObject::CallOnTriggerExit(_In_ ColliderBase *In_Other) noexcept
+{
+	OnTriggerExit(In_Other);
+	for (auto &itr : m_Components)
+	{
+		itr->OnTriggerExit(In_Other);
+	}
+}
+
 void GameObject::RemoveComponent(_In_ std::string In_Name)
 {
 	for (auto itr = m_Components.begin(); itr != m_Components.end(); ++itr)
@@ -344,6 +394,25 @@ DirectX::XMFLOAT3 GameObject::GetRightBottomBackPosition() const noexcept
 	float Back = m_Pos.z + (m_Scale.z / 2.0f);
 	return DirectX::XMFLOAT3(Right, Bottom, Back);
 }
+
+void GameObject::OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept
+{
+	std::string msg = m_Name + " TriggerEnter with " + In_Other->GetGameObject()->GetName();
+	DebugManager::GetInstance().DebugLog(msg.c_str());
+}
+
+void GameObject::OnTriggerStay(_In_ ColliderBase *In_Other) noexcept
+{
+	std::string  msg = m_Name + " TriggerStay with " + In_Other->GetGameObject()->GetName();
+	DebugManager::GetInstance().DebugLog(msg.c_str());
+}
+
+void GameObject::OnTriggerExit(_In_ ColliderBase *In_Other) noexcept
+{
+	std::string msg = m_Name + " TriggerExit with " + In_Other->GetGameObject()->GetName();
+	DebugManager::GetInstance().DebugLog(msg.c_str());
+}
+
 
 void GameObject::InitializeComponents() noexcept
 {

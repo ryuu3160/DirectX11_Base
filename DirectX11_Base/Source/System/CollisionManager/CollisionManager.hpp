@@ -52,6 +52,11 @@ public:
 	/// </summary>
 	void CheckAllCollisions() noexcept;
 
+	/// <summary>
+	/// 登録されているすべての衝突コールバック関数を呼び出します
+	/// </summary>
+	void CallAllCollisionCallbacks();
+
 private:
 
 	struct ColliderPairKey
@@ -88,13 +93,13 @@ private:
 		}
 	};
 
-	struct ColliderPairInfo
+	struct ColliderCallbackInfo
 	{
-		bool bIsHit = false;
-		bool bIsHitPrev = false;
+		ColliderBase *pOther;
+		std::function<void(ColliderBase *)> Callback;
 	};
 
-	using ColliderPairMap = std::unordered_map<ColliderPairKey, ColliderPairInfo, ColliderPairHash>;
+	using ColliderPairMap = std::unordered_map<ColliderPairKey, bool, ColliderPairHash>;
 
 private:
 	CollisionManager();
@@ -151,5 +156,6 @@ private:
 	std::array<int, cx_MaxLevel + 1> m_Pow; // 8の累乗を格納する配列
 
 	std::vector<OctreeCell*> m_OctreeCells; // オクツリーセルの配列
+	std::vector<ColliderCallbackInfo> m_CollisionCallbacks; // 衝突コールバック関数リスト
 	ColliderPairMap m_ColliderPairList; // 衝突判定リスト
 };

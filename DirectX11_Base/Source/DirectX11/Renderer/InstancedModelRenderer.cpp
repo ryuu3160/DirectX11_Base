@@ -139,6 +139,36 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld(false);
 
+	// マテリアルのシェーダーを使用しない場合は、モデル全体のシェーダーをバインド
+	// ※VSはインスタンシング用のSRVを設定する必要があるため、ここではバインドしない
+	if(!m_bUseMaterialShader)
+	{
+		// メモリ上の行列をグラフィックスメモリへコピー
+		// 1つ目の引数はバッファの番号
+		m_pVS->WriteBuffer(0, mat);
+
+		// 設定されたパラメーターをVSに書き込む
+		for(auto &itr : m_pShaderParamsVS)
+		{
+			if(itr)
+			{
+				m_pVS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
+			}
+		}
+		m_pShaderParamsVS.clear();
+
+		// 設定されたパラメーターをPSに書き込む
+		for(auto &itr : m_pShaderParamsPS)
+		{
+			if(itr)
+			{
+				m_pPS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
+			}
+		}
+		m_pPS->Bind();
+		m_pShaderParamsPS.clear();
+	}
+
 	for (auto &itr : m_vecMeshes)
 	{
 		// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーをバインド
@@ -178,32 +208,9 @@ void InstancedModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 		}
 		else
 		{
-			// メモリ上の行列をグラフィックスメモリへコピー
-			// 1つ目の引数はバッファの番号
-			m_pVS->WriteBuffer(0, mat);
+			// モデル全体のシェーダーを使用する場合は、インスタンス用SRVを設定してバインド
 			m_pVS->SetInstanceSRV(itr->GetMesh()->GetInstanceSRV());
-
-			// 設定されたパラメーターをVSに書き込む
-			for (auto &itr : m_pShaderParamsVS)
-			{
-				if (itr)
-				{
-					m_pVS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
-				}
-			}
 			m_pVS->Bind();
-			m_pShaderParamsVS.clear();
-
-			// 設定されたパラメーターをPSに書き込む
-			for (auto &itr : m_pShaderParamsPS)
-			{
-				if (itr)
-				{
-					m_pPS->WriteBuffer(itr->GetSlotNum(), itr->GetParam());
-				}
-			}
-			m_pPS->Bind();
-			m_pShaderParamsPS.clear();
 		}
 
 		// 設定されているテクスチャをシェーダーに設定

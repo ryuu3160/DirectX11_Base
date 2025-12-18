@@ -110,30 +110,47 @@ void CollisionManager::CheckAllCollisions() noexcept
 	{
 		if(itr->first.pColliderA->CheckCollision(itr->first.pColliderB))
 		{
-			// 前回も当たっていた場合は継続フラグを立てる
-			if(itr->second.bIsHit)
+			auto *pColliderA = itr->first.pColliderA;
+			auto *pColliderB = itr->first.pColliderB;
+			// 前回も当たっていた場合はStayコールバックを呼び出す
+			if(itr->second)
 			{
-				itr->second.bIsHitPrev = true;
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderB,[pColliderA](ColliderBase *other) { pColliderA->CallOnStay(other); } });
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderA,[pColliderB](ColliderBase *other) { pColliderB->CallOnStay(other); } });
 			}
 			else
 			{
-				itr->second.bIsHit = true;
+				itr->second = true;
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderB,[pColliderA](ColliderBase *other) { pColliderA->CallOnEnter(other); } });
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderA,[pColliderB](ColliderBase *other) { pColliderB->CallOnEnter(other); } });
 			}
 			++itr;
 		}
 		else
 		{
-			// 前回も当たっていなかった場合はPrevフラグもリセット
-			if(!itr->second.bIsHit)
+			// 前フレームで当たっていた場合はExitコールバックを呼び出す
+			if(itr->second)
 			{
-				itr->second.bIsHitPrev = false;
+				auto *pColliderA = itr->first.pColliderA;
+				auto *pColliderB = itr->first.pColliderB;
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderB,[pColliderA](ColliderBase *other) { pColliderA->CallOnExit(other); } });
+				m_CollisionCallbacks.emplace_back(ColliderCallbackInfo{ pColliderA,[pColliderB](ColliderBase *other) { pColliderB->CallOnExit(other); } });
 			}
 			// 当たっていなかった場合はフラグをリセット
-			itr->second.bIsHit = false;
+			itr->second = false;
 
 			itr = m_ColliderPairList.erase(itr);
 		}
 	}
+}
+
+void CollisionManager::CallAllCollisionCallbacks()
+{
+	for(auto &itr : m_CollisionCallbacks)
+	{
+		itr.Callback(itr.pOther);
+	}
+	m_CollisionCallbacks.clear();
 }
 
 CollisionManager::CollisionManager()
@@ -281,16 +298,14 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 			// 衝突リスト作成
 			// unordered_setを使って重複登録を防止
 			ColliderPairKey Pair(Tree1->GetCollider(), Tree2->GetCollider());
-			ColliderPairInfo Info;
-			Inout_ColPairs.emplace(Pair,Info);
+			Inout_ColPairs.emplace(Pair,false);
 			Tree2 = Tree2->GetNextTree();
 		}
 		// ② 衝突スタックとの衝突リスト作成
 		for(itr = Inout_ColStac.begin(); itr != Inout_ColStac.end(); ++itr)
 		{
 			ColliderPairKey Pair(Tree1->GetCollider(), *itr);
-			ColliderPairInfo Info;
-			Inout_ColPairs.emplace(Pair, Info);
+			Inout_ColPairs.emplace(Pair, false);
 		}
 		Tree1 = Tree1->GetNextTree();
 	}

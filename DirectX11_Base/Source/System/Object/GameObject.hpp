@@ -51,6 +51,14 @@ public:
 	/// <param name="In_FixedTick"></param>
 	void ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept;
 
+	// 当たり判定用
+	void CallOnCollisionEnter(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnCollisionStay(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnCollisionExit(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnTriggerEnter(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnTriggerStay(_In_ ColliderBase *In_Other) noexcept;
+	void CallOnTriggerExit(_In_ ColliderBase *In_Other) noexcept;
+
 	// コンポーネントの生成
 	template<typename T>
 	requires std::derived_from<T, Component>
@@ -145,6 +153,13 @@ protected:
 	virtual void Update(_In_ float In_Tick) noexcept override {}
 	virtual void LateUpdate(_In_ float In_Tick) noexcept override {}
 	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override {}
+
+	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept override {}
+	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept override {}
+	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept override {}
+	virtual void OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept override;
+	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept override;
+	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept override;
 
 private:
 	void InitializeComponents() noexcept;
