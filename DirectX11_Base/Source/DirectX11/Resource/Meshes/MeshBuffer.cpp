@@ -50,16 +50,16 @@ MeshBuffer::~MeshBuffer()
 	m_pVtxBuffer = nullptr;
 }
 
-HRESULT MeshBuffer::RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const int In_VtxCount, _In_opt_ void *In_pIdx, _In_ const int In_IdxCount) noexcept
+HRESULT MeshBuffer::RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const Description &In_Desc) noexcept
 {
-	if((In_pVtx == nullptr && In_pIdx == nullptr) || (In_VtxCount == 0 && In_IdxCount == 0) ||
-		(In_pVtx == 0 && In_pIdx == 0))
+	if((In_pVtx == nullptr && In_Desc.pIdx == nullptr) || (In_Desc.vtxCount == 0 && In_Desc.idxCount == 0) ||
+		(In_pVtx == 0 && In_Desc.pIdx == 0))
 	{
 		return E_FAIL;
 	}
 
 	// サイズが現在よりも小さい場合は書き込んで終了
-	if(static_cast<UINT>(In_VtxCount) <= m_Desc.vtxCount && static_cast<UINT>(In_IdxCount) <= m_Desc.idxCount)
+	if(static_cast<UINT>(In_Desc.vtxCount) <= m_Desc.vtxCount && static_cast<UINT>(In_Desc.idxCount) <= m_Desc.idxCount)
 	{
 		return Write(In_pVtx);
 	}
@@ -69,26 +69,26 @@ HRESULT MeshBuffer::RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const int In_VtxCo
 	m_pIdxBuffer = nullptr;
 	// 新しいバッファを作成
 	HRESULT hr = E_FAIL;
-	hr = CreateVertexBuffer(In_pVtx ? In_pVtx : m_Desc.pVtx, m_Desc.vtxSize, In_VtxCount, m_Desc.isWrite);
-	if (In_pIdx || m_Desc.idxCount > 0)
+	hr = CreateVertexBuffer(In_pVtx ? In_pVtx : m_Desc.pVtx, m_Desc.vtxSize, In_Desc.vtxCount, m_Desc.isWrite);
+	if (In_Desc.pIdx || m_Desc.idxCount > 0)
 	{
-		hr = CreateIndexBuffer(In_pIdx ? In_pIdx : m_Desc.pIdx, m_Desc.idxSize, In_IdxCount);
+		hr = CreateIndexBuffer(In_Desc.pIdx ? In_Desc.pIdx : m_Desc.pIdx, m_Desc.idxSize, In_Desc.idxCount);
 	}
 	// 頂点とインデックスの情報をコピー
 	if(m_Desc.pVtx)
 		delete[] m_Desc.pVtx;
-	rsize_t vtxMemSize = m_Desc.vtxSize * In_VtxCount;
+	rsize_t vtxMemSize = m_Desc.vtxSize * In_Desc.vtxCount;
 	void *pVtx = new char[vtxMemSize];
 	memcpy_s(pVtx, vtxMemSize, In_pVtx ? In_pVtx : m_Desc.pVtx, vtxMemSize);
 	m_Desc.pVtx = pVtx;
 	if(m_Desc.pIdx)
 		delete[] m_Desc.pIdx;
-	rsize_t idxMemSize = m_Desc.idxSize * In_IdxCount;
+	rsize_t idxMemSize = m_Desc.idxSize * In_Desc.idxCount;
 	void *pIdx = new char[idxMemSize];
-	memcpy_s(pIdx, idxMemSize, In_pIdx ? In_pIdx : m_Desc.pIdx, idxMemSize);
+	memcpy_s(pIdx, idxMemSize, In_Desc.pIdx ? In_Desc.pIdx : m_Desc.pIdx, idxMemSize);
 	m_Desc.pIdx = pIdx;
-	m_Desc.vtxCount = In_VtxCount;
-	m_Desc.idxCount = In_IdxCount;
+	m_Desc.vtxCount = In_Desc.vtxCount;
+	m_Desc.idxCount = In_Desc.idxCount;
 	return hr;
 }
 

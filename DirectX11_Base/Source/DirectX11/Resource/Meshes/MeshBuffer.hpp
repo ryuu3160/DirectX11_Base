@@ -53,7 +53,7 @@ public:
 	/// </summary>
 	/// <param name="In_Desc">バッファの再作成に使用される記述子</param>
 	/// <returns>操作の成功または失敗を示すHRESULT値</returns>
-	HRESULT RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const int In_VtxCount, _In_opt_ void *In_pIdx = nullptr, _In_ const int In_IdxCount = 0) noexcept;
+	HRESULT RemakeBuffer(_In_opt_ void *In_pVtx, _In_ const Description &In_Desc) noexcept;
 
 private:
 	/// <summary>

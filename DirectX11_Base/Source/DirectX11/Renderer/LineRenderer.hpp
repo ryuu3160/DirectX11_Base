@@ -38,7 +38,7 @@ public:
 	/// <summary>
 	/// ライン情報をクリアします
 	/// </summary>
-	void ClearLines() noexcept { m_IsClearLines = true; }
+	void ClearLines() noexcept;
 
 	/// <summary>
 	/// 指定されたテクスチャスロットに描画を行います
@@ -73,10 +73,10 @@ private:
 		DirectX::XMFLOAT4 param[2] = {};
 		std::vector<Vertex> lineVtxs;
 		std::shared_ptr<MeshBuffer> lineMesh;
-		std::shared_ptr<MeshBuffer> boxMesh;
-		std::shared_ptr<MeshBuffer> sphereMesh;
 	};
+	std::mutex m_Mutex;
 	Data m_Data;
+	MeshBuffer::Description m_Desc;
 	bool m_IsUpdate;
 	bool m_IsClearLines;
 };

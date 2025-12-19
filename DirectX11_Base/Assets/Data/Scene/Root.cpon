@@ -1,14 +1,7 @@
 #ObjNum : 9
-RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
-  Position:[3]5, 2, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]5, 5, 1
-  RTSpriteRenderer:[1]{AssetPath:string}:
-    AssetPath:
-
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]5.763709, 6.993572, -6.0964065
-  Quaternion:[4]0.3061119, -0.37107694, 0.1364209, 0.86601496
+  Quaternion:[4]0.30503476, -0.36118618, 0.12930945, 0.8716487
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -27,6 +20,32 @@ GridObject[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,L
   LineRenderer:[1]{AssetPath:string}:
     AssetPath:
 
+RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
+  Position:[3]0, 1, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+
+RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]1, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+
+RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object,InputSystem:object}:
+  Position:[3]-4.099998, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/F15E.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+  InputSystem:[0]{}:
+
 GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]0, 5, 0
   Quaternion:[4]-8.4293696e-08, 0.70710665, -0.7071067, -8.429369e-08
@@ -41,24 +60,12 @@ GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,C
     Focus:1
     IsShow:false
 
-RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
-  Position:[3]0, 1, 0
+SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
+  Position:[3]5.763709, 6.993572, -6.0964065
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-  SphereCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-
-RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object,InputSystem:object}:
-  Position:[3]-3.4999983, 0, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/F15E.fbx
-  SphereCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-  InputSystem:[0]{}:
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/SkyBox/sky.obj
 
 PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
   Position:[3]0, -0.5, 0
@@ -67,17 +74,10 @@ PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/plane/plane.fbx
 
-RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]1, 0, 0
+RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
+  Position:[3]5, 2, 0
   Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-
-SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]5.763709, 6.993572, -6.0964065
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  SkyBoxRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/SkyBox/sky.obj
+  Scale:[3]5, 5, 1
+  RTSpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:
 
