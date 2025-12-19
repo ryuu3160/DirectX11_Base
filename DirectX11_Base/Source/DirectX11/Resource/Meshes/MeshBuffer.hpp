@@ -21,13 +21,13 @@ public:
 	struct Description
 	{
 		const void *pVtx = nullptr;
-		UINT vtxSize;
-		UINT vtxCount;
-		bool isWrite;
+		UINT vtxSize{};
+		UINT vtxCount{};
+		bool isWrite{};
 		const void *pIdx = nullptr;
-		UINT idxSize;
-		UINT idxCount;
-		D3D11_PRIMITIVE_TOPOLOGY topology;
+		UINT idxSize{};
+		UINT idxCount{};
+		D3D11_PRIMITIVE_TOPOLOGY topology{};
 	};
 public:
 	MeshBuffer(_In_ const Description &In_Desc) noexcept;
