@@ -56,6 +56,7 @@ public:
 		Command,	// ボタン
 		Group,		// 表示項目をまとめる
 		List,		// 一覧表示
+		LayoutFunc,	// レイアウト用関数
 	};
 
 protected:
@@ -215,6 +216,12 @@ private:
 	std::function<void()> m_Notice;
 };
 
+/// <summary>
+/// ItemCallbackクラス
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Kind]">保存する型を表すKind情報</param>
+/// param name="[In_Func]">コールバック関数</param>
 class ItemCallback : public DebugItem
 {
 public:
@@ -331,7 +338,147 @@ private:
 	bool m_IsOutputLogFile;
 };
 
+/// <summary>
+/// ItemLayoutFuncクラス
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_LayoutType]">レイアウトの種類</param>
+class ItemLayoutFunc : public DebugItem
+{
+public:
+	enum LayoutType
+	{
+		SameLine,			// 同一行に表示
+		NewLine,			// SameLineの解除（改行）
+		Spacing,			// ウィジェット間に空白を入れる
+		Separator,			// セパレータを入れる
+		Indent,				// インデントを追加
+		UnIndent,			// インデントをもとに戻す
+		Dummy,				// 見えないスペーサー
+		SetNextItemWidth,	// 次のアイテムの幅を設定
+	};
 
+	ItemLayoutFunc(_In_ std::string In_Name, _In_ LayoutType In_LayoutType);
+	~ItemLayoutFunc();
+	virtual void DrawImGui() override {};
+
+private:
+	LayoutType m_LayoutType;
+};
+
+/// <summary>
+/// ImGuiの同一行にアイテムを配置するためのレイアウト機能を提供する
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_OffsetX]">同一行に配置する際のX方向のオフセット値</param>
+/// <param name="[In_SpacingW]">同一行に配置する際の間隔幅（負の値の場合はデフォルト値を使用）</param>
+class ItemSameLine : public ItemLayoutFunc
+{
+public:
+	ItemSameLine(_In_ std::string In_Name, _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
+	~ItemSameLine();
+	void DrawImGui() override;
+private:
+	float m_OffsetX;
+	float m_SpacingW;
+};
+
+/// <summary>
+/// ImGuiの改行を行うためのレイアウト機能を提供する
+/// </summary>
+class ItemNewLine : public ItemLayoutFunc
+{
+public:
+	ItemNewLine(_In_ std::string In_Name);
+	~ItemNewLine();
+	void DrawImGui() override;
+};
+
+/// <summary>
+/// ImGuiのウィジェット間に空白を入れるためのレイアウト機能を提供する
+/// </summary>
+class ItemSpacing : public ItemLayoutFunc
+{
+public:
+	ItemSpacing(_In_ std::string In_Name, _In_ int In_m_SpaceNum = 1);
+	~ItemSpacing();
+	void DrawImGui() override;
+private:
+	int m_SpaceNum;
+};
+
+/// <summary>
+/// ImGuiのセパレータを描画するためのレイアウト機能を提供する
+/// </summary>
+class ItemSeparator : public ItemLayoutFunc
+{
+public:
+	ItemSeparator(_In_ std::string In_Name);
+	~ItemSeparator();
+	void DrawImGui() override;
+};
+
+/// <summary>
+/// ImGuiのインデントを追加するためのレイアウト機能を提供する
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_IndentW]">インデント幅（負の値の場合はデフォルト値を使用）</param>
+class ItemIndent : public ItemLayoutFunc
+{
+public:
+	ItemIndent(_In_ std::string In_Name, _In_ float In_IndentW = 0.0f);
+	~ItemIndent();
+	void DrawImGui() override;
+private:
+	float m_IndentW;
+};
+
+/// <summary>
+/// ImGuiのインデントを元に戻すためのレイアウト機能を提供する
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// param name="[In_IndentW]">インデント幅（負の値の場合はデフォルト値を使用）</param>
+class ItemUnIndent : public ItemLayoutFunc
+{
+public:
+	ItemUnIndent(_In_ std::string In_Name, _In_ float In_IndentW = 0.0f);
+	~ItemUnIndent();
+	void DrawImGui() override;
+private:
+	float m_IndentW;
+};
+
+/// <summary>
+/// ImGuiの見えないスペーサーを描画するためのレイアウト機能を提供する
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Width]">スペーサーの幅</param>
+/// <param name="[In_Height]">スペーサーの高さ</param>
+class ItemDummy : public ItemLayoutFunc
+{
+public:
+	ItemDummy(_In_ std::string In_Name, _In_ float In_Width, _In_ float In_Height);
+	~ItemDummy();
+	void DrawImGui() override;
+private:
+	float m_Width;
+	float m_Height;
+};
+
+/// <summary>
+/// ImGuiの次のアイテムの幅を設定するためのレイアウト機能を提供する
+///	</summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Width]">次のアイテムの幅</param>
+class ItemSetNextItemWidth : public ItemLayoutFunc
+{
+public:
+	ItemSetNextItemWidth(_In_ std::string In_Name, _In_ float In_Width);
+	~ItemSetNextItemWidth();
+	void DrawImGui() override;
+private:
+	float m_Width;
+};
 
 // -------------------------------
 //	テンプレート関数実装

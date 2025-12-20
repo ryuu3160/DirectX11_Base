@@ -112,7 +112,11 @@ void DebugManager::Init()
 	DebugMenu->CreateItem<ItemCallback>("Pause", DebugItem::Kind::Bool,
 		[](bool IsSet, void *ptr)
 		{
-			if (IsSet)
+			if(!IsSet)
+				return;
+
+			bool *IsPause = reinterpret_cast<bool*>(ptr);
+			if (*IsPause)
 			{
 				FrameManager::GetInstance().SetTimeScale(0.0f);
 			}
@@ -121,6 +125,17 @@ void DebugManager::Init()
 				FrameManager::GetInstance().SetTimeScale(1.0f);
 			}
 		});
+	DebugMenu->CreateItem<ItemSameLine>("SameLine1");
+	auto IsDrawGizmoCallback = DebugMenu->CreateItem<ItemCallback>("IsDrawGizmo", DebugItem::Kind::Bool,
+		[](bool IsSet, void *ptr)
+		{
+			if(!IsSet)
+				return;
+			bool *IsDrawGizmo = reinterpret_cast<bool*>(ptr);
+			RenderManager::GetInstance().SetDrawGizmos(*IsDrawGizmo);
+		});
+	IsDrawGizmoCallback->GetValue() = RenderManager::GetInstance().IsDrawGizmos();
+
 	auto ScreenColor = DebugMenu->CreateItem<ItemValue>("ScreenColor", DebugItem::Kind::Color, true);
 	DX11_Core::GetInstance().SetWindowColor(ScreenColor->GetColor());
 	ScreenColor->SetNoticeFunc([]()
