@@ -186,6 +186,17 @@ void GameObject::ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept
 	FixedUpdate(In_FixedTick);
 }
 
+void GameObject::OnDrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
+{
+	// 継承先オブジェクトのギズモ描画処理
+	DrawGizmos(In_Gizmos);
+	// コンポーネントのギズモ描画処理
+	for (auto &itr : m_Components)
+	{
+		itr->DrawGizmos(In_Gizmos);
+	}
+}
+
 void GameObject::CallOnCollisionEnter(_In_ ColliderBase *In_Other) noexcept
 {
 	OnCollisionEnter(In_Other);

@@ -202,7 +202,7 @@
     <ClCompile Include="Source\DirectX11\Resource\Shaders\ShaderParam.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp" />
     <ClCompile Include="Source\DirectX11\Resource\Texture.cpp" />
-    <ClCompile Include="Source\DirectX11\System\Geometory.cpp" />
+    <ClCompile Include="Source\DirectX11\System\Gizmos.cpp" />
     <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
       <SubType>
       </SubType>
@@ -386,7 +386,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Geometory.hpp" />
+    <ClInclude Include="Source\DirectX11\System\Gizmos.hpp" />
     <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
       <SubType>
       </SubType>

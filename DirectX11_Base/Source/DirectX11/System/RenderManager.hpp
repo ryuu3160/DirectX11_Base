@@ -12,6 +12,11 @@
 #include "DirectX11/Renderer/RenderComponent.hpp"
 #include "DirectX11/System/RenderContext.hpp"
 
+// ==============================
+//  前方宣言
+// ==============================
+class Gizmos;
+
 /// <summary>
 /// RenderManagerクラス
 /// </summary>
@@ -101,8 +106,13 @@ private:
 	std::vector<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト
 	std::vector<LayerGroup> m_StandbySortLayer; // ソート待ちのレイヤーリスト
 	std::map<LayerGroup, std::vector<RenderComponent *>> m_RenderComponents; // レンダリングコンポーネントのマップ
+	std::unordered_set<GameObject *> m_ObjectsToDrawGizmos; // ギズモを描画するオブジェクトのリスト
 
 	MultiComparison<std::string,LayerGroup> m_RenderContextComparison; // レンダーコンテキストの比較用マルチコンパリソン
 	std::unordered_map<std::string, RenderContext *> m_RenderContexts; // レンダーコンテキストのマップ
 	std::vector<std::string> m_RenderContextNames; // レンダーコンテキストのリスト
+
+#ifdef _DEBUG
+	Gizmos *m_pGizmos; // ギズモ描画用オブジェクト
+#endif
 };

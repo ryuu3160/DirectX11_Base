@@ -1,12 +1,12 @@
 /*+===================================================================
-	File: Geometory.hpp
+	File: Gizmos.hpp
 	Summary: 佐々木先生のものを参考にして作成
 	Author: AT13C 01 青木雄一郎
 	Date: 2025/6/14 Sat AM 07:23:17 初回作成
 ===================================================================+*/
-#include "Geometory.hpp"
+#include "Gizmos.hpp"
 
-void Geometory::Init()
+void Gizmos::Init()
 {
 	for (int i = 0; i < 3; ++i)
 		DirectX::XMStoreFloat4x4(&m_Data.matrix[i], DirectX::XMMatrixIdentity());
@@ -18,33 +18,30 @@ void Geometory::Init()
 	MakeLine();
 	MakeBox();
 	MakeSphere();
+	m_IsUpdate = true;
 }
 
-void Geometory::SetVertexShader(_In_ VertexShader *In_Vs) noexcept
+void Gizmos::SetVertexShader(_In_ VertexShader *In_Vs) noexcept
 {
 	m_Data.pVS = In_Vs;
 }
-void Geometory::SetPixelShader(_In_ PixelShader *In_Ps) noexcept
+void Gizmos::SetPixelShader(_In_ PixelShader *In_Ps) noexcept
 {
 	m_Data.pPS = In_Ps;
 }
-void Geometory::SetWorld(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
-{
-	m_Data.matrix[0] = In_World;
-}
-void Geometory::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
+void Gizmos::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
 {
 	m_Data.matrix[1] = In_View;
 }
-void Geometory::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
+void Gizmos::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
 {
 	m_Data.matrix[2] = In_Proj;
 }
-void Geometory::SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept
+void Gizmos::SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept
 {
 	m_Data.param[0] = In_Color;
 }
-void Geometory::SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept
+void Gizmos::SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept
 {
 	DirectX::XMVECTOR vDir = DirectX::XMLoadFloat3(&In_Dir);
 	DirectX::XMStoreFloat3(&In_Dir, DirectX::XMVector3Normalize(vDir));
@@ -52,60 +49,64 @@ void Geometory::SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept
 	m_Data.param[1].y = In_Dir.y;
 	m_Data.param[1].z = In_Dir.z;
 }
-void Geometory::EnableLight(_In_ bool In_Enable) noexcept
+void Gizmos::EnableLight(_In_ bool In_Enable) noexcept
 {
 	m_Data.param[1].w = In_Enable ? 0.0f : 1.0f;
 }
 
-void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End) noexcept
+void Gizmos::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
 {
-	if (m_Data.lineIndex < GEOMETORY_MAX_LINE_NUM)
-	{
-		m_Data.lineVtx[m_Data.lineIndex].pos = In_Start;
-		m_Data.lineVtx[m_Data.lineIndex].color = m_Data.param[0];
-		++m_Data.lineIndex;
-		m_Data.lineVtx[m_Data.lineIndex].pos = In_End;
-		m_Data.lineVtx[m_Data.lineIndex].color = m_Data.param[0];
-		++m_Data.lineIndex;
-	}
+	Vertex start, end;
+	start.pos = In_Start;
+	start.color = In_StartColor;
+	start.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	end.pos = In_End;
+	end.color = In_EndColor;
+	end.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+	m_Data.lineVtxs.emplace_back(start);
+	m_Data.lineVtxs.emplace_back(end);
+	m_IsUpdate = true;
 }
-void Geometory::AddLine(_In_ DirectX::XMFLOAT3 In_StartPos, _In_ DirectX::XMFLOAT4 In_StartColor,
-	_In_ DirectX::XMFLOAT3 In_EndPos, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
+void Gizmos::DrawLines(_In_ RenderContext *In_RenderContext) noexcept
 {
-	if (m_Data.lineIndex < GEOMETORY_MAX_LINE_NUM)
-	{
-		m_Data.lineVtx[m_Data.lineIndex].pos = In_StartPos;
-		m_Data.lineVtx[m_Data.lineIndex].color = In_StartColor;
-		++m_Data.lineIndex;
-		m_Data.lineVtx[m_Data.lineIndex].pos = In_EndPos;
-		m_Data.lineVtx[m_Data.lineIndex].color = In_EndColor;
-		++m_Data.lineIndex;
-	}
-}
-void Geometory::DrawLines() noexcept
-{
-	DirectX::XMFLOAT4X4 worldBackup = m_Data.matrix[0];
+	// 定数バッファに渡す行列の情報を作成
+	DirectX::XMFLOAT4X4 mat[3];
+	// カメラのビュー/プロジェクション行列を設定
+	mat[1] = In_RenderContext->GetView();
+	mat[2] = In_RenderContext->GetProj();
+
+	DirectX::XMFLOAT4X4 fmat;
+	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
+	// 単位行列でワールド行列を作成
+	mat[0] = m_Data.pOwner->GetWorld();
+
 	DirectX::XMFLOAT4 colorBackup = m_Data.param[0];
 	float lightBackup = m_Data.param[1].w;
 
-	DirectX::XMStoreFloat4x4(&m_Data.matrix[0], DirectX::XMMatrixIdentity());
 	m_Data.param[0] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Data.param[1].w = 1.0f;
-	
-	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
+
+	m_Data.pVS->WriteBuffer(0, mat);
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
 	m_Data.pVS->Bind();
 	m_Data.pPS->Bind();
-	m_Data.lineMesh->Write(m_Data.lineVtx);
-	m_Data.lineMesh->Draw(m_Data.lineIndex);
-	
-	m_Data.matrix[0] = worldBackup;
+	if(m_IsUpdate)
+	{
+		m_Desc.pVtx = m_Data.lineVtxs.data();
+		m_Desc.vtxSize = sizeof(Vertex);
+		m_Desc.vtxCount = static_cast<UINT>(m_Data.lineVtxs.size());
+		m_Data.lineMesh->RemakeBuffer(m_Data.lineVtxs.data(), m_Desc);
+		m_IsUpdate = false;
+	}
+	m_Data.lineMesh->Draw(static_cast<int>(m_Data.lineVtxs.size()));
+
 	m_Data.param[0] = colorBackup;
 	m_Data.param[1].w = lightBackup;
 
-	m_Data.lineIndex = 0;
+	m_Data.lineVtxs.clear();
 }
-void Geometory::DrawBox() noexcept
+void Gizmos::DrawBox() noexcept
 {
 	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
@@ -113,7 +114,7 @@ void Geometory::DrawBox() noexcept
 	m_Data.pPS->Bind();
 	m_Data.boxMesh->Draw();
 }
-void Geometory::DrawSphere() noexcept
+void Gizmos::DrawSphere() noexcept
 {
 	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
 	m_Data.pVS->WriteBuffer(1, m_Data.param);
@@ -122,21 +123,21 @@ void Geometory::DrawSphere() noexcept
 	m_Data.sphereMesh->Draw();
 }
 
-void Geometory::MakeVertexShader() noexcept
+void Gizmos::MakeVertexShader() noexcept
 {
 	m_Data.defVS = std::make_shared<VertexShader>();
 	HRESULT hr = m_Data.defVS->Load("Assets/Shader/VS_Geometory.cso");
 	m_Data.pVS = m_Data.defVS.get();
 }
 
-void Geometory::MakePixelShader() noexcept
+void Gizmos::MakePixelShader() noexcept
 {
 	m_Data.defPS = std::make_shared<PixelShader>();
 	HRESULT hr = m_Data.defPS->Load("Assets/Shader/PS_Geometory.cso");
 	m_Data.pPS = m_Data.defPS.get();
 }
 
-void Geometory::MakeLine() noexcept
+void Gizmos::MakeLine() noexcept
 {
 	MeshBuffer::Description desc = {};
 	for (int i = 0; i < GEOMETORY_MAX_LINE_NUM; ++i)
@@ -153,7 +154,7 @@ void Geometory::MakeLine() noexcept
 	m_Data.lineIndex = 0;
 	m_Data.lineMesh = std::make_shared<MeshBuffer>(desc);
 }
-void Geometory::MakeBox() noexcept
+void Gizmos::MakeBox() noexcept
 {
 	const float d = 0.5f;
 	DirectX::XMFLOAT4 color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -215,7 +216,7 @@ void Geometory::MakeBox() noexcept
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_Data.boxMesh = std::make_shared<MeshBuffer>(desc);
 }
-void Geometory::MakeSphere() noexcept
+void Gizmos::MakeSphere() noexcept
 {
 	std::vector<Vertex> vtx;
 	const int detail = 32;
@@ -259,7 +260,12 @@ void Geometory::MakeSphere() noexcept
 	m_Data.sphereMesh = std::make_shared<MeshBuffer>(desc);
 }
 
-Geometory::~Geometory()
+Gizmos::Gizmos()
+{
+	Init();
+}
+
+Gizmos::~Gizmos()
 {
 	m_Data.sphereMesh.reset();
 	m_Data.boxMesh.reset();

@@ -10,6 +10,7 @@
 // ==============================
 #include "RenderManager.hpp"
 #include "System/Component/Camera.hpp"
+#include "DirectX11/System/Gizmos.hpp"
 
 void RenderManager::AddRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_Layer) noexcept
 {
@@ -20,6 +21,7 @@ void RenderManager::AddRenderComponent(_In_ RenderComponent *In_RenderComponent,
 	auto &&itr = m_RenderComponents.try_emplace(In_Layer);
 	// 構築された、又は既に存在するレイヤーへRenderComponentを追加
 	itr.first->second.push_back(In_RenderComponent);
+	m_ObjectsToDrawGizmos.insert(In_RenderComponent->GetGameObject());
 }
 
 void RenderManager::RemoveRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_LayerGroup) noexcept
@@ -36,6 +38,7 @@ void RenderManager::RemoveRenderComponent(_In_ RenderComponent *In_RenderCompone
 			layerList.erase(compItr);
 		}
 	}
+	m_ObjectsToDrawGizmos.erase(In_RenderComponent->GetGameObject());
 }
 
 void RenderManager::RemoveAllRenderComponent() noexcept
@@ -164,6 +167,27 @@ void RenderManager::DrawAll() noexcept
 					itr->Draw(ctx->second);
 			}
 		}
+
+#ifdef _DEBUG
+		// ギズモの描画
+		if(m_pGizmos)
+		{
+			if(ctx->second->IsMainContext())
+			{
+				// メインコンテキストの場合描画
+				for(auto &itr : m_ObjectsToDrawGizmos)
+				{
+					if(itr->IsActive())
+					{
+						// Todo: ギズモのコンテナを作成して、それを渡すようにする
+
+						itr->OnDrawGizmos(m_pGizmos);
+					}
+				}
+			}
+			m_pGizmos->DrawLines(ctx->second);
+		}
+#endif
 	}
 
 	// RTVとDSVをデフォルトに戻す
@@ -176,13 +200,18 @@ void RenderManager::DrawAll() noexcept
 
 RenderManager::RenderManager()
 	: m_IsSortLayerGroup(false), m_IsSortLayer(false)
-	, m_IsRemoveComponent(false)
+	, m_IsRemoveComponent(false), m_pGizmos(nullptr)
 {
 	// レンダリングコンポーネントのマップを初期化
 	m_RenderComponents.clear();
 
 	m_RenderContextComparison.MakeComparison("MainOnlyDraw",
 		{ LayerGroup::LayerGroup_RenderTexture,LayerGroup::LayerGroup_UI,LayerGroup::LayerGroup_Fade });
+
+#ifdef _DEBUG
+	m_pGizmos = new Gizmos();
+	m_pGizmos->Init();
+#endif
 }
 RenderManager::~RenderManager()
 {

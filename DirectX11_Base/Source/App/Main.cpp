@@ -48,7 +48,7 @@ HRESULT Main::Init()
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
-	Geometory::GetInstance().Init();
+	Gizmos::GetInstance().Init();
 	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();

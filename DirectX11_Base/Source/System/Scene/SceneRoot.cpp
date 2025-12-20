@@ -206,7 +206,7 @@ void SceneRoot::Draw()
 {
 	return;
 #ifdef _DEBUG
-	Geometory &geometory = Geometory::GetInstance();
+	Gizmos &geometory = Gizmos::GetInstance();
 	Camera *pCamera = GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
 
 	geometory.SetView(pCamera->GetView());

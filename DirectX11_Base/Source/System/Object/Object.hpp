@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "DirectX11/System/Gizmos.hpp"
 // ==============================
 //	ëOï˚êÈåæ
 // ==============================
@@ -49,6 +49,9 @@ protected:
 	virtual void OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept {};
 	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept {};
+
+	// ÉMÉYÉÇï`âÊ
+	virtual void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept {};
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) {};

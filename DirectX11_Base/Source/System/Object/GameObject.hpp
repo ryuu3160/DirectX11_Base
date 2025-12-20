@@ -51,6 +51,11 @@ public:
 	/// <param name="In_FixedTick"></param>
 	void ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept;
 
+	/// <summary>
+	/// ƒMƒYƒ‚‚ğ•`‰æ‚·‚é‚½‚ß‚ÉŒÄ‚Ño‚³‚ê‚Ü‚·
+	/// </summary>
+	void OnDrawGizmos(_In_ Gizmos* In_Gizmos) noexcept;
+
 	// “–‚½‚è”»’è—p
 	void CallOnCollisionEnter(_In_ ColliderBase *In_Other) noexcept;
 	void CallOnCollisionStay(_In_ ColliderBase *In_Other) noexcept;

@@ -93,8 +93,6 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	mat[1] = In_RenderContext->GetView();
 	mat[2] = In_RenderContext->GetProj();
 
-	DirectX::XMFLOAT4X4 fmat;
-	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pTransform->GetWorld();
 

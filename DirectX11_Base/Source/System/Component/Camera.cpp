@@ -55,8 +55,8 @@ void Camera::Draw() const noexcept
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
 	DirectX::XMFLOAT4X4 mat;
 	DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixTranspose(S * T));
-	Geometory::GetInstance().SetWorld(mat);
-	Geometory::GetInstance().DrawBox();
+	Gizmos::GetInstance().SetWorld(mat);
+	Gizmos::GetInstance().DrawBox();
 }
 #endif
 
