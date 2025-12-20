@@ -1119,3 +1119,19 @@ void ItemSetNextItemWidth::DrawImGui()
 		return;
 	ImGui::SetNextItemWidth(m_Width);
 }
+
+ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(std::string In_Name)
+	: ItemLayoutFunc(In_Name, LayoutType::AlignTextToFramePadding)
+{
+}
+
+ItemAlignTextToFramePadding::~ItemAlignTextToFramePadding()
+{
+}
+
+void ItemAlignTextToFramePadding::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::AlignTextToFramePadding();
+}

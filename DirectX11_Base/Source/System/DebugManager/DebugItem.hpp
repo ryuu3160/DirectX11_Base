@@ -348,14 +348,15 @@ class ItemLayoutFunc : public DebugItem
 public:
 	enum LayoutType
 	{
-		SameLine,			// 同一行に表示
-		NewLine,			// SameLineの解除（改行）
-		Spacing,			// ウィジェット間に空白を入れる
-		Separator,			// セパレータを入れる
-		Indent,				// インデントを追加
-		UnIndent,			// インデントをもとに戻す
-		Dummy,				// 見えないスペーサー
-		SetNextItemWidth,	// 次のアイテムの幅を設定
+		SameLine,					// 同一行に表示
+		NewLine,					// SameLineの解除（改行）
+		Spacing,					// ウィジェット間に空白を入れる
+		Separator,					// セパレータを入れる
+		Indent,						// インデントを追加
+		UnIndent,					// インデントをもとに戻す
+		Dummy,						// 見えないスペーサー
+		SetNextItemWidth,			// 次のアイテムの幅を設定
+		AlignTextToFramePadding,	// テキストをフレームパディングに合わせる
 	};
 
 	ItemLayoutFunc(_In_ std::string In_Name, _In_ LayoutType In_LayoutType);
@@ -478,6 +479,14 @@ public:
 	void DrawImGui() override;
 private:
 	float m_Width;
+};
+
+class ItemAlignTextToFramePadding : public ItemLayoutFunc
+{
+public:
+	ItemAlignTextToFramePadding(_In_ std::string In_Name);
+	~ItemAlignTextToFramePadding();
+	void DrawImGui() override;
 };
 
 // -------------------------------

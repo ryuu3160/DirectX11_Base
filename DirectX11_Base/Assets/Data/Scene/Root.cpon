@@ -1,11 +1,4 @@
 #ObjNum : 9
-RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]1, 0, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]2.7733076, 6.812431, -7.7437353
   Quaternion:[4]0.29988125, -0.2401773, 0.08107595, 0.9196705
@@ -27,6 +20,22 @@ GridObject[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,L
   LineRenderer:[1]{AssetPath:string}:
     AssetPath:
 
+RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]1, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+
+RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
+  Position:[3]0, 1, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+
 SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
   Position:[3]2.7733076, 6.812431, -7.7437353
   Quaternion:[4]0, 0, 0, 1
@@ -43,22 +52,6 @@ RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,M
   SphereCollider:[1]{IsTrigger:bool}:
     IsTrigger:true
   InputSystem:[0]{}:
-
-RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
-  Position:[3]0, 1, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-  SphereCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-
-RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
-  Position:[3]5, 2, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]5, 5, 1
-  RTSpriteRenderer:[1]{AssetPath:string}:
-    AssetPath:
 
 PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
   Position:[3]0, -0.5, 0
@@ -80,4 +73,11 @@ GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,C
     Aspect:1.77778
     Focus:1
     IsShow:false
+
+RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
+  Position:[3]5, 2, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]5, 5, 1
+  RTSpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:
 
