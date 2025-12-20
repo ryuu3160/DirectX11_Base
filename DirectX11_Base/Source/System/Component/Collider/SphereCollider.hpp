@@ -28,6 +28,8 @@ public:
 
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
 
+	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
+
 private:
 
 	// ‘Šè‚ªSphereCollider‚Ìê‡‚Ì“–‚½‚è”»’è

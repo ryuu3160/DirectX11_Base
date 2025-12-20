@@ -958,3 +958,164 @@ void ItemConsole::WriteLogToFile()
 	}
 	file.close();
 }
+
+// ==============================
+//  ItemLayoutFunc
+// ==============================
+
+ItemLayoutFunc::ItemLayoutFunc(_In_ std::string In_Name, _In_ LayoutType In_LayoutType)
+{
+	m_Name = In_Name;
+	m_Kind = Kind::LayoutFunc;
+	m_LayoutType = In_LayoutType;
+}
+
+ItemLayoutFunc::~ItemLayoutFunc()
+{
+}
+
+// ==============================
+//  ItemSameLine
+// ==============================
+
+ItemSameLine::ItemSameLine(_In_ std::string In_Name, _In_ float In_OffsetX, _In_ float In_SpacingW)
+	: ItemLayoutFunc(In_Name, LayoutType::SameLine), m_OffsetX(In_OffsetX), m_SpacingW(In_SpacingW)
+{
+	if(m_SpacingW < 0.0f)
+		m_SpacingW = -1.0f;
+}
+
+ItemSameLine::~ItemSameLine()
+{
+}
+
+void ItemSameLine::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+
+	ImGui::SameLine(m_OffsetX, m_SpacingW);
+}
+
+ItemNewLine::ItemNewLine(_In_ std::string In_Name)
+	: ItemLayoutFunc(In_Name, LayoutType::NewLine)
+{
+}
+
+ItemNewLine::~ItemNewLine()
+{
+}
+
+void ItemNewLine::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::NewLine();
+}
+
+ItemSpacing::ItemSpacing(_In_ std::string In_Name, _In_ int In_m_SpaceNum)
+	: ItemLayoutFunc(In_Name, LayoutType::Spacing)
+{
+}
+
+ItemSpacing::~ItemSpacing()
+{
+}
+
+void ItemSpacing::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	for(int i = 0; i < m_SpaceNum; ++i)
+		ImGui::Spacing();
+}
+
+ItemSeparator::ItemSeparator(_In_ std::string In_Name)
+	: ItemLayoutFunc(In_Name, LayoutType::Separator)
+{
+}
+
+ItemSeparator::~ItemSeparator()
+{
+}
+
+void ItemSeparator::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::Separator();
+}
+
+ItemIndent::ItemIndent(_In_ std::string In_Name, _In_ float In_IndentW)
+	: ItemLayoutFunc(In_Name, LayoutType::Indent), m_IndentW(In_IndentW)
+{
+	if(m_IndentW < 0.0f)
+		m_IndentW = 0.0f;
+}
+
+ItemIndent::~ItemIndent()
+{
+}
+
+void ItemIndent::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::Indent(m_IndentW);
+}
+
+ItemUnIndent::ItemUnIndent(_In_ std::string In_Name, _In_ float In_IndentW)
+	: ItemLayoutFunc(In_Name, LayoutType::UnIndent), m_IndentW(In_IndentW)
+{
+	if(m_IndentW < 0.0f)
+		m_IndentW = 0.0f;
+}
+
+ItemUnIndent::~ItemUnIndent()
+{
+}
+
+void ItemUnIndent::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::Unindent(m_IndentW);
+}
+
+ItemDummy::ItemDummy(_In_ std::string In_Name, _In_ float In_Width, _In_ float In_Height)
+	: ItemLayoutFunc(In_Name, LayoutType::Dummy), m_Width(In_Width), m_Height(In_Height)
+{
+	if(m_Width < 0.0f)
+		m_Width = 0.0f;
+	if(m_Height < 0.0f)
+		m_Height = 0.0f;
+}
+
+ItemDummy::~ItemDummy()
+{
+}
+
+void ItemDummy::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::Dummy(ImVec2(m_Width, m_Height));
+}
+
+ItemSetNextItemWidth::ItemSetNextItemWidth(_In_ std::string In_Name, _In_ float In_Width)
+	: ItemLayoutFunc(In_Name, LayoutType::SetNextItemWidth), m_Width(In_Width)
+{
+	if(m_Width < 0.0f)
+		m_Width = -1.0f;
+}
+
+ItemSetNextItemWidth::~ItemSetNextItemWidth()
+{
+}
+
+void ItemSetNextItemWidth::DrawImGui()
+{
+	if (m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::SetNextItemWidth(m_Width);
+}

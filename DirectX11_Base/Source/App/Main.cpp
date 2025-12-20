@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Main.hpp"
-#include "DirectX11/System/Geometory.hpp"
+#include "DirectX11/System/Gizmos.hpp"
 #include "DirectX11/System/RenderManager.hpp"
 #include "System/CollisionManager/CollisionManager.hpp"
 #include "System/DebugManager/InitializeImGui.hpp"
@@ -48,7 +48,6 @@ HRESULT Main::Init()
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
-	Gizmos::GetInstance().Init();
 	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();

@@ -1,7 +1,14 @@
 #ObjNum : 9
+RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]1, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+
 EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]5.763709, 6.993572, -6.0964065
-  Quaternion:[4]0.30503476, -0.36118618, 0.12930945, 0.8716487
+  Position:[3]2.7733076, 6.812431, -7.7437353
+  Quaternion:[4]0.29988125, -0.2401773, 0.08107595, 0.9196705
   Scale:[3]1, 1, 1
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -20,21 +27,12 @@ GridObject[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,L
   LineRenderer:[1]{AssetPath:string}:
     AssetPath:
 
-RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
-  Position:[3]0, 1, 0
+SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
+  Position:[3]2.7733076, 6.812431, -7.7437353
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-  SphereCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-
-RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]1, 0, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/SkyBox/sky.obj
 
 RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object,InputSystem:object}:
   Position:[3]-4.099998, 0, 0
@@ -45,6 +43,29 @@ RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,M
   SphereCollider:[1]{IsTrigger:bool}:
     IsTrigger:true
   InputSystem:[0]{}:
+
+RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
+  Position:[3]0, 1, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+
+RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
+  Position:[3]5, 2, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]5, 5, 1
+  RTSpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:
+
+PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]0, -0.5, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1000, 1, 1000
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/plane/plane.fbx
 
 GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]0, 5, 0
@@ -59,25 +80,4 @@ GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,C
     Aspect:1.77778
     Focus:1
     IsShow:false
-
-SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]5.763709, 6.993572, -6.0964065
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  SkyBoxRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/SkyBox/sky.obj
-
-PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]0, -0.5, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1000, 1, 1000
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/plane/plane.fbx
-
-RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
-  Position:[3]5, 2, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]5, 5, 1
-  RTSpriteRenderer:[1]{AssetPath:string}:
-    AssetPath:
 

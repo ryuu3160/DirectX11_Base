@@ -11,7 +11,7 @@
 #include "DirectX11/System/RenderManager.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
 #include "DirectX11/Resource/Shaders/ShaderParam.hpp"
-#include "DirectX11/System/Geometory.hpp"
+#include "DirectX11/System/Gizmos.hpp"
 #include "DirectX11/Renderer/InstancedModelRenderer.hpp"
 #include "DirectX11/Renderer/RTSpriteRenderer.hpp"
 #include "SceneRoot.hpp"
@@ -204,53 +204,6 @@ void SceneRoot::Update(_In_ float In_Tick)
 
 void SceneRoot::Draw()
 {
-	return;
-#ifdef _DEBUG
-	Gizmos &geometory = Gizmos::GetInstance();
-	Camera *pCamera = GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
-
-	geometory.SetView(pCamera->GetView());
-	geometory.SetProjection(pCamera->GetProj());
-	pCamera->Draw();
-
-	DirectX::XMFLOAT4X4 fmat;
-	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
-	geometory.SetWorld(fmat);
-
-	// –ÔŠ|‚¯•`‰æ
-	float GridSize = cx_fGridSize;
-	GridSize *= 0.5f;
-	float GridMargin = cx_fGridMargin;
-	DirectX::XMFLOAT4 color;
-	color = cx_GridColor;
-	geometory.SetColor(color);
-	float d = GridMargin;
-	float s = GridSize;
-	for (;s >= GridMargin && GridMargin > 0.0f;d += GridMargin,s -= GridMargin)
-	{
-		geometory.AddLine(DirectX::XMFLOAT3(d, 0.0f, -GridSize), DirectX::XMFLOAT3(d, 0.0f, GridSize));
-		geometory.AddLine(DirectX::XMFLOAT3(-d, 0.0f, -GridSize), DirectX::XMFLOAT3(-d, 0.0f, GridSize));
-		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, d), DirectX::XMFLOAT3(GridSize, 0.0f, d));
-		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, -d), DirectX::XMFLOAT3(GridSize, 0.0f, -d));
-	}
-	// Ž²•`‰æ
-	if (cx_bGridAxis)
-	{
-		geometory.SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(GridSize, 0.0f, 0.0f));
-		geometory.SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-		geometory.AddLine(DirectX::XMFLOAT3(0.0f, -GridSize, 0.0f), DirectX::XMFLOAT3(0.0f, GridSize, 0.0f));
-		geometory.SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-		geometory.AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, GridSize));
-	}
-	else
-	{
-		geometory.AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(GridSize, 0.0f, 0.0f));
-		geometory.AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, GridSize));
-	}
-	geometory.DrawLines();
-
-#endif
 }
 
 void SceneRoot::ChangeScene()

@@ -41,6 +41,9 @@ public:
 
 	void RemoveAllRenderComponent() noexcept;
 
+	inline void SetDrawGizmos(_In_ bool In_IsDrawGizmos) noexcept { m_IsDrawGizmos = In_IsDrawGizmos; }
+	inline bool IsDrawGizmos() const noexcept { return m_IsDrawGizmos; }
+
 	/// <summary>
 	/// 指定したカメラとレンダーターゲット／デプスステンシルを使用してメインの RenderContext を作成します。関数は例外を投げません。
 	/// </summary>
@@ -101,6 +104,7 @@ private:
 	bool m_IsSortLayerGroup; // レイヤーグループのソートが必要かどうかのフラグ
 	bool m_IsSortLayer; // ソートが必要かどうかのフラグ
 	bool m_IsRemoveComponent; // レンダーコンポーネントの削除が必要かどうかのフラグ
+	bool m_IsDrawGizmos; // ギズモを描画するかどうかのフラグ
 	std::future<void> m_RemoveFuture; // 非同期削除用のfutureリスト
 	std::vector<LayerGroup> m_StandbyRemoveComponent; // 削除待ちのレイヤーグループリスト
 	std::vector<LayerGroup> m_StandbySortLayerGroup; // ソート待ちのレイヤーグループリスト

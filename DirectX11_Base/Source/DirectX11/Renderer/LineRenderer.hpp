@@ -16,7 +16,7 @@
 // ==============================
 namespace
 {
-	inline constexpr DirectX::XMFLOAT4 DefaultLineColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	inline constexpr DirectX::XMFLOAT4 cx_DefaultLineColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /// <summary>
@@ -33,7 +33,7 @@ public:
 
 	void SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept { m_Data.param[0] = In_Color; }
 
-	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor = DefaultLineColor, _In_ DirectX::XMFLOAT4 In_EndColor = DefaultLineColor) noexcept;
+	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor = cx_DefaultLineColor, _In_ DirectX::XMFLOAT4 In_EndColor = cx_DefaultLineColor) noexcept;
 
 	/// <summary>
 	/// ÉâÉCÉìèÓïÒÇÉNÉäÉAÇµÇ‹Ç∑

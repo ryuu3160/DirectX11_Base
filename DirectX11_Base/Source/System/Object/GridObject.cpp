@@ -40,10 +40,14 @@ void GridObject::Init() noexcept
 {
 	auto &DebugMenu = DebugManager::GetInstance().GetDebugWindowRef("System", "DebugMenu");
 	m_pDebugGroup = DebugMenu.CreateItem<ItemGroup>("Grid##GridObject");
+	m_pDebugGroup->CreateGroupItem<ItemSetNextItemWidth>("##GridObject", 100.0f);
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridSize##GridObject", DebugItem::Float, true);
+	m_pDebugGroup->CreateGroupItem<ItemSameLine>("1##GridObject");
+	m_pDebugGroup->CreateGroupItem<ItemSetNextItemWidth>("##GridObject", 100.0f);
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridMargin##GridObject", DebugItem::Float, true);
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridColor##GridObject", DebugItem::Color, true);
 	m_pDebugGroup->CreateGroupItem<ItemBind>("Active##GridObject", DebugItem::Bool, &m_IsActive);
+	m_pDebugGroup->CreateGroupItem<ItemSameLine>("2##GridObject");
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridAxis##GridObject", DebugItem::Bool, true);
 }
 

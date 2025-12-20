@@ -169,23 +169,28 @@ void RenderManager::DrawAll() noexcept
 		}
 
 #ifdef _DEBUG
-		// ギズモの描画
-		if(m_pGizmos)
+		if(m_IsDrawGizmos)
 		{
-			if(ctx->second->IsMainContext())
+			// ギズモの描画
+			if(m_pGizmos)
 			{
-				// メインコンテキストの場合描画
-				for(auto &itr : m_ObjectsToDrawGizmos)
+				if(ctx->second->IsMainContext())
 				{
-					if(itr->IsActive())
+					// メインコンテキストの場合描画
+					for(auto &itr : m_ObjectsToDrawGizmos)
 					{
-						// Todo: ギズモのコンテナを作成して、それを渡すようにする
-
-						itr->OnDrawGizmos(m_pGizmos);
+						if(itr->IsActive())
+						{
+							itr->OnDrawGizmos(m_pGizmos);
+						}
 					}
 				}
+				DX11Core.Change2DMode(ctx->second->GetRTV());
+				m_pGizmos->DrawLines(ctx->second);
+				m_pGizmos->DrawBoxes(ctx->second);
+				m_pGizmos->DrawSpheres(ctx->second);
+				DX11Core.Change3DMode(ctx->second->GetRTV(), ctx->second->GetDSV());
 			}
-			m_pGizmos->DrawLines(ctx->second);
 		}
 #endif
 	}
@@ -200,7 +205,10 @@ void RenderManager::DrawAll() noexcept
 
 RenderManager::RenderManager()
 	: m_IsSortLayerGroup(false), m_IsSortLayer(false)
-	, m_IsRemoveComponent(false), m_pGizmos(nullptr)
+	, m_IsRemoveComponent(false), m_IsDrawGizmos(true)
+#ifdef _DEBUG
+	, m_pGizmos(nullptr)
+#endif
 {
 	// レンダリングコンポーネントのマップを初期化
 	m_RenderComponents.clear();
@@ -215,6 +223,14 @@ RenderManager::RenderManager()
 }
 RenderManager::~RenderManager()
 {
+#ifdef _DEBUG
+	if (m_pGizmos)
+	{
+		delete m_pGizmos;
+		m_pGizmos = nullptr;
+	}
+#endif
+
 	for (auto &ctx : m_RenderContexts)
 	{
 		delete ctx.second;

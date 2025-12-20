@@ -5,13 +5,12 @@
 	Date: 2025/6/14 Sat AM 07:23:17 初回作成
 ===================================================================+*/
 #include "Gizmos.hpp"
+#include "RenderManager.hpp"
 
 void Gizmos::Init()
 {
-	for (int i = 0; i < 3; ++i)
-		DirectX::XMStoreFloat4x4(&m_Data.matrix[i], DirectX::XMMatrixIdentity());
-	m_Data.param[0] = DirectX::XMFLOAT4(1, 1, 1, 1);
-	m_Data.param[1] = DirectX::XMFLOAT4(1, 1, 1, 1);
+	m_Data.param[0] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Data.param[1] = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	MakeVertexShader();
 	MakePixelShader();
@@ -28,14 +27,6 @@ void Gizmos::SetVertexShader(_In_ VertexShader *In_Vs) noexcept
 void Gizmos::SetPixelShader(_In_ PixelShader *In_Ps) noexcept
 {
 	m_Data.pPS = In_Ps;
-}
-void Gizmos::SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept
-{
-	m_Data.matrix[1] = In_View;
-}
-void Gizmos::SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept
-{
-	m_Data.matrix[2] = In_Proj;
 }
 void Gizmos::SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept
 {
@@ -54,8 +45,10 @@ void Gizmos::EnableLight(_In_ bool In_Enable) noexcept
 	m_Data.param[1].w = In_Enable ? 0.0f : 1.0f;
 }
 
-void Gizmos::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
+void Gizmos::AddLine(_In_ GameObject *In_Obj, _In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor, _In_ DirectX::XMFLOAT4 In_EndColor) noexcept
 {
+	DirectX::XMFLOAT3 ObjPos = In_Obj->GetPosition();
+
 	Vertex start, end;
 	start.pos = In_Start;
 	start.color = In_StartColor;
@@ -63,6 +56,10 @@ void Gizmos::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_
 	end.pos = In_End;
 	end.color = In_EndColor;
 	end.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+	// ワールド行列から位置を変換
+	start.pos += ObjPos;
+	end.pos += ObjPos;
 
 	m_Data.lineVtxs.emplace_back(start);
 	m_Data.lineVtxs.emplace_back(end);
@@ -79,7 +76,7 @@ void Gizmos::DrawLines(_In_ RenderContext *In_RenderContext) noexcept
 	DirectX::XMFLOAT4X4 fmat;
 	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
 	// 単位行列でワールド行列を作成
-	mat[0] = m_Data.pOwner->GetWorld();
+	mat[0] = fmat;
 
 	DirectX::XMFLOAT4 colorBackup = m_Data.param[0];
 	float lightBackup = m_Data.param[1].w;
@@ -106,21 +103,51 @@ void Gizmos::DrawLines(_In_ RenderContext *In_RenderContext) noexcept
 
 	m_Data.lineVtxs.clear();
 }
-void Gizmos::DrawBox() noexcept
+void Gizmos::DrawBoxes(_In_ RenderContext *In_RenderContext) noexcept
 {
-	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
-	m_Data.pVS->WriteBuffer(1, m_Data.param);
-	m_Data.pVS->Bind();
-	m_Data.pPS->Bind();
-	m_Data.boxMesh->Draw();
+	for(auto &itr : m_Data.BoxMatrices)
+	{
+		// 定数バッファに渡す行列の情報を作成
+		DirectX::XMFLOAT4X4 mat[3];
+		// カメラのビュー/プロジェクション行列を設定
+		mat[1] = In_RenderContext->GetView();
+		mat[2] = In_RenderContext->GetProj();
+
+		mat[0] = itr;
+		m_Data.pVS->WriteBuffer(0, mat);
+		m_Data.pVS->WriteBuffer(1, m_Data.param);
+		m_Data.pVS->Bind();
+		m_Data.pPS->Bind();
+		m_Data.boxMesh->Draw();
+	}
+	m_Data.BoxMatrices.clear();
 }
-void Gizmos::DrawSphere() noexcept
+void Gizmos::DrawSpheres(_In_ RenderContext *In_RenderContext) noexcept
 {
-	m_Data.pVS->WriteBuffer(0, m_Data.matrix);
-	m_Data.pVS->WriteBuffer(1, m_Data.param);
-	m_Data.pVS->Bind();
-	m_Data.pPS->Bind();
-	m_Data.sphereMesh->Draw();
+	for(auto &itr : m_Data.SphereMatrices)
+	{
+		// 定数バッファに渡す行列の情報を作成
+		DirectX::XMFLOAT4X4 mat[3];
+		// カメラのビュー/プロジェクション行列を設定
+		mat[1] = In_RenderContext->GetView();
+		mat[2] = In_RenderContext->GetProj();
+
+		mat[0] = itr;
+		m_Data.pVS->WriteBuffer(0, mat);
+		m_Data.pVS->WriteBuffer(1, m_Data.param);
+		m_Data.pVS->Bind();
+		m_Data.pPS->Bind();
+		m_Data.sphereMesh->Draw();
+	}
+	m_Data.SphereMatrices.clear();
+}
+void Gizmos::DrawBox(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
+{
+	m_Data.BoxMatrices.push_back(In_World);
+}
+void Gizmos::DrawSphere(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
+{
+	m_Data.SphereMatrices.push_back(In_World);
 }
 
 void Gizmos::MakeVertexShader() noexcept
@@ -139,19 +166,14 @@ void Gizmos::MakePixelShader() noexcept
 
 void Gizmos::MakeLine() noexcept
 {
-	MeshBuffer::Description desc = {};
-	for (int i = 0; i < GEOMETORY_MAX_LINE_NUM; ++i)
-	{
-		m_Data.lineVtx[i].pos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_Data.lineVtx[i].color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		m_Data.lineVtx[i].normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-	}
-	desc.pVtx = m_Data.lineVtx;
+	m_Data.lineVtxs.reserve(2048);
+
+	MeshBuffer::Description desc{};
+	desc.pVtx = m_Data.lineVtxs.data();
 	desc.vtxSize = sizeof(Vertex);
-	desc.vtxCount = GEOMETORY_MAX_LINE_NUM;
+	desc.vtxCount = static_cast<UINT>(m_Data.lineVtxs.size());
 	desc.isWrite = true;
 	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	m_Data.lineIndex = 0;
 	m_Data.lineMesh = std::make_shared<MeshBuffer>(desc);
 }
 void Gizmos::MakeBox() noexcept

@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Camera.hpp"
-#include "DirectX11/System/Geometory.hpp"
+#include "DirectX11/System/Gizmos.hpp"
 #include "System/Object/GameObject.hpp"
 
 Camera::Camera()
@@ -55,8 +55,6 @@ void Camera::Draw() const noexcept
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
 	DirectX::XMFLOAT4X4 mat;
 	DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixTranspose(S * T));
-	Gizmos::GetInstance().SetWorld(mat);
-	Gizmos::GetInstance().DrawBox();
 }
 #endif
 
@@ -117,6 +115,11 @@ DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 
 	DirectX::XMStoreFloat3(&pos, vLook);
 	return pos;
+}
+
+void Camera::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
+{
+	In_Gizmos->DrawBox(m_pTransform->GetWorld());
 }
 
 #ifdef _DEBUG

@@ -10,6 +10,12 @@
 #include "DirectX11/Resource/Meshes/MeshBuffer.hpp"
 
 // ==============================
+//  ëOï˚êÈåæ
+// ==============================
+class GameObject;
+class RenderContext;
+
+// ==============================
 //	íËêîíËã`
 // ==============================
 namespace
@@ -26,15 +32,13 @@ public:
 
 	void SetVertexShader(_In_ VertexShader* In_Vs) noexcept;
 	void SetPixelShader(_In_ PixelShader* In_Ps) noexcept;
-	void SetView(_In_ DirectX::XMFLOAT4X4 In_View) noexcept;
-	void SetProjection(_In_ DirectX::XMFLOAT4X4 In_Proj) noexcept;
 	void SetColor(_In_ DirectX::XMFLOAT4 In_Color) noexcept;
 	void SetLightDirection(_In_ DirectX::XMFLOAT3 In_Dir) noexcept;
 	void EnableLight(_In_ bool In_Enable) noexcept;
 
-	void AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor = DefaultLineColor, _In_ DirectX::XMFLOAT4 In_EndColor = DefaultLineColor) noexcept;
-	void DrawBox() noexcept;
-	void DrawSphere() noexcept;
+	void AddLine(_In_ GameObject* In_Obj, _In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOAT3 In_End, _In_ DirectX::XMFLOAT4 In_StartColor = DefaultLineColor, _In_ DirectX::XMFLOAT4 In_EndColor = DefaultLineColor) noexcept;
+	void DrawBox(_In_ DirectX::XMFLOAT4X4 In_World) noexcept;
+	void DrawSphere(_In_ DirectX::XMFLOAT4X4 In_World) noexcept;
 
 private:
 	void Init();
@@ -45,6 +49,8 @@ private:
 	void MakeSphere() noexcept;
 
 	void DrawLines(_In_ RenderContext *In_RenderContext) noexcept;
+	void DrawBoxes(_In_ RenderContext *In_RenderContext) noexcept;
+	void DrawSpheres(_In_ RenderContext *In_RenderContext) noexcept;
 private:
 	struct Vertex
 	{
@@ -52,28 +58,24 @@ private:
 		DirectX::XMFLOAT4 color;
 		DirectX::XMFLOAT3 normal;
 	};
-	struct DrawingData
+
+	struct Data
 	{
 		std::shared_ptr<VertexShader> defVS;
 		std::shared_ptr<PixelShader> defPS;
 		VertexShader *pVS = nullptr;
 		PixelShader *pPS = nullptr;
-		DirectX::XMFLOAT4X4 matrix[3] = {};
 		DirectX::XMFLOAT4 param[2] = {};
-	};
-
-	struct Data
-	{
 		std::vector<Vertex> lineVtxs;
+		std::vector<DirectX::XMFLOAT4X4> BoxMatrices;
+		std::vector<DirectX::XMFLOAT4X4> SphereMatrices;
 		std::shared_ptr<MeshBuffer> lineMesh;
 		std::shared_ptr<MeshBuffer> boxMesh;
 		std::shared_ptr<MeshBuffer> sphereMesh;
 		GameObject *pOwner = nullptr;
 	};
 
-
-	std::vector<Data> m_DrawData;
-	DrawingData m_Data;
+	Data m_Data;
 	std::mutex m_Mutex;
 	MeshBuffer::Description m_Desc;
 	bool m_IsUpdate;

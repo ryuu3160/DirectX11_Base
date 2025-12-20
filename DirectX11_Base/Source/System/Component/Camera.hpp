@@ -99,6 +99,8 @@ public:
 	/// <param name="[In_bIsLock]">å≈íËÇ∑ÇÈÇ©Ç«Ç§Ç©ÇÃê^ãUíl</param>
 	inline void SetIsLockZ(_In_ const bool &In_bIsLock) noexcept { m_bIsLockZ = In_bIsLock; }
 
+	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
+
 protected:
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
