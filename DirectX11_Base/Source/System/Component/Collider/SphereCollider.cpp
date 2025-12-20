@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "SphereCollider.hpp"
+#include "BoxCollider.hpp"
 
 SphereCollider::SphereCollider()
 	: ColliderBase("SphereCollider"), m_Radius(1.0f)
@@ -48,8 +49,19 @@ bool SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 		break;
 
 	case COLLIDER_BOX:
-		// box対boxの当たり判定
-		// 未実装
+		// 球対箱の当たり判定
+        if (IsCollidingSphereToBox(In_Other))
+        {
+            m_IsCollision = true;
+            In_Other->SetIsCollision(true);
+            return true;
+        }
+        else
+        {
+            m_IsCollision = false;
+            In_Other->SetIsCollision(false);
+            return false;
+		}
 		break;
 	}
 
@@ -199,5 +211,38 @@ bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) cons
 		return true;
 	}
 
+	return false;
+}
+
+bool SphereCollider::IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const noexcept
+{
+    BoxCollider *box = dynamic_cast<BoxCollider *>(In_Other);
+    if (!box) return false;
+    DirectX::XMFLOAT3 sphereCenter = m_pTransform->GetPosition();
+    DirectX::XMFLOAT3 boxCenter = box->GetGameObject()->GetPosition();
+    DirectX::XMFLOAT3 boxHalfExtents = box->GetHalfExtents();
+    // 球の中心から箱の中心へのベクトルを計算
+    DirectX::XMFLOAT3 diff;
+    diff.x = sphereCenter.x - boxCenter.x;
+    diff.y = sphereCenter.y - boxCenter.y;
+    diff.z = sphereCenter.z - boxCenter.z;
+    // 最近接点を計算
+    DirectX::XMFLOAT3 closestPoint;
+    closestPoint.x = std::max(-boxHalfExtents.x, std::min(diff.x, boxHalfExtents.x));
+    closestPoint.y = std::max(-boxHalfExtents.y, std::min(diff.y, boxHalfExtents.y));
+    closestPoint.z = std::max(-boxHalfExtents.z, std::min(diff.z, boxHalfExtents.z));
+    // 最近接点と球の中心との距離を計算
+    DirectX::XMFLOAT3 closestToSphere;
+    closestToSphere.x = diff.x - closestPoint.x;
+    closestToSphere.y = diff.y - closestPoint.y;
+    closestToSphere.z = diff.z - closestPoint.z;
+    float distSq = closestToSphere.x * closestToSphere.x +
+        closestToSphere.y * closestToSphere.y +
+        closestToSphere.z * closestToSphere.z;
+    // 半径の二乗と距離の二乗を比較
+    if (distSq <= m_Radius * m_Radius)
+    {
+        return true;
+    }
 	return false;
 }

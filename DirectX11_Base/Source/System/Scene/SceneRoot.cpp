@@ -20,6 +20,7 @@
 #include "System/SpriteManager/SpriteManager.hpp"
 #include "System/Component/InputSystem.hpp"
 #include "System/Component/Collider/SphereCollider.hpp"
+#include "System/Component/Collider/BoxCollider.hpp"
 
 // ==============================
 //  定数
@@ -54,7 +55,7 @@ void SceneRoot::Init()
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
 	pModel->SetPosition({ 0.0f, 1.0f, 0.0f });
-	pModel->AddComponent<SphereCollider>();
+	pModel->AddComponent<BoxCollider>();
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();
@@ -71,7 +72,7 @@ void SceneRoot::Init()
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(false); // マテリアルシェーダーを使用する
 	Component2->SetScale(0.005f);
-	pModel2->AddComponent<SphereCollider>();
+	pModel2->AddComponent<BoxCollider>();
 
 	// F15Eの移動処理
 	auto input = pModel2->AddComponent<InputSystem>();

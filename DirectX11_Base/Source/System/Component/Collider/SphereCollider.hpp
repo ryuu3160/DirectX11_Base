@@ -26,6 +26,12 @@ public:
 	/// <param name="[In_Radius]">İ’è‚·‚é”¼Œa‚Ì’lB</param>
 	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
 
+	/// <summary>
+	/// ”¼Œa‚ğæ“¾‚µ‚Ü‚·
+	/// </summary>
+	/// <returns>Œ»İ‚Ì”¼Œa‚Ì’l</returns>
+	float GetRadius() const noexcept { return m_Radius; }
+
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
 
 	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
@@ -34,6 +40,9 @@ private:
 
 	// ‘Šè‚ªSphereCollider‚Ìê‡‚Ì“–‚½‚è”»’è
 	bool IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) const noexcept;
+
+	// ‘Šè‚ªBoxCollider‚Ìê‡‚Ì“–‚½‚è”»’è
+	bool IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const noexcept;
 
 protected:
 	float m_Radius = 1.0f; // ”¼Œa

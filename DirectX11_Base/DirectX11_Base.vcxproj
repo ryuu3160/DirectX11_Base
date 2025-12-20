@@ -232,6 +232,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\Collider\BoxCollider.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp" />
     <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
       <SubType>
@@ -410,6 +414,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Camera.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\Collider\BoxCollider.hpp">
       <SubType>
       </SubType>
     </ClInclude>

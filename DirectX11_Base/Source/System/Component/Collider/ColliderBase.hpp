@@ -24,7 +24,7 @@ enum ColliderType
 	COLLIDER_NONE = -1, // 無効
 	COLLIDER_SPHERE, // 球
 	COLLIDER_BOX,   // 箱
-
+	COLLIDER_CAPSULE, // カプセル
 
 
 	COLLIDER_MAX,   // 最大値

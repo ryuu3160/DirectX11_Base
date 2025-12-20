@@ -361,6 +361,9 @@
     <ClCompile Include="Source\DirectX11\System\Gizmos.cpp">
       <Filter>Source\DirectX11\System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\System\Component\Collider\BoxCollider.cpp">
+      <Filter>Source\System\Component\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -617,6 +620,9 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Gizmos.hpp">
       <Filter>Source\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\Collider\BoxCollider.hpp">
+      <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
