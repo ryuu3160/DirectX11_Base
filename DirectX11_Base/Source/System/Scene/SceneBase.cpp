@@ -75,7 +75,7 @@ void SceneBase::CommonProcessScene() noexcept
 
 #ifdef _DEBUG
 	// グリッドオブジェクトの作成
-	auto grid = CreateObject<GridObject>("GridObject");
+	auto grid = CreateObject_NotAddHierarchy<GridObject>("GridObject");
 	grid->SetCamera(pCamObj);
 #endif
 }

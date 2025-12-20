@@ -53,6 +53,10 @@ public:
 	requires std::derived_from<T, GameObject>
 	T *CreateObject(_In_ const std::string &In_Name, Args&&... args) noexcept;
 
+	template <typename T, typename ...Args>
+	requires std::derived_from<T, GameObject>
+	T *CreateObject_NotAddHierarchy(_In_ const std::string &In_Name, Args&&... args) noexcept;
+
 	/// <summary>
 	/// 指定された名前でGameObjectを作成します。
 	/// </summary>
@@ -205,6 +209,33 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 
 	// ヒエラルキーに追加
 	m_Hierarchy->AddListItem(In_Name);
+
+#endif // _DEBUG
+
+	// オブジェクト生成
+	T *ptr = new T(In_Name, args...);
+	ptr->m_pScene = this; // 所属シーンを設定
+	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
+	m_Items.push_back(In_Name);
+	m_SceneObjects.emplace(ptr);
+	m_InitObjects.push_back(ptr);
+	return ptr;
+}
+
+template<typename T, typename ...Args>
+requires std::derived_from<T, GameObject>
+inline T *SceneBase::CreateObject_NotAddHierarchy(const std::string &In_Name, Args && ...args) noexcept
+{
+#ifdef _DEBUG
+	// デバッグ中のみ、名称ダブりがないかチェック
+	Objects::iterator itr = m_Objects.find(In_Name);
+	if(itr != m_Objects.end())
+	{
+		std::string buf = "Failed to create object." + In_Name;
+		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+		return nullptr;
+	}
 
 #endif // _DEBUG
 
