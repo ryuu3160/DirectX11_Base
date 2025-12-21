@@ -1,64 +1,10 @@
 #ObjNum : 9
-EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
-  Position:[3]2.7733076, 6.812431, -7.7437353
-  Quaternion:[4]0.29988125, -0.2401773, 0.08107595, 0.9196705
-  Scale:[3]1, 1, 1
-  Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
-    Is3D:true
-    Fovy:60
-    Width:20
-    Near:0.2
-    Far:1000
-    Aspect:1.77778
-    Focus:1
-    IsShow:false
-
 GridObject[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,LineRenderer:object}:
   Position:[3]0, 0, 0
   Quaternion:[4]0, 0, 0, 1
   Scale:[3]1, 1, 1
   LineRenderer:[1]{AssetPath:string}:
     AssetPath:
-
-SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
-  Position:[3]2.7733076, 6.812431, -7.7437353
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  SkyBoxRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/SkyBox/sky.obj
-
-RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]1, 0, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-
-RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,BoxCollider:object}:
-  Position:[3]0, 1, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-  BoxCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-
-RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,BoxCollider:object,InputSystem:object}:
-  Position:[3]-3.5999985, 0, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1, 1, 1
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/F15E.fbx
-  BoxCollider:[1]{IsTrigger:bool}:
-    IsTrigger:true
-  InputSystem:[0]{}:
-
-PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
-  Position:[3]0, -0.5, 0
-  Quaternion:[4]0, 0, 0, 1
-  Scale:[3]1000, 1, 1000
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/plane/plane.fbx
 
 GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
   Position:[3]0, 5, 0
@@ -73,6 +19,60 @@ GameCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,C
     Aspect:1.77778
     Focus:1
     IsShow:false
+
+EditorCamera[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,Camera:object}:
+  Position:[3]2.7733076, 6.812431, -7.7437353
+  Quaternion:[4]0.29988125, -0.2401773, 0.08107595, 0.9196705
+  Scale:[3]1, 1, 1
+  Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
+    Is3D:true
+    Fovy:60
+    Width:20
+    Near:0.2
+    Far:1000
+    Aspect:1.77778
+    Focus:1
+    IsShow:false
+
+SkyBox[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,SkyBoxRenderer:object}:
+  Position:[3]2.7733076, 6.812431, -7.7437353
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/SkyBox/sky.obj
+
+RootModel0[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,SphereCollider:object}:
+  Position:[3]0, 1, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+
+RootModel1[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object,BoxCollider:object,InputSystem:object}:
+  Position:[3]-3.5999985, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/F15E.fbx
+  BoxCollider:[1]{IsTrigger:bool}:
+    IsTrigger:true
+  InputSystem:[0]{}:
+
+RootModel0Child(RootModel0_Child)[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]1, 0, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1, 1, 1
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+
+PatternScale[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,ModelRenderer:object}:
+  Position:[3]0, -0.5, 0
+  Quaternion:[4]0, 0, 0, 1
+  Scale:[3]1000, 1, 1000
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/plane/plane.fbx
 
 RTSprite[1]{Position:array<float>,Quaternion:array<float>,Scale:array<float>,RTSpriteRenderer:object}:
   Position:[3]5, 2, 0

@@ -127,27 +127,32 @@ void BoxCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 	// 当たり判定のアウトラインをAddLineで描画する
 	GameObject *obj = m_pTransform;
 
+	// 色
+	DirectX::XMFLOAT4 EdgeColorX(0.7f, 1.0f, 0.0f, 0.7f);
+	DirectX::XMFLOAT4 EdgeColorY(0.5f, 1.0f, 0.0f, 0.7f);
+	DirectX::XMFLOAT4 EdgeColorZ(0.3f, 1.0f, 0.0f, 0.7f);
+
 	// 8つの頂点をワールド座標で取得
 	DirectX::XMFLOAT3 v[8];
 	GetLocalVertices(v);
 
 	// 底面（4本）
-	In_Gizmos->AddLine(obj, v[0], v[1]);
-	In_Gizmos->AddLine(obj, v[1], v[2]);
-	In_Gizmos->AddLine(obj, v[2], v[3]);
-	In_Gizmos->AddLine(obj, v[3], v[0]);
+	In_Gizmos->AddLine(obj, v[0], v[1], EdgeColorX, EdgeColorX);
+	In_Gizmos->AddLine(obj, v[1], v[2], EdgeColorZ, EdgeColorZ);
+	In_Gizmos->AddLine(obj, v[2], v[3], EdgeColorX, EdgeColorX);
+	In_Gizmos->AddLine(obj, v[3], v[0], EdgeColorZ, EdgeColorZ);
 
 	// 上面（4本）
-	In_Gizmos->AddLine(obj, v[4], v[5]);
-	In_Gizmos->AddLine(obj, v[5], v[6]);
-	In_Gizmos->AddLine(obj, v[6], v[7]);
-	In_Gizmos->AddLine(obj, v[7], v[4]);
+	In_Gizmos->AddLine(obj, v[4], v[5], EdgeColorX, EdgeColorX);
+	In_Gizmos->AddLine(obj, v[5], v[6], EdgeColorZ, EdgeColorZ);
+	In_Gizmos->AddLine(obj, v[6], v[7], EdgeColorX, EdgeColorX);
+	In_Gizmos->AddLine(obj, v[7], v[4], EdgeColorZ, EdgeColorZ);
 
 	// 縦の辺（4本）
-	In_Gizmos->AddLine(obj, v[0], v[4]);
-	In_Gizmos->AddLine(obj, v[1], v[5]);
-	In_Gizmos->AddLine(obj, v[2], v[6]);
-	In_Gizmos->AddLine(obj, v[3], v[7]);
+	In_Gizmos->AddLine(obj, v[0], v[4], EdgeColorY, EdgeColorY);
+	In_Gizmos->AddLine(obj, v[1], v[5], EdgeColorY, EdgeColorY);
+	In_Gizmos->AddLine(obj, v[2], v[6], EdgeColorY, EdgeColorY);
+	In_Gizmos->AddLine(obj, v[3], v[7], EdgeColorY, EdgeColorY);
 }
 
 void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept
@@ -167,14 +172,13 @@ void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const
 	DirectX::XMVECTOR axisX = DirectX::XMLoadFloat3(&m_AxisX);
 	DirectX::XMVECTOR axisY = DirectX::XMLoadFloat3(&m_AxisY);
 	DirectX::XMVECTOR axisZ = DirectX::XMLoadFloat3(&m_AxisZ);
-	DirectX::XMVECTOR center = DirectX::XMLoadFloat3(&m_WorldCenter);
 
-	// 各頂点をワールド座標に変換
+	// 各頂点に対して回転を適用
 	for(int i = 0; i < 8; ++i)
 	{
 		DirectX::XMVECTOR local = DirectX::XMLoadFloat3(&localVertices[i]);
 
-		// pos = local. x * axisX + local.y * axisY + local.z * axisZ
+		// pos = local.x * axisX + local.y * axisY + local.z * axisZ
 		DirectX::XMVECTOR pos = DirectX::XMVectorScale(axisX, localVertices[i].x)
 			+ DirectX::XMVectorScale(axisY, localVertices[i].y)
 			+ DirectX::XMVectorScale(axisZ, localVertices[i].z);
