@@ -287,17 +287,41 @@ inline bool operator!=(_In_ const DirectX::XMFLOAT4 &In_Value1, _In_ const Direc
 		In_Value1.z == In_Value2.z && In_Value1.w == In_Value2.w);
 }
 
+// -------------------------------
+// XMVECTOR関連関数群
+// -------------------------------
+
+inline DirectX::XMVECTOR operator+(_In_ const DirectX::XMVECTOR &In_Value1, _In_ const DirectX::XMVECTOR &In_Value2)
+{
+	return DirectX::XMVectorAdd(In_Value1, In_Value2);
+}
+
+inline DirectX::XMVECTOR operator-(_In_ const DirectX::XMVECTOR &In_Value1, _In_ const DirectX::XMVECTOR &In_Value2)
+{
+	return DirectX::XMVectorSubtract(In_Value1, In_Value2);
+}
+
+inline DirectX::XMVECTOR operator*(_In_ const DirectX::XMVECTOR &In_Value1, _In_ const DirectX::XMVECTOR &In_Value2)
+{
+	return DirectX::XMVectorMultiply(In_Value1, In_Value2);
+}
+
+inline DirectX::XMVECTOR operator/(_In_ const DirectX::XMVECTOR &In_Value1, _In_ const DirectX::XMVECTOR &In_Value2)
+{
+	return DirectX::XMVectorDivide(In_Value1, In_Value2);
+}
+
 namespace DX11Math
 {
 	/// <summary>
-	/// 与えられた値をセンチメートル基準に変換します。
+	/// 与えられた値をセンチメートル基準に変換します
 	/// </summary>
 	/// <param name="[In_Value]">値</param>
 	/// <returns>cm基準に変換された値</returns>
 	static constexpr float CMeter(_In_ float In_Value) { return In_Value * 0.01f; }
 
 	/// <summary>
-	/// 2Dベクトルの各成分をセンチメートル基準に変換します。
+	/// 2Dベクトルの各成分をセンチメートル基準に変換します
 	/// </summary>
 	/// <param name="In_Value">変換するDirectX::XMFLOAT2型の2Dベクトル</param>
 	/// <returns>各成分がcm基準に変換された値</returns>
@@ -309,6 +333,19 @@ namespace DX11Math
 	static inline DirectX::XMFLOAT3 CMeter(_In_ DirectX::XMFLOAT3 In_Value)
 	{
 		return In_Value * 0.01f;
+	}
+
+	/// <summary>
+	/// 2つの範囲が重なっているかどうかを判定します
+	/// </summary>
+	/// <param name="In_MinA">範囲Aの最小値</param>
+	/// <param name="In_MaxA">範囲Aの最大値</param>
+	/// <param name="In_MinB">範囲Bの最小値</param>
+	/// <param name="In_MaxB">範囲Bの最大値</param>
+	/// <returns>範囲が重なっている場合はtrue、それ以外の場合はfalse</returns>
+	static inline bool IsOverlap(_In_ float In_MinA, _In_ float In_MaxA, _In_ float In_MinB, _In_ float In_MaxB)
+	{
+		return !((In_MaxA < In_MinB) || (In_MaxB < In_MinA));
 	}
 
 	/// <summary>
@@ -325,74 +362,74 @@ namespace DX11Math
 	/// <typeparam name="[T]">変換する型</typeparam>
 	/// <param name="[Rad]">ラジアン角</param>
 	/// <returns>メジアン角</returns>
-	static inline float ToDeg(_In_ float In_Rad) { return static_cast<float>(In_Rad * (180.0f / PI)); }
+	static inline float ToDeg(_In_ float In_Rad) { return In_Rad * (180.0f / PI); }
 
 	/// <summary>
-	/// 2次元ベクトルの各成分を度からラジアンに変換します。
+	/// 2次元ベクトルの各成分を度からラジアンに変換します
 	/// </summary>
-	/// <param name="[In_Degree]">度単位の2次元ベクトル。</param>
-	/// <returns>各成分がラジアン単位に変換された2次元ベクトル。</returns>
+	/// <param name="[In_Degree]">度単位の2次元ベクトル</param>
+	/// <returns>各成分がラジアン単位に変換された2次元ベクトル</returns>
 	static inline DirectX::XMFLOAT2 ToRad(_In_ DirectX::XMFLOAT2 In_Degree)
 	{
 		return In_Degree * (PI / 180.0f);
 	}
 
 	/// <summary>
-	/// ラジアン単位の2次元ベクトルを度単位に変換します。
+	/// ラジアン単位の2次元ベクトルを度単位に変換します
 	/// </summary>
-	/// <param name="[In_Rad]">ラジアン単位の2次元ベクトル。</param>
-	/// <returns>度単位に変換された2次元ベクトル。</returns>
+	/// <param name="[In_Rad]">ラジアン単位の2次元ベクトル</param>
+	/// <returns>度単位に変換された2次元ベクトル</returns>
 	static inline DirectX::XMFLOAT2 ToDeg(_In_ DirectX::XMFLOAT2 In_Rad)
 	{
 		return In_Rad * (180.0f / PI);
 	}
 
 	/// <summary>
-	/// 度単位の3次元ベクトルをラジアン単位に変換します。
+	/// 度単位の3次元ベクトルをラジアン単位に変換します
 	/// </summary>
-	/// <param name="[In_Degree]">度単位の各成分を持つDirectX::XMFLOAT3型の入力ベクトル。</param>
-	/// <returns>各成分がラジアン単位に変換されたDirectX::XMFLOAT3型のベクトル。</returns>
+	/// <param name="[In_Degree]">度単位の各成分を持つDirectX::XMFLOAT3型の入力ベクトル</param>
+	/// <returns>各成分がラジアン単位に変換されたDirectX::XMFLOAT3型のベクトル</returns>
 	static inline DirectX::XMFLOAT3 ToRad(_In_ DirectX::XMFLOAT3 In_Degree)
 	{
 		return In_Degree * (PI / 180.0f);
 	}
 
 	/// <summary>
-	/// ラジアン単位の3次元ベクトルを度単位に変換します。
+	/// ラジアン単位の3次元ベクトルを度単位に変換します
 	/// </summary>
-	/// <param name="[In_Rad]">ラジアン単位のDirectX::XMFLOAT3型ベクトル。</param>
-	/// <returns>各成分が度単位に変換されたDirectX::XMFLOAT3型ベクトル。</returns>
+	/// <param name="[In_Rad]">ラジアン単位のDirectX::XMFLOAT3型ベクトル</param>
+	/// <returns>各成分が度単位に変換されたDirectX::XMFLOAT3型ベクトル</returns>
 	static inline DirectX::XMFLOAT3 ToDeg(_In_ DirectX::XMFLOAT3 In_Rad)
 	{
 		return In_Rad * (180.0f / PI);
 	}
 
 	/// <summary>
-	/// 度単位のDirectX::XMFLOAT4ベクトルをラジアン単位に変換します。
+	/// 度単位のDirectX::XMFLOAT4ベクトルをラジアン単位に変換します
 	/// </summary>
-	/// <param name="[In_Degree]">度単位で表されたDirectX::XMFLOAT4ベクトル。</param>
-	/// <returns>ラジアン単位に変換されたDirectX::XMFLOAT4ベクトル。</returns>
+	/// <param name="[In_Degree]">度単位で表されたDirectX::XMFLOAT4ベクトル</param>
+	/// <returns>ラジアン単位に変換されたDirectX::XMFLOAT4ベクトル</returns>
 	static inline DirectX::XMFLOAT4 ToRad(_In_ DirectX::XMFLOAT4 In_Degree)
 	{
 		return In_Degree * (PI / 180.0f);
 	}
 
 	/// <summary>
-	/// ラジアン単位のDirectX::XMFLOAT4ベクトルを度単位に変換します。
+	/// ラジアン単位のDirectX::XMFLOAT4ベクトルを度単位に変換します
 	/// </summary>
-	/// <param name="[In_Rad]">ラジアン単位のDirectX::XMFLOAT4ベクトル。</param>
-	/// <returns>度単位に変換されたDirectX::XMFLOAT4ベクトル。</returns>
+	/// <param name="[In_Rad]">ラジアン単位のDirectX::XMFLOAT4ベクトル</param>
+	/// <returns>度単位に変換されたDirectX::XMFLOAT4ベクトル</returns>
 	static inline DirectX::XMFLOAT4 ToDeg(_In_ DirectX::XMFLOAT4 In_Rad)
 	{
 		return In_Rad * (180.0f / PI);
 	}
 
 	/// <summary>
-	/// 値を指定した範囲 [In_Low, In_High] に収めます。
+	/// 値を指定した範囲 [In_Low, In_High] に収めます
 	/// </summary>
-	/// <param name="[In_Value]">クランプする入力値。</param>
-	/// <param name="[In_Low]">許容される下限。In_Valueがこの値より小さい場合、In_Lowが返されます。</param>
-	/// <param name="[In_High]">許容される上限。In_Valueがこの値より大きい場合、In_High が返されます。</param>
+	/// <param name="[In_Value]">クランプする入力値</param>
+	/// <param name="[In_Low]">許容される下限(In_Valueがこの値より小さい場合、In_Lowが返されます)</param>
+	/// <param name="[In_High]">許容される上限(In_Valueがこの値より大きい場合、In_High が返されます)</param>
 	/// <returns>v をIn_LowとIn_Highの範囲内に制限した結果のfloat値(両端を含む)</returns>
 	inline float Clampf(_In_ float In_Value, _In_ float In_Low, _In_ float In_High)
 	{
@@ -402,13 +439,13 @@ namespace DX11Math
 	}
 
 	/// <summary>
-	/// クォータニオンをロール・ピッチ・ヨー（オイラー角）に変換します。
+	/// クォータニオンをロール・ピッチ・ヨー(オイラー角)に変換します
 	/// </summary>
-	/// <param name="[In_Quat]">変換対象のDirectX::XMFLOAT4型クォータニオン。</param>
-	/// <returns>変換されたDirectX::XMFLOAT3型のロール・ピッチ・ヨー（オイラー角）。</returns>
+	/// <param name="[In_Quat]">変換対象のDirectX::XMFLOAT4型クォータニオン</param>
+	/// <returns>変換されたDirectX::XMFLOAT3型のロール・ピッチ・ヨー(単位はRadian)</returns>
 	static inline DirectX::XMFLOAT3 QuaternionToRollPitchYaw(_In_ const DirectX::XMFLOAT4 &In_Quat)
 	{
-		// DirectX quaternions: x, y, z, w
+		// クォータニオンの成分
 		float x = In_Quat.x;
 		float y = In_Quat.y;
 		float z = In_Quat.z;
@@ -416,54 +453,44 @@ namespace DX11Math
 
 		// 正規化
 		float mag = std::sqrt(x * x + y * y + z * z + w * w);
-		if (mag > 0.0f)
+		if(mag > EPSILON)
 		{
 			x /= mag; y /= mag; z /= mag; w /= mag;
 		}
 
-		// t2 = 2*(w*y - z*x) が asin に入る値
-		// これが ±1 に近いとジンバルロック
-		float t0 = 2.0f * (w * x + y * z);
-		float t1 = 1.0f - 2.0f * (x * x + y * y);
-		float t2 = 2.0f * (w * y - z * x);
-		float t3 = 2.0f * (w * z + x * y);
-		float t4 = 1.0f - 2.0f * (y * y + z * z);
+		// DirectX標準のPitch(X)→Yaw(Y)→Roll(Z)順序の変換式
+		float sinp = 2.0f * (w * x - y * z);
+		float pitch;
 
-		float roll, pitch, yaw;
-
-		if (std::fabs(t2) < 1.0f - EPSILON)
+		// ジンバルロックチェック
+		if(std::fabs(sinp) >= 1.0f - EPSILON)
 		{
-			// 通常ケース
-			roll = std::atan2(t0, t1);       // X軸回転
-			pitch = std::asin(Clampf(t2, -1.0f, 1.0f)); // Y軸回転
-			yaw = std::atan2(t3, t4);       // Z軸回転
+			pitch = std::copysign(DirectX::XM_PI / 2.0f, sinp);
+			float yaw = std::atan2(-2.0f * (x * z - w * y), 1.0f - 2.0f * (x * x + y * y));
+			float roll = 0.0f; // ジンバルロック時はRollを0に固定
+			return DirectX::XMFLOAT3(pitch, yaw, roll);
 		}
 		else
 		{
-			// ジンバルロック付近の特別処理
-			// pitchを±pi/2に固定してrollを固定(roll=0にしてyawを算出)
-			if (t2 > 0.0f)
-			{
-				// N（+pi/2）
-				pitch = +PI / 2.0f;
-				// yawを2*atan2(x, w)で復元する
-				yaw = 2.0f * std::atan2(x, w);
-				roll = 0.0f;
-			}
-			else
-			{
-				// S（-pi/2）
-				pitch = -PI / 2.0f;
-				yaw = -2.0f * std::atan2(x, w);
-				roll = 0.0f;
-			}
+			pitch = std::asin(sinp);
+			float yaw = std::atan2(2.0f * (w * y + x * z), 1.0f - 2.0f * (x * x + y * y));
+			float roll = std::atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (x * x + z * z));
+			return DirectX::XMFLOAT3(pitch, yaw, roll);
 		}
-
-		return DirectX::XMFLOAT3(roll, pitch, yaw);
+	}
+	/// <summary>
+	/// クォータニオンをロール・ピッチ・ヨー（オイラー角）に変換します
+	/// </summary>
+	/// <param name="[In_Quat]">変換対象のDirectX::XMFLOAT4型クォータニオン</param>
+	/// <returns>変換されたDirectX::XMFLOAT3型のロール・ピッチ・ヨー(単位はDegree)</returns>
+	static inline DirectX::XMFLOAT3 QuaternionToRollPitchYawDegrees(_In_ const DirectX::XMFLOAT4 &In_Quat)
+	{
+		auto RallPitchYawRad = QuaternionToRollPitchYaw(In_Quat);
+		return ToDeg(RallPitchYawRad);
 	}
 
 	/// <summary>
-	/// クォータニオン同士の乗算を行います。
+	/// クォータニオン同士の乗算を行います
 	/// </summary>
 	/// <param name="[In_Q1]">掛ける値</param>
 	/// <param name="[In_Q2]">掛けられる値</param>
@@ -479,13 +506,60 @@ namespace DX11Math
 	}
 
 	/// <summary>
-	/// スクリーン座標をワールド座標に変換します。
+	/// 2つの3次元ベクトルの内積を計算します
 	/// </summary>
-	/// <param name="[In_ScreenPos]">変換するスクリーン座標（POINTS構造体）。</param>
-	/// <param name="[In_fZ]">変換時に使用するZ値（深度）。</param>
-	/// <param name="[In_View]">カメラのビュー行列（DirectX::XMFLOAT4X4型）。</param>
-	/// <param name="[In_Proj]">カメラのプロジェクション行列（DirectX::XMFLOAT4X4型）。</param>
-	/// <returns>変換後のワールド座標（DirectX::XMVECTOR型）。</returns>
+	/// <param name="[In_V1]">1つ目の3次元ベクトル</param>
+	/// <param name="[In_V2]">2つ目の3次元ベクトル</param>
+	/// <returns>2つのベクトルの内積(スカラー値)</returns>
+	static inline float Dot(_In_ const DirectX::XMFLOAT3 &In_V1, _In_ const DirectX::XMFLOAT3 &In_V2)
+	{
+		return In_V1.x * In_V2.x + In_V1.y * In_V2.y + In_V1.z * In_V2.z;
+	}
+
+	/// <summary>
+	/// 2つの3次元ベクトルの外積を計算します
+	/// </summary>
+	/// <param name="[In_V1]">1つ目の3次元ベクトル</param>
+	/// <param name="[In_V2]">2つ目の3次元ベクトル</param>
+	/// <returns>2つのベクトルの外積を表す3次元ベクトル</returns>
+	static inline DirectX::XMFLOAT3 Cross(_In_ const DirectX::XMFLOAT3 &In_V1, _In_ const DirectX::XMFLOAT3 &In_V2)
+	{
+		return DirectX::XMFLOAT3(
+			In_V1.y * In_V2.z - In_V1.z * In_V2.y,
+			In_V1.z * In_V2.x - In_V1.x * In_V2.z,
+			In_V1.x * In_V2.y - In_V1.y * In_V2.x
+		);
+	}
+
+	/// <summary>
+	/// 3次元ベクトルの長さの二乗を計算します
+	/// </summary>
+	/// <param name="[In_V]">長さの二乗を計算する3次元ベクトル</param>
+	/// <returns>ベクトルの長さの二乗</returns>
+	static inline float LengthSquared(_In_ const DirectX::XMFLOAT3 &In_V)
+	{
+		return In_V.x * In_V.x + In_V.y * In_V.y + In_V.z * In_V.z;
+	}
+
+	/// <summary>
+	/// 3次元ベクトルの長さを計算します
+	/// </summary>
+	/// <param name="[In_V]">長さを計算する3次元ベクトル</param>
+	/// <returns>ベクトルの長さ(ユークリッドノルム)</returns>
+	static inline float Length(_In_ const DirectX::XMFLOAT3 &In_V)
+	{
+		return std::sqrt(LengthSquared(In_V));
+	}
+
+
+	/// <summary>
+	/// スクリーン座標をワールド座標に変換します
+	/// </summary>
+	/// <param name="[In_ScreenPos]">変換するスクリーン座標(POINTS構造体)</param>
+	/// <param name="[In_fZ]">変換時に使用するZ値(深度)</param>
+	/// <param name="[In_View]">カメラのビュー行列(DirectX::XMFLOAT4X4型)</param>
+	/// <param name="[In_Proj]">カメラのプロジェクション行列(DirectX::XMFLOAT4X4型)</param>
+	/// <returns>変換後のワールド座標(DirectX::XMVECTOR型)</returns>
 	static inline DirectX::XMVECTOR ScreenToWorldPos(_In_ const POINTS &In_ScreenPos, _In_ const float &In_fZ, _In_ const DirectX::XMFLOAT4X4 &In_View, _In_ const DirectX::XMFLOAT4X4 &In_Proj)
 	{
 		// 各行列の逆行列を算出
@@ -583,6 +657,11 @@ namespace DX11Math
 		return false;
 	}
 
+	/// <summary>
+	/// 3次元空間インデックス用にビットを分離します
+	/// </summary>
+	/// <param name="[In_Bit]">分離する入力バイト値</param>
+	/// <returns>3次元モートン符号化のためにビットが分離された整数値</returns>
 	static int BitSeparateFor3D(_In_ BYTE In_Bit)
 	{
 		int n = In_Bit;
