@@ -13,7 +13,6 @@
 
 BoxCollider::BoxCollider()
 	: ColliderBase("BoxCollider")
-	, m_Center(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
 	, m_HalfExtents(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f))
 	, m_WorldCenter(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
 	, m_AxisX(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)), m_AxisY(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)), m_AxisZ(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f))

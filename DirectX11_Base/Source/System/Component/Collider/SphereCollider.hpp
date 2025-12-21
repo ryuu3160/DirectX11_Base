@@ -27,12 +27,6 @@ public:
 	float GetRadius() const noexcept { return m_Radius; }
 
 	/// <summary>
-	/// 境界ボリュームの中心点を取得します
-	/// </summary>
-	/// <returns>境界ボリュームの中心座標を表す3次元ベクトル</returns>
-	DirectX::XMFLOAT3 GetCenter() const noexcept { return m_Center; }
-
-	/// <summary>
 	/// ワールド座標系での中心点を取得します
 	/// </summary>
 	/// <returns>ワールド座標系での中心座標を表す3次元ベクトル</returns>
@@ -43,12 +37,6 @@ public:
 	/// </summary>
 	/// <param name="[In_Radius]">設定する半径の値</param>
 	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
-	
-	/// <summary>
-	/// オブジェクトの中心位置を設定します
-	/// </summary>
-	/// <param name="In_Center">設定する中心位置の3次元座標</param>
-	void SetCenter(_In_ const DirectX::XMFLOAT3 &In_Center) noexcept { m_Center = In_Center; }
 
 	/// <summary>
 	/// 他のコライダーとの衝突を検出します
@@ -76,5 +64,4 @@ private:
 
 protected:
 	float m_Radius = 1.0f; // 半径
-	DirectX::XMFLOAT3 m_Center; // ローカル中心座標
 };

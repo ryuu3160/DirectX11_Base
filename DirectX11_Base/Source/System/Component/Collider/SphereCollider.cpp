@@ -13,7 +13,6 @@
 
 SphereCollider::SphereCollider()
 	: ColliderBase("SphereCollider"), m_Radius(1.0f)
-	, m_Center(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
 {
 	m_Type = COLLIDER_SPHERE;
 }

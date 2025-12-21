@@ -22,11 +22,9 @@ public:
 
 	void Update(_In_ float In_Tick) noexcept override;
 
-	inline DirectX::XMFLOAT3 GetCenter() const { return m_Center; }
 	inline DirectX::XMFLOAT3 GetHalfExtents() const { return m_HalfExtents; }
 	
 	inline void SetSize(_In_ const DirectX::XMFLOAT3 &size) { m_HalfExtents = size * 0.5f; }
-	inline void SetCenter(_In_ const DirectX::XMFLOAT3 &center) { m_Center = center; }
 	inline void SetHalfExtents(_In_ const DirectX::XMFLOAT3 &halfExtents) { m_HalfExtents = halfExtents; }
 	
 	// ワールド座標系での情報を取得
@@ -86,7 +84,6 @@ private:
 	bool IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcept;
 
 protected:
-	DirectX::XMFLOAT3 m_Center; // 中心位置（ローカル）
 	// サイズ
 	DirectX::XMFLOAT3 m_HalfExtents;
 

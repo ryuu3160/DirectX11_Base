@@ -39,12 +39,10 @@ public:
 	ColliderBase(_In_ std::string In_Name);
 	virtual ~ColliderBase();
 
-	void SaveLoad(_In_ DataAccessor *In_Data) final;
+	virtual void SaveLoad(_In_ DataAccessor *In_Data) override;
 
 	void Init() noexcept override;
-
 	void Update(_In_ float In_Tick) noexcept override;
-
 	void FixedUpdate(_In_ double In_FixedTick) noexcept override;
 
 	virtual bool CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
@@ -52,6 +50,17 @@ public:
 	virtual void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept = 0;
 
 	ColliderType GetType() const noexcept { return m_Type; }
+
+	/// <summary>
+	/// 境界ボリュームの中心座標を取得します
+	/// </summary>
+	/// <returns>境界ボリュームの中心を表すXMFLOAT3ベクトル</returns>
+	inline DirectX::XMFLOAT3 GetCenter() const { return m_Center; }
+	/// <summary>
+	/// 境界ボリュームの中心座標を設定します
+	/// </summary>
+	/// <param name="[In_Center]">設定する中心座標を表すXMFLOAT3ベクトル</param>
+	inline void SetCenter(_In_ const DirectX::XMFLOAT3 &In_Center) { m_Center = In_Center; }
 
 	const bool &IsTrigger() const noexcept { return m_IsTrigger; }
 	/// <summary>
@@ -81,7 +90,7 @@ protected:
 	ColliderType m_Type; // コライダーの形状
 	bool m_IsTrigger; // トリガーかどうか
 	bool m_IsCollision; // 衝突しているかどうか
-
+	DirectX::XMFLOAT3 m_Center; // ローカル座標系での中心位置
 private:
 	CollisionManager &m_CollisionManager;
 };

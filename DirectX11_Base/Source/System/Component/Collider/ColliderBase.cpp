@@ -18,6 +18,7 @@ ColliderBase::ColliderBase(_In_ std::string In_Name)
 	, m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
 	, m_CollisionManager(CollisionManager::GetInstance())
 	, m_pTreeData(nullptr)
+	, m_Center{ 0.0f, 0.0f, 0.0f }
 {
 	m_pTreeData = std::make_shared<TreeData>();
 	m_pTreeData->m_pCollider = this;
