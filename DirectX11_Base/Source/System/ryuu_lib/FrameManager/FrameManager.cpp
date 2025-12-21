@@ -21,7 +21,7 @@ void FrameManager::Init(_In_ float In_fFps, _In_ bool In_YieldWhenWaiting)
 	// メインフレームデータの設定
 	// ------------------------------
 	m_StartTime = clock::now();
-	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(1e-6f, In_fFps)));
+	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(EPSILON, In_fFps)));
 
 	m_LastTime = clock::now() - std::chrono::duration_cast<clock::duration>(m_TargetDuration);
 	m_FpsTime = clock::now();
@@ -86,7 +86,7 @@ bool FrameManager::UpdateMain()
 void FrameManager::ChangeMainFps(_In_ float In_fFps)
 {
 	m_fMainFps = In_fFps;
-	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(1e-6f, In_fFps)));
+	m_TargetDuration = std::chrono::duration<double>(static_cast<double>(1.0f / std::max(EPSILON, In_fFps)));
 }
 
 float FrameManager::GetElapsedSeconds() const
