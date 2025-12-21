@@ -99,6 +99,18 @@ void SceneRoot::Init()
 			pos.x += 0.1f;
 			pModel2->SetPosition(pos);
 		});
+	input->RegisterKeyCallBack('E', InputSystem::KeyState::Press, [pModel2]()
+		{
+			auto rot = pModel2->GetRotation(true);
+			rot.y += 1.0f;
+			pModel2->SetRotation(rot);
+		});
+	input->RegisterKeyCallBack('Q', InputSystem::KeyState::Press, [pModel2]()
+		{
+			auto rot = pModel2->GetRotation(true);
+			rot.y -= 1.0f;
+			pModel2->SetRotation(rot);
+		});
 
 	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 1.0f, 1.0f, 1.0f });

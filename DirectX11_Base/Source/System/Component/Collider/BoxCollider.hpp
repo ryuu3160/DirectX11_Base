@@ -20,25 +20,53 @@ public:
 	BoxCollider();
 	virtual ~BoxCollider();
 
-	DirectX::XMFLOAT3 GetLeftTopFront() const noexcept { return m_LeftTopFront; }
-	void SetLeftTopFront(_In_ const DirectX::XMFLOAT3 &In_LeftTopFront) noexcept { m_LeftTopFront = In_LeftTopFront; }
-	DirectX::XMFLOAT3 GetRightBottomBack() const noexcept { return m_RightBottomBack; }
-	void SetRightBottomBack(_In_ const DirectX::XMFLOAT3 &In_RightBottomBack) noexcept { m_RightBottomBack = In_RightBottomBack; }
+	void Update(_In_ float In_Tick) noexcept override;
 
-	DirectX::XMFLOAT3 GetHalfExtents() const noexcept
-	{
-		return DirectX::XMFLOAT3(
-			(m_RightBottomBack.x - m_LeftTopFront.x) * 0.5f,
-			(m_LeftTopFront.y - m_RightBottomBack.y) * 0.5f,
-			(m_RightBottomBack.z - m_LeftTopFront.z) * 0.5f
-		);
-	}
+	inline DirectX::XMFLOAT3 GetCenter() const { return m_Center; }
+	inline DirectX::XMFLOAT3 GetHalfExtents() const { return m_HalfExtents; }
+	
+	inline void SetSize(_In_ const DirectX::XMFLOAT3 &size) { m_HalfExtents = size * 0.5f; }
+	inline void SetCenter(_In_ const DirectX::XMFLOAT3 &center) { m_Center = center; }
+	inline void SetHalfExtents(_In_ const DirectX::XMFLOAT3 &halfExtents) { m_HalfExtents = halfExtents; }
+	
+	// ワールド座標系での情報を取得
+	inline DirectX::XMFLOAT3 GetWorldCenter() const { return m_WorldCenter; }
+	inline DirectX::XMFLOAT3 GetAxisX() const { return m_AxisX; }
+	inline DirectX::XMFLOAT3 GetAxisY() const { return m_AxisY; }
+	inline DirectX::XMFLOAT3 GetAxisZ() const { return m_AxisZ; }
 
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
 
 	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
 
 private:
+	/// <summary>
+	/// DrawGizmosのヘルパー関数：ワールド座標系での頂点座標を取得する
+	/// </summary>
+	void GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept;
+
+	/// <summary>
+	/// 指定された軸上に投影されたバウンディングボックスの半径を計算します
+	/// </summary>
+	/// <param name="[In_HalfExtents]">バウンディングボックスの半分のサイズ(各軸方向の範囲)</param>
+	/// <param name="[In_AxisX]">バウンディングボックスのローカルX軸方向ベクトル</param>
+	/// <param name="[In_AxisY]">バウンディングボックスのローカルY軸方向ベクトル</param>
+	/// <param name="[In_AxisZ]">バウンディングボックスのローカルZ軸方向ベクトル</param>
+	/// <param name="[In_Axis]">投影先の軸を表すベクトル</param>
+	/// <returns>指定された軸上に投影されたバウンディングボックスの半径</returns>
+	float GetProjectedRadius(_In_ const DirectX::XMFLOAT3 &In_HalfExtents, _In_ const DirectX::XMFLOAT3 &In_AxisX,
+		_In_ const DirectX::XMFLOAT3 &In_AxisY, _In_ const DirectX::XMFLOAT3 &In_AxisZ, _In_ const DirectX::XMFLOAT3 &In_Axis) const noexcept;
+
+	/// <summary>
+	/// 分離軸チェックのヘルパー関数
+	/// </summary>
+	/// <param name="[In_Diff]">2つの物体の中心間の差分ベクトル</param>
+	/// <param name="[In_Axis]">分離テストを実行する軸</param>
+	/// <param name="[In_RadiusA]">最初の物体の有効半径</param>
+	/// <param name="[In_RadiusB]">2番目の物体の有効半径</param>
+	/// <returns>重なっていればtrueを返す</returns>
+	bool CheckAxis(_In_ const DirectX::XMFLOAT3 &In_Diff, _In_ const DirectX::XMFLOAT3 &In_Axis,
+		_In_ float In_RadiusA, _In_ float In_RadiusB) const noexcept;
 
 	// 相手がSphereColliderの場合の当たり判定
 	bool IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noexcept;
@@ -46,6 +74,13 @@ private:
 	bool IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcept;
 
 protected:
-	DirectX::XMFLOAT3 m_LeftTopFront; // 左上前の頂点座標
-	DirectX::XMFLOAT3 m_RightBottomBack; // 右下後ろの頂点座標
+	DirectX::XMFLOAT3 m_Center; // 中心位置（ローカル）
+	// サイズ
+	DirectX::XMFLOAT3 m_HalfExtents;
+
+	// ワールド空間での軸方向
+	DirectX::XMFLOAT3 m_WorldCenter;  // 中心位置（ワールド）
+	DirectX::XMFLOAT3 m_AxisX; // ローカルX軸のワールド方向
+	DirectX::XMFLOAT3 m_AxisY; // ローカルY軸のワールド方向
+	DirectX::XMFLOAT3 m_AxisZ; // ローカルZ軸のワールド方向
 };

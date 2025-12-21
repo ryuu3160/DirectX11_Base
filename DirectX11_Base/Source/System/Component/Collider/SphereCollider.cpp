@@ -217,32 +217,35 @@ bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) cons
 bool SphereCollider::IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const noexcept
 {
     BoxCollider *box = dynamic_cast<BoxCollider *>(In_Other);
-    if (!box) return false;
-    DirectX::XMFLOAT3 sphereCenter = m_pTransform->GetPosition();
-    DirectX::XMFLOAT3 boxCenter = box->GetGameObject()->GetPosition();
-    DirectX::XMFLOAT3 boxHalfExtents = box->GetHalfExtents();
-    // 球の中心から箱の中心へのベクトルを計算
-    DirectX::XMFLOAT3 diff;
-    diff.x = sphereCenter.x - boxCenter.x;
-    diff.y = sphereCenter.y - boxCenter.y;
-    diff.z = sphereCenter.z - boxCenter.z;
-    // 最近接点を計算
-    DirectX::XMFLOAT3 closestPoint;
-    closestPoint.x = std::max(-boxHalfExtents.x, std::min(diff.x, boxHalfExtents.x));
-    closestPoint.y = std::max(-boxHalfExtents.y, std::min(diff.y, boxHalfExtents.y));
-    closestPoint.z = std::max(-boxHalfExtents.z, std::min(diff.z, boxHalfExtents.z));
-    // 最近接点と球の中心との距離を計算
-    DirectX::XMFLOAT3 closestToSphere;
-    closestToSphere.x = diff.x - closestPoint.x;
-    closestToSphere.y = diff.y - closestPoint.y;
-    closestToSphere.z = diff.z - closestPoint.z;
-    float distSq = closestToSphere.x * closestToSphere.x +
-        closestToSphere.y * closestToSphere.y +
-        closestToSphere.z * closestToSphere.z;
-    // 半径の二乗と距離の二乗を比較
-    if (distSq <= m_Radius * m_Radius)
-    {
-        return true;
-    }
-	return false;
+    if (!box)
+        return false;
+
+	DirectX::XMFLOAT3 spherePos = m_pTransform->GetPosition();
+    DirectX::XMVECTOR spherePosVec = DirectX::XMLoadFloat3(&spherePos);
+    DirectX::XMFLOAT3 center = box->GetWorldCenter();
+    DirectX::XMVECTOR centerVec = DirectX::XMLoadFloat3(&center);
+	DirectX::XMFLOAT3 HalfExtents = box->GetHalfExtents(); 
+	DirectX::XMFLOAT3 AxisX = box->GetAxisX();
+	DirectX::XMFLOAT3 AxisY = box->GetAxisY();
+	DirectX::XMFLOAT3 AxisZ = box->GetAxisZ();
+
+    // 球の中心をBoxのローカル座標系に変換
+    DirectX::XMVECTOR diff = spherePosVec - centerVec;
+
+    float projX = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&AxisX)));
+    float projY = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&AxisY)));
+    float projZ = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&AxisZ)));
+
+    // クランプして最近接点を求める
+    float closestX = std::max(-HalfExtents.x, std::min(projX, HalfExtents.x));
+    float closestY = std::max(-HalfExtents.y, std::min(projY, HalfExtents.y));
+    float closestZ = std::max(-HalfExtents.z, std::min(projZ, HalfExtents.z));
+
+    // 距離の二乗を計算
+    float distSq = (projX - closestX) * (projX - closestX)
+        + (projY - closestY) * (projY - closestY)
+        + (projZ - closestZ) * (projZ - closestZ);
+
+    float radius = m_Radius;
+    return distSq <= (radius * radius);
 }

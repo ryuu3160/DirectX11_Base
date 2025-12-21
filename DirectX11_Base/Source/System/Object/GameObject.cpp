@@ -286,9 +286,15 @@ void GameObject::DestroySelf() noexcept
 		itr->DestroySelf();
 }
 
-DirectX::XMFLOAT3 GameObject::GetRotation() const noexcept
+DirectX::XMFLOAT3 GameObject::GetRotation(_In_ bool In_IsDegree) const noexcept
 {
-	return DX11Math::QuaternionToRollPitchYaw(m_Quat);
+	DirectX::XMFLOAT3 rot;
+	rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
+
+	if(In_IsDegree)
+		rot = ToDeg(rot);
+
+	return rot;
 }
 
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept

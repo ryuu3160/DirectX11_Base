@@ -124,7 +124,7 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
-	DirectX::XMFLOAT3 GetRotation() const noexcept;
+	DirectX::XMFLOAT3 GetRotation(_In_ bool In_IsDegree = false) const noexcept;
 
 	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_Pos; }
 	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_Quat; }
@@ -137,6 +137,11 @@ public:
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
 	void SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
+
+	/// <summary>
+	/// âÒì]Çê›íËÇµÇ‹Ç∑
+	/// </summary>
+	/// <param name="[In_Rotation]">ê›íËÇ∑ÇÈâÒì]íl(Degree)</param>
 	void SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept;
 	void SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept;
 	void SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept;

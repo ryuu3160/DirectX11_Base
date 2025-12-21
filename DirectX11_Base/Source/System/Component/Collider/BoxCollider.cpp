@@ -13,14 +13,37 @@
 
 BoxCollider::BoxCollider()
 	: ColliderBase("BoxCollider")
-	, m_LeftTopFront(DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f))
-	, m_RightBottomBack(DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f))
+	, m_Center(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
+	, m_HalfExtents(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f))
+	, m_WorldCenter(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
+	, m_AxisX(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)), m_AxisY(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)), m_AxisZ(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f))
 {
 	m_Type = COLLIDER_BOX;
 }
 
 BoxCollider::~BoxCollider()
 {
+}
+
+void BoxCollider::Update(_In_ float In_Tick) noexcept
+{
+	// オブジェクトのワールド行列を取得
+	DirectX::XMFLOAT4X4 worldMatrix = m_pTransform->GetWorld(false);
+	DirectX::XMMATRIX matWorld = DirectX::XMLoadFloat4x4(&worldMatrix);
+
+	// ローカル中心をワールド座標に変換
+	DirectX::XMVECTOR localCenter = DirectX::XMLoadFloat3(&m_Center);
+	DirectX::XMVECTOR worldCenter = DirectX::XMVector3TransformCoord(localCenter, matWorld);
+	DirectX::XMStoreFloat3(&m_WorldCenter, worldCenter);
+
+	// 各軸方向を取得（回転のみ適用、スケールは無視）
+	DirectX::XMVECTOR axisX = DirectX::XMVector3Normalize(matWorld.r[0]); // X軸
+	DirectX::XMVECTOR axisY = DirectX::XMVector3Normalize(matWorld.r[1]); // Y軸
+	DirectX::XMVECTOR axisZ = DirectX::XMVector3Normalize(matWorld.r[2]); // Z軸
+
+	DirectX::XMStoreFloat3(&m_AxisX, axisX);
+	DirectX::XMStoreFloat3(&m_AxisY, axisY);
+	DirectX::XMStoreFloat3(&m_AxisZ, axisZ);
 }
 
 bool BoxCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
@@ -75,64 +98,181 @@ void BoxCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 	// 当たり判定のアウトラインをAddLineで描画する
 	GameObject *obj = m_pTransform;
 
-	auto LeftBottomFront = DirectX::XMFLOAT3(m_LeftTopFront.x, m_RightBottomBack.y, m_LeftTopFront.z);
-	auto LeftTopBack = DirectX::XMFLOAT3(m_LeftTopFront.x, m_LeftTopFront.y, m_RightBottomBack.z);
-	auto LeftBottomBack = DirectX::XMFLOAT3(m_LeftTopFront.x, m_RightBottomBack.y, m_RightBottomBack.z);
-	auto RightTopFront = DirectX::XMFLOAT3(m_RightBottomBack.x, m_LeftTopFront.y, m_LeftTopFront.z);
-	auto RightBottomFront = DirectX::XMFLOAT3(m_RightBottomBack.x, m_RightBottomBack.y, m_LeftTopFront.z);
-	auto RightTopBack = DirectX::XMFLOAT3(m_RightBottomBack.x, m_LeftTopFront.y, m_RightBottomBack.z);
+	// 8つの頂点をワールド座標で取得
+	DirectX::XMFLOAT3 v[8];
+	GetLocalVertices(v);
 
-	In_Gizmos->AddLine(obj, m_LeftTopFront, LeftBottomFront);
-	In_Gizmos->AddLine(obj, m_LeftTopFront, LeftTopBack);
-	In_Gizmos->AddLine(obj, m_LeftTopFront, RightTopFront);
-	In_Gizmos->AddLine(obj, LeftBottomFront, LeftBottomBack);
-	In_Gizmos->AddLine(obj, LeftTopBack, LeftBottomBack);
-	In_Gizmos->AddLine(obj, RightTopFront, RightTopBack);
-	In_Gizmos->AddLine(obj, RightTopFront, RightBottomFront);
-	In_Gizmos->AddLine(obj, RightBottomFront, m_RightBottomBack);
-	In_Gizmos->AddLine(obj, RightTopBack, m_RightBottomBack);
-	In_Gizmos->AddLine(obj, LeftTopBack, RightTopBack);
-	In_Gizmos->AddLine(obj, LeftBottomBack, m_RightBottomBack);
+	// 底面（4本）
+	In_Gizmos->AddLine(obj, v[0], v[1]);
+	In_Gizmos->AddLine(obj, v[1], v[2]);
+	In_Gizmos->AddLine(obj, v[2], v[3]);
+	In_Gizmos->AddLine(obj, v[3], v[0]);
 
+	// 上面（4本）
+	In_Gizmos->AddLine(obj, v[4], v[5]);
+	In_Gizmos->AddLine(obj, v[5], v[6]);
+	In_Gizmos->AddLine(obj, v[6], v[7]);
+	In_Gizmos->AddLine(obj, v[7], v[4]);
 
+	// 縦の辺（4本）
+	In_Gizmos->AddLine(obj, v[0], v[4]);
+	In_Gizmos->AddLine(obj, v[1], v[5]);
+	In_Gizmos->AddLine(obj, v[2], v[6]);
+	In_Gizmos->AddLine(obj, v[3], v[7]);
+}
+
+void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept
+{
+	// ローカル座標での8頂点
+	DirectX::XMFLOAT3 localVertices[8] = {
+		{-m_HalfExtents.x, -m_HalfExtents.y, -m_HalfExtents.z}, // 0:  左下奥
+		{ m_HalfExtents.x, -m_HalfExtents.y, -m_HalfExtents.z}, // 1: 右下奥
+		{ m_HalfExtents.x, -m_HalfExtents.y,  m_HalfExtents.z}, // 2: 右下手前
+		{-m_HalfExtents.x, -m_HalfExtents.y,  m_HalfExtents.z}, // 3: 左下手前
+		{-m_HalfExtents.x,  m_HalfExtents.y, -m_HalfExtents.z}, // 4: 左上奥
+		{ m_HalfExtents.x,  m_HalfExtents.y, -m_HalfExtents.z}, // 5: 右上奥
+		{ m_HalfExtents.x,  m_HalfExtents.y,  m_HalfExtents.z}, // 6: 右上手前
+		{-m_HalfExtents.x,  m_HalfExtents.y,  m_HalfExtents.z}, // 7: 左上手前
+	};
+
+	DirectX::XMVECTOR axisX = DirectX::XMLoadFloat3(&m_AxisX);
+	DirectX::XMVECTOR axisY = DirectX::XMLoadFloat3(&m_AxisY);
+	DirectX::XMVECTOR axisZ = DirectX::XMLoadFloat3(&m_AxisZ);
+	DirectX::XMVECTOR center = DirectX::XMLoadFloat3(&m_WorldCenter);
+
+	// 各頂点をワールド座標に変換
+	for(int i = 0; i < 8; ++i)
+	{
+		DirectX::XMVECTOR local = DirectX::XMLoadFloat3(&localVertices[i]);
+
+		// pos = local. x * axisX + local.y * axisY + local.z * axisZ
+		DirectX::XMVECTOR pos = DirectX::XMVectorScale(axisX, localVertices[i].x)
+			+ DirectX::XMVectorScale(axisY, localVertices[i].y)
+			+ DirectX::XMVectorScale(axisZ, localVertices[i].z);
+
+		DirectX::XMStoreFloat3(&outVertices[i], pos);
+	}
+}
+
+float BoxCollider::GetProjectedRadius(_In_ const DirectX::XMFLOAT3 &In_HalfExtents, _In_ const DirectX::XMFLOAT3 &In_AxisX,
+	_In_ const DirectX::XMFLOAT3 &In_AxisY, _In_ const DirectX::XMFLOAT3 &In_AxisZ, _In_ const DirectX::XMFLOAT3 &In_Axis) const noexcept
+{
+	return In_HalfExtents.x * std::abs(Dot(In_AxisX, In_Axis))
+		+ In_HalfExtents.y * std::abs(Dot(In_AxisY, In_Axis))
+		+ In_HalfExtents.z * std::abs(Dot(In_AxisZ, In_Axis));
+}
+
+bool BoxCollider::CheckAxis(_In_ const DirectX::XMFLOAT3 &In_Diff, _In_ const DirectX::XMFLOAT3 &In_Axis,
+	_In_ float In_RadiusA, _In_ float In_RadiusB) const noexcept
+{
+	// 軸上の距離を計算
+	float distanceOnAxis = std::abs(Dot(In_Diff, In_Axis));
+	return distanceOnAxis <= In_RadiusA + In_RadiusB; // 重なっていればtrue
 }
 
 bool BoxCollider::IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noexcept
 {
 	SphereCollider *other = dynamic_cast<SphereCollider *>(In_Other);
-	if(!other) return false;
-	DirectX::XMFLOAT3 boxPos = m_pTransform->GetPosition();
+	if(!other)
+		return false;
+
+	// 計算用に球の中心とBoxの中心、各軸をベクトル化
 	DirectX::XMFLOAT3 spherePos = other->GetGameObject()->GetPosition();
-	DirectX::XMFLOAT3 halfExtents = GetHalfExtents();
-	// ボックスの各軸に対して、球の中心点をクランプする
-	float closestX = std::max(boxPos.x - halfExtents.x, std::min(spherePos.x, boxPos.x + halfExtents.x));
-	float closestY = std::max(boxPos.y - halfExtents.y, std::min(spherePos.y, boxPos.y + halfExtents.y));
-	float closestZ = std::max(boxPos.z - halfExtents.z, std::min(spherePos.z, boxPos.z + halfExtents.z));
-	// クランプされた点と球の中心点との距離を計算
-	float distanceX = spherePos.x - closestX;
-	float distanceY = spherePos.y - closestY;
-	float distanceZ = spherePos.z - closestZ;
-	float distanceSquared = (distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ);
+	DirectX::XMVECTOR spherePosVec = DirectX::XMLoadFloat3(&spherePos);
+	DirectX::XMVECTOR centerVec = DirectX::XMLoadFloat3(&m_WorldCenter);
+
+	// 球の中心をBoxのローカル座標系に変換
+	DirectX::XMVECTOR diff = spherePosVec - centerVec;
+
+	// 各軸への射影を計算
+	float projX = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&m_AxisX)));
+	float projY = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&m_AxisY)));
+	float projZ = DirectX::XMVectorGetX(DirectX::XMVector3Dot(diff, DirectX::XMLoadFloat3(&m_AxisZ)));
+
+	// クランプして最近接点を求める
+	float closestX = std::max(-m_HalfExtents.x, std::min(projX, m_HalfExtents.x));
+	float closestY = std::max(-m_HalfExtents.y, std::min(projY, m_HalfExtents.y));
+	float closestZ = std::max(-m_HalfExtents.z, std::min(projZ, m_HalfExtents.z));
+
+	// 距離の二乗を計算
+	float distSq = (projX - closestX) * (projX - closestX)
+		+ (projY - closestY) * (projY - closestY)
+		+ (projZ - closestZ) * (projZ - closestZ);
+
+	// 半径の二乗と比較
 	float radius = other->GetRadius();
-	// 距離の二乗が半径の二乗以下なら衝突している
-	return distanceSquared <= (radius * radius);
+	return distSq <= (radius * radius);
 }
 
 bool BoxCollider::IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcept
 {
 	BoxCollider *other = dynamic_cast<BoxCollider *>(In_Other);
-	if(!other) return false;
+	if(!other)
+		return false;
 
-	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPosition();
-	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPosition();
-	DirectX::XMFLOAT3 halfExtents1 = GetHalfExtents();
-	DirectX::XMFLOAT3 halfExtents2 = other->GetHalfExtents();
-	// 各軸での重なりをチェック
-	if (std::abs(pos1.x - pos2.x) <= (halfExtents1.x + halfExtents2.x) &&
-		std::abs(pos1.y - pos2.y) <= (halfExtents1.y + halfExtents2.y) &&
-		std::abs(pos1.z - pos2.z) <= (halfExtents1.z + halfExtents2.z))
+	// ワールド座標系での中心、軸、半分のサイズを取得
+	DirectX::XMFLOAT3 centerA = m_WorldCenter;
+	DirectX::XMFLOAT3 axisA[3] = { m_AxisX, m_AxisY, m_AxisZ };
+	DirectX::XMFLOAT3 halfA = m_HalfExtents;
+	// ぶつかった相手の情報
+	DirectX::XMFLOAT3 centerB = other->m_WorldCenter;
+	DirectX::XMFLOAT3 axisB[3] = { other->m_AxisX, other->m_AxisY, other->m_AxisZ };
+	DirectX::XMFLOAT3 halfB = other->m_HalfExtents;
+
+	// 中心間のベクトル
+	DirectX::XMFLOAT3 diff = {
+		centerB.x - centerA.x,
+		centerB.y - centerA.y,
+		centerB.z - centerA.z
+	};
+
+	// BoxAの3軸
+	float halfAArray[3] = { halfA.x, halfA.y, halfA.z };
+	for(int i = 0; i < 3; ++i)
 	{
-		return true;
+		// 投影半径を計算、軸での分離をチェック
+		float radiusB = GetProjectedRadius(halfB, axisB[0], axisB[1], axisB[2], axisA[i]);
+		if(!CheckAxis(diff, axisA[i], halfAArray[i], radiusB))
+			return false;
 	}
-	return false;
+
+	// BoxBの3軸
+	float halfBArray[3] = { halfB.x, halfB.y, halfB.z };
+	for(int i = 0; i < 3; ++i)
+	{
+		// 投影半径を計算、軸での分離をチェック
+		float radiusA = GetProjectedRadius(halfA, axisA[0], axisA[1], axisA[2], axisB[i]);
+		if(!CheckAxis(diff, axisB[i], radiusA, halfBArray[i]))
+			return false;
+	}
+
+	// 外積軸(9本)
+	for(int i = 0; i < 3; ++i)
+	{
+		for(int j = 0; j < 3; ++j)
+		{
+			// 軸を計算
+			DirectX::XMFLOAT3 axis = Cross(axisA[i], axisB[j]);
+			float lengthSq = LengthSquared(axis);
+
+			if(lengthSq < EPSILON)
+				continue; // 平行な軸はスキップ
+
+			// 正規化
+			float invLength = 1.0f / std::sqrt(lengthSq);
+			axis.x *= invLength;
+			axis.y *= invLength;
+			axis.z *= invLength;
+
+			// 投影半径を計算
+			float radiusA = GetProjectedRadius(halfA, axisA[0], axisA[1], axisA[2], axis);
+			float radiusB = GetProjectedRadius(halfB, axisB[0], axisB[1], axisB[2], axis);
+
+			// 軸での分離をチェック
+			if(!CheckAxis(diff, axis, radiusA, radiusB))
+				return false;
+		}
+	}
+
+	return true; // 衝突している
 }
