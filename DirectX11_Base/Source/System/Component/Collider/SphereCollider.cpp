@@ -13,12 +13,18 @@
 
 SphereCollider::SphereCollider()
 	: ColliderBase("SphereCollider"), m_Radius(1.0f)
+	, m_Center(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
 {
 	m_Type = COLLIDER_SPHERE;
 }
 
 SphereCollider::~SphereCollider()
 {
+}
+
+DirectX::XMFLOAT3 SphereCollider::GetWorldCenter() const noexcept
+{
+	return m_Center + m_pTransform->GetPosition();
 }
 
 bool SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
@@ -68,12 +74,27 @@ bool SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 	return false;
 }
 
+void SphereCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept
+{
+	auto worldCenter = GetWorldCenter();
+    Out_LeftTopFront = DirectX::XMFLOAT3(
+        worldCenter.x - m_Radius,
+        worldCenter.y + m_Radius,
+        worldCenter.z - m_Radius
+	);
+    Out_RightBottomBack = DirectX::XMFLOAT3(
+        worldCenter.x + m_Radius,
+        worldCenter.y - m_Radius,
+        worldCenter.z + m_Radius
+	);
+}
+
 void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 {
 	// 当たり判定のアウトラインをDrawLineで描画する
 	int segments = 32;              // セグメント数
     float angleStep = 2.0f * PI / segments;  // 1セグメントあたりの角度
-	DirectX::XMFLOAT3 center = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f); // 中心位置
+	DirectX::XMFLOAT3 center = m_Center; // 中心位置
 	int latitudeLines = 4; // 追加の緯度線の数
 
     // === XY平面の円（Z軸周りの円）===
@@ -196,10 +217,11 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) const noexcept
 {
 	SphereCollider *other = dynamic_cast<SphereCollider *>(In_Other);
-	if (!other) return false;
+	if (!other)
+        return false;
 
-	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPosition();
-	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPosition() + m_Center;
+	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPosition() + other->m_Center;
 	float radiusSum = m_Radius + other->m_Radius;
 	float distSq = (pos1.x - pos2.x) * (pos1.x - pos2.x) +
 		(pos1.y - pos2.y) * (pos1.y - pos2.y) +
@@ -220,7 +242,7 @@ bool SphereCollider::IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const n
     if (!box)
         return false;
 
-	DirectX::XMFLOAT3 spherePos = m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 spherePos = m_pTransform->GetPosition() + m_Center;
     DirectX::XMVECTOR spherePosVec = DirectX::XMLoadFloat3(&spherePos);
     DirectX::XMFLOAT3 center = box->GetWorldCenter();
     DirectX::XMVECTOR centerVec = DirectX::XMLoadFloat3(&center);

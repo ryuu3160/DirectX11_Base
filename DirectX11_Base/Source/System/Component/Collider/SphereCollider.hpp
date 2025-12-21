@@ -21,18 +21,48 @@ public:
 	virtual ~SphereCollider();
 
 	/// <summary>
-	/// 半径を設定します。
-	/// </summary>
-	/// <param name="[In_Radius]">設定する半径の値。</param>
-	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
-
-	/// <summary>
 	/// 半径を取得します
 	/// </summary>
 	/// <returns>現在の半径の値</returns>
 	float GetRadius() const noexcept { return m_Radius; }
 
+	/// <summary>
+	/// 境界ボリュームの中心点を取得します
+	/// </summary>
+	/// <returns>境界ボリュームの中心座標を表す3次元ベクトル</returns>
+	DirectX::XMFLOAT3 GetCenter() const noexcept { return m_Center; }
+
+	/// <summary>
+	/// ワールド座標系での中心点を取得します
+	/// </summary>
+	/// <returns>ワールド座標系での中心座標を表す3次元ベクトル</returns>
+	DirectX::XMFLOAT3 GetWorldCenter() const noexcept;
+
+	/// <summary>
+	/// 半径を設定します
+	/// </summary>
+	/// <param name="[In_Radius]">設定する半径の値</param>
+	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
+	
+	/// <summary>
+	/// オブジェクトの中心位置を設定します
+	/// </summary>
+	/// <param name="In_Center">設定する中心位置の3次元座標</param>
+	void SetCenter(_In_ const DirectX::XMFLOAT3 &In_Center) noexcept { m_Center = In_Center; }
+
+	/// <summary>
+	/// 他のコライダーとの衝突を検出します
+	/// </summary>
+	/// <param name="[In_Other]">衝突を判定する対象のコライダー</param>
+	/// <returns>衝突が発生した場合はtrue、それ以外の場合はfalse</returns>
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
+
+	/// <summary>
+	/// 軸平行境界ボックス (AABB) を取得します
+	/// </summary>
+	/// <param name="[Out_LeftTopFront]">AABBの左上前の角の座標を受け取ります</param>
+	/// <param name="[Out_RightBottomBack]">AABBの右下後ろの角の座標を受け取ります</param>
+	void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept override;
 
 	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
 
@@ -46,5 +76,5 @@ private:
 
 protected:
 	float m_Radius = 1.0f; // 半径
-
+	DirectX::XMFLOAT3 m_Center; // ローカル中心座標
 };

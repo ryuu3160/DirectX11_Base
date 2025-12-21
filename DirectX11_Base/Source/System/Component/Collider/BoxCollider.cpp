@@ -93,6 +93,36 @@ bool BoxCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
 	return false;
 }
 
+void BoxCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept
+{
+	// OBB の8頂点を取得
+	DirectX::XMFLOAT3 vertices[8];
+	GetLocalVertices(vertices);
+
+	// 8頂点を包む AABB を計算
+	DirectX::XMFLOAT3 Min, Max;
+	Min = vertices[0];
+	Max = vertices[0];
+
+	for(int i = 1; i < 8; ++i)
+	{
+		Min.x = std::min(Min.x, vertices[i].x);
+		Min.y = std::min(Min.y, vertices[i].y);
+		Min.z = std::min(Min.z, vertices[i].z);
+
+		Max.x = std::max(Max.x, vertices[i].x);
+		Max.y = std::max(Max.y, vertices[i].y);
+		Max.z = std::max(Max.z, vertices[i].z);
+	}
+
+	Out_LeftTopFront.x = Min.x;
+	Out_LeftTopFront.y = Max.y;
+	Out_LeftTopFront.z = Min.z;
+	Out_RightBottomBack.x = Max.x;
+	Out_RightBottomBack.y = Min.y;
+	Out_RightBottomBack.z = Max.z;
+}
+
 void BoxCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 {
 	// 当たり判定のアウトラインをAddLineで描画する
@@ -177,7 +207,7 @@ bool BoxCollider::IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noex
 		return false;
 
 	// 計算用に球の中心とBoxの中心、各軸をベクトル化
-	DirectX::XMFLOAT3 spherePos = other->GetGameObject()->GetPosition();
+	DirectX::XMFLOAT3 spherePos = other->GetWorldCenter();
 	DirectX::XMVECTOR spherePosVec = DirectX::XMLoadFloat3(&spherePos);
 	DirectX::XMVECTOR centerVec = DirectX::XMLoadFloat3(&m_WorldCenter);
 

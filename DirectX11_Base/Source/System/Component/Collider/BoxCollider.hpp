@@ -35,7 +35,19 @@ public:
 	inline DirectX::XMFLOAT3 GetAxisY() const { return m_AxisY; }
 	inline DirectX::XMFLOAT3 GetAxisZ() const { return m_AxisZ; }
 
+	/// <summary>
+	/// 他のコライダーとの衝突判定を行います
+	/// </summary>
+	/// <param name="[In_Other]">衝突判定を行う対象のコライダー</param>
+	/// <returns>衝突している場合はtrue、そうでない場合はfalse</returns>
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
+
+	/// <summary>
+	/// 軸平行境界ボックス (AABB) を取得します
+	/// </summary>
+	/// <param name="[Out_LeftTopFront]">境界ボックスの左上前の頂点座標</param>
+	/// <param name="[Out_RightBottomBack]">境界ボックスの右下後ろの頂点座標</param>
+	void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept override;
 
 	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
 

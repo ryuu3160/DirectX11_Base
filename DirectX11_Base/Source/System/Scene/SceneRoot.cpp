@@ -55,7 +55,7 @@ void SceneRoot::Init()
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
 	pModel->SetPosition({ 0.0f, 1.0f, 0.0f });
-	pModel->AddComponent<BoxCollider>();
+	pModel->AddComponent<SphereCollider>();
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
 	auto comp = child->AddComponent<ModelRenderer>();

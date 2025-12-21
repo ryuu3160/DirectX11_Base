@@ -243,9 +243,9 @@ int CollisionManager::GetPointElem(_In_ const DirectX::XMFLOAT3 In_Point) const 
 int CollisionManager::GetMortonNumberOfCollider(_In_ ColliderBase *In_Collider) noexcept
 {
 	// オブジェクトの境界範囲から登録モートン番号を算出
-	auto GameObj = In_Collider->GetGameObject();
-	auto LeftTopFront = GameObj->GetLeftTopFrontPosition();
-	auto RightBottomBack = GameObj->GetRightBottomBackPosition();
+	DirectX::XMFLOAT3 LeftTopFront;
+	DirectX::XMFLOAT3 RightBottomBack;
+	In_Collider->GetAABB(LeftTopFront, RightBottomBack);
 	return GetMortonNumber(LeftTopFront, RightBottomBack);
 }
 

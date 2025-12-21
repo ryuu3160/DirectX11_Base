@@ -49,6 +49,8 @@ public:
 
 	virtual bool CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
 
+	virtual void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept = 0;
+
 	ColliderType GetType() const noexcept { return m_Type; }
 
 	const bool &IsTrigger() const noexcept { return m_IsTrigger; }
