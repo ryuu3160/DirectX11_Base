@@ -14,17 +14,19 @@
 //	定数定義
 // ==============================
 
-namespace
+namespace DX11Math
 {
 	/// <summary>
 	/// 円周率（π）を表す定数
 	/// </summary>
-	const inline constexpr float PI = 3.14159265358979323846f;
-	const inline constexpr float EPSILON = 1e-6f;
+	inline constexpr float PI = 3.14159265358979323846f;
+	inline constexpr float TWO_PI = 6.28318530717958647692f;
+	inline constexpr float HALF_PI = 1.57079632679489661923f;
+	inline constexpr float EPSILON = 1e-6f;
 
-	const inline constexpr DirectX::XMVECTORF32 g_RayEpsilon = { { { 1e-20f, 1e-20f, 1e-20f, 1e-20f } } };
-	const inline constexpr DirectX::XMVECTORF32 g_FltMin = { { { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX } } };
-	const inline constexpr DirectX::XMVECTORF32 g_FltMax = { { { FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX } } };
+	inline constexpr DirectX::XMVECTORF32 g_RayEpsilon = { { { 1e-20f, 1e-20f, 1e-20f, 1e-20f } } };
+	inline constexpr DirectX::XMVECTORF32 g_FltMin = { { { -FLT_MAX, -FLT_MAX, -FLT_MAX, -FLT_MAX } } };
+	inline constexpr DirectX::XMVECTORF32 g_FltMax = { { { FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX } } };
 }
 
 inline DirectX::XMFLOAT2 operator+(_In_ const DirectX::XMFLOAT2 &In_Value1, _In_ const DirectX::XMFLOAT2 &In_Value2)
@@ -301,6 +303,21 @@ inline DirectX::XMVECTOR operator-(_In_ const DirectX::XMVECTOR &In_Value1, _In_
 	return DirectX::XMVectorSubtract(In_Value1, In_Value2);
 }
 
+inline DirectX::XMVECTOR operator-(_In_ const DirectX::XMVECTOR &In_Value)
+{
+	return DirectX::XMVectorNegate(In_Value);
+}
+
+inline DirectX::XMVECTOR operator*(_In_ const DirectX::XMVECTOR &In_Value, _In_ const float &In_Float)
+{
+	return DirectX::XMVectorScale(In_Value, In_Float);
+}
+
+inline DirectX::XMVECTOR operator*(_In_ const float &In_Float, _In_ const DirectX::XMVECTOR &In_Value)
+{
+	return DirectX::XMVectorScale(In_Value, In_Float);
+}
+
 inline DirectX::XMVECTOR operator*(_In_ const DirectX::XMVECTOR &In_Value1, _In_ const DirectX::XMVECTOR &In_Value2)
 {
 	return DirectX::XMVectorMultiply(In_Value1, In_Value2);
@@ -425,17 +442,90 @@ namespace DX11Math
 	}
 
 	/// <summary>
-	/// 値を指定した範囲 [In_Low, In_High] に収めます
+	/// 値がゼロに近い場合は0.0fを返し、そうでない場合は元の値を返します
+	/// </summary>
+	/// <param name="[In_Value]">評価する浮動小数点数値</param>
+	/// <returns>値の絶対値がEPSILONより小さい場合は0.0f、そうでない場合は元の値</returns>
+	static inline float NearZero(_In_ float In_Value)
+	{
+		return (std::fabs(In_Value) < EPSILON) ? 0.0f : In_Value;
+	}
+
+	/// <summary>
+	/// 浮動小数点数の2乗を計算します
+	/// </summary>
+	/// <param name="[In_Value]">2乗する値</param>
+	/// <returns>入力値の2乗。</returns>
+	static inline float Squaref(_In_ float In_Value)
+	{
+		return In_Value * In_Value;
+	}
+
+	/// <summary>
+	/// 2つの浮動小数点数がほぼ等しいかどうかを判定します
+	/// </summary>
+	/// <param name="[In_A]">比較する最初の浮動小数点数</param>
+	/// <param name="[In_B]">比較する2番目の浮動小数点数</param>
+	/// <returns>2つの数値の差の絶対値がEPSILONより小さい場合はtrue、そうでない場合はfalse</returns>
+	static inline bool NearEqual(_In_ float In_A, _In_ float In_B)
+	{
+		return (std::fabs(In_A - In_B) < EPSILON);
+	}
+
+	/// <summary>
+	/// 2つの3次元ベクトルが近似的に等しいかどうかを判定します
+	/// </summary>
+	/// <param name="[In_A]">比較する最初のベクトル</param>
+	/// <param name="[In_B]">比較する2番目のベクトル</param>
+	/// <returns>2つのベクトルのすべての成分(x、y、z)が近似的に等しい場合はtrue、それ以外の場合はfalse</returns>
+	static inline bool NearEqual(_In_ const DirectX::XMFLOAT3 &In_A, _In_ const DirectX::XMFLOAT3 &In_B)
+	{
+		return (NearEqual(In_A.x, In_B.x) && NearEqual(In_A.y, In_B.y) && NearEqual(In_A.z, In_B.z));
+	}
+
+	/// <summary>
+	/// 値を指定した範囲[In_Low, In_High]に制限します
 	/// </summary>
 	/// <param name="[In_Value]">クランプする入力値</param>
 	/// <param name="[In_Low]">許容される下限(In_Valueがこの値より小さい場合、In_Lowが返されます)</param>
 	/// <param name="[In_High]">許容される上限(In_Valueがこの値より大きい場合、In_High が返されます)</param>
 	/// <returns>v をIn_LowとIn_Highの範囲内に制限した結果のfloat値(両端を含む)</returns>
-	inline float Clampf(_In_ float In_Value, _In_ float In_Low, _In_ float In_High)
+	inline float Clamp(_In_ float In_Value, _In_ float In_Low, _In_ float In_High)
 	{
 		if (In_Value < In_Low) return In_Low;
 		if (In_Value > In_High) return In_High;
 		return In_Value;
+	}
+
+	/// <summary>
+	/// 2次元ベクトルの各成分を指定された範囲内に制限します
+	/// </summary>
+	/// <param name="[In_Value]">制限する入力ベクトル</param>
+	/// <param name="[In_Low]">各成分の最小値を定義するベクトル</param>
+	/// <param name="[In_High]">各成分の最大値を定義するベクトル</param>
+	/// <returns>各成分が対応する最小値と最大値の範囲内に制限された新しいベクトル</returns>
+	inline DirectX::XMFLOAT2 Clamp(_In_ DirectX::XMFLOAT2 In_Value, _In_ DirectX::XMFLOAT2 In_Low, _In_ DirectX::XMFLOAT2 In_High)
+	{
+		DirectX::XMFLOAT2 result;
+		result.x = Clamp(In_Value.x, In_Low.x, In_High.x);
+		result.y = Clamp(In_Value.y, In_Low.y, In_High.y);
+		return result;
+	}
+
+	/// <summary>
+	/// 3次元ベクトルの各成分を指定された範囲内に制限します
+	/// </summary>
+	/// <param name="[In_Value]">制限する入力ベクトル</param>
+	/// <param name="[In_Low]">各成分の最小値を表すベクトル</param>
+	/// <param name="[In_High]">各成分の最大値を表すベクトル</param>
+	/// <returns>各成分が対応する最小値と最大値の範囲内に制限されたベクトル</returns>
+	inline DirectX::XMFLOAT3 Clamp(_In_ DirectX::XMFLOAT3 In_Value, _In_ DirectX::XMFLOAT3 In_Low, _In_ DirectX::XMFLOAT3 In_High)
+	{
+		DirectX::XMFLOAT3 result;
+		result.x = Clamp(In_Value.x, In_Low.x, In_High.x);
+		result.y = Clamp(In_Value.y, In_Low.y, In_High.y);
+		result.z = Clamp(In_Value.z, In_Low.z, In_High.z);
+		return result;
 	}
 
 	/// <summary>
@@ -465,8 +555,16 @@ namespace DX11Math
 		// ジンバルロックチェック
 		if(std::fabs(sinp) >= 1.0f - EPSILON)
 		{
-			pitch = std::copysign(DirectX::XM_PI / 2.0f, sinp);
-			float yaw = std::atan2(-2.0f * (x * z - w * y), 1.0f - 2.0f * (x * x + y * y));
+			pitch = std::copysign(DirectX::XM_PIDIV2, sinp);
+			float m20 = 2.0f * (x * z + w * y);
+			float m00 = 1.0f - 2.0f * (y * y + z * z);
+			float yaw = std::atan2(-m20, m00);
+
+			// が-πに近い場合、πに変換(または 0 に近づける)
+			if(yaw < -DirectX::XM_PI + 0.01f)
+			{
+				yaw += DirectX::XM_2PI; // -π → π
+			}
 			float roll = 0.0f; // ジンバルロック時はRollを0に固定
 			return DirectX::XMFLOAT3(pitch, yaw, roll);
 		}
@@ -551,6 +649,59 @@ namespace DX11Math
 		return std::sqrt(LengthSquared(In_V));
 	}
 
+	/// <summary>
+	/// ラジアン角度を-πからπの範囲に正規化します
+	/// </summary>
+	/// <param name="[In_Rad]">正規化するラジアン角度</param>
+	/// <returns>-πからπの範囲に正規化されたラジアン角度</returns>
+	static inline float NormalizeRadAngle(_In_ float In_Rad)
+	{
+		while (In_Rad > PI)
+			In_Rad -= TWO_PI;
+		while (In_Rad < -PI)
+			In_Rad += TWO_PI;
+		return In_Rad;
+	}
+
+	/// <summary>
+	/// オイラー角(ラジアン)の各成分を正規化します
+	/// </summary>
+	/// <param name="[In_RadAngles]">正規化する入力のオイラー角(ラジアン単位)</param>
+	/// <returns>各成分が正規化されたオイラー角</returns>
+	static inline DirectX::XMFLOAT3 NormalizeEulerRadAngles(_In_ DirectX::XMFLOAT3 In_RadAngles)
+	{
+		In_RadAngles.x = NormalizeRadAngle(In_RadAngles.x);
+		In_RadAngles.y = NormalizeRadAngle(In_RadAngles.y);
+		In_RadAngles.z = NormalizeRadAngle(In_RadAngles.z);
+		return In_RadAngles;
+	}
+
+	/// <summary>
+	/// 度数法の角度を-180度から180度の範囲に正規化します
+	/// </summary>
+	/// <param name="[In_Deg]">正規化する角度(度数法)</param>
+	/// <returns>-180度から180度の範囲に正規化された角度</returns>
+	static inline float NormalizeDegAngle(_In_ float In_Deg)
+	{
+		while (In_Deg > 180.0f)
+			In_Deg -= 360.0f;
+		while (In_Deg < -180.0f)
+			In_Deg += 360.0f;
+		return In_Deg;
+	}
+
+	/// <summary>
+	/// オイラー角(度数法)の各成分を正規化します。
+	/// </summary>
+	/// <param name="[In_DegAngles]">正規化する度数法のオイラー角</param>
+	/// <returns>各成分が正規化されたオイラー角</returns>
+	static inline DirectX::XMFLOAT3 NormalizeEulerDegAngles(_In_ DirectX::XMFLOAT3 In_DegAngles)
+	{
+		In_DegAngles.x = NormalizeDegAngle(In_DegAngles.x);
+		In_DegAngles.y = NormalizeDegAngle(In_DegAngles.y);
+		In_DegAngles.z = NormalizeDegAngle(In_DegAngles.z);
+		return In_DegAngles;
+	}
 
 	/// <summary>
 	/// スクリーン座標をワールド座標に変換します
