@@ -186,6 +186,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
 	T *ptr = new T(In_Name);
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	ptr->ExecuteAwake(); // Awake呼び出し
 	m_Objects.insert(std::pair<std::string, T*>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_SceneObjects.emplace(ptr);
@@ -216,6 +217,7 @@ T *SceneBase::CreateObject(_In_ const std::string &In_Name, Args && ...args) noe
 	T *ptr = new T(In_Name, args...);
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	ptr->ExecuteAwake(); // Awake呼び出し
 	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_SceneObjects.emplace(ptr);
@@ -243,6 +245,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(const std::string &In_Name, Ar
 	T *ptr = new T(In_Name, args...);
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	ptr->ExecuteAwake(); // Awake呼び出し
 	m_Objects.insert(std::pair<std::string, T *>(In_Name, ptr));
 	m_Items.push_back(In_Name);
 	m_SceneObjects.emplace(ptr);

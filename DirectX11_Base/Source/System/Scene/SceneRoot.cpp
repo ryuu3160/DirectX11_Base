@@ -21,6 +21,7 @@
 #include "System/Component/InputSystem.hpp"
 #include "System/Component/Collider/SphereCollider.hpp"
 #include "System/Component/Collider/BoxCollider.hpp"
+#include "System/Component/Collider/CapsuleCollider.hpp"
 
 // ==============================
 //  定数
@@ -54,7 +55,7 @@ void SceneRoot::Init()
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
-	pModel->SetPosition({ 0.0f, 1.0f, 0.0f });
+	pModel->SetPosition({0.0f, 1.0f, 0.0f});
 	pModel->AddComponent<SphereCollider>();
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
@@ -72,7 +73,7 @@ void SceneRoot::Init()
 	Component2->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 	Component2->IsUseMaterialShader(false); // マテリアルシェーダーを使用する
 	Component2->SetScale(0.005f);
-	pModel2->AddComponent<BoxCollider>();
+	pModel2->AddComponent<CapsuleCollider>();
 
 	// F15Eの移動処理
 	auto input = pModel2->AddComponent<InputSystem>();
@@ -101,15 +102,11 @@ void SceneRoot::Init()
 		});
 	input->RegisterKeyCallBack('E', InputSystem::KeyState::Press, [pModel2]()
 		{
-			auto rot = pModel2->GetRotation(true);
-			rot.y += 1.0f;
-			pModel2->SetRotation(rot);
+			pModel2->Rotate(1.0f, 0.0f, 0.0f);
 		});
 	input->RegisterKeyCallBack('Q', InputSystem::KeyState::Press, [pModel2]()
 		{
-			auto rot = pModel2->GetRotation(true);
-			rot.y -= 1.0f;
-			pModel2->SetRotation(rot);
+			pModel2->Rotate(-1.0f, 0.0f, 0.0f);
 		});
 
 	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
