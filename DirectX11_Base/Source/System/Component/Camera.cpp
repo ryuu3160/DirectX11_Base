@@ -60,13 +60,13 @@ void Camera::Draw() const noexcept
 
 DirectX::XMFLOAT4X4 Camera::GetView(_In_ bool In_Transpose) const noexcept
 {
-	DirectX::XMFLOAT3 pos = m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 pos = m_pGameObject->GetPosition();
 	DirectX::XMFLOAT3 look = GetLook();
 	DirectX::XMFLOAT3 up;
 	if (m_bIsLockZ)
 		up = { 0.0f, 1.0f, 0.0f };
 	else
-		up = m_pTransform->GetUp();
+		up = m_pGameObject->GetUp();
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 	DirectX::XMVECTOR vLook = DirectX::XMLoadFloat3(&look);
 	DirectX::XMVECTOR vUp = DirectX::XMLoadFloat3(&up);
@@ -102,11 +102,11 @@ DirectX::XMFLOAT4X4 Camera::GetProj(_In_ bool In_Transpose) const noexcept
 DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 {
 	// 位置の取得
-	DirectX::XMFLOAT3 pos = m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 pos = m_pGameObject->GetPosition();
 	DirectX::XMVECTOR vPos = DirectX::XMLoadFloat3(&pos);
 
 	// 前方ベクトル取得
-	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
+	DirectX::XMFLOAT3 front = m_pGameObject->GetFront();
 	DirectX::XMVECTOR vFront = DirectX::XMLoadFloat3(&front);
 
 	// カメラの位置からフォーカス距離まで進んだ位置を注視点とする
@@ -119,7 +119,7 @@ DirectX::XMFLOAT3 Camera::GetLook() const noexcept
 
 void Camera::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 {
-	In_Gizmos->DrawBox(m_pTransform->GetWorld());
+	In_Gizmos->DrawBox(m_pGameObject->GetWorld());
 }
 
 #ifdef _DEBUG
