@@ -364,9 +364,11 @@
     <ClCompile Include="Source\System\Component\Collider\BoxCollider.cpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\CapsuleCollider.cpp" />
     <ClCompile Include="Source\System\Component\Transform.cpp">
       <Filter>Source\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\Collider\CapsuleCollider.cpp">
+      <Filter>Source\System\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -628,9 +630,11 @@
     <ClInclude Include="Source\System\Component\Collider\BoxCollider.hpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\CapsuleCollider.hpp" />
     <ClInclude Include="Source\System\Component\Transform.hpp">
       <Filter>Source\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\Collider\CapsuleCollider.hpp">
+      <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
