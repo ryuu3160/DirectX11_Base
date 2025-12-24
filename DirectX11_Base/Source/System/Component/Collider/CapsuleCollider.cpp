@@ -197,6 +197,14 @@ void CapsuleCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
     drawHemisphere(pointB, 1.0f); // ‰º‚Ì”¼‹…
 }
 
+void CapsuleCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+    ColliderBase::RegisterDebugInspector(In_pWindow);
+	ItemGroup &Group = In_pWindow->GetGroupItem("CapsuleCollider");
+	Group.CreateGroupItem<ItemBind>("Height", ItemBind::Kind::Float, &m_Height);
+	Group.CreateGroupItem<ItemBind>("Radius", ItemBind::Kind::Float, &m_Radius);
+}
+
 bool CapsuleCollider::IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept
 {
     BoxCollider *box = dynamic_cast<BoxCollider *>(In_Other);

@@ -49,6 +49,11 @@ public:
 
 	void DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept override;
 
+protected:
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
+
 private:
 	// ‘Šè‚ªBoxCollider‚Ìê‡‚Ì“–‚½‚è”»’è
 	bool IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept override;

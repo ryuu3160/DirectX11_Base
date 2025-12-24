@@ -25,6 +25,12 @@ BoxCollider::~BoxCollider()
 {
 }
 
+void BoxCollider::SaveLoad(_In_ DataAccessor *In_Data)
+{
+	ColliderBase::SaveLoad(In_Data);
+	In_Data->AccessValue<DirectX::XMFLOAT3>("HalfExtents", &m_HalfExtents);
+}
+
 void BoxCollider::Init() noexcept
 {
 	ColliderBase::Init();
@@ -104,6 +110,13 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 	In_Gizmos->AddLine(obj, v[1], v[5], EdgeColorY, EdgeColorY);
 	In_Gizmos->AddLine(obj, v[2], v[6], EdgeColorY, EdgeColorY);
 	In_Gizmos->AddLine(obj, v[3], v[7], EdgeColorY, EdgeColorY);
+}
+
+void BoxCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+	ColliderBase::RegisterDebugInspector(In_pWindow);
+	ItemGroup &Group = In_pWindow->GetGroupItem("BoxCollider");
+	Group.CreateGroupItem<ItemBind>("HalfExtents", ItemBind::Kind::Vector, &m_HalfExtents);
 }
 
 void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept

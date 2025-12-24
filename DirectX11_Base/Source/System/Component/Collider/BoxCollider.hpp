@@ -21,6 +21,8 @@ public:
 	BoxCollider();
 	virtual ~BoxCollider();
 
+	void SaveLoad(_In_ DataAccessor *In_Data) override;
+
 	void Init() noexcept override;
 	void Update(_In_ float In_Tick) noexcept override;
 
@@ -43,6 +45,11 @@ public:
 	void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept override;
 
 	void DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept override;
+
+protected:
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
 
 private:
 	/// <summary>
