@@ -68,6 +68,7 @@ void RenderComponent::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	auto Bind2 = group->CreateGroupItem<ItemBind>("Layer", DebugItem::Kind::Int, &m_nLayer);
 	Bind2->SetNoticeFunc([this]() { CallLayerSortRequest(); });
 	group->CreateGroupItem<ItemBind>("AssetPath", DebugItem::Kind::Path, &m_AssetPath);
+	group->CreateGroupItem<ItemBind>("IsActive##RenderCmp", DebugItem::Kind::Bool, &m_IsActive);
 }
 #endif
 

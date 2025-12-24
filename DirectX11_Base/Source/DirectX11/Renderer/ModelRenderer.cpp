@@ -136,7 +136,7 @@ void ModelRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	mat[2] = In_RenderContext->GetProj(false);
 
 	// 単位行列でワールド行列を作成
-	mat[0] = m_pTransform->GetWorld(false);
+	mat[0] = m_pGameObject->GetWorld(false);
 
 	// マテリアルのシェーダーを使用しない場合は、デフォルトのシェーダーを使用
 	if (!m_bUseMaterialShader)

@@ -131,10 +131,14 @@ void SpriteRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	DirectX::XMMATRIX mWorld;
 	DirectX::XMMATRIX BillBoard = DirectX::XMMatrixIdentity();
 
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y, m_pTransform->GetPosition().z);
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_pTransform->GetScale().x, m_pTransform->GetScale().y, m_pTransform->GetScale().z);
-	auto rot = m_pTransform->GetRotation();
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(rot.x, rot.y, rot.z);
+	// ワールド行列計算
+	auto Pos = m_pGameObject->GetPosition();
+	auto Scale = m_pGameObject->GetScale();
+	auto Quat = m_pGameObject->GetQuat();
+
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&Quat));
 
 	// ビュー行列とプロジェクション行列取得
 	if (m_SpriteData.Is3D)
@@ -198,10 +202,10 @@ void SpriteRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 
 const DirectX::XMFLOAT3 &SpriteRenderer::GetPositionPixel() noexcept
 {
-	if(!m_pTransform)
+	if(!m_pGameObject)
 		return m_PositionPixel = { 0.0f,0.0f,0.0f }; // Transformが設定されていない場合は空の値を返す
 
-	m_PositionPixel = m_pTransform->GetPosition();
+	m_PositionPixel = m_pGameObject->GetPosition();
 
 	// x軸とy軸をピクセル単位に変換
 	m_PositionPixel.x = m_PositionPixel.x * (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / cx_fScreenWidthCorrect);
@@ -253,7 +257,7 @@ void SpriteRenderer::SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) noex
 	DirectX::XMFLOAT3 pos = m_PositionPixel = In_Pos; // ピクセル単位の位置を保存
 	pos.x = pos.x / (static_cast<float>(cx_nWINDOW_WIDTH) / 2.0f / cx_fScreenWidthCorrect);
 	pos.y = pos.y / (static_cast<float>(cx_nWINDOW_HEIGHT) / 2.0f / cx_fScreenHeightCorrect);
-	m_pTransform->SetPosition(pos);
+	m_pGameObject->SetPosition(pos);
 }
 
 void SpriteRenderer::MakeDefaultShader() noexcept

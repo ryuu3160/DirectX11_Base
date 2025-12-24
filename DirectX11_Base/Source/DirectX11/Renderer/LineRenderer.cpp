@@ -94,7 +94,7 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	mat[2] = In_RenderContext->GetProj();
 
 	// 単位行列でワールド行列を作成
-	mat[0] = m_pTransform->GetWorld();
+	mat[0] = m_pGameObject->GetWorld();
 
 	DirectX::XMFLOAT4 colorBackup = m_Data.param[0];
 	float lightBackup = m_Data.param[1].w;
