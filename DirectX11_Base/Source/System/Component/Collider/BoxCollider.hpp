@@ -16,10 +16,12 @@
 /// </summary>
 class BoxCollider : public ColliderBase
 {
+	friend class CapsuleCollider;
 public:
 	BoxCollider();
 	virtual ~BoxCollider();
 
+	void Init() noexcept override;
 	void Update(_In_ float In_Tick) noexcept override;
 
 	inline DirectX::XMFLOAT3 GetHalfExtents() const { return m_HalfExtents; }
@@ -34,20 +36,13 @@ public:
 	inline DirectX::XMFLOAT3 GetAxisZ() const { return m_AxisZ; }
 
 	/// <summary>
-	/// 他のコライダーとの衝突判定を行います
-	/// </summary>
-	/// <param name="[In_Other]">衝突判定を行う対象のコライダー</param>
-	/// <returns>衝突している場合はtrue、そうでない場合はfalse</returns>
-	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
-
-	/// <summary>
 	/// 軸平行境界ボックス (AABB) を取得します
 	/// </summary>
 	/// <param name="[Out_LeftTopFront]">境界ボックスの左上前の頂点座標</param>
 	/// <param name="[Out_RightBottomBack]">境界ボックスの右下後ろの頂点座標</param>
 	void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept override;
 
-	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
+	void DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept override;
 
 private:
 	/// <summary>
@@ -78,10 +73,30 @@ private:
 	bool CheckAxis(_In_ const DirectX::XMFLOAT3 &In_Diff, _In_ const DirectX::XMFLOAT3 &In_Axis,
 		_In_ float In_RadiusA, _In_ float In_RadiusB) const noexcept;
 
-	// 相手がSphereColliderの場合の当たり判定
-	bool IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noexcept;
+	/// <summary>
+	/// 線分とOBBの最短距離の二乗を計算
+	/// </summary>
+	/// <param name="[In_SegA]">線分の始点</param>
+	/// <param name="[In_SegB]">線分の終点</param>
+	/// <returns>最短距離の二乗</returns>
+	float SegmentToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_SegA, _In_ const DirectX::XMFLOAT3 &In_SegB) const noexcept;
 
-	bool IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcept;
+	/// <summary>
+	/// 点とOBBの最短距離の二乗を計算
+	/// </summary>
+	/// <param name="[In_Point]">点の座標</param>
+	/// <returns>最短距離の二乗</returns>
+	float PointToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_Point) const noexcept;
+
+	// ワールド座標系での線分情報を更新
+	void UpdateWorldSegment() noexcept;
+
+	// 相手がSphereColliderの場合の当たり判定
+	bool IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept override;
+	// 相手がBoxColliderの場合の当たり判定
+	bool IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept override;
+	// 相手がCapsuleColliderの場合の当たり判定
+	bool IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept override;
 
 protected:
 	// サイズ

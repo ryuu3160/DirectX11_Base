@@ -10,6 +10,7 @@
 // ==============================
 #include "BoxCollider.hpp"
 #include "SphereCollider.hpp"
+#include "CapsuleCollider.hpp"
 
 BoxCollider::BoxCollider()
 	: ColliderBase("BoxCollider")
@@ -24,72 +25,15 @@ BoxCollider::~BoxCollider()
 {
 }
 
-void BoxCollider::Update(_In_ float In_Tick) noexcept
+void BoxCollider::Init() noexcept
 {
-	// オブジェクトのワールド行列を取得
-	DirectX::XMFLOAT4X4 worldMatrix = m_pTransform->GetWorld(false);
-	DirectX::XMMATRIX matWorld = DirectX::XMLoadFloat4x4(&worldMatrix);
-
-	// ローカル中心をワールド座標に変換
-	DirectX::XMVECTOR localCenter = DirectX::XMLoadFloat3(&m_Center);
-	DirectX::XMVECTOR worldCenter = DirectX::XMVector3TransformCoord(localCenter, matWorld);
-	DirectX::XMStoreFloat3(&m_WorldCenter, worldCenter);
-
-	// 各軸方向を取得（回転のみ適用、スケールは無視）
-	DirectX::XMVECTOR axisX = DirectX::XMVector3Normalize(matWorld.r[0]); // X軸
-	DirectX::XMVECTOR axisY = DirectX::XMVector3Normalize(matWorld.r[1]); // Y軸
-	DirectX::XMVECTOR axisZ = DirectX::XMVector3Normalize(matWorld.r[2]); // Z軸
-
-	DirectX::XMStoreFloat3(&m_AxisX, axisX);
-	DirectX::XMStoreFloat3(&m_AxisY, axisY);
-	DirectX::XMStoreFloat3(&m_AxisZ, axisZ);
+	ColliderBase::Init();
+	UpdateWorldSegment();
 }
 
-bool BoxCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
+void BoxCollider::Update(_In_ float In_Tick) noexcept
 {
-	// 相手がいなければ処理しない
-	if(!In_Other)
-		return false;
-	// 自分自身とは当たらない
-	if(In_Other == this)
-		return false;
-
-	switch(In_Other->GetType())
-	{
-	case COLLIDER_SPHERE:
-		// 球対球の当たり判定
-		if(IsCollidingBoxToSphere(In_Other))
-		{
-			m_IsCollision = true;
-			In_Other->SetIsCollision(true);
-			return true;
-		}
-		else
-		{
-			m_IsCollision = false;
-			In_Other->SetIsCollision(false);
-			return false;
-		}
-		break;
-
-	case COLLIDER_BOX:
-		// 球対箱の当たり判定
-		if(IsCollidingBoxToBox(In_Other))
-		{
-			m_IsCollision = true;
-			In_Other->SetIsCollision(true);
-			return true;
-		}
-		else
-		{
-			m_IsCollision = false;
-			In_Other->SetIsCollision(false);
-			return false;
-		}
-		break;
-	}
-
-	return false;
+	UpdateWorldSegment();
 }
 
 void BoxCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept
@@ -97,6 +41,13 @@ void BoxCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ Direc
 	// OBB の8頂点を取得
 	DirectX::XMFLOAT3 vertices[8];
 	GetLocalVertices(vertices);
+
+	// ワールド座標に変換
+	auto ObjPos = m_pGameObject->GetPosition();
+	for(int i = 0; i < 8; ++i)
+	{
+		vertices[i] += ObjPos;
+	}
 
 	// 8頂点を包む AABB を計算
 	DirectX::XMFLOAT3 Min, Max;
@@ -122,10 +73,10 @@ void BoxCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ Direc
 	Out_RightBottomBack.z = Max.z;
 }
 
-void BoxCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
+void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 {
 	// 当たり判定のアウトラインをAddLineで描画する
-	GameObject *obj = m_pTransform;
+	GameObject *obj = m_pGameObject;
 
 	// 色
 	DirectX::XMFLOAT4 EdgeColorX(0.7f, 1.0f, 0.0f, 0.7f);
@@ -203,7 +154,104 @@ bool BoxCollider::CheckAxis(_In_ const DirectX::XMFLOAT3 &In_Diff, _In_ const Di
 	return distanceOnAxis <= In_RadiusA + In_RadiusB; // 重なっていればtrue
 }
 
-bool BoxCollider::IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noexcept
+float BoxCollider::SegmentToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_SegA, _In_ const DirectX::XMFLOAT3 &In_SegB) const noexcept
+{
+	DirectX::XMFLOAT3 segDir = {
+		In_SegB.x - In_SegA.x,
+		In_SegB.y - In_SegA.y,
+		In_SegB.z - In_SegA.z
+	};
+
+	float segLengthSq = LengthSquared(segDir);
+	if(segLengthSq < EPSILON)
+	{
+		return PointToOBBDistanceSquared(In_SegA);
+	}
+
+	float segLength = std::sqrt(segLengthSq);
+	DirectX::XMFLOAT3 segDirNorm = {
+		segDir.x / segLength,
+		segDir.y / segLength,
+		segDir.z / segLength
+	};
+
+	// 線分の各端点と OBB の距離
+	float distSqA = PointToOBBDistanceSquared(In_SegA);
+	float distSqB = PointToOBBDistanceSquared(In_SegB);
+
+	// 最小値を初期値とする
+	float minDistSq = std::min(distSqA, distSqB);
+
+	// OBB の各面との交差をチェック
+	// （詳細な実装は複雑なので、サンプリングで十分実用的）
+
+	// 線分上の複数点でサンプリング
+	const int samples = 10;
+	for(int i = 1; i < samples; ++i)
+	{
+		float t = (float)i / (float)samples;
+		DirectX::XMFLOAT3 samplePoint = {
+			In_SegA.x + segDir.x * t,
+			In_SegA.y + segDir.y * t,
+			In_SegA.z + segDir.z * t
+		};
+
+		float distSq = PointToOBBDistanceSquared(samplePoint);
+		minDistSq = std::min(minDistSq, distSq);
+	}
+
+	return minDistSq;
+}
+
+float BoxCollider::PointToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_Point) const noexcept
+{
+	// 点を OBB のローカル座標系に変換
+	DirectX::XMFLOAT3 diff = {
+		In_Point.x - m_WorldCenter.x,
+		In_Point.y - m_WorldCenter.y,
+		In_Point.z - m_WorldCenter.z
+	};
+
+	// 各軸への射影
+	float projX = Dot(diff, m_AxisX);
+	float projY = Dot(diff, m_AxisY);
+	float projZ = Dot(diff, m_AxisZ);
+
+	// OBB の範囲内にクランプ（最近接点を求める）
+	float closestX = std::max(-m_HalfExtents.x, std::min(projX, m_HalfExtents.x));
+	float closestY = std::max(-m_HalfExtents.y, std::min(projY, m_HalfExtents.y));
+	float closestZ = std::max(-m_HalfExtents.z, std::min(projZ, m_HalfExtents.z));
+
+	// 距離の二乗を計算
+	float dx = projX - closestX;
+	float dy = projY - closestY;
+	float dz = projZ - closestZ;
+
+	return dx * dx + dy * dy + dz * dz;
+}
+
+void BoxCollider::UpdateWorldSegment() noexcept
+{
+	// オブジェクトのワールド行列を取得
+	DirectX::XMFLOAT4X4 worldMatrix = m_pGameObject->GetWorld(false);
+	DirectX::XMMATRIX matWorld = DirectX::XMLoadFloat4x4(&worldMatrix);
+
+	// ローカル中心をワールド座標に変換
+	DirectX::XMVECTOR localCenter = DirectX::XMLoadFloat3(&m_Center);
+	DirectX::XMVECTOR worldCenter = DirectX::XMVector3TransformCoord(localCenter, matWorld);
+	DirectX::XMStoreFloat3(&m_WorldCenter, worldCenter);
+
+	// 各軸方向を取得（回転のみ適用、スケールは無視）
+	DirectX::XMVECTOR axisX = DirectX::XMVector3Normalize(matWorld.r[0]); // X軸
+	DirectX::XMVECTOR axisY = DirectX::XMVector3Normalize(matWorld.r[1]); // Y軸
+	DirectX::XMVECTOR axisZ = DirectX::XMVector3Normalize(matWorld.r[2]); // Z軸
+
+	DirectX::XMStoreFloat3(&m_AxisX, axisX);
+	DirectX::XMStoreFloat3(&m_AxisY, axisY);
+	DirectX::XMStoreFloat3(&m_AxisZ, axisZ);
+}
+
+bool BoxCollider::IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept
 {
 	SphereCollider *other = dynamic_cast<SphereCollider *>(In_Other);
 	if(!other)
@@ -237,7 +285,7 @@ bool BoxCollider::IsCollidingBoxToSphere(_In_ ColliderBase *In_Other) const noex
 	return distSq <= (radius * radius);
 }
 
-bool BoxCollider::IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcept
+bool BoxCollider::IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept
 {
 	BoxCollider *other = dynamic_cast<BoxCollider *>(In_Other);
 	if(!other)
@@ -308,4 +356,22 @@ bool BoxCollider::IsCollidingBoxToBox(_In_ ColliderBase *In_Other) const noexcep
 	}
 
 	return true; // 衝突している
+}
+
+bool BoxCollider::IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept
+{
+	CapsuleCollider *capsule = dynamic_cast<CapsuleCollider *>(In_Other);
+	if(!capsule)
+		return false;
+
+	// カプセルの線分と半径を取得
+	DirectX::XMFLOAT3 capA = capsule->GetWorldPointA();
+	DirectX::XMFLOAT3 capB = capsule->GetWorldPointB();
+	float capRadius = capsule->GetRadius();
+
+	// 線分とOBBの最短距離の二乗を計算
+	float distSq = SegmentToOBBDistanceSquared(capA, capB);
+
+	// 半径の二乗と比較
+	return distSq <= (capRadius * capRadius);
 }

@@ -31,7 +31,8 @@ ColliderBase::~ColliderBase()
 
 void ColliderBase::SaveLoad(_In_ DataAccessor *In_Data)
 {
-	In_Data->AccessValue<bool>("IsTrigger", & m_IsTrigger);
+	In_Data->AccessValue<bool>("IsTrigger", &m_IsTrigger);
+	In_Data->AccessValue<DirectX::XMFLOAT3>("LocalCenter", &m_Center);
 }
 
 void ColliderBase::Init() noexcept
@@ -48,47 +49,116 @@ void ColliderBase::FixedUpdate(_In_ double In_FixedTick) noexcept
 	m_CollisionManager.UpdateCollisionCells(this);
 }
 
+bool ColliderBase::CheckCollision(_In_ ColliderBase *In_Other) noexcept
+{
+	// 相手がいなければ処理しない
+	if(!In_Other)
+		return false;
+	// 自分自身とは当たらない
+	if(In_Other == this)
+		return false;
+
+	switch(In_Other->GetType())
+	{
+	case COLLIDER_SPHERE:
+		// 球対球の当たり判定
+		if(IsCollisionToSphere(In_Other))
+		{
+			m_IsCollision = true;
+			In_Other->SetIsCollision(true);
+			return true;
+		}
+		else
+		{
+			m_IsCollision = false;
+			In_Other->SetIsCollision(false);
+			return false;
+		}
+		break;
+
+	case COLLIDER_BOX:
+		// 球対箱の当たり判定
+		if(IsCollisionToBox(In_Other))
+		{
+			m_IsCollision = true;
+			In_Other->SetIsCollision(true);
+			return true;
+		}
+		else
+		{
+			m_IsCollision = false;
+			In_Other->SetIsCollision(false);
+			return false;
+		}
+		break;
+	case COLLIDER_CAPSULE:
+		// 球対カプセルの当たり判定
+		if(IsCollisionToCapsule(In_Other))
+		{
+			m_IsCollision = true;
+			In_Other->SetIsCollision(true);
+			return true;
+		}
+		else
+		{
+			m_IsCollision = false;
+			In_Other->SetIsCollision(false);
+			return false;
+		}
+		break;
+	}
+
+	return false;
+}
+
 void ColliderBase::CallOnEnter(_In_ ColliderBase *In_Other) noexcept
 {
-	if(!m_pTransform || !m_pTransform->IsActive())
+	if(!m_pGameObject || !m_pGameObject->IsActive())
 		return;
 
 	if(m_IsTrigger)
 	{
-		m_pTransform->CallOnTriggerEnter(In_Other);
+		m_pGameObject->CallOnTriggerEnter(In_Other);
 	}
 	else
 	{
-		m_pTransform->CallOnCollisionEnter(In_Other);
+		m_pGameObject->CallOnCollisionEnter(In_Other);
 	}
 }
 
 void ColliderBase::CallOnStay(_In_ ColliderBase *In_Other) noexcept
 {
-	if(!m_pTransform || !m_pTransform->IsActive())
+	if(!m_pGameObject || !m_pGameObject->IsActive())
 		return;
 	if(m_IsTrigger)
 	{
-		m_pTransform->CallOnTriggerStay(In_Other);
+		m_pGameObject->CallOnTriggerStay(In_Other);
 	}
 	else
 	{
-		m_pTransform->CallOnCollisionStay(In_Other);
+		m_pGameObject->CallOnCollisionStay(In_Other);
 	}
 }
 
 void ColliderBase::CallOnExit(_In_ ColliderBase *In_Other) noexcept
 {
-	if(!m_pTransform || !m_pTransform->IsActive())
+	if(!m_pGameObject || !m_pGameObject->IsActive())
 		return;
 	if(m_IsTrigger)
 	{
-		m_pTransform->CallOnTriggerExit(In_Other);
+		m_pGameObject->CallOnTriggerExit(In_Other);
 	}
 	else
 	{
-		m_pTransform->CallOnCollisionExit(In_Other);
+		m_pGameObject->CallOnCollisionExit(In_Other);
 	}
+}
+
+void ColliderBase::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
+{
+	if(!m_pGameObject || !m_pGameObject->IsActive())
+		return;
+	DrawColliderOutline(In_Gizmos);
 }
 
 #ifdef _DEBUG
@@ -96,5 +166,6 @@ void ColliderBase::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
 	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>(m_Name);
 	group->CreateGroupItem<ItemBind>("IsTrigger", DebugItem::Kind::Bool, &m_IsTrigger);
+	group->CreateGroupItem<ItemBind>("LocalCenter", DebugItem::Kind::Vector, &m_Center);
 }
 #endif

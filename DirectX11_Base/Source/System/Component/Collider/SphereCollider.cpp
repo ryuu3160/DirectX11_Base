@@ -10,6 +10,8 @@
 // ==============================
 #include "SphereCollider.hpp"
 #include "BoxCollider.hpp"
+#include "CapsuleCollider.hpp"
+#include "System/DebugManager/DebugItem.hpp"
 
 SphereCollider::SphereCollider()
 	: ColliderBase("SphereCollider"), m_Radius(1.0f)
@@ -21,56 +23,15 @@ SphereCollider::~SphereCollider()
 {
 }
 
-DirectX::XMFLOAT3 SphereCollider::GetWorldCenter() const noexcept
+void SphereCollider::SaveLoad(_In_ DataAccessor *In_Data)
 {
-	return m_Center + m_pTransform->GetPosition();
+    ColliderBase::SaveLoad(In_Data);
+	In_Data->AccessValue<float>("Radius", &m_Radius);
 }
 
-bool SphereCollider::CheckCollision(_In_ ColliderBase *In_Other) noexcept
+DirectX::XMFLOAT3 SphereCollider::GetWorldCenter() const noexcept
 {
-	// 相手がいなければ処理しない
-	if (!In_Other)
-		return false;
-	// 自分自身とは当たらない
-	if (In_Other == this)
-		return false;
-
-	switch(In_Other->GetType())
-	{
-	case COLLIDER_SPHERE:
-		// 球対球の当たり判定
-		if (IsCollidingSphereToSphere(In_Other))
-		{
-			m_IsCollision = true;
-			In_Other->SetIsCollision(true);
-			return true;
-		}
-		else
-		{
-			m_IsCollision = false;
-			In_Other->SetIsCollision(false);
-			return false;
-		}
-		break;
-
-	case COLLIDER_BOX:
-		// 球対箱の当たり判定
-        if (IsCollidingSphereToBox(In_Other))
-        {
-            m_IsCollision = true;
-            In_Other->SetIsCollision(true);
-            return true;
-        }
-        else
-        {
-            m_IsCollision = false;
-            In_Other->SetIsCollision(false);
-            return false;
-		}
-		break;
-	}
-
-	return false;
+	return m_Center + m_pGameObject->GetPosition();
 }
 
 void SphereCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept
@@ -88,7 +49,7 @@ void SphereCollider::GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ Di
 	);
 }
 
-void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
+void SphereCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 {
 	// 当たり判定のアウトラインをDrawLineで描画する
 	int segments = 32;              // セグメント数
@@ -115,7 +76,7 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
             center.z
         );
 
-		In_Gizmos->AddLine(m_pTransform,start, end, ColorXY, ColorXY);
+		In_Gizmos->AddLine(m_pGameObject,start, end, ColorXY, ColorXY);
     }
 
     // === XZ平面の円（Y軸周りの円）===
@@ -137,7 +98,7 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
             center.z + m_Radius * sinf(angle2)
         );
 
-		In_Gizmos->AddLine(m_pTransform, start, end, ColorXZ, ColorXZ);
+		In_Gizmos->AddLine(m_pGameObject, start, end, ColorXZ, ColorXZ);
     }
 
     // === YZ平面の円（X軸周りの円）===
@@ -159,7 +120,7 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
             center.z + m_Radius * sinf(angle2)
         );
 
-		In_Gizmos->AddLine(m_pTransform, start, end, ColorYZ, ColorYZ);
+		In_Gizmos->AddLine(m_pGameObject, start, end, ColorYZ, ColorYZ);
     }
     // === 追加の緯度線（赤道から上下に）===
     auto ColorLat = DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 0.4f);
@@ -187,7 +148,7 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
                 center.z + latRadius * sinf(angle2)
             );
 
-            In_Gizmos->AddLine(m_pTransform, start, end, ColorLat, ColorLat);
+            In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
         }
 
         // 下半球の緯度線
@@ -208,19 +169,26 @@ void SphereCollider::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
                 center.z + latRadius * sinf(angle2)
             );
 
-            In_Gizmos->AddLine(m_pTransform, start, end, ColorLat, ColorLat);
+            In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
         }
     }
 }
 
-bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) const noexcept
+void SphereCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+	ColliderBase::RegisterDebugInspector(In_pWindow);
+	ItemGroup &group = In_pWindow->GetGroupItem("SphereCollider");
+	group.CreateGroupItem<ItemBind>("Radius",DebugItem::Float, &m_Radius);
+}
+
+bool SphereCollider::IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept
 {
 	SphereCollider *other = dynamic_cast<SphereCollider *>(In_Other);
 	if (!other)
         return false;
 
-	DirectX::XMFLOAT3 pos1 = m_pTransform->GetPosition() + m_Center;
-	DirectX::XMFLOAT3 pos2 = other->m_pTransform->GetPosition() + other->m_Center;
+	DirectX::XMFLOAT3 pos1 = m_pGameObject->GetPosition() + m_Center;
+	DirectX::XMFLOAT3 pos2 = other->m_pGameObject->GetPosition() + other->m_Center;
 	float radiusSum = m_Radius + other->m_Radius;
 	float distSq = (pos1.x - pos2.x) * (pos1.x - pos2.x) +
 		(pos1.y - pos2.y) * (pos1.y - pos2.y) +
@@ -235,13 +203,13 @@ bool SphereCollider::IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) cons
 	return false;
 }
 
-bool SphereCollider::IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const noexcept
+bool SphereCollider::IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept
 {
     BoxCollider *box = dynamic_cast<BoxCollider *>(In_Other);
     if (!box)
         return false;
 
-	DirectX::XMFLOAT3 spherePos = m_pTransform->GetPosition() + m_Center;
+	DirectX::XMFLOAT3 spherePos = m_pGameObject->GetPosition() + m_Center;
     DirectX::XMVECTOR spherePosVec = DirectX::XMLoadFloat3(&spherePos);
     DirectX::XMFLOAT3 center = box->GetWorldCenter();
     DirectX::XMVECTOR centerVec = DirectX::XMLoadFloat3(&center);
@@ -269,4 +237,13 @@ bool SphereCollider::IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const n
 
     float radius = m_Radius;
     return distSq <= (radius * radius);
+}
+
+bool SphereCollider::IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept
+{
+    CapsuleCollider *capsule = dynamic_cast<CapsuleCollider *>(In_Other);
+    if(!capsule)
+        return false;
+
+	return capsule->IsCollisionToSphere(this);
 }

@@ -45,7 +45,7 @@ public:
 	void Update(_In_ float In_Tick) noexcept override;
 	void FixedUpdate(_In_ double In_FixedTick) noexcept override;
 
-	virtual bool CheckCollision(_In_ ColliderBase *In_Other) noexcept = 0;
+	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept;
 
 	virtual void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept = 0;
 
@@ -80,7 +80,17 @@ public:
 	void CallOnStay(_In_ ColliderBase *In_Other) noexcept;
 	void CallOnExit(_In_ ColliderBase *In_Other) noexcept;
 
+	// ÉMÉYÉÇï`âÊ
+	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override final;
+
 protected:
+
+	// åpè≥êÊÇ≈égópÇ∑ÇÈä÷êî
+	virtual void DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept = 0;
+	virtual bool IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept = 0;
+	virtual bool IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept = 0;
+	virtual bool IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept = 0;
+
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
 #endif // _DEBUG

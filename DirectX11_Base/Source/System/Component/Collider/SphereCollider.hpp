@@ -20,6 +20,8 @@ public:
 	SphereCollider();
 	virtual ~SphereCollider();
 
+	virtual void SaveLoad(_In_ DataAccessor *In_Data) override;
+
 	/// <summary>
 	/// 半径を取得します
 	/// </summary>
@@ -39,28 +41,28 @@ public:
 	void SetRadius(_In_ const float &In_Radius) noexcept { m_Radius = In_Radius; }
 
 	/// <summary>
-	/// 他のコライダーとの衝突を検出します
-	/// </summary>
-	/// <param name="[In_Other]">衝突を判定する対象のコライダー</param>
-	/// <returns>衝突が発生した場合はtrue、それ以外の場合はfalse</returns>
-	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept override;
-
-	/// <summary>
 	/// 軸平行境界ボックス (AABB) を取得します
 	/// </summary>
 	/// <param name="[Out_LeftTopFront]">AABBの左上前の角の座標を受け取ります</param>
 	/// <param name="[Out_RightBottomBack]">AABBの右下後ろの角の座標を受け取ります</param>
 	void GetAABB(_Out_ DirectX::XMFLOAT3 &Out_LeftTopFront, _Out_ DirectX::XMFLOAT3 &Out_RightBottomBack) const noexcept override;
 
-	void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept override;
+	void DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept override;
+
+protected:
+
+#ifdef _DEBUG
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif // _DEBUG
 
 private:
 
 	// 相手がSphereColliderの場合の当たり判定
-	bool IsCollidingSphereToSphere(_In_ ColliderBase *In_Other) const noexcept;
-
+	bool IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept override;
 	// 相手がBoxColliderの場合の当たり判定
-	bool IsCollidingSphereToBox(_In_ ColliderBase *In_Other) const noexcept;
+	bool IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept override;
+	// 相手がCapsuleColliderの場合の当たり判定
+	bool IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept override;
 
 protected:
 	float m_Radius = 1.0f; // 半径
