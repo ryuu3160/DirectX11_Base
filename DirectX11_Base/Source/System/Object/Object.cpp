@@ -20,3 +20,14 @@ void Object::SetActive(_In_ bool In_IsActive) noexcept
 	else
 		OnDisable();
 }
+
+void Object::SetActiveParent(_In_ bool In_IsActiveParent) noexcept
+{
+	if(m_IsActiveParent == In_IsActiveParent)
+		return;
+	m_IsActiveParent = In_IsActiveParent;
+	if(m_IsActiveParent)
+		OnEnable();
+	else
+		OnDisable();
+}

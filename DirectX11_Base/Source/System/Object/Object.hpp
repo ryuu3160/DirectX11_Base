@@ -26,10 +26,12 @@ public:
 	virtual ~Object() = default;
 
 	void SetActive(_In_ bool In_IsActive) noexcept;
+	void SetActiveParent(_In_ bool In_IsActiveParent) noexcept;
 
 	virtual void OnEnable() noexcept {}
 	virtual void OnDisable() noexcept {}
 	[[nodiscard]] bool IsActive() const noexcept { return m_IsActive; }
+	[[nodiscard]] bool IsActiveParent() const noexcept { return m_IsActiveParent; }
 	[[nodiscard]] bool IsInitialized() const noexcept { return m_IsInitialized; }
 
 	virtual void Init() noexcept = 0;
@@ -60,6 +62,7 @@ protected:
 
 protected:
 	bool m_IsActive = true;
+	bool m_IsActiveParent = true;
 	bool m_IsInitialized = false;
 	bool m_IsDestroySelf = false;
 };

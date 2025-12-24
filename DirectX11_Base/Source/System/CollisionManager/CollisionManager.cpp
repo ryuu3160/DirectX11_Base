@@ -387,7 +387,7 @@ bool CollisionManager::CheckCollisionActive(_In_ ColliderBase *In_Collider) noex
 	if(!In_Collider)
 		return false;
 
-	if(In_Collider->IsActive() && In_Collider->IsInitialized())
+	if(In_Collider->IsActive() && In_Collider->IsInitialized() && In_Collider->IsActiveParent())
 		return true;
 	return false;
 }

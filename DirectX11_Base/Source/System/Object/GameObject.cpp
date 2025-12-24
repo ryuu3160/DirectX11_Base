@@ -46,7 +46,13 @@ void GameObject::OnEnable() noexcept
 	// コンポーネントの有効化処理
 	for (auto &itr : m_Components)
 	{
-		itr->OnEnable();
+		itr->SetActive(true);
+	}
+
+	// 子オブジェクトの有効化処理
+	for (auto &child : m_ChildObjects)
+	{
+		child->SetActiveParent(true);
 	}
 }
 
@@ -55,8 +61,12 @@ void GameObject::OnDisable() noexcept
 	// コンポーネントの無効化処理
 	for (auto &itr : m_Components)
 	{
-		itr->OnDisable();
 		itr->SetActive(false);
+	}
+	// 子オブジェクトの無効化処理
+	for (auto &child : m_ChildObjects)
+	{
+		child->SetActiveParent(false);
 	}
 }
 
@@ -395,9 +405,6 @@ void GameObject::DataWrite(_In_ cpon *In_pCpon)
 	m_Data->ClearData();
 
 	auto block = m_Data->CreateDataBlock();
-	/*block->CreateArray<float>("Position", { m_Pos.x, m_Pos.y, m_Pos.z });
-	block->CreateArray<float>("Quaternion", { m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w });
-	block->CreateArray<float>("Scale", { m_Scale.x, m_Scale.y, m_Scale.z });*/
 
 	for (auto &itr : m_Components)
 	{
@@ -413,47 +420,18 @@ void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 		return;
 
 	*m_Data = *In_pCponObj;
-
-	/*auto block = (*In_pCponObj)[0];
-	auto PosArray = block->GetArrayPtr<float>("Position");
-	auto QuatArray = block->GetArrayPtr<float>("Quaternion");
-	auto ScaleArray = block->GetArrayPtr<float>("Scale");
-
-	if (!PosArray || !QuatArray || !ScaleArray)
-		return;
-
-	m_Pos = DirectX::XMFLOAT3((*PosArray)[0], (*PosArray)[1], (*PosArray)[2]);
-	m_Quat = DirectX::XMFLOAT4((*QuatArray)[0], (*QuatArray)[1], (*QuatArray)[2], (*QuatArray)[3]);
-	m_Scale = DirectX::XMFLOAT3((*ScaleArray)[0], (*ScaleArray)[1], (*ScaleArray)[2]);*/
 }
 
 #ifdef _DEBUG
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
-	//// トランスフォームグループの作成
-	//ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
-	//group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
-	//group->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
-	//	[this](bool IsWrite, void *arg) {
-	//		DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
-	//		if (IsWrite)
-	//		{
-	//			DirectX::XMStoreFloat4(&m_Quat,
-	//				DirectX::XMQuaternionRotationRollPitchYaw( // zxy
-	//					DirectX::XMConvertToRadians(pVec->x), // pitch
-	//					DirectX::XMConvertToRadians(pVec->y), // yaw
-	//					DirectX::XMConvertToRadians(pVec->z))); // roll
-	//		}
-	//		else
-	//		{
-	//			DirectX::XMFLOAT3 rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
-	//			pVec->x = DirectX::XMConvertToDegrees(rot.x);
-	//			pVec->y = DirectX::XMConvertToDegrees(rot.y);
-	//			pVec->z = DirectX::XMConvertToDegrees(rot.z);
-	//		}
-	//	});
-	//group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
-	In_pWindow->CreateItem<ItemBind>("IsActive", DebugItem::Kind::Bool, &m_IsActive);
+	auto Active = In_pWindow->CreateItem<ItemBind>("IsActive", DebugItem::Kind::Bool, &m_IsActive);
+	Active->SetNoticeFunc([this]() {
+		if (m_IsActive)
+			OnEnable();
+		else
+			OnDisable();
+		});
 
 	// 継承先オブジェクトのインスペクター登録
 	RegisterObjectDebugInspector(In_pWindow);

@@ -135,7 +135,7 @@ void SceneBase::_ObjectsInit() noexcept
 {
 	for (auto itr = m_InitObjects.begin(); itr != m_InitObjects.end();)
 	{
-		if ((*itr)->m_IsActive)
+		if ((*itr)->m_IsActive && (*itr)->m_IsActiveParent)
 		{
 			(*itr)->ExecuteInit();
 			itr = m_InitObjects.erase(itr);
@@ -153,7 +153,7 @@ void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
 	for(auto &itr : m_SceneObjects)
 	{
 		// アクティブかつ初期化済みなら更新を実行
-		if (itr && itr->m_IsActive && itr->m_IsInitialized)
+		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
 			itr->ExecuteUpdate(In_Tick);
 		}
@@ -169,7 +169,7 @@ void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 	for(auto &itr : m_SceneObjects)
 	{
 		// アクティブかつ初期化済みなら更新を実行
-		if (itr && itr->m_IsActive && itr->m_IsInitialized)
+		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
 			itr->ExecuteLateUpdate(In_Tick);
 		}
@@ -185,7 +185,7 @@ void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
 	for(auto &itr : m_SceneObjects)
 	{
 		// アクティブかつ初期化済みなら更新を実行
-		if (itr && itr->m_IsActive && itr->m_IsInitialized)
+		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
 			itr->ExecuteFixedUpdate(In_FixedTick);
 		}
@@ -200,8 +200,8 @@ void SceneBase::_ExecuteDestroyObjectsComponents() noexcept
 	// シーンが所持しているオブジェクトのコンポーネント破棄処理を実行
 	for(auto &itr : m_SceneObjects)
 	{
-		// 型チェック
-		if (itr && itr->m_IsActive && itr->m_IsInitialized)
+		// アクティブかつ初期化済みなら破棄処理を実行
+		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
 			itr->ExecuteDestroyComponents();
 		}
