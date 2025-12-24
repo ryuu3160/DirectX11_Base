@@ -1013,8 +1013,8 @@ void ItemNewLine::DrawImGui()
 	ImGui::NewLine();
 }
 
-ItemSpacing::ItemSpacing(_In_ std::string In_Name, _In_ int In_m_SpaceNum)
-	: ItemLayoutFunc(In_Name, LayoutType::Spacing)
+ItemSpacing::ItemSpacing(_In_ std::string In_Name, _In_ int In_SpaceNum)
+	: ItemLayoutFunc(In_Name, LayoutType::Spacing), m_SpaceNum(In_SpaceNum)
 {
 }
 
@@ -1120,7 +1120,7 @@ void ItemSetNextItemWidth::DrawImGui()
 	ImGui::SetNextItemWidth(m_Width);
 }
 
-ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(std::string In_Name)
+ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(_In_ std::string In_Name)
 	: ItemLayoutFunc(In_Name, LayoutType::AlignTextToFramePadding)
 {
 }

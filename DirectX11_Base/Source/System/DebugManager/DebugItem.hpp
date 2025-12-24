@@ -401,7 +401,7 @@ public:
 class ItemSpacing : public ItemLayoutFunc
 {
 public:
-	ItemSpacing(_In_ std::string In_Name, _In_ int In_m_SpaceNum = 1);
+	ItemSpacing(_In_ std::string In_Name, _In_ int In_SpaceNum = 1);
 	~ItemSpacing();
 	void DrawImGui() override;
 private:
