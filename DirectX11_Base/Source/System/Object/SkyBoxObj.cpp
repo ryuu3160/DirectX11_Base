@@ -22,18 +22,22 @@ SkyBoxObj::SkyBoxObj(_In_ std::string In_Name)
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)
 {
-	// スカイボックス描画コンポーネントの生成
-	m_pRenderComponent = AddComponent<SkyBoxRenderer>();
-	m_pRenderComponent->SetAssetPath("Assets/Model/SkyBox/sky.obj");
-	m_pRenderComponent->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-	m_pRenderComponent->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-	m_pRenderComponent->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 }
 
 SkyBoxObj::~SkyBoxObj()
 {
 	m_pCameraObj = nullptr;
 	m_pRenderComponent = nullptr;
+}
+
+void SkyBoxObj::Awake() noexcept
+{
+	// スカイボックス描画コンポーネントの生成
+	m_pRenderComponent = AddComponent<SkyBoxRenderer>();
+	m_pRenderComponent->SetAssetPath("Assets/Model/SkyBox/sky.obj");
+	m_pRenderComponent->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
+	m_pRenderComponent->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
+	m_pRenderComponent->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 }
 
 void SkyBoxObj::SetFilePath(_In_ const FilePath &In_Path) noexcept
@@ -51,7 +55,7 @@ void SkyBoxObj::LateUpdate(_In_ float In_Tick) noexcept
 {
 	if (NullCheck(m_pCameraObj, NCMode::OUTPUT, "error: SkyBoxObj Error, CameraObj is nullptr"))
 		return;
-
-	m_Pos = m_pCameraObj->GetPosition();
+	// カメラの位置にスカイボックスを移動させる
+	m_pTransform->SetPosition(m_pCameraObj->GetPosition());
 }
 

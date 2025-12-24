@@ -30,6 +30,8 @@ public:
 	CameraBaseObj(_In_ std::string In_Name);
 	~CameraBaseObj();
 
+	virtual void Awake() noexcept override;
+
 protected:
 	Camera *m_pComponent;
 };

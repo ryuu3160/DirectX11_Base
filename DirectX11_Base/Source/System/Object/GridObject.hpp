@@ -31,6 +31,8 @@ public:
 
 	void Init() noexcept override;
 
+	void Awake() noexcept override;
+
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 
 	void Update(_In_ float In_Tick) noexcept override final;

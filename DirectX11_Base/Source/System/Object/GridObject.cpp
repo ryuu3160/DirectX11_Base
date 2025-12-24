@@ -24,12 +24,6 @@ GridObject::GridObject(_In_ std::string In_Name)
 	, m_GridSizePrev(20.0f), m_GridMarginPrev(1.0f), m_GridColorPrev{ 0.5f, 0.5f, 0.5f, 1.0f }
 	, m_GridAxisPrev(true)
 {
-	// グリッド描画コンポーネントの生成
-	m_pRenderComponent = AddComponent<LineRenderer>();
-	m_pRenderComponent->SetLayerGroup(LayerGroup_Grid);
-
-	// グリッドの作成
-	CreateGrid();
 }
 
 GridObject::~GridObject()
@@ -49,6 +43,16 @@ void GridObject::Init() noexcept
 	m_pDebugGroup->CreateGroupItem<ItemBind>("Active##GridObject", DebugItem::Bool, &m_IsActive);
 	m_pDebugGroup->CreateGroupItem<ItemSameLine>("2##GridObject");
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridAxis##GridObject", DebugItem::Bool, true);
+}
+
+void GridObject::Awake() noexcept
+{
+	// グリッド描画コンポーネントの生成
+	m_pRenderComponent = AddComponent<LineRenderer>();
+	m_pRenderComponent->SetLayerGroup(LayerGroup_Grid);
+
+	// グリッドの作成
+	CreateGrid();
 }
 
 void GridObject::SetCamera(_In_ GameObject *In_Cam) noexcept

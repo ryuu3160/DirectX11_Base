@@ -9,101 +9,25 @@
 //	include
 // ==============================
 #include "GameObject.hpp"
+#include "System/Component/Transform.hpp"
 #include "System/Component/Collider/ColliderBase.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
-	, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 	, m_bIsChild(false)
 	, m_pScene(nullptr), m_pParent(nullptr)
 	, m_Data(nullptr)
+	, m_pTransform(nullptr)
+	//, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 {
 	m_Data = std::make_shared<cpon_object>();
 	m_Data->SetObjectName(m_Name);
-	//// オブジェクト名に応じて、保存ファイルの読み込み
- //   std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
- //   FilePath path = pathStr;
-	//std::fstream file;
-	//file.open(path.data(), std::ios::in | std::ios::binary);
-	//if (file.is_open())
-	//{
-	//	// ファイルが開けた場合、データを読み込む
-	//	file.seekg(0, std::ios::end);
-	//	long fileSize = static_cast<long>(file.tellg());
-	//	file.seekg(0, std::ios::beg);
-	//	char *ptr = new char[fileSize];
-	//	file.read(ptr, fileSize); // ファイルの内容を一括で読み込む
-	//	m_Datas.push_back({ "data", ptr }); // 一括で読み込んだデータを保存
-	//	file.close();
-
-	//	// ゲームオブジェクト内のデータの読み込み
- //       // ファイルサイズが十分かどうかをチェックしてからmemcpyを実行
-	//	if (fileSize >= sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale))
-	//	{
-	//		std::memcpy(&m_Pos, ptr, sizeof(m_Pos));
-	//		std::memcpy(&m_Quat, ptr + sizeof(m_Pos), sizeof(m_Quat));
-	//		std::memcpy(&m_Scale, ptr + sizeof(m_Pos) + sizeof(m_Quat), sizeof(m_Scale));
-	//		ptr += sizeof(m_Pos) + sizeof(m_Quat) + sizeof(m_Scale);
-	//	}
-	//	size_t size = 0;
-	//	// データのキーと値が保存されている個所へのポインタを取得
-	//	for (;ptr - m_Datas[0].value < fileSize;ptr += size)
-	//	{
-	//		char *data[2]; // キー,値
-	//		for (int i = 0; i < 2; ++i)
-	//		{
-	//			// データサイズ
-	//			size = *reinterpret_cast<size_t *>(ptr);
-	//			ptr += sizeof(size);
-	//			// データ
-	//			data[i] = ptr;
-	//			ptr += size;
-	//		}
-	//		m_Datas.push_back({ data[0], data[1] });
-	//	}
-	//}
 }
 
 GameObject::~GameObject()
 {
 	m_Data = nullptr;
 	auto itr = m_Components.begin();
-//	// 保存データの削除
-//	if (!m_Datas.empty())
-//		delete[] m_Datas[0].value;
-//
-//#ifdef _DEBUG
-//	// データの保存
-//	std::string pathStr = "Assets/GameObject/" + m_Name + ".dat";
-//    FilePath path = pathStr;
-//	std::fstream file;
-//	file.open(path.data(), std::ios::out | std::ios::binary);
-//	if (file.is_open())
-//	{
-//		// ゲームオブジェクトのデータを保存
-//		file.write(reinterpret_cast<const char *>(&m_Pos), sizeof(m_Pos));
-//		file.write(reinterpret_cast<const char *>(&m_Quat), sizeof(m_Quat));
-//		file.write(reinterpret_cast<const char *>(&m_Scale), sizeof(m_Scale));
-//
-//		// コンポーネントのデータを保存
-//		for (itr = m_Components.begin();itr != m_Components.end();itr++)
-//		{
-//			const char *name = typeid(**itr).name();
-//			Component::DataAccessor accessor(nullptr);
-//			(*itr)->ReadWrite(&accessor);
-//			// データのキーを保存
-//			size_t size = strlen(name);
-//			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-//			file.write(name, size);
-//			// データの保存
-//			size = accessor.GetWriteSize();
-//			file.write(reinterpret_cast<const char *>(&size), sizeof(size));
-//			file.write(accessor.GetData(), size);
-//		}
-//		file.close();
-//	}
-//#endif
-
 	// コンポーネントの削除
 	for (itr = m_Components.begin(); itr != m_Components.end();itr++)
 	{
@@ -145,6 +69,20 @@ void GameObject::ExecuteInit() noexcept
 	InitializeComponents();
 
 	m_IsInitialized = true;
+}
+
+void GameObject::ExecuteAwake() noexcept
+{
+	// Transformコンポーネント追加
+	m_pTransform = AddComponent<Transform>();
+
+	// 継承先オブジェクトのAwake処理
+	Awake();
+	// コンポーネントのAwake処理
+	for (auto &itr : m_Components)
+	{
+		itr->Awake();
+	}
 }
 
 void GameObject::ExecuteUpdate(_In_ float In_Tick) noexcept
@@ -288,76 +226,50 @@ void GameObject::DestroySelf() noexcept
 
 DirectX::XMFLOAT3 GameObject::GetRotation(_In_ bool In_IsDegree) const noexcept
 {
-	DirectX::XMFLOAT3 rot;
-	rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
-
-	if(In_IsDegree)
-		rot = ToDeg(rot);
-
-	return rot;
+	return m_pTransform->GetRotation(In_IsDegree);
 }
 
 DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
 {
-	// 前方ベクトルを取得
-	DirectX::XMVECTOR vFront = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vFront = DirectX::XMVector3Rotate(vFront, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	if (Is_Normalize)
-		DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vFront));
-	else
-		DirectX::XMStoreFloat3(&dir, vFront);
-	return dir;
+	return m_pTransform->GetFront(Is_Normalize);
 }
 
 DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
 {
-	// 右方向ベクトルを取得
-	DirectX::XMVECTOR vRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vRight = DirectX::XMVector3Rotate(vRight, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vRight));
-	return dir;
+	return m_pTransform->GetRight();
 }
 
 DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 {
-	// 上方向ベクトルを取得
-	DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vUp = DirectX::XMVector3Rotate(vUp, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	DirectX::XMStoreFloat3(&dir, vUp);
-	return dir;
+	return m_pTransform->GetUp();
 }
 
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
+	auto Pos = m_pTransform->GetPosition();
+	auto Quat = m_pTransform->GetQuat();
+	auto Scale = m_pTransform->GetScale();
+
 	// 各要素の行列を取得
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
-		DirectX::XMVectorSet(m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w)
+		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
 	);
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
 
 	// 行列の合算
 	DirectX::XMMATRIX M = S * R * T;
 
 	if (m_bIsChild && m_pParent)
 	{
-		T = DirectX::XMMatrixTranslation(m_pParent->m_Pos.x, m_pParent->m_Pos.y, m_pParent->m_Pos.z);
+		auto ParPos = m_pParent->m_pTransform->GetPosition();
+		auto ParQuat = m_pParent->m_pTransform->GetQuat();
+		auto ParScale = m_pParent->m_pTransform->GetScale();
+		T = DirectX::XMMatrixTranslation(ParPos.x, ParPos.y, ParPos.z);
 		R = DirectX::XMMatrixRotationQuaternion(
-			DirectX::XMVectorSet(m_pParent->m_Quat.x, m_pParent->m_Quat.y, m_pParent->m_Quat.z, m_pParent->m_Quat.w)
+			DirectX::XMVectorSet(ParQuat.x, ParQuat.y, ParQuat.z, ParQuat.w)
 		);
-		S = DirectX::XMMatrixScaling(m_pParent->m_Scale.x, m_pParent->m_Scale.y, m_pParent->m_Scale.z);
+		S = DirectX::XMMatrixScaling(ParScale.x, ParScale.y, ParScale.z);
 
 		M = M * (S * R * T);
 	}
@@ -374,42 +286,42 @@ DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcep
 
 void GameObject::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
-	m_Pos = In_Pos;
+	m_pTransform->SetPosition(In_Pos);
 }
 
 void GameObject::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 {
-	// 回転を設定
-	auto Rot = ToRad(In_Rotation);
-	// クォータニオンに変換
-	DirectX::XMStoreFloat4(&m_Quat,DirectX::XMQuaternionRotationRollPitchYaw(Rot.x, Rot.y, Rot.z));
+	m_pTransform->SetRotation(In_Rotation);
 }
 
 void GameObject::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 {
-	// 拡縮を設定
-	m_Scale = In_Scale;
+	m_pTransform->SetScale(In_Scale);
 }
 
 void GameObject::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 {
-	// クォータニオンを設定
-	m_Quat = In_Quat;
+	m_pTransform->SetQuat(In_Quat);
 }
 
 DirectX::XMFLOAT3 GameObject::GetLeftTopFrontPosition() const noexcept
 {
-	float Left = m_Pos.x - (m_Scale.x / 2.0f);
-	float Top = m_Pos.y + (m_Scale.y / 2.0f);
-	float Front = m_Pos.z - (m_Scale.z / 2.0f);
+	auto Pos = m_pTransform->GetPosition();
+	auto Scale = m_pTransform->GetScale();
+
+	float Left = Pos.x - (Scale.x / 2.0f);
+	float Top = Pos.y + (Scale.y / 2.0f);
+	float Front = Pos.z - (Scale.z / 2.0f);
 	return DirectX::XMFLOAT3(Left, Top, Front);
 }
 
 DirectX::XMFLOAT3 GameObject::GetRightBottomBackPosition() const noexcept
 {
-	float Right = m_Pos.x + (m_Scale.x / 2.0f);
-	float Bottom = m_Pos.y - (m_Scale.y / 2.0f);
-	float Back = m_Pos.z + (m_Scale.z / 2.0f);
+	auto Pos = m_pTransform->GetPosition();
+	auto Scale = m_pTransform->GetScale();
+	float Right = Pos.x + (Scale.x / 2.0f);
+	float Bottom = Pos.y - (Scale.y / 2.0f);
+	float Back = Pos.z + (Scale.z / 2.0f);
 	return DirectX::XMFLOAT3(Right, Bottom, Back);
 }
 
@@ -445,19 +357,15 @@ void GameObject::InitializeComponents() noexcept
 void GameObject::_addComponent(_In_ Component *In_pComponent)
 {
 	// 所持オブジェクトの登録
-	In_pComponent->m_pTransform = this;
+	In_pComponent->m_pGameObject = this;
 
-	// 保存データに一致するコンポーネントがあるか探索
-	const char *name = typeid(*In_pComponent).name();
-	auto it = std::find_if(m_Datas.begin(), m_Datas.end(), [&name](SaveData &data)
-		{
-			// コンポーネントの名前と保存データのキーが一致するか確認
-			return strstr(data.name, name) == data.name;
-		});
-	if (it == m_Datas.end()) return;
+	if(!m_Data)
+		return;
 
 	// 保存されている情報を設定
 	In_pComponent->DataRead(m_Data);
+	// Awake処理を実行
+	In_pComponent->Awake();
 }
 
 void GameObject::_destroySelf() noexcept
@@ -487,9 +395,9 @@ void GameObject::DataWrite(_In_ cpon *In_pCpon)
 	m_Data->ClearData();
 
 	auto block = m_Data->CreateDataBlock();
-	block->CreateArray<float>("Position", { m_Pos.x, m_Pos.y, m_Pos.z });
+	/*block->CreateArray<float>("Position", { m_Pos.x, m_Pos.y, m_Pos.z });
 	block->CreateArray<float>("Quaternion", { m_Quat.x, m_Quat.y, m_Quat.z, m_Quat.w });
-	block->CreateArray<float>("Scale", { m_Scale.x, m_Scale.y, m_Scale.z });
+	block->CreateArray<float>("Scale", { m_Scale.x, m_Scale.y, m_Scale.z });*/
 
 	for (auto &itr : m_Components)
 	{
@@ -506,7 +414,7 @@ void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 
 	*m_Data = *In_pCponObj;
 
-	auto block = (*In_pCponObj)[0];
+	/*auto block = (*In_pCponObj)[0];
 	auto PosArray = block->GetArrayPtr<float>("Position");
 	auto QuatArray = block->GetArrayPtr<float>("Quaternion");
 	auto ScaleArray = block->GetArrayPtr<float>("Scale");
@@ -516,35 +424,35 @@ void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 
 	m_Pos = DirectX::XMFLOAT3((*PosArray)[0], (*PosArray)[1], (*PosArray)[2]);
 	m_Quat = DirectX::XMFLOAT4((*QuatArray)[0], (*QuatArray)[1], (*QuatArray)[2], (*QuatArray)[3]);
-	m_Scale = DirectX::XMFLOAT3((*ScaleArray)[0], (*ScaleArray)[1], (*ScaleArray)[2]);
+	m_Scale = DirectX::XMFLOAT3((*ScaleArray)[0], (*ScaleArray)[1], (*ScaleArray)[2]);*/
 }
 
 #ifdef _DEBUG
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
-	// トランスフォームグループの作成
-	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
-	group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
-	group->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
-		[this](bool IsWrite, void *arg) {
-			DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
-			if (IsWrite)
-			{
-				DirectX::XMStoreFloat4(&m_Quat,
-					DirectX::XMQuaternionRotationRollPitchYaw( // zxy
-						DirectX::XMConvertToRadians(pVec->x), // pitch
-						DirectX::XMConvertToRadians(pVec->y), // yaw
-						DirectX::XMConvertToRadians(pVec->z))); // roll
-			}
-			else
-			{
-				DirectX::XMFLOAT3 rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
-				pVec->x = DirectX::XMConvertToDegrees(rot.x);
-				pVec->y = DirectX::XMConvertToDegrees(rot.y);
-				pVec->z = DirectX::XMConvertToDegrees(rot.z);
-			}
-		});
-	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+	//// トランスフォームグループの作成
+	//ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
+	//group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
+	//group->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
+	//	[this](bool IsWrite, void *arg) {
+	//		DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
+	//		if (IsWrite)
+	//		{
+	//			DirectX::XMStoreFloat4(&m_Quat,
+	//				DirectX::XMQuaternionRotationRollPitchYaw( // zxy
+	//					DirectX::XMConvertToRadians(pVec->x), // pitch
+	//					DirectX::XMConvertToRadians(pVec->y), // yaw
+	//					DirectX::XMConvertToRadians(pVec->z))); // roll
+	//		}
+	//		else
+	//		{
+	//			DirectX::XMFLOAT3 rot = DX11Math::QuaternionToRollPitchYaw(m_Quat);
+	//			pVec->x = DirectX::XMConvertToDegrees(rot.x);
+	//			pVec->y = DirectX::XMConvertToDegrees(rot.y);
+	//			pVec->z = DirectX::XMConvertToDegrees(rot.z);
+	//		}
+	//	});
+	//group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
 	In_pWindow->CreateItem<ItemBind>("IsActive", DebugItem::Kind::Bool, &m_IsActive);
 
 	// 継承先オブジェクトのインスペクター登録

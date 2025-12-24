@@ -11,6 +11,8 @@
 // ==============================
 #include "System/Object/Object.hpp"
 #include "System/Scene/SceneBase.hpp"
+#include "System/Component/Transform.hpp"
+
 // ==============================
 //  前方宣言
 // ==============================
@@ -34,6 +36,8 @@ public:
 	virtual void OnDisable() noexcept override;
 
 	void ExecuteInit() noexcept;
+
+	void ExecuteAwake() noexcept;
 
 	/// <summary>
 	/// 更新処理
@@ -124,11 +128,16 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
+
+	inline Transform *GetTransform() const noexcept { return m_pTransform; }
+
+	inline void Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) { m_pTransform->Rotate(In_PitchDeg, In_YawDeg, In_RollDeg); }
+
 	DirectX::XMFLOAT3 GetRotation(_In_ bool In_IsDegree = false) const noexcept;
 
-	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_Pos; }
-	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_Quat; }
-	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_Scale; }
+	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_pTransform->GetPosition(); }
+	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_pTransform->GetQuat(); }
+	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_pTransform->GetScale(); }
 	inline const bool &IsChild() const noexcept { return m_bIsChild; }
 
 	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
@@ -160,6 +169,7 @@ public:
 protected:
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}
+	virtual void Awake() noexcept override {}
 	virtual void Update(_In_ float In_Tick) noexcept override {}
 	virtual void LateUpdate(_In_ float In_Tick) noexcept override {}
 	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override {}
@@ -173,7 +183,7 @@ protected:
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
-	virtual void RegisterObjectDebugInspector(_In_ DebugWindow *In_pWindow) {};
+	virtual void RegisterObjectDebugInspector(_In_ DebugWindow *In_pWindow) {}
 #endif // _DEBUG
 
 private:
@@ -214,9 +224,10 @@ private:
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
 	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
 protected:
-	DirectX::XMFLOAT3	m_Pos;		// 座標
-	DirectX::XMFLOAT3	m_Scale;	// 拡縮
-	DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
+	Transform *m_pTransform;		// Transformコンポーネントへのポインタ
+	//DirectX::XMFLOAT3	m_Pos;		// 座標
+	//DirectX::XMFLOAT3	m_Scale;	// 拡縮
+	//DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
 	bool				m_bIsChild; // 子オブジェクトかどうか
 };
 

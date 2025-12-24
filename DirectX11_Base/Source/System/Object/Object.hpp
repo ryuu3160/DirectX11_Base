@@ -27,15 +27,16 @@ public:
 
 	void SetActive(_In_ bool In_IsActive) noexcept;
 
-	virtual void OnEnable() noexcept {};
-	virtual void OnDisable() noexcept {};
+	virtual void OnEnable() noexcept {}
+	virtual void OnDisable() noexcept {}
 	[[nodiscard]] bool IsActive() const noexcept { return m_IsActive; }
 	[[nodiscard]] bool IsInitialized() const noexcept { return m_IsInitialized; }
 
 	virtual void Init() noexcept = 0;
-	virtual void Update(_In_ float In_Tick) noexcept {};
-	virtual void LateUpdate(_In_ float In_Tick) noexcept {};
-	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept {};
+	virtual void Awake() noexcept {}
+	virtual void Update(_In_ float In_Tick) noexcept {}
+	virtual void LateUpdate(_In_ float In_Tick) noexcept {}
+	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept {}
 
 	virtual void DestroySelf() noexcept { m_IsDestroySelf = true;}
 	[[nodiscard]] bool IsDestroySelf() const noexcept { return m_IsDestroySelf; }
@@ -43,18 +44,18 @@ public:
 protected:
 
 	// “–‚½‚è”»’è—p
-	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {};
-	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept {};
-	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept {};
-	virtual void OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept {};
-	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept {};
-	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept {};
+	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept {}
+	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept {}
+	virtual void OnCollisionExit(_In_ ColliderBase *In_Other) noexcept {}
+	virtual void OnTriggerEnter(_In_ ColliderBase *In_Other) noexcept {}
+	virtual void OnTriggerStay(_In_ ColliderBase *In_Other) noexcept {}
+	virtual void OnTriggerExit(_In_ ColliderBase *In_Other) noexcept {}
 
 	// ƒMƒYƒ‚•`‰æ
-	virtual void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept {};
+	virtual void DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept {}
 
 #ifdef _DEBUG
-	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) {};
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) {}
 #endif // _DEBUG
 
 protected:

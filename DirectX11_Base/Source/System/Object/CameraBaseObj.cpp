@@ -19,9 +19,13 @@ CameraBaseObj::CameraBaseObj(_In_ std::string In_Name)
 	: GameObject(In_Name)
 	, m_pComponent(nullptr)
 {
-	m_pComponent = AddComponent<Camera>();
 }
 
 CameraBaseObj::~CameraBaseObj()
 {
+}
+
+void CameraBaseObj::Awake() noexcept
+{
+	m_pComponent = AddComponent<Camera>();
 }

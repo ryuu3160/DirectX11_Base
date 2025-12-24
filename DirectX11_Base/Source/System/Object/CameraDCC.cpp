@@ -68,13 +68,14 @@ void CameraDCC::Update(_In_ float In_Tick) noexcept
 
 	m_OldPos = cursorPos;
 	// カメラ情報
-	DirectX::XMFLOAT3 front = GetFront();
-	DirectX::XMFLOAT3 side = GetRight();
+	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
+	DirectX::XMFLOAT3 side = m_pTransform->GetRight();
 	DirectX::XMFLOAT3 up(0.0f, 1.0f, 0.0f);
 	DirectX::XMFLOAT3 look = m_pComponent->GetLook();
+	DirectX::XMFLOAT3 Pos = m_pTransform->GetPosition();
 	arg.vCamFront = DirectX::XMLoadFloat3(&front);
 	arg.vCamSide = DirectX::XMLoadFloat3(&side);
-	arg.vCamPos = DirectX::XMLoadFloat3(&m_Pos);
+	arg.vCamPos = DirectX::XMLoadFloat3(&Pos);
 	arg.vCamLook = DirectX::XMLoadFloat3(&look);
 	arg.vCamUp = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(arg.vCamFront, arg.vCamSide));
 
@@ -120,7 +121,8 @@ void CameraDCC::UpdateOrbit(Argument &In_arg) noexcept
 	DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationAxis(
 		DirectX::XMVectorSet(0, 1, 0, 0), DirectX::XMConvertToRadians(angleX)
 	);
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	auto Quat = m_pTransform->GetQuat();
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 
 	DirectX::XMVECTOR vAxisX = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
@@ -128,14 +130,17 @@ void CameraDCC::UpdateOrbit(Argument &In_arg) noexcept
 	quat = DirectX::XMQuaternionRotationAxis(vAxisX, DirectX::XMConvertToRadians(angleY));
 	qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 
-	DirectX::XMStoreFloat4(&m_Quat, qRotate);
+	DirectX::XMStoreFloat4(&Quat, qRotate);
+	m_pTransform->SetQuat(Quat);
 
 	// 注視点からカメラの後方へフォーカス距離だけ移動させる
-	DirectX::XMFLOAT3 dir = GetFront();
+	DirectX::XMFLOAT3 dir = m_pTransform->GetFront();
 	DirectX::XMVECTOR vDir = DirectX::XMLoadFloat3(&dir);
 	vDir = DirectX::XMVectorScale(vDir, -m_pComponent->GetFocus());
 	DirectX::XMVECTOR vPos = DirectX::XMVectorAdd(In_arg.vCamLook, vDir);
-	DirectX::XMStoreFloat3(&m_Pos, vPos);
+	auto Pos = m_pTransform->GetPosition();
+	DirectX::XMStoreFloat3(&Pos, vPos);
+	m_pTransform->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateTrack(Argument &In_arg) noexcept
@@ -157,7 +162,9 @@ void CameraDCC::UpdateTrack(Argument &In_arg) noexcept
 	vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorScale(In_arg.vCamSide, farMoveX * rate));
 	vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorScale(In_arg.vCamUp, farMoveY * rate));
 	vCamMove = DirectX::XMVectorScale(vCamMove, In_arg.speed);
-	DirectX::XMStoreFloat3(&m_Pos, DirectX::XMVectorAdd(In_arg.vCamPos, vCamMove));
+	auto Pos = m_pTransform->GetPosition();
+	DirectX::XMStoreFloat3(&Pos, DirectX::XMVectorAdd(In_arg.vCamPos, vCamMove));
+	m_pTransform->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateDolly(Argument &In_arg) noexcept
@@ -177,8 +184,10 @@ void CameraDCC::UpdateDolly(Argument &In_arg) noexcept
 
 	// カメラ位置更新
 	DirectX::XMVECTOR vMove = DirectX::XMVectorScale(In_arg.vCamFront, -focus);
-	DirectX::XMStoreFloat3(&m_Pos, DirectX::XMVectorAdd(In_arg.vCamLook, vMove));
+	auto Pos = m_pTransform->GetPosition();
+	DirectX::XMStoreFloat3(&Pos, DirectX::XMVectorAdd(In_arg.vCamLook, vMove));
 	m_pComponent->SetFocus(focus);
+	m_pTransform->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
@@ -188,7 +197,8 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 	float angleY = 180.0f * In_arg.mouseMove.y / 720.0f;
 
 	// 横回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	auto Quat = m_pTransform->GetQuat();
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationAxis(
 		In_arg.vCamUp, DirectX::XMConvertToRadians(angleX)
 	);
@@ -201,11 +211,12 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 	qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 
 	// 回転の更新
-	DirectX::XMStoreFloat4(&m_Quat, qRotate);
+	DirectX::XMStoreFloat4(&Quat, qRotate);
+	m_pTransform->SetQuat(Quat);
 
 	// 軸の取得
-	DirectX::XMFLOAT3 front = GetFront();
-	DirectX::XMFLOAT3 side = GetRight();
+	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
+	DirectX::XMFLOAT3 side = m_pTransform->GetRight();
 	In_arg.vCamFront = DirectX::XMLoadFloat3(&front);
 	In_arg.vCamSide = DirectX::XMLoadFloat3(&side);
 
@@ -222,5 +233,7 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 
 	// 更新
 	DirectX::XMVECTOR vCamPos = DirectX::XMVectorAdd(In_arg.vCamPos, vCamMove);
-	DirectX::XMStoreFloat3(&m_Pos, vCamPos);
+	auto Pos = m_pTransform->GetPosition();
+	DirectX::XMStoreFloat3(&Pos, vCamPos);
+	m_pTransform->SetPosition(Pos);
 }

@@ -22,6 +22,8 @@ public:
 	SkyBoxObj(_In_ std::string In_Name);
 	~SkyBoxObj();
 
+	void Awake() noexcept override;
+
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 
