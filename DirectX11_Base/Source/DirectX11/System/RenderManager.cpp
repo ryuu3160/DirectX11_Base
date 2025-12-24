@@ -163,7 +163,7 @@ void RenderManager::DrawAll() noexcept
 			for (auto &itr : layer.second)
 			{
 				// RenderComopnent‚ªnullptr‚¶‚á‚È‚¢ê‡‚Ì‚ÝDraw‚ðŒÄ‚Ño‚·
-				if (itr && itr->GetGameObject()->IsActive())
+				if (itr && itr->GetGameObject()->IsActive() && itr->GetGameObject()->IsInitialized() && itr->IsActive())
 					itr->Draw(ctx->second);
 			}
 		}
