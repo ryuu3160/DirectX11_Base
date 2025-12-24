@@ -107,7 +107,7 @@ void cpon_block::CreateHints(_In_ const std::string_view In_TagName, _In_ DataIt
 		auto array = std::get<cpon_block::Array>(In_Data);
 
 		m_BlockHintsRef += "array";
-
+		
 		if (VariantArrayCheckType<std::string>(array))
 			m_BlockHintsRef += "<string>";
 		else if (VariantArrayCheckType<int>(array))
