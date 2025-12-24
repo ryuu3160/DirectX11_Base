@@ -1,10 +1,10 @@
 #ObjNum : 9
 EditorCamera[1]{Transform:object,Camera:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]6.51663, 6.5800385, -5.9352884
+    Position:[3]5.8961926, 8.315885, -8.101385
     Scale:[3]1, 1, 1
-    Quat:[4]0.3202781, -0.39572722, 0.03040035, 0.8601605
-    Euler:[3]0, 0, 0
+    Quat:[4]0.3448753, -0.3848723, 0.06133385, 0.85390055
+    Euler:[3]43.658302, -41.219685, -24.916674
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
     Fovy:60
@@ -12,30 +12,8 @@ EditorCamera[1]{Transform:object,Camera:object}:
     Near:0.2
     Far:1000
     Aspect:1.77778
-    Focus:11.3439
+    Focus:13.1438
     IsShow:false
-
-RootModel0Child(RootModel0_Child)[1]{Transform:object,ModelRenderer:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-
-RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,InputSystem:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]-3.7999983, 0, -0.10000043
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/F15E.fbx
-  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-  InputSystem:[0]{}:
 
 GridObject[1]{Transform:object,LineRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -59,6 +37,19 @@ RootModel0[1]{Transform:object,ModelRenderer:object,SphereCollider:object}:
     LocalCenter:[3]0, 0, 0
     Radius:1
 
+RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,InputSystem:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]-4.199998, 0, -2.1000006
+    Scale:[3]1, 1, 1
+    Quat:[4]-0.017452398, 0, 0, 0.9998477
+    Euler:[3]-2, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/F15E.fbx
+  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 1, 0
+  InputSystem:[0]{}:
+
 GameCamera[1]{Transform:object,Camera:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]0, 5, 0
@@ -75,15 +66,6 @@ GameCamera[1]{Transform:object,Camera:object}:
     Focus:1
     IsShow:false
 
-SkyBox[1]{Transform:object,SkyBoxRenderer:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]6.51663, 6.5800385, -5.9352884
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  SkyBoxRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/SkyBox/sky.obj
-
 PatternScale[1]{Transform:object,ModelRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]0, -0.5, 0
@@ -92,6 +74,24 @@ PatternScale[1]{Transform:object,ModelRenderer:object}:
     Euler:[3]0, 0, 0
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/plane/plane.fbx
+
+RootModel0Child(RootModel0_Child)[1]{Transform:object,ModelRenderer:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]1, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+
+SkyBox[1]{Transform:object,SkyBoxRenderer:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]5.8961926, 8.315885, -8.101385
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/SkyBox/sky.obj
 
 RTSprite[1]{Transform:object,RTSpriteRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
