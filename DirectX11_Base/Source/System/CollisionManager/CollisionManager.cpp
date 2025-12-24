@@ -292,9 +292,21 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 	TreeData* Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
 	while(Tree1 != nullptr)
 	{
+		if(!CheckCollisionActive(Tree1->GetCollider()))
+		{
+			Tree1 = Tree1->GetNextTree();
+			continue;
+		}
+
 		TreeData* Tree2 = Tree1->GetNextTree();
 		while(Tree2 != nullptr)
 		{
+			if(!CheckCollisionActive(Tree2->GetCollider()))
+			{
+				Tree2 = Tree2->GetNextTree();
+				continue;
+			}
+
 			// Õ“ËƒŠƒXƒgì¬
 			// unordered_set‚ðŽg‚Á‚Äd•¡“o˜^‚ð–hŽ~
 			ColliderPairKey Pair(Tree1->GetCollider(), Tree2->GetCollider());
@@ -304,6 +316,9 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 		// ‡A Õ“ËƒXƒ^ƒbƒN‚Æ‚ÌÕ“ËƒŠƒXƒgì¬
 		for(itr = Inout_ColStac.begin(); itr != Inout_ColStac.end(); ++itr)
 		{
+			if(!CheckCollisionActive(*itr))
+				continue;
+
 			ColliderPairKey Pair(Tree1->GetCollider(), *itr);
 			Inout_ColPairs.emplace(Pair, false);
 		}
@@ -329,6 +344,12 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 				Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
 				while(Tree1)
 				{
+					if(!CheckCollisionActive(Tree1->GetCollider()))
+					{
+						Tree1 = Tree1->GetNextTree();
+						continue;
+					}
+
 					Inout_ColStac.push_back(Tree1->GetCollider());
 					ObjNum++;
 					Tree1 = Tree1->GetNextTree();
@@ -359,4 +380,14 @@ void CollisionManager::RemoveColliderPair(_In_ ColliderBase *In_Collider)
 		else
 			++itr;
 	}
+}
+
+bool CollisionManager::CheckCollisionActive(_In_ ColliderBase *In_Collider) noexcept
+{
+	if(!In_Collider)
+		return false;
+
+	if(In_Collider->IsActive() && In_Collider->IsInitialized())
+		return true;
+	return false;
 }
