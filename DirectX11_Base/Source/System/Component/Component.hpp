@@ -38,29 +38,124 @@ public:
 		}
 
 		template<TypeValue T>
-		void AccessValue(_In_ const std::string_view In_Key, _Inout_opt_ T *Inout_Value)
+		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
 		{
+			if(Inout_Value == nullptr)
+				return;
+
 			if (m_IsWrite)
 			{
-				if(Inout_Value != nullptr)
-					(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
+				(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
 			}
 			else
 			{
-				Inout_Value = (*m_Data)[0]->GetValuePtr<T>(In_Key);
+				auto ValuePtr = (*m_Data)[0]->GetValuePtr<T>(In_Key);
+				if(!ValuePtr)
+					return;
+				*Inout_Value = *ValuePtr;
+			}
+		}
+
+		template<typename T>
+			requires std::same_as<T, DirectX::XMFLOAT2>
+		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		{
+			if(Inout_Value == nullptr)
+				return;
+			if(m_IsWrite)
+			{
+				std::vector<float> vec = { Inout_Value->x, Inout_Value->y };
+				(*m_Data)[0]->CreateArray(In_Key, vec);
+			}
+			else
+			{
+				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+				if(!opt)
+				{
+					*Inout_Value = DirectX::XMFLOAT2{};
+					return;
+				}
+				std::vector<float> &vec = *opt;
+				if(vec.size() >= 2)
+				{
+					Inout_Value->x = vec[0];
+					Inout_Value->y = vec[1];
+				}
+			}
+		}
+
+		template<typename T>
+		requires std::same_as<T, DirectX::XMFLOAT3>
+		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		{
+			if (Inout_Value == nullptr)
+				return;
+			if (m_IsWrite)
+			{
+				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z };
+				(*m_Data)[0]->CreateArray(In_Key, vec);
+			}
+			else
+			{
+				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+				if(!opt)
+				{
+					*Inout_Value = DirectX::XMFLOAT3{};
+					return;
+				}
+				std::vector<float> &vec = *opt;
+				if (vec.size() >= 3)
+				{
+					Inout_Value->x = vec[0];
+					Inout_Value->y = vec[1];
+					Inout_Value->z = vec[2];
+				}
+			}
+		}
+
+		template<typename T>
+		requires std::same_as<T, DirectX::XMFLOAT4>
+		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		{
+			if(Inout_Value == nullptr)
+				return;
+			if(m_IsWrite)
+			{
+				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z, Inout_Value->w };
+				(*m_Data)[0]->CreateArray(In_Key, vec);
+			}
+			else
+			{
+				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+				if(!opt)
+				{
+					*Inout_Value = DirectX::XMFLOAT4{};
+					return;
+				}
+				std::vector<float> &vec = *opt;
+				if(vec.size() >= 4)
+				{
+					Inout_Value->x = vec[0];
+					Inout_Value->y = vec[1];
+					Inout_Value->z = vec[2];
+					Inout_Value->w = vec[3];
+				}
 			}
 		}
 
 		template<TypeValue T>
-		void AccessArray(_In_ const std::string_view In_Key, _Inout_opt_ std::vector<T> *Inout_Array)
+		void AccessArray(_In_ const std::string_view In_Key, _Inout_ std::vector<T> *Inout_Array)
 		{
+			if(Inout_Array == nullptr)
+				return;
+
 			if (m_IsWrite)
 			{
 				(*m_Data)[0]->CreateArray(In_Key, *Inout_Array);
 			}
 			else
 			{
-				Inout_Array = (*m_Data)[0]->GetArrayPtr<T>(In_Key);
+				*Inout_Array = *(*m_Data)[0]->GetArrayPtr<T>(In_Key);
 			}
 		}
 
@@ -84,14 +179,16 @@ public:
 	Component(_In_ std::string In_Name);
 	virtual  ~Component();
 	virtual void OnEnable() noexcept override {};
+	virtual void OnDisable() noexcept override {};
 	virtual void Init() noexcept override = 0;
+	virtual void Awake() noexcept override {}
 	virtual void Update(_In_ float In_Tick) noexcept override;
 	virtual void LateUpdate(_In_ float In_Tick) noexcept override;
 	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override;
 
 	virtual void SaveLoad(_In_ DataAccessor *In_Data) {}
 
-	GameObject *GetGameObject() const noexcept { return m_pTransform; }
+	GameObject *GetGameObject() const noexcept { return m_pGameObject; }
 
 	void DestroySelf() noexcept override final;
 
@@ -106,6 +203,6 @@ private:
 	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
 
 protected:
-	GameObject *m_pTransform;
+	GameObject *m_pGameObject;
 	std::string m_Name;
 };

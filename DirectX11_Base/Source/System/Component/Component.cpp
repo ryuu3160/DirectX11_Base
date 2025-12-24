@@ -11,13 +11,13 @@
 #include "Component.hpp"
 
 Component::Component(_In_ std::string In_Name)
-	: m_Name(In_Name), m_pTransform(nullptr)
+	: m_Name(In_Name), m_pGameObject(nullptr)
 {
 }
 
 Component::~Component()
 {
-	m_pTransform = nullptr;
+	m_pGameObject = nullptr;
 }
 
 void Component::Update(_In_ float In_Tick) noexcept
@@ -35,7 +35,7 @@ void Component::FixedUpdate(_In_ double In_FixedTick) noexcept
 void Component::DestroySelf() noexcept
 {
 	Object::DestroySelf();
-	m_pTransform->RemoveComponent(m_Name);
+	m_pGameObject->RemoveComponent(m_Name);
 }
 
 #ifdef _DEBUG
@@ -55,6 +55,11 @@ void Component::DataWrite(_In_ std::shared_ptr<cpon_block> In_pCponBlock)
 
 void Component::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 {
-	DataAccessor accessor(In_pCponObj);
+	auto Obj = In_pCponObj->operator[](0)->GetObject(m_Name);
+
+	if(!Obj)
+		return;
+
+	DataAccessor accessor(Obj);
 	SaveLoad(&accessor);
 }
