@@ -1,4 +1,30 @@
 #ObjNum : 9
+RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,InputSystem:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]-4.199998, 0, -2.1000006
+    Scale:[3]1, 1, 1
+    Quat:[4]-0.017452398, 0, 0, 0.9998477
+    Euler:[3]-2, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/F15E.fbx
+  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 1, 0
+  InputSystem:[0]{}:
+
+RootModel0[1]{Transform:object,ModelRenderer:object,SphereCollider:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, 1, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,Radius:float}:
+    IsTrigger:true
+    LocalCenter:[3]0, 0, 0
+    Radius:1
+
 EditorCamera[1]{Transform:object,Camera:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]5.8961926, 8.315885, -8.101385
@@ -14,41 +40,6 @@ EditorCamera[1]{Transform:object,Camera:object}:
     Aspect:1.77778
     Focus:13.1438
     IsShow:false
-
-GridObject[1]{Transform:object,LineRenderer:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  LineRenderer:[1]{AssetPath:string}:
-    AssetPath:
-
-RootModel0[1]{Transform:object,ModelRenderer:object,SphereCollider:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 1, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/spot/spot.fbx
-  SphereCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,Radius:float}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-    Radius:1
-
-RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,InputSystem:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]-4.199998, 0, -2.1000006
-    Scale:[3]1, 1, 1
-    Quat:[4]-0.017452398, 0, 0, 0.9998477
-    Euler:[3]-2, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/F15E.fbx
-  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 1, 0
-  InputSystem:[0]{}:
 
 GameCamera[1]{Transform:object,Camera:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -66,14 +57,14 @@ GameCamera[1]{Transform:object,Camera:object}:
     Focus:1
     IsShow:false
 
-PatternScale[1]{Transform:object,ModelRenderer:object}:
+GridObject[1]{Transform:object,LineRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, -0.5, 0
-    Scale:[3]1000, 1, 1000
+    Position:[3]0, 0, 0
+    Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/plane/plane.fbx
+  LineRenderer:[1]{AssetPath:string}:
+    AssetPath:
 
 RootModel0Child(RootModel0_Child)[1]{Transform:object,ModelRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -92,6 +83,15 @@ SkyBox[1]{Transform:object,SkyBoxRenderer:object}:
     Euler:[3]0, 0, 0
   SkyBoxRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/SkyBox/sky.obj
+
+PatternScale[1]{Transform:object,ModelRenderer:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, -0.5, 0
+    Scale:[3]1000, 1, 1000
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/plane/plane.fbx
 
 RTSprite[1]{Transform:object,RTSpriteRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
