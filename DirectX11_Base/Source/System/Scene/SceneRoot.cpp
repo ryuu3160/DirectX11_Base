@@ -18,7 +18,7 @@
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/SkyBoxObj.hpp"
 #include "System/SpriteManager/SpriteManager.hpp"
-#include "System/Component/InputSystem.hpp"
+#include "System/Component/PlayerController.hpp"
 #include "System/Component/Collider/SphereCollider.hpp"
 #include "System/Component/Collider/BoxCollider.hpp"
 #include "System/Component/Collider/CapsuleCollider.hpp"
@@ -76,8 +76,9 @@ void SceneRoot::Init()
 	pModel2->AddComponent<CapsuleCollider>();
 
 	// F15E‚ÌˆÚ“®ˆ—
-	auto input = pModel2->AddComponent<InputSystem>();
-	input->RegisterKeyCallBack('W', InputSystem::KeyState::Press, [pModel2]() {
+	pModel2->AddComponent<MovementComponent>();
+	auto input = pModel2->AddComponent<PlayerController>();
+	/*input->RegisterKeyCallBack('W', InputSystem::KeyState::Press, [pModel2]() {
 		auto pos = pModel2->GetPosition();
 		pos.z += 0.1f;
 		pModel2->SetPosition(pos);
@@ -107,7 +108,7 @@ void SceneRoot::Init()
 	input->RegisterKeyCallBack('Q', InputSystem::KeyState::Press, [pModel2]()
 		{
 			pModel2->Rotate(-1.0f, 0.0f, 0.0f);
-		});
+		});*/
 
 	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 1.0f, 1.0f, 1.0f });

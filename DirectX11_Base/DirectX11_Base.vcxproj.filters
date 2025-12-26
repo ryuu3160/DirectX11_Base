@@ -331,9 +331,6 @@
     <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Component\InputSystem.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClCompile>
@@ -369,6 +366,15 @@
     </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\CapsuleCollider.cpp">
       <Filter>Source\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Input\InputSystem.cpp">
+      <Filter>Source\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\PlayerController.cpp">
+      <Filter>Source\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\MovementComponent.cpp">
+      <Filter>Source\System\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -594,9 +600,6 @@
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\Component\InputSystem.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
@@ -635,6 +638,15 @@
     </ClInclude>
     <ClInclude Include="Source\System\Component\Collider\CapsuleCollider.hpp">
       <Filter>Source\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Input\InputSystem.hpp">
+      <Filter>Source\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\PlayerController.hpp">
+      <Filter>Source\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\MovementComponent.hpp">
+      <Filter>Source\System\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

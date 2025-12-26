@@ -230,7 +230,8 @@ bool CapsuleCollider::IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept
     float sphereRadius = sphere->GetRadius();
 
     // ‹…‚Ì’†S‚©‚çƒJƒvƒZƒ‹ü•ª‚Ö‚ÌÅ’Z‹——£‚Ì“ñæ
-    float distSq = PointToSegmentDistanceSquared(spherePos, m_WorldPointA, m_WorldPointB);
+    float dummyParam = 0.0f;
+    float distSq = PointToSegmentDistanceSquared(spherePos, m_WorldPointA, m_WorldPointB, &dummyParam);
 
     // ”¼Œa‚Ì˜a‚Ì“ñæ‚Æ”äŠr
     float radiusSum = m_Radius + sphereRadius;
@@ -244,9 +245,13 @@ bool CapsuleCollider::IsCollisionToCapsule(_In_ ColliderBase *In_Other) noexcept
         return false;
 
     // 2‚Â‚Ìü•ª‚ÌÅ’Z‹——£‚Ì“ñæ‚ğŒvZ
+    // C6387Œx‰ñ”ğ‚Ì‚½‚ßA–¢g—p‚Å‚àƒ_ƒ~[•Ï”‚ğ“n‚·
+    float dummySeg = 0.0f;
+    float dummyParam = 0.0f;
     float distSq = SegmentToSegmentDistanceSquared(
         m_WorldPointA, m_WorldPointB,
-        other->m_WorldPointA, other->m_WorldPointB
+        other->m_WorldPointA, other->m_WorldPointB,
+        &dummySeg, &dummyParam
     );
 
     // ”¼Œa‚Ì˜a‚Ì“ñæ‚Æ”äŠr

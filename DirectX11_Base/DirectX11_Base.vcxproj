@@ -249,7 +249,11 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\System\Component\InputSystem.cpp">
+    <ClCompile Include="Source\System\Component\MovementComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\Component\PlayerController.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -286,6 +290,7 @@
     <ClCompile Include="Source\System\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\System\Input\Input.cpp" />
+    <ClCompile Include="Source\System\Input\InputSystem.cpp" />
     <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
       <SubType>
       </SubType>
@@ -442,7 +447,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\System\Component\InputSystem.hpp">
+    <ClInclude Include="Source\System\Component\MovementComponent.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Component\PlayerController.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -481,6 +490,7 @@
     <ClInclude Include="Source\System\ImGui\imstb_textedit.h" />
     <ClInclude Include="Source\System\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\System\Input\Input.hpp" />
+    <ClInclude Include="Source\System\Input\InputSystem.hpp" />
     <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
       <SubType>
       </SubType>
