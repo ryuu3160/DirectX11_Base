@@ -22,6 +22,7 @@ namespace
 /// </summary>
 class InputSystem : public Singleton<InputSystem>
 {
+	friend class Singleton<InputSystem>;
 public:
 	enum class KeyState
 	{
