@@ -70,6 +70,9 @@ private:
 		// シェーダー作成
 		T *shader = new T();
 		std::string name = std::string(In_FileName);
+
+		// シェーダーをmapに
+		std::lock_guard<std::mutex> lock(m_Mutex); // スレッドセーフ
 		m_mapShaders.insert({ name, shader});
 
 		return shader; // 作成したシェーダーを返す
@@ -77,4 +80,5 @@ private:
 
 private:
 	std::unordered_map<std::string, Shader *> m_mapShaders; // シェーダーのマップ
+	std::mutex m_Mutex; // スレッドセーフ用のミューテックス
 };

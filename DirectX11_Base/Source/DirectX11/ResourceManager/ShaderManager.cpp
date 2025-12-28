@@ -12,10 +12,17 @@
 
 void ShaderManager::SetupShaders(_In_ const std::vector<std::string> &In_FileNames) noexcept
 {
+	// 非同期でシェーダーをセットアップ
+	std::vector<std::future<void>> futures;
+
 	for (const auto &itr : In_FileNames)
 	{
-		SetupShader(itr);
+		auto async = std::async(std::launch::async, &ShaderManager::SetupShader, this, std::string_view(itr));
+		futures.push_back(std::move(async));
 	}
+	// 全ての非同期処理が完了するまで待機
+	for (auto &future : futures)
+		future.get();
 }
 
 void ShaderManager::SetupShader(_In_ const std::string_view In_FileName) noexcept
