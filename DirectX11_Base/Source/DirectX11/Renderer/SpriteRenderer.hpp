@@ -40,7 +40,9 @@ public:
 	SpriteRenderer();
 	~SpriteRenderer();
 
-	void Update(_In_ float In_Tick) noexcept override final;
+	void Awake() noexcept override final;
+
+	void Update(_In_ float In_DeltaTime) noexcept override final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;

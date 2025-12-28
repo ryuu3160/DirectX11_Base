@@ -30,7 +30,6 @@ SpriteRenderer::SpriteRenderer()
 		MakeDefaultShader();
 		MakeDefaultTexture();
 	}
-	GetPositionPixel();
 }
 
 SpriteRenderer::~SpriteRenderer()
@@ -49,7 +48,12 @@ SpriteRenderer::~SpriteRenderer()
 	}
 }
 
-void SpriteRenderer::Update(_In_ float In_Tick) noexcept
+void SpriteRenderer::Awake() noexcept
+{
+	GetPositionPixel();
+}
+
+void SpriteRenderer::Update(_In_ float In_DeltaTime) noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (m_bIsLoaded)
