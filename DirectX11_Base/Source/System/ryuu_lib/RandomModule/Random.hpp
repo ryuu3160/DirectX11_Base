@@ -9,6 +9,14 @@
  ===================================================================+*/
 #pragma once
 
+#include <string>
+#include <vector>
+#include <list>
+#include <initializer_list>
+#include <random>
+#include <Windows.h>
+#include <unordered_set>
+
 class Random
 {
 public:
@@ -173,7 +181,7 @@ std::string Random::Choice(_In_ A... In_Args)
 	//引数のカウント
 	for (std::string ss : std::initializer_list<std::string>{In_Args... })
 	{
-		nCount++;
+		++nCount;
 	}
 
 	for (std::string ss : std::initializer_list<std::string>{In_Args... })
@@ -186,7 +194,7 @@ std::string Random::Choice(_In_ A... In_Args)
 	}
 
 	//返す文字列の番号決
-	nRandom = static_cast<int>(m_DistFloat(m_mt)) % nCount + 1;
+	nRandom = m_DistInt(m_mt) % nCount + 1;
 
 	i = 1;//カウンタ
 
@@ -197,7 +205,7 @@ std::string Random::Choice(_In_ A... In_Args)
 			strReturn = ss;
 			return strReturn;
 		}
-		i++;
+		++i;
 	}
 
 	return strReturn;
@@ -218,11 +226,11 @@ T Random::Choice(_In_ const std::vector<T>&In_Aray)
 	//要素がない場合のエラー
 	if (In_Aray.empty())
 	{
-		put = -1;
+		return T{};//デフォルト値を返す
 	}
 
 	//返す文字列の番号決め
-	nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
+	nRandom = m_DistInt(m_mt) % In_Aray.size();
 
 	put = In_Aray[nRandom];
 
@@ -237,27 +245,20 @@ T Random::Choice(_In_ const std::vector<T>&In_Aray)
 template<typename T>
 T Random::Choice(_In_ const std::list<T>& In_Aray)
 {
-	T put;
 	int nRandom;
-	int nCount = 0;
-	auto itr = In_Aray.begin();
 
 	//要素がない場合のエラー
 	if (In_Aray.empty())
 	{
-		put = -1;
+		return T{};//デフォルト値を返す
 	}
 
 	//返す文字列の番号決め
-	nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
+	nRandom = m_DistInt(m_mt) % In_Aray.size();
 
-	for (int i = 0; i < nRandom; i++)
-	{
-		itr++;
-	}
-	put = *itr;
+	auto itr = std::next(In_Aray.begin(), nRandom);
 
-	return put;
+	return *itr;
 }
 
 /// <summary>
@@ -272,11 +273,6 @@ template<typename T>
 std::vector<T> Random::Sample(_In_ const std::vector<T> &In_Aray, _In_ int In_Num)
 {
 	std::vector<T> sample;
-	std::vector<int> Already;
-	int nRandom;	//プッシュするデータの要素番号
-	int nPushCount = 0;
-	bool bPush = true;
-
 	//要素数が配列のサイズよりも大きい場合のエラー
 	if (In_Aray.size() < In_Num)
 	{
@@ -285,35 +281,17 @@ std::vector<T> Random::Sample(_In_ const std::vector<T> &In_Aray, _In_ int In_Nu
 		return sample;
 	}
 
-	//プッシュ処理
-	while (nPushCount < In_Num)
+	std::unordered_set<int> used_indices;
+	int nRandom;	//プッシュするデータの要素番号
+
+	while (sample.size() < In_Num)
 	{
-		//乱数生成
-		nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
-
-		//重複排除
-		for (int i = 0; i < Already.size(); i++)
-		{
-			if (Already[i] == nRandom)
-			{
-				bPush = false;
-				break;
-			}
-			else
-			{
-				bPush = true;
-			}
-		}
-
-		//値の挿入
-		if (bPush)
+		nRandom = m_DistInt(m_mt) % In_Aray.size();
+		if (used_indices.insert(nRandom).second)
 		{
 			sample.push_back(In_Aray[nRandom]);
-			Already.push_back(nRandom);
-			nPushCount++;
 		}
 	}
-
 	return sample;
 }
 
@@ -329,11 +307,6 @@ template<typename T>
 std::list<T> Random::Sample(_In_ const std::list<T>& In_Aray, _In_ int In_Num)
 {
 	std::list<T> sample;
-	std::vector<int> Already;
-	int nRandom;	//プッシュするデータの要素番号
-	int nPushCount = 0;
-	bool bPush = true;
-
 	//要素数が配列のサイズよりも大きい場合のエラー
 	if (In_Aray.size() < In_Num)
 	{
@@ -342,40 +315,18 @@ std::list<T> Random::Sample(_In_ const std::list<T>& In_Aray, _In_ int In_Num)
 		return sample;
 	}
 
-	//プッシュ処理
-	while (nPushCount < In_Num)
+	std::unordered_set<int> used_indices;
+	int nRandom;	//プッシュするデータの要素番号
+
+	while (sample.size() < In_Num)
 	{
-		//乱数生成
-		nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
-
-		//重複排除
-		for (int i = 0; i < Already.size(); i++)
+		nRandom = m_DistInt(m_mt) % In_Aray.size();
+		if (used_indices.insert(nRandom).second)
 		{
-			if (Already[i] == nRandom)
-			{
-				bPush = false;
-				break;
-			}
-			else
-			{
-				bPush = true;
-			}
-		}
-
-		//値の挿入
-		if (bPush)
-		{
-			auto itr = In_Aray.begin();
-			for (int i = 0; i < nRandom; i++)
-			{
-				itr++;
-			}
+			auto itr = std::next(In_Aray.begin(), nRandom);
 			sample.push_back(*itr);
-			Already.push_back(nRandom);
-			nPushCount++;
 		}
 	}
-
 	return sample;
 }
 
@@ -394,10 +345,10 @@ std::vector<T> Random::Choices(_In_ const std::vector<T>& In_Aray, _In_ int In_E
 	int nRandom;	//プッシュするデータの要素番号
 
 	//プッシュ処理
-	for (int i = 0;i < In_ElementNum;i++)
+	for (int i = 0;i < In_ElementNum;++i)
 	{
 		//乱数生成
-		nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
+		nRandom = m_DistInt(m_mt) % In_Aray.size();
 
 		//プッシュ
 		choices.push_back(In_Aray[nRandom]);
@@ -421,17 +372,12 @@ std::list<T> Random::Choices(_In_ const std::list<T>& In_Aray, _In_ int In_Eleme
 	int nRandom;	//プッシュするデータの要素番号
 
 	//プッシュ処理
-	for (int i = 0; i < In_ElementNum; i++)
+	for (int i = 0; i < In_ElementNum; ++i)
 	{
-		//先頭イテレーター取得
-		auto itr = In_Aray.begin();
 		//乱数生成
-		nRandom = static_cast<int>(m_DistFloat(m_mt)) % In_Aray.size();
+		nRandom = m_DistInt(m_mt) % In_Aray.size();
 
-		for (int j = 0; j < nRandom; j++)
-		{
-			itr++;
-		}
+		auto itr = std::next(In_Aray.begin(), nRandom);
 		//プッシュ
 		choices.push_back(*itr);
 	}

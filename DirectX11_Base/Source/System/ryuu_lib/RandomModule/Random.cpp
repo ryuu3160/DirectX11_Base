@@ -7,6 +7,12 @@
 	(C) 2024 ryuu3160. All rights reserved.
 ===================================================================+*/
 #include "Random.hpp"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <stdarg.h>
+#include <string>
 
 Random::Random()
 	: m_mt(std::random_device{}()), m_DistFloat(0, RAND_MAX)
@@ -47,6 +53,9 @@ int Random::GetInteger(_In_ int In_Max, _In_ bool In_IncludeZero)
 
 int Random::GetIntegerRange(_In_ int In_Min, _In_ int In_Max)
 {
+	if (In_Min > In_Max)
+		return 0;
+
 	In_Max++;
 	In_Max -= In_Min;
 
@@ -85,6 +94,10 @@ float Random::GetDecimal(_In_ int In_Max, _In_ int In_PointPos, _In_ bool In_Inc
 
 float Random::GetDecimalRange(_In_ float In_Min, _In_ float In_Max, _In_ int In_PointPos)
 {
+	if(In_Min > In_Max)
+		return 0.0f;
+
+
 	float fRandom;
 	int nSetPointPos;
 	int nMaxVal;
