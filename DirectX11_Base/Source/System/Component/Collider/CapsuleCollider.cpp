@@ -38,7 +38,7 @@ void CapsuleCollider::Init() noexcept
     UpdateWorldSegment();
 }
 
-void CapsuleCollider::Update(_In_ float In_Tick) noexcept
+void CapsuleCollider::Update(_In_ float In_DeltaTime) noexcept
 {
     UpdateWorldSegment();
 }

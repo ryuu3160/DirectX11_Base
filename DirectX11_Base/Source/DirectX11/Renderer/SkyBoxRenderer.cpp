@@ -50,7 +50,7 @@ SkyBoxRenderer::~SkyBoxRenderer()
 	m_vecMeshes.clear();
 }
 
-void SkyBoxRenderer::Update(_In_ float In_Tick) noexcept
+void SkyBoxRenderer::Update(_In_ float In_DeltaTime) noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	if (!m_vecMeshes.empty()) return;

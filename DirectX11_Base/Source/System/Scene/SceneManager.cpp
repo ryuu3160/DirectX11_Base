@@ -55,38 +55,38 @@ void SceneManager::SceneObjectsInit() noexcept
 	}
 }
 
-void SceneManager::RootFixedUpdate(_In_ double In_FixedTick) noexcept
+void SceneManager::RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 {
 	// メインシーンの更新
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootFixedUpdate(In_FixedTick);
+		m_pCurrentScene->_RootFixedUpdate(In_FixedDeltaTime);
 	// サブシーンの更新
 	for (auto &itr : m_SubScene)
 	{
 		if (itr.second)
-			itr.second->_RootFixedUpdate(In_FixedTick);
+			itr.second->_RootFixedUpdate(In_FixedDeltaTime);
 	}
 
 	// 当たり判定の更新
 	m_CollisionManager.CheckAllCollisions();
 }
 
-void SceneManager::RootUpdate(_In_ float In_Tick) noexcept
+void SceneManager::RootUpdate(_In_ float In_DeltaTime) noexcept
 {
 	// 初期化されていないオブジェクトの初期化
 	SceneObjectsInit();
 
 	// メインの更新
-	_RootUpdateMain(In_Tick);
+	_RootUpdateMain(In_DeltaTime);
 
 	// 遅延更新
-	_RootUpdateLate(In_Tick);
+	_RootUpdateLate(In_DeltaTime);
 
 	// コンポーネント削除予約リストの処理
 	_ExecuteDestroyObjectsComponents();
 
 	// フェードの処理
-	m_FadeManager.Update(In_Tick);
+	m_FadeManager.Update(In_DeltaTime);
 }
 
 void SceneManager::RootDraw() noexcept
@@ -184,29 +184,29 @@ void SceneManager::UnLoadCurrentScene() noexcept
 	}
 }
 
-void SceneManager::_RootUpdateMain(_In_ float In_Tick) noexcept
+void SceneManager::_RootUpdateMain(_In_ float In_DeltaTime) noexcept
 {
 	// メインシーンの更新
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootUpdateMain(In_Tick);
+		m_pCurrentScene->_RootUpdateMain(In_DeltaTime);
 	// サブシーンの更新
 	for (auto &itr : m_SubScene)
 	{
 		if(itr.second)
-			itr.second->_RootUpdateMain(In_Tick);
+			itr.second->_RootUpdateMain(In_DeltaTime);
 	}
 }
 
-void SceneManager::_RootUpdateLate(_In_ float In_Tick) noexcept
+void SceneManager::_RootUpdateLate(_In_ float In_DeltaTime) noexcept
 {
 	// メインシーンの更新
 	if (m_pCurrentScene)
-		m_pCurrentScene->_RootUpdateLate(In_Tick);
+		m_pCurrentScene->_RootUpdateLate(In_DeltaTime);
 	// サブシーンの更新
 	for (auto &itr : m_SubScene)
 	{
 		if (itr.second)
-			itr.second->_RootUpdateLate(In_Tick);
+			itr.second->_RootUpdateLate(In_DeltaTime);
 	}
 }
 

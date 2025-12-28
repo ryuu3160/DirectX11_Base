@@ -20,15 +20,15 @@ Component::~Component()
 	m_pGameObject = nullptr;
 }
 
-void Component::Update(_In_ float In_Tick) noexcept
+void Component::Update(_In_ float In_DeltaTime) noexcept
 {
 }
 
-void Component::LateUpdate(_In_ float In_Tick) noexcept
+void Component::LateUpdate(_In_ float In_DeltaTime) noexcept
 {
 }
 
-void Component::FixedUpdate(_In_ double In_FixedTick) noexcept
+void Component::FixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 {
 }
 

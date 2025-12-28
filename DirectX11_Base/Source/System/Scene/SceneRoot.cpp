@@ -148,9 +148,6 @@ void SceneRoot::Init()
 	pPatternScale->SetPosition({ 0.0f, -0.5f, 0.0f });
 	pPatternScale->SetScale({ 1000.0f, 1.0f, 1000.0f });
 
-	FadeManager::GetInstance().AddFade("TestFade", 5.0f, Ease::EasingType::MAX, true);
-	FadeManager::GetInstance().StartFadeIn("TestFade");
-
 	// レンダーターゲットスプライトテスト
 	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1280, 720);
 	auto DSV = RenderTargetManager::GetInstance().CreateDepthStencil("GameDSV", 1280, 720,false);
@@ -166,13 +163,16 @@ void SceneRoot::Init()
 	RTSpriteCmp->SetRenderContext(RenderCtx);
 	pRTSprite->SetPosition({ 5.0f,2.0f,0.0f });
 	pRTSprite->SetScale({ 5.0f,5.0f,1.0f });
+
+	FadeManager::GetInstance().AddFade("TestFade", 5.0f, Ease::EasingType::MAX, true);
+	FadeManager::GetInstance().StartFadeIn("TestFade");
 }
 
 void SceneRoot::Uninit()
 {
 }
 
-void SceneRoot::Update(_In_ float In_Tick)
+void SceneRoot::Update(_In_ float In_DeltaTime)
 {
 	struct PaternScale
 	{

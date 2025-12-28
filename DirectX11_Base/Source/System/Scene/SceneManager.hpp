@@ -30,12 +30,12 @@ public:
 
 	void SceneObjectsInit() noexcept;
 
-	void RootFixedUpdate(_In_ double In_FixedTick) noexcept;
+	void RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept;
 
 	/// <summary>
 	/// シーンのアップデート
 	/// </summary>
-	void RootUpdate(_In_ float In_Tick) noexcept;
+	void RootUpdate(_In_ float In_DeltaTime) noexcept;
 
 	/// <summary>
 	/// シーンの描画
@@ -92,8 +92,8 @@ private:
 	/// </summary>
 	void UnLoadCurrentScene() noexcept;
 
-	void _RootUpdateMain(_In_ float In_Tick) noexcept;
-	void _RootUpdateLate(_In_ float In_Tick) noexcept;
+	void _RootUpdateMain(_In_ float In_DeltaTime) noexcept;
+	void _RootUpdateLate(_In_ float In_DeltaTime) noexcept;
 
 	void _ExecuteDestroyObjectsComponents() noexcept;
 

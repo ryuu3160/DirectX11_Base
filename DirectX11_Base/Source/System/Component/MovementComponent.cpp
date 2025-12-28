@@ -26,10 +26,10 @@ void MovementComponent::Init() noexcept
 	m_Transform = GetGameObject()->GetTransform();
 }
 
-void MovementComponent::Update(_In_ float In_Tick) noexcept
+void MovementComponent::Update(_In_ float In_DeltaTime) noexcept
 {
 	// 蓄積した入力を使って移動
-	ProcessMovement(In_Tick);
+	ProcessMovement(In_DeltaTime);
 
 	// 入力をリセット(次フレーム用)
 	m_InputVector = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -48,7 +48,7 @@ void MovementComponent::Jump()
 	m_Velocity.y = 5.0f;
 }
 
-void MovementComponent::ProcessMovement(_In_ float In_Tick)
+void MovementComponent::ProcessMovement(_In_ float In_DeltaTime)
 {
     // 入力ベクトルを正規化
     DirectX::XMVECTOR input = DirectX::XMLoadFloat3(&m_InputVector);
@@ -60,7 +60,7 @@ void MovementComponent::ProcessMovement(_In_ float In_Tick)
 
         // 加速
         DirectX::XMVECTOR velocity = DirectX::XMLoadFloat3(&m_Velocity);
-        DirectX::XMVECTOR acceleration = DirectX::XMVectorScale(input, m_Acceleration * In_Tick);
+        DirectX::XMVECTOR acceleration = DirectX::XMVectorScale(input, m_Acceleration * In_DeltaTime);
         velocity = DirectX::XMVectorAdd(velocity, acceleration);
 
         // 最大速度制限(水平のみ)
@@ -83,11 +83,11 @@ void MovementComponent::ProcessMovement(_In_ float In_Tick)
         DirectX::XMVECTOR velocity = DirectX::XMLoadFloat3(&m_Velocity);
         DirectX::XMVECTOR deceleration = DirectX::XMVectorScale(
             DirectX::XMVector3Normalize(velocity),
-            -m_Deceleration * In_Tick
+            -m_Deceleration * In_DeltaTime
         );
 
         float currentSpeed = DirectX::XMVectorGetX(DirectX::XMVector3Length(velocity));
-        float decelAmount = m_Deceleration * In_Tick;
+        float decelAmount = m_Deceleration * In_DeltaTime;
 
         if(decelAmount >= currentSpeed)
         {
@@ -102,8 +102,8 @@ void MovementComponent::ProcessMovement(_In_ float In_Tick)
 
     // Transformを更新
     DirectX::XMFLOAT3 pos = m_Transform->GetPosition();
-    pos.x += m_Velocity.x * In_Tick;
-    pos.y += m_Velocity.y * In_Tick;
-    pos.z += m_Velocity.z * In_Tick;
+    pos.x += m_Velocity.x * In_DeltaTime;
+    pos.y += m_Velocity.y * In_DeltaTime;
+    pos.z += m_Velocity.z * In_DeltaTime;
     m_Transform->SetPosition(pos);
 }

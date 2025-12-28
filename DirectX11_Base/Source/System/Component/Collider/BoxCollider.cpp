@@ -37,7 +37,7 @@ void BoxCollider::Init() noexcept
 	UpdateWorldSegment();
 }
 
-void BoxCollider::Update(_In_ float In_Tick) noexcept
+void BoxCollider::Update(_In_ float In_DeltaTime) noexcept
 {
 	UpdateWorldSegment();
 }

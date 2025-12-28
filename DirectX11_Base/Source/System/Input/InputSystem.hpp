@@ -38,7 +38,7 @@ public:
 
 	void Init() noexcept;
 
-	void Update(_In_ float In_Tick) noexcept;
+	void Update(_In_ float In_DeltaTime) noexcept;
 
 	/// <summary>
 	/// 指定されたキーと状態に対してコールバック関数を登録します

@@ -50,7 +50,7 @@ void RenderComponent::Init() noexcept
 	m_RenderManager.AddRenderComponent(this, m_LayerGroup);
 }
 
-void RenderComponent::Update(_In_ float In_Tick) noexcept
+void RenderComponent::Update(_In_ float In_DeltaTime) noexcept
 {
 }
 

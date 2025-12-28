@@ -40,11 +40,11 @@ void ColliderBase::Init() noexcept
 	m_CollisionManager.AddColliderComponent(this);
 }
 
-void ColliderBase::Update(_In_ float In_Tick) noexcept
+void ColliderBase::Update(_In_ float In_DeltaTime) noexcept
 {
 }
 
-void ColliderBase::FixedUpdate(_In_ double In_FixedTick) noexcept
+void ColliderBase::FixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 {
 	m_CollisionManager.UpdateCollisionCells(this);
 }

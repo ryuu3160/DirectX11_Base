@@ -42,7 +42,7 @@ public:
 	SkyBoxRenderer();
 	~SkyBoxRenderer();
 
-	void Update(_In_ float In_Tick) noexcept final;
+	void Update(_In_ float In_DeltaTime) noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;

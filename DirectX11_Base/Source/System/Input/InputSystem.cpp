@@ -23,7 +23,7 @@ void InputSystem::Init() noexcept
     m_NextHandle = 1;
 }
 
-void InputSystem::Update(_In_ float In_Tick) noexcept
+void InputSystem::Update(_In_ float In_DeltaTime) noexcept
 {
     for(auto &[key, callbacks] : m_InputMap)
     {

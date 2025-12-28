@@ -22,7 +22,7 @@ public:
 
 	void Init() noexcept override;
 
-	void Update(_In_ float In_Tick) noexcept override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
     // “ü—Í‚ð’Ç‰Á
 	void AddInputVector(_In_ const DirectX::XMFLOAT3 &In_Input);
@@ -30,7 +30,7 @@ public:
     void Jump();
 
 private:
-    void ProcessMovement(_In_ float In_Tick);
+    void ProcessMovement(_In_ float In_DeltaTime);
 
 private:
 	Transform *m_Transform;

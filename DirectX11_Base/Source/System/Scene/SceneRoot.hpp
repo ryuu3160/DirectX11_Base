@@ -23,7 +23,7 @@ public:
 	// シーンの解放
 	void Uninit() override;
 	// シーンの更新
-	void Update(_In_ float In_Tick) override;
+	void Update(_In_ float In_DeltaTime) override;
 	// シーンの描画
 	void Draw() override;
 private:

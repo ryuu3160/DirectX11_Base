@@ -59,7 +59,7 @@ void GridObject::SetCamera(_In_ GameObject *In_Cam) noexcept
 {
 }
 
-void GridObject::Update(_In_ float In_Tick) noexcept
+void GridObject::Update(_In_ float In_DeltaTime) noexcept
 {
 	m_GridSize = (*m_pDebugGroup)["GridSize##GridObject"].GetFloat();
 	m_GridMargin = (*m_pDebugGroup)["GridMargin##GridObject"].GetFloat();

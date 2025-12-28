@@ -36,9 +36,9 @@ public:
 
 	virtual void Init() noexcept = 0;
 	virtual void Awake() noexcept {}
-	virtual void Update(_In_ float In_Tick) noexcept {}
-	virtual void LateUpdate(_In_ float In_Tick) noexcept {}
-	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept {}
+	virtual void Update(_In_ float In_DeltaTime) noexcept {}
+	virtual void LateUpdate(_In_ float In_DeltaTime) noexcept {}
+	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept {}
 
 	virtual void DestroySelf() noexcept { m_IsDestroySelf = true;}
 	[[nodiscard]] bool IsDestroySelf() const noexcept { return m_IsDestroySelf; }

@@ -38,7 +38,7 @@ CameraDCC::~CameraDCC()
 {
 }
 
-void CameraDCC::Update(_In_ float In_Tick) noexcept
+void CameraDCC::Update(_In_ float In_DeltaTime) noexcept
 {
 	Argument arg{};
 #ifdef _DEBUG

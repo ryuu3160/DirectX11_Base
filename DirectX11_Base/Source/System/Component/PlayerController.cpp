@@ -45,7 +45,7 @@ void PlayerController::Awake() noexcept
     m_CameraObj = m_pGameObject;
 }
 
-void PlayerController::Update(_In_ float In_Tick) noexcept
+void PlayerController::Update(_In_ float In_DeltaTime) noexcept
 {
     if(!m_MovementComponent)
         return;

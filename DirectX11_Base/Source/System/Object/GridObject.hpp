@@ -35,7 +35,7 @@ public:
 
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 
-	void Update(_In_ float In_Tick) noexcept override final;
+	void Update(_In_ float In_DeltaTime) noexcept override final;
 
 private:
 

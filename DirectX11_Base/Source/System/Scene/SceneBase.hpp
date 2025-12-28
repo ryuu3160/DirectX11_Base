@@ -89,9 +89,9 @@ public:
 	// 継承先で使用する関数
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;
-	virtual void Update(_In_ float In_Tick) = 0;
-	virtual void LateUpdate(_In_ float In_Tick) {};
-	virtual void FixedUpdate(_In_ double In_FixedTick) {};
+	virtual void Update(_In_ float In_DeltaTime) = 0;
+	virtual void LateUpdate(_In_ float In_DeltaTime) {};
+	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) {};
 	virtual void Draw() = 0;
 
 protected:
@@ -116,18 +116,18 @@ private:
 	/// <summary>
 	/// ルートのメイン更新処理を実行します。
 	/// </summary>
-	/// <param name="[In_Tick]">経過時間（デルタタイム）を示す入力値。</param>
-	void _RootUpdateMain(_In_ float In_Tick) noexcept;
+	/// <param name="[In_DeltaTime]">経過時間（デルタタイム）を示す入力値。</param>
+	void _RootUpdateMain(_In_ float In_DeltaTime) noexcept;
 	/// <summary>
 	/// ルートオブジェクトの遅延更新処理を実行します。
 	/// </summary>
-	/// <param name="[In_Tick]">経過時間（デルタタイム）を示す入力値。</param>
-	void _RootUpdateLate(_In_ float In_Tick) noexcept;
+	/// <param name="[In_DeltaTime]">経過時間（デルタタイム）を示す入力値。</param>
+	void _RootUpdateLate(_In_ float In_DeltaTime) noexcept;
 	/// <summary>
 	/// ルートの固定更新処理を実行します。
 	/// </summary>
-	/// <param name="[In_FixedTick]">固定タイックの時間（固定更新間隔）を示す入力値。固定ステップの継続時間</param>
-	void _RootFixedUpdate(_In_ double In_FixedTick) noexcept;
+	/// <param name="[In_FixedDeltaTime]">固定タイックの時間（固定更新間隔）を示す入力値。固定ステップの継続時間</param>
+	void _RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept;
 
 	/// <summary>
 	/// オブジェクトのコンポーネント削除予約リストを処理する

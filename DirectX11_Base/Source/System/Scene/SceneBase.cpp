@@ -147,7 +147,7 @@ void SceneBase::_ObjectsInit() noexcept
 	}
 }
 
-void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
+void SceneBase::_RootUpdateMain(_In_ float In_DeltaTime) noexcept
 {
 	// シーンが所持しているオブジェクトの更新
 	for(auto &itr : m_SceneObjects)
@@ -155,15 +155,15 @@ void SceneBase::_RootUpdateMain(_In_ float In_Tick) noexcept
 		// アクティブかつ初期化済みなら更新を実行
 		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
-			itr->ExecuteUpdate(In_Tick);
+			itr->ExecuteUpdate(In_DeltaTime);
 		}
 	}
 
 	// シーン自体の更新(クリア判定など
-	Update(In_Tick);
+	Update(In_DeltaTime);
 }
 
-void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
+void SceneBase::_RootUpdateLate(_In_ float In_DeltaTime) noexcept
 {
 	// シーンが所持しているオブジェクトの遅延更新
 	for(auto &itr : m_SceneObjects)
@@ -171,15 +171,15 @@ void SceneBase::_RootUpdateLate(_In_ float In_Tick) noexcept
 		// アクティブかつ初期化済みなら更新を実行
 		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
-			itr->ExecuteLateUpdate(In_Tick);
+			itr->ExecuteLateUpdate(In_DeltaTime);
 		}
 	}
 
 	// シーン自体の遅延更新
-	LateUpdate(In_Tick);
+	LateUpdate(In_DeltaTime);
 }
 
-void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
+void SceneBase::_RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 {
 	// シーンが所持しているオブジェクトの固定更新
 	for(auto &itr : m_SceneObjects)
@@ -187,12 +187,12 @@ void SceneBase::_RootFixedUpdate(_In_ double In_FixedTick) noexcept
 		// アクティブかつ初期化済みなら更新を実行
 		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
-			itr->ExecuteFixedUpdate(In_FixedTick);
+			itr->ExecuteFixedUpdate(In_FixedDeltaTime);
 		}
 	}
 
 	// シーン自体の固定更新
-	FixedUpdate(In_FixedTick);
+	FixedUpdate(In_FixedDeltaTime);
 }
 
 void SceneBase::_ExecuteDestroyObjectsComponents() noexcept

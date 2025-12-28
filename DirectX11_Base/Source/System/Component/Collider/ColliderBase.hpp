@@ -42,8 +42,8 @@ public:
 	virtual void SaveLoad(_In_ DataAccessor *In_Data) override;
 
 	void Init() noexcept override;
-	void Update(_In_ float In_Tick) noexcept override;
-	void FixedUpdate(_In_ double In_FixedTick) noexcept override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
+	void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override;
 
 	bool CheckCollision(_In_ ColliderBase *In_Other) noexcept;
 

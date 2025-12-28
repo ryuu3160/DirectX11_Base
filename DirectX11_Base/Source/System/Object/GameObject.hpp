@@ -42,18 +42,18 @@ public:
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void ExecuteUpdate(_In_ float In_Tick) noexcept;
+	void ExecuteUpdate(_In_ float In_DeltaTime) noexcept;
 
 	/// <summary>
 	/// 遅延更新処理
 	/// </summary>
-	void ExecuteLateUpdate(_In_ float In_Tick) noexcept;
+	void ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept;
 
 	/// <summary>
 	/// 固定間隔更新処理
 	/// </summary>
-	/// <param name="In_FixedTick"></param>
-	void ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept;
+	/// <param name="In_FixedDeltaTime"></param>
+	void ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept;
 
 	/// <summary>
 	/// ギズモを描画するために呼び出されます
@@ -170,9 +170,9 @@ protected:
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}
 	virtual void Awake() noexcept override {}
-	virtual void Update(_In_ float In_Tick) noexcept override {}
-	virtual void LateUpdate(_In_ float In_Tick) noexcept override {}
-	virtual void FixedUpdate(_In_ double In_FixedTick) noexcept override {}
+	virtual void Update(_In_ float In_DeltaTime) noexcept override {}
+	virtual void LateUpdate(_In_ float In_DeltaTime) noexcept override {}
+	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override {}
 
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept override {}
 	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept override {}

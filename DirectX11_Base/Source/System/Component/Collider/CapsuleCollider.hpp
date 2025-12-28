@@ -22,7 +22,7 @@ public:
 	virtual ~CapsuleCollider();
 
 	void Init() noexcept override;
-	void Update(_In_ float In_Tick) noexcept override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	float GetHeight() const { return m_Height; }
 	float GetRadius() const { return m_Radius; }

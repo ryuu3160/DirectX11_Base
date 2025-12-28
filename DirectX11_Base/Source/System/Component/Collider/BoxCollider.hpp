@@ -24,7 +24,7 @@ public:
 	void SaveLoad(_In_ DataAccessor *In_Data) override;
 
 	void Init() noexcept override;
-	void Update(_In_ float In_Tick) noexcept override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	inline DirectX::XMFLOAT3 GetHalfExtents() const { return m_HalfExtents; }
 	

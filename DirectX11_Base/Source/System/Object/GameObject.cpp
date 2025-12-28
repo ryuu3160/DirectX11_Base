@@ -95,7 +95,7 @@ void GameObject::ExecuteAwake() noexcept
 	}
 }
 
-void GameObject::ExecuteUpdate(_In_ float In_Tick) noexcept
+void GameObject::ExecuteUpdate(_In_ float In_DeltaTime) noexcept
 {
 	// 初期化が呼ばれていないコンポーネントの初期化
 	InitializeComponents();
@@ -104,34 +104,34 @@ void GameObject::ExecuteUpdate(_In_ float In_Tick) noexcept
 	for (auto &itr : m_Components)
 	{
 		if(itr->m_IsActive)
-			itr->Update(In_Tick);
+			itr->Update(In_DeltaTime);
 	}
 	// 継承先オブジェクトの処理
-	Update(In_Tick);
+	Update(In_DeltaTime);
 }
 
-void GameObject::ExecuteLateUpdate(_In_ float In_Tick) noexcept
+void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
 {
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
 		if(itr->m_IsActive)
-			itr->LateUpdate(In_Tick);
+			itr->LateUpdate(In_DeltaTime);
 	}
 	// 継承先オブジェクトの遅延処理
-	LateUpdate(In_Tick);
+	LateUpdate(In_DeltaTime);
 }
 
-void GameObject::ExecuteFixedUpdate(_In_ double In_FixedTick) noexcept
+void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 {
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
 		if(itr->m_IsActive)
-			itr->FixedUpdate(In_FixedTick);
+			itr->FixedUpdate(In_FixedDeltaTime);
 	}
 	// 継承先オブジェクトの固定間隔更新処理
-	FixedUpdate(In_FixedTick);
+	FixedUpdate(In_FixedDeltaTime);
 }
 
 void GameObject::OnDrawGizmos(_In_ Gizmos *In_Gizmos) noexcept

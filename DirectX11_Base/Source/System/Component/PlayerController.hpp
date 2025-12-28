@@ -23,7 +23,7 @@ public:
 
     void Init() noexcept override;
     void Awake() noexcept override;
-    void Update(_In_ float In_Tick) noexcept override;
+    void Update(_In_ float In_DeltaTime) noexcept override;
 
     /// <summary>
     /// <para>カメラオブジェクトを設定します</para>
