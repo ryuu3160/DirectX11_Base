@@ -11,7 +11,7 @@
 #include "SceneBase.hpp"
 #include "System/Object/CameraDCC.hpp"
 #include "System/Object/GameObject.hpp"
-#include "System/Scene/SceneManager.hpp"
+#include "System/Managers/SceneManager/SceneManager.hpp"
 #include "System/Object/GridObject.hpp"
 
 // ==============================

@@ -9,9 +9,9 @@
 // ==============================
 //	include
 // ==============================
-#include "System/DebugManager/InitializeImGui.hpp"
-#include "System/DebugManager/DebugWindow.hpp"
-#include "System/DebugManager/DebugItem.hpp"
+#include "System/Managers/DebugManager/InitializeImGui.hpp"
+#include "System/Managers/DebugManager/DebugWindow.hpp"
+#include "System/Managers/DebugManager/DebugItem.hpp"
 
 // ==============================
 //	’è”’è‹`

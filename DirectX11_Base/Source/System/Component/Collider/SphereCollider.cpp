@@ -11,7 +11,7 @@
 #include "SphereCollider.hpp"
 #include "BoxCollider.hpp"
 #include "CapsuleCollider.hpp"
-#include "System/DebugManager/DebugItem.hpp"
+#include "System/Managers/DebugManager/DebugItem.hpp"
 
 SphereCollider::SphereCollider()
 	: ColliderBase("SphereCollider"), m_Radius(1.0f)

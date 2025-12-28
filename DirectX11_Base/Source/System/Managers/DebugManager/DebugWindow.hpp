@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/DebugManager/DebugItem.hpp"
+#include "System/Managers/DebugManager/DebugItem.hpp"
 
 // ==============================
 //	’è”’è‹`

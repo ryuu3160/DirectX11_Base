@@ -11,7 +11,7 @@
 #include "FadeManager.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
-#include "System/Scene/SceneManager.hpp"
+#include "System/Managers/SceneManager/SceneManager.hpp"
 
 void FadeManager::Update(_In_ float In_DeltaTime) noexcept
 {

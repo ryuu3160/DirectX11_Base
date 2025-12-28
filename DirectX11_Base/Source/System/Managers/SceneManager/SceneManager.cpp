@@ -10,7 +10,7 @@
 // ==============================
 #include "SceneManager.hpp"
 #include "DirectX11/System/RenderManager.hpp"
-#include "System/CollisionManager/CollisionManager.hpp"
+#include "System/Managers/CollisionManager/CollisionManager.hpp"
 
 SceneManager::SceneManager()
 	: m_RenderManager(RenderManager::GetInstance())

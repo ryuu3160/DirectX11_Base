@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "SceneBase.hpp"
+#include "System/Scene/SceneBase.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾

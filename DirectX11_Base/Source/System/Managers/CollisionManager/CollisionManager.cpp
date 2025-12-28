@@ -9,8 +9,8 @@
 //	include
 // ==============================
 #include "CollisionManager.hpp"
-#include "System/CollisionManager/OctreeCell.hpp"
-#include "System/CollisionManager/TreeData.hpp"
+#include "System/Managers/CollisionManager/OctreeCell.hpp"
+#include "System/Managers/CollisionManager/TreeData.hpp"
 
 // ==============================
 //	’è”’è‹`

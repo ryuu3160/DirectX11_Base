@@ -13,7 +13,7 @@
 #include "DirectX11/Resource/Shaders/Shader.hpp"
 #include "DirectX11/Renderer/ModelRenderer.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
-#include "System/DebugManager/DebugItem.hpp"
+#include "System/Managers/DebugManager/DebugItem.hpp"
 
 // ==============================
 //  undefine

@@ -9,9 +9,9 @@
 //	include
 // ==============================
 #include "ColliderBase.hpp"
-#include "System/CollisionManager/CollisionManager.hpp"
-#include "System/CollisionManager/TreeData.hpp"
-#include "System/DebugManager/DebugItem.hpp"
+#include "System/Managers/CollisionManager/CollisionManager.hpp"
+#include "System/Managers/CollisionManager/TreeData.hpp"
+#include "System/Managers/DebugManager/DebugItem.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
