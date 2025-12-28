@@ -30,6 +30,14 @@ void PlayerController::Init() noexcept
 	{
 		DebugManager::GetInstance().DebugLogError("PlayerController:  MovementComponent not found!");
 	}
+
+    InputSystem::GetInstance().RegisterKeyCallBack(VK_SPACE, InputSystem::KeyState::Trigger, [this]()
+    {
+        if(m_MovementComponent)
+        {
+            m_MovementComponent->Jump();
+        }
+	});
 }
 
 void PlayerController::Awake() noexcept
@@ -67,12 +75,6 @@ void PlayerController::Update(_In_ float In_Tick) noexcept
 
     // MovementComponent‚É“ü—Í‚ð“n‚·
     m_MovementComponent->AddInputVector(moveDirFloat);
-
-    // ƒWƒƒƒ“ƒv
-    if(Input::IsKeyTrigger(VK_SPACE))
-    {
-        m_MovementComponent->Jump();
-    }
 }
 
 void PlayerController::SetCameraObj(_In_ GameObject *In_CameraObj)

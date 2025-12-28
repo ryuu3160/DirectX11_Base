@@ -17,6 +17,8 @@ namespace Input
 
 HRESULT Init()
 {
+	// InputSystem‚Ì‰Šú‰»
+	InputSystem::GetInstance().Init();
 	//Å‰‚Ì“ü—Í
 	if (GetKeyboardState(g_KeyTable))
 	{

@@ -143,6 +143,8 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 
 		// Inputの更新
 		Input::Update();
+		// InputSystemの更新
+		InputSystem::GetInstance().Update(DeltaTime);
 
 		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
 		{
