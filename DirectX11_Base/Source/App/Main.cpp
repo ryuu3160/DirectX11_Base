@@ -24,8 +24,8 @@
 // ==============================
 //  プロトタイプ宣言
 // ==============================
-void Update(_In_ float In_Tick);
-void FixedUpdate(_In_ double In_FixedTick);
+void Update(_In_ float In_DeltaTime);
+void FixedUpdate(_In_ double In_FixedDeltaTime);
 void Draw();
 
 // ==============================
@@ -70,6 +70,8 @@ HRESULT Main::Init()
 		"PS_POM",
 		"VS_Sprite",
 		"PS_Sprite",
+		"IVS_Particle", // インスタンシング用パーティクル
+		"PS_Particle",
 	};
 	ShaderManager::GetInstance().SetupShaders(shaders);
 
@@ -174,15 +176,15 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 	}
 }
 
-void FixedUpdate(_In_ double In_FixedTick)
+void FixedUpdate(_In_ double In_FixedDeltaTime)
 {
-	SceneManager::GetInstance().RootFixedUpdate(In_FixedTick);
+	SceneManager::GetInstance().RootFixedUpdate(In_FixedDeltaTime);
 }
 
-void Update(_In_ float In_Tick)
+void Update(_In_ float In_DeltaTime)
 {
 	auto &SceneM = SceneManager::GetInstance();
-	SceneM.RootUpdate(In_Tick);
+	SceneM.RootUpdate(In_DeltaTime);
 	SpriteManager::GetInstance().Update();
 	DebugManager::GetInstance().Update();
 }

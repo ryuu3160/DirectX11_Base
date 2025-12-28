@@ -125,6 +125,15 @@
     <Filter Include="Source\System\CPON">
       <UniqueIdentifier>{48d9f31c-8e52-4fac-80ee-2471ab33b1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\DirectX11\System\Particle">
+      <UniqueIdentifier>{e8f07fcc-5ff5-45a6-bf5e-a316810a831d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\System\Particle\Core">
+      <UniqueIdentifier>{dc92863e-3419-4945-9d75-92ed589f86a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\DirectX11\System\Particle\Components">
+      <UniqueIdentifier>{3fdecfa1-498b-45db-a8f2-02e4bfed756d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -375,6 +384,15 @@
     </ClCompile>
     <ClCompile Include="Source\System\Component\MovementComponent.cpp">
       <Filter>Source\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Particle\Core\Particle.cpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Particle\Components\ParticleEffect.cpp">
+      <Filter>Source\DirectX11\System\Particle\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -648,6 +666,15 @@
     <ClInclude Include="Source\System\Component\MovementComponent.hpp">
       <Filter>Source\System\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Particle\Core\Particle.hpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Particle\Components\ParticleEffect.hpp">
+      <Filter>Source\DirectX11\System\Particle\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -708,6 +735,12 @@
     </FxCompile>
     <FxCompile Include="Source\Shader\VertexShader\VS_Shadow.hlsl">
       <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\IVS_Particle.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_Particle.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

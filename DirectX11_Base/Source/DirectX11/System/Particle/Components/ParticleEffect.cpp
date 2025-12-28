@@ -1,0 +1,178 @@
+/*+===================================================================
+	File: ParticleEffect.cpp
+	Summary: （このファイルで何をするか記載する）
+	Author: AT13C192 01 青木雄一郎
+	Date: 2025/12/28 Sun AM 11:22:17 初回作成
+===================================================================+*/
+
+// ==============================
+//	include
+// ==============================
+#include "ParticleEffect.hpp"
+#include "DirectX11/ResourceManager/TextureManager.hpp"
+#include "DirectX11/ResourceManager/ShaderManager.hpp"
+
+ParticleEffect::ParticleEffect()
+    : RenderComponent("ParticleEffect")
+    , m_Gravity(0.0f, -9.8f, 0.0f)
+    , m_pVS(nullptr), m_pPS(nullptr)
+{
+    MakeDefaultShader();
+}
+
+ParticleEffect::~ParticleEffect()
+{
+    m_Emitters.clear();
+}
+
+void ParticleEffect::Init() noexcept
+{
+    RenderComponent::Init();
+
+    // インスタンスバッファの初期化は Update で行う
+}
+
+void ParticleEffect::Update(_In_ float In_Tick) noexcept
+{
+    // 全エミッターの更新
+    for(auto &emitter : m_Emitters)
+    {
+        if(emitter)
+        {
+            // エミッターの位置をGameObjectの位置に同期
+            emitter->GetSettings().Position = m_pGameObject->GetPosition();
+            emitter->Update(In_Tick, m_Gravity);
+        }
+    }
+
+    // インスタンスバッファの更新
+    UpdateInstanceBuffer();
+}
+
+void ParticleEffect::Draw(_In_ RenderContext *In_RenderContext) noexcept
+{
+    if(m_InstanceDataArray.empty()) return;
+
+    auto &DX11 = DX11_Core::GetInstance();
+
+	// パーティクル用のレンダーステート設定
+	DX11.SetBlendMode(BlendMode::BLEND_ADD); // 加算合成
+	DX11.SetDepthTest(DepthState::DEPTH_ENABLE_TEST); // 書き込み無効
+	DX11.SetCullingMode(D3D11_CULL_NONE); // カリング無効
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // シェーダー設定
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    DirectX::XMFLOAT4X4 mat[3];
+    mat[0] = DirectX::XMFLOAT4X4(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    ); // 単位行列
+    mat[1] = In_RenderContext->GetView(false);
+    mat[2] = In_RenderContext->GetProj(false);
+
+    m_pVS->WriteBuffer(0, mat);
+    m_pVS->SetInstanceSRV(m_InstanceBuffer->GetInstanceSRV());
+    m_pVS->Bind();
+
+    if(m_Texture)
+        m_pPS->SetTexture(0, m_Texture.get());
+    m_pPS->Bind();
+
+    // 描画
+    m_InstanceBuffer->Draw();
+
+	// レンダーステートを元に戻す
+    DX11.SetBlendMode(BlendMode::BLEND_ALPHA);
+	DX11.SetDepthTest(DepthState::DEPTH_ENABLE_WRITE_TEST);
+	DX11.SetCullingMode(D3D11_CULL_BACK);
+}
+
+ParticleEmitter *ParticleEffect::AddEmitter(_In_ const EmitterSettings &In_Settings)
+{
+    auto emitter = std::make_unique<ParticleEmitter>();
+    emitter->Init(In_Settings);
+    m_Emitters.push_back(std::move(emitter));
+    return m_Emitters.back().get();
+}
+
+void ParticleEffect::Play()
+{
+    for(auto &emitter : m_Emitters)
+    {
+        if(emitter) emitter->Play();
+    }
+}
+
+void ParticleEffect::Stop()
+{
+    for(auto &emitter : m_Emitters)
+    {
+        if(emitter) emitter->Stop();
+    }
+}
+
+void ParticleEffect::SetTexture(_In_ const FilePath &In_Path)
+{
+	m_Texture = TextureManager::GetInstance().LoadTexture(In_Path);
+}
+
+void ParticleEffect::UpdateInstanceBuffer()
+{
+    m_InstanceDataArray.clear();
+
+    // 全エミッターから全パーティクルを収集
+    for(auto &emitter : m_Emitters)
+    {
+        if(!emitter) continue;
+
+        const auto &particles = emitter->GetParticles();
+        for(const auto &particle : particles)
+        {
+            if(!particle.m_IsActive) continue;
+
+            InstanceData data;
+
+            // ワールド行列作成 (ビルボード化)
+            DirectX::XMMATRIX S = DirectX::XMMatrixScaling(particle.m_Size.x, particle.m_Size.y, 1.0f);
+            DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(
+                particle.m_Position.x,
+                particle.m_Position.y,
+                particle.m_Position.z
+            );
+
+            // ビルボード (カメラ方向を向く)
+            // 簡易版:  Y軸ビルボード
+            DirectX::XMMATRIX World = S * T;
+            DirectX::XMStoreFloat4x4(&data.World, DirectX::XMMatrixTranspose(World));
+
+            data.Color = particle.m_Color;
+
+            m_InstanceDataArray.push_back(data);
+        }
+    }
+
+    // インスタンスバッファの作成/更新
+    if(!m_InstanceDataArray.empty())
+    {
+        // 既存のメッシュバッファから頂点データを取得するか、
+        // ビルボード用の板ポリゴンを作成
+
+        // ここでは簡略化のため省略
+        // 実際には InstancedMeshBuffer を再作成する必要がある
+    }
+}
+
+void ParticleEffect::MakeDefaultShader()
+{
+    // インスタンシング用シェーダーを使用
+    m_defVS = std::make_shared<InstancedVertexShader>();
+    m_defVS->Load("Assets/Shader/IVS_Particle.cso");
+    m_pVS = reinterpret_cast<InstancedVertexShader *>(m_defVS.get());
+
+    m_defPS = std::make_shared<PixelShader>();
+    m_defPS->Load("Assets/Shader/PS_Particle.cso");
+    m_pPS = m_defPS.get();
+}
