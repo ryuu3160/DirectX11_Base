@@ -9,7 +9,7 @@
 #include "Random.hpp"
 
 Random::Random()
-	: m_mt(std::random_device{}()), m_dist(0, RAND_MAX)
+	: m_mt(std::random_device{}()), m_DistFloat(0, RAND_MAX)
 {
 }
 
@@ -22,19 +22,19 @@ void Random::SetSeedTime()
 	m_mt.seed(static_cast<unsigned int>(time(NULL)));
 }
 
-void Random::SetSeed(unsigned int nSeed)
+void Random::SetSeed(_In_ unsigned int In_Seed)
 {
-	m_mt.seed(nSeed);
+	m_mt.seed(In_Seed);
 }
 
-int Random::GetInteger(int nMax, bool bIncludeZero)
+int Random::GetInteger(_In_ int In_Max, _In_ bool In_IncludeZero)
 {
 	int nInZero;
 
-	if (bIncludeZero)
+	if (In_IncludeZero)
 	{
 		nInZero = 0;
-		nMax++;
+		In_Max++;
 	}
 	else
 	{
@@ -42,19 +42,19 @@ int Random::GetInteger(int nMax, bool bIncludeZero)
 	}
 
 	//乱数を最大値で割った余りにnInZeroを足す
-	return static_cast<int>(m_dist(m_mt)) % nMax + nInZero;
+	return m_DistInt(m_mt) % In_Max + nInZero;
 }
 
-int Random::GetIntegerRange(int nMax, int nMin)
+int Random::GetIntegerRange(_In_ int In_Min, _In_ int In_Max)
 {
-	nMax++;
-	nMax -= nMin;
+	In_Max++;
+	In_Max -= In_Min;
 
 	//最大値を+1したものから最小値を引き、それで乱数を割った余りに最小値を足す
-	return static_cast<int>(m_dist(m_mt)) % nMax + nMin;
+	return m_DistInt(m_mt) % In_Max + In_Min;
 }
 
-float Random::GetDecimal(int nMax, int nPointPos, bool bIncludeZero)
+float Random::GetDecimal(_In_ int In_Max, _In_ int In_PointPos, _In_ bool In_IncludeZero)
 {
 	float fRandom;
 	int nSetPointPos;
@@ -62,11 +62,11 @@ float Random::GetDecimal(int nMax, int nPointPos, bool bIncludeZero)
 	int nInZero;
 
 	//10を、表示したい少数の位だけ累乗した数値
-	nSetPointPos = static_cast<int>(pow(10, nPointPos));
+	nSetPointPos = static_cast<int>(pow(10, In_PointPos));
 	//最大値の桁を増やす
-	nVal = nMax * nSetPointPos;
+	nVal = In_Max * nSetPointPos;
 
-	if (bIncludeZero)
+	if (In_IncludeZero)
 	{
 		nInZero = 0;
 		nVal++;
@@ -77,13 +77,13 @@ float Random::GetDecimal(int nMax, int nPointPos, bool bIncludeZero)
 	}
 
 	//乱数を最大値で割った余りにnInZeroを足して、小数点をずらす
-	fRandom = static_cast<float>(static_cast<int>(m_dist(m_mt)) % nVal + nInZero);
+	fRandom = static_cast<float>(static_cast<int>(m_DistFloat(m_mt)) % nVal + nInZero);
 	fRandom /= nSetPointPos;
 
 	return fRandom;
 }
 
-float Random::GetDecimalRange(float fMax, float fMin, int nPointPos)
+float Random::GetDecimalRange(_In_ float In_Min, _In_ float In_Max, _In_ int In_PointPos)
 {
 	float fRandom;
 	int nSetPointPos;
@@ -91,11 +91,11 @@ float Random::GetDecimalRange(float fMax, float fMin, int nPointPos)
 	int nMinVal;
 
 	//10を、表示したい少数の位だけ累乗した数値
-	nSetPointPos = static_cast<int>(pow(10, nPointPos));
+	nSetPointPos = static_cast<int>(pow(10, In_PointPos));
 
 	//最大値、最小値の桁を増やす
-	nMaxVal = static_cast<int>(fMax * nSetPointPos);
-	nMinVal = static_cast<int>(fMin * nSetPointPos);
+	nMaxVal = static_cast<int>(In_Max * nSetPointPos);
+	nMinVal = static_cast<int>(In_Min * nSetPointPos);
 
 	//最大値を+1したところから、最小値を引く
 	nMaxVal++;
@@ -105,17 +105,17 @@ float Random::GetDecimalRange(float fMax, float fMin, int nPointPos)
 	if (nMaxVal > RAND_MAX)
 	{
 		std::uniform_real_distribution<float>::param_type SetParam(0, static_cast<float>(nMaxVal));
-		m_dist.param(SetParam);
+		m_DistFloat.param(SetParam);
 	}
 
 	//乱数を最大値から最小値を引いた値で割った余りに最小値を足して、小数点の位置をずらす
-	auto param = m_dist.param(); // 現在の乱数の最大値を保存
+	auto param = m_DistFloat.param(); // 現在の乱数の最大値を保存
 
-	fRandom = static_cast<float>(static_cast<int>(m_dist(m_mt)) % nMaxVal + nMinVal);
+	fRandom = static_cast<float>(static_cast<int>(m_DistFloat(m_mt)) % nMaxVal + nMinVal);
 	fRandom /= nSetPointPos;
 
 	// 生成できる乱数の最大値を元に戻す
-	m_dist.param(param);
+	m_DistFloat.param(param);
 
 	return fRandom;
 }
