@@ -1,17 +1,4 @@
-#ObjNum : 9
-RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,InputSystem:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]-4.199998, 0, -2.1000006
-    Scale:[3]1, 1, 1
-    Quat:[4]-0.017452398, 0, 0, 0.9998477
-    Euler:[3]-2, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Assets/Model/F15E.fbx
-  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 1, 0
-  InputSystem:[0]{}:
-
+#ObjNum : 10
 RootModel0[1]{Transform:object,ModelRenderer:object,SphereCollider:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]0, 1, 0
@@ -24,6 +11,29 @@ RootModel0[1]{Transform:object,ModelRenderer:object,SphereCollider:object}:
     IsTrigger:true
     LocalCenter:[3]0, 0, 0
     Radius:1
+
+RootModel1[1]{Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object,PlayerController:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]-4.199998, 0, -2.1000006
+    Scale:[3]1, 1, 1
+    Quat:[4]-0.017452398, 0, 0, 0.9998477
+    Euler:[3]-2, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Model/F15E.fbx
+  CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 1, 0
+  MovementComponent:[0]{}:
+  PlayerController:[0]{}:
+
+GridObject[1]{Transform:object,LineRenderer:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  LineRenderer:[1]{AssetPath:string}:
+    AssetPath:
 
 EditorCamera[1]{Transform:object,Camera:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -40,31 +50,6 @@ EditorCamera[1]{Transform:object,Camera:object}:
     Aspect:1.77778
     Focus:13.1438
     IsShow:false
-
-GameCamera[1]{Transform:object,Camera:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 5, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]-8.4293696e-08, 0.70710665, -0.7071067, -8.429369e-08
-    Euler:[3]0, 0, 0
-  Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
-    Is3D:true
-    Fovy:60
-    Width:20
-    Near:0.2
-    Far:1000
-    Aspect:1.77778
-    Focus:1
-    IsShow:false
-
-GridObject[1]{Transform:object,LineRenderer:object}:
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  LineRenderer:[1]{AssetPath:string}:
-    AssetPath:
 
 RootModel0Child(RootModel0_Child)[1]{Transform:object,ModelRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -93,6 +78,22 @@ PatternScale[1]{Transform:object,ModelRenderer:object}:
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Assets/Model/plane/plane.fbx
 
+GameCamera[1]{Transform:object,Camera:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, 5, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]-8.4293696e-08, 0.70710665, -0.7071067, -8.429369e-08
+    Euler:[3]0, 0, 0
+  Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
+    Is3D:true
+    Fovy:60
+    Width:20
+    Near:0.2
+    Far:1000
+    Aspect:1.77778
+    Focus:1
+    IsShow:false
+
 RTSprite[1]{Transform:object,RTSpriteRenderer:object}:
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]5, 2, 0
@@ -101,4 +102,13 @@ RTSprite[1]{Transform:object,RTSpriteRenderer:object}:
     Euler:[3]0, 0, 0
   RTSpriteRenderer:[1]{AssetPath:string}:
     AssetPath:
+
+TestSprite[1]{Transform:object,SpriteRenderer:object}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]3.1875, -1.3377779, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  SpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:Assets/Texture/TestTexture.png
 
