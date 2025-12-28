@@ -7,12 +7,6 @@
 	(C) 2024 ryuu3160. All rights reserved.
 ===================================================================+*/
 #include "Random.hpp"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
-#include <stdarg.h>
-#include <string>
 
 Random::Random()
 	: m_mt(std::random_device{}()), m_dist(0, RAND_MAX)
