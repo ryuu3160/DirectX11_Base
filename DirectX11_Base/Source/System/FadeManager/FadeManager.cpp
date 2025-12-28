@@ -11,20 +11,23 @@
 #include "FadeManager.hpp"
 #include "DirectX11/Renderer/SpriteRenderer.hpp"
 #include "DirectX11/ResourceManager/ShaderManager.hpp"
+#include "System/Scene/SceneManager.hpp"
 
-void FadeManager::Update(_In_ float In_Tick) noexcept
+void FadeManager::Update(_In_ float In_DeltaTime) noexcept
 {
 	for (auto &itr : m_mapFadeObj)
 	{
+		itr.second.pFadeObj->ExecuteUpdate(0.0f);
+
 		if (itr.second.IsStartFadeIn)
 		{
 			// フェードイン処理
-			UpdateFadeIn(itr.second, In_Tick);
+			UpdateFadeIn(itr.second, In_DeltaTime);
 		}
 		else if (itr.second.IsStartFadeOut)
 		{
 			// フェードアウト処理
-			UpdateFadeOut(itr.second, In_Tick);
+			UpdateFadeOut(itr.second, In_DeltaTime);
 		}
 	}
 
@@ -48,7 +51,7 @@ void FadeManager::Update(_In_ float In_Tick) noexcept
 			// フェード用オブジェクトの破棄
 			if (itr->second.pFadeObj)
 			{
-				delete itr->second.pFadeObj;
+				itr->second.pFadeObj->DestroySelf();
 				itr->second.pFadeObj = nullptr;
 			}
 			// マップから削除
@@ -152,7 +155,7 @@ void FadeManager::DeleteFade(_In_ std::string_view In_Name) noexcept
 		// フェード用オブジェクトの破棄
 		if (itr->second.pFadeObj)
 		{
-			delete itr->second.pFadeObj;
+			itr->second.pFadeObj->DestroySelf();
 			itr->second.pFadeObj = nullptr;
 		}
 		// マップから削除
@@ -192,18 +195,10 @@ FadeManager::FadeManager()
 }
 FadeManager::~FadeManager()
 {
-	for (auto &pair : m_mapFadeObj)
-	{
-		if (pair.second.pFadeObj)
-		{
-			delete pair.second.pFadeObj;
-			pair.second.pFadeObj = nullptr;
-		}
-	}
 	m_mapFadeObj.clear();
 }
 
-void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept
+void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_DeltaTime) noexcept
 {
 	float alpha;
 	if(InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
@@ -220,10 +215,10 @@ void FadeManager::UpdateFadeIn(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_T
 	else
 		col.w = alpha;
 	cmp->SetColor(col);
-	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_Tick);
+	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_DeltaTime);
 }
 
-void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_Tick) noexcept
+void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_DeltaTime) noexcept
 {
 	float alpha;
 	if (InOut_FadeInfo.EaseType >= Ease::EasingType::MAX)
@@ -239,12 +234,15 @@ void FadeManager::UpdateFadeOut(_Inout_ FadeInfo &InOut_FadeInfo, _In_ float In_
 	else
 		col.w = alpha;
 	cmp->SetColor(col);
-	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_Tick);
+	InOut_FadeInfo.pFadeObj->ExecuteUpdate(In_DeltaTime);
 }
 
 GameObject *FadeManager::CreateFadeObj(_In_ std::string_view In_Name, _In_ const FadeInfo &In_FadeInfo)
 {
-	GameObject *pWork = new GameObject(std::string(In_Name));
+	auto Scene = SceneManager::GetInstance().GetCurrentScene();
+
+	GameObject *pWork = Scene->CreateObject_NotAddHierarchy<GameObject>(std::string(In_Name));
+
 	auto cmp = pWork->AddComponent<SpriteRenderer>();
 	cmp->SetLayerGroup(LayerGroup_Fade);
 	cmp->SetAssetPath(In_FadeInfo.TexturePath.data());
