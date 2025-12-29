@@ -40,6 +40,8 @@ public:
 	void DrawBox(_In_ DirectX::XMFLOAT4X4 In_World) noexcept;
 	void DrawSphere(_In_ DirectX::XMFLOAT4X4 In_World) noexcept;
 
+	void UpdateMeshBuffer() noexcept { m_IsUpdate = true; }
+
 private:
 	void Init();
 	void MakeVertexShader() noexcept;

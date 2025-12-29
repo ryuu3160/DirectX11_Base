@@ -67,6 +67,11 @@ void Gizmos::AddLine(_In_ GameObject *In_Obj, _In_ DirectX::XMFLOAT3 In_Start, _
 }
 void Gizmos::DrawLines(_In_ RenderContext *In_RenderContext) noexcept
 {
+	if(m_Data.lineVtxs.empty())
+	{
+		return;
+	}
+
 	// 定数バッファに渡す行列の情報を作成
 	DirectX::XMFLOAT4X4 mat[3];
 	// カメラのビュー/プロジェクション行列を設定
