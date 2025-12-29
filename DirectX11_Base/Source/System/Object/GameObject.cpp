@@ -406,6 +406,9 @@ void GameObject::DataWrite(_In_ cpon *In_pCpon)
 
 	auto block = m_Data->CreateDataBlock();
 
+	block->SetValue("IsActive", m_IsActive);
+
+	// コンポーネントのデータ保存処理
 	for (auto &itr : m_Components)
 	{
 		itr->DataWrite(block);
@@ -419,6 +422,9 @@ void GameObject::DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj)
 	if(!In_pCponObj || In_pCponObj->IsEmpty())
 		return;
 
+	m_IsActive = (*In_pCponObj)[0]->GetValue<bool>("IsActive");
+
+	// 保存されている情報を設定
 	*m_Data = *In_pCponObj;
 }
 
