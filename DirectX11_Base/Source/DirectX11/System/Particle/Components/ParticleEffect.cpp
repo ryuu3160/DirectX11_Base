@@ -16,6 +16,7 @@ ParticleEffect::ParticleEffect()
     : RenderComponent("ParticleEffect")
     , m_Gravity(0.0f, -9.8f, 0.0f)
     , m_pVS(nullptr), m_pPS(nullptr)
+	, m_bMeshInitialized(false)
 {
     MakeDefaultShader();
 }
@@ -73,8 +74,8 @@ void ParticleEffect::Draw(_In_ RenderContext *In_RenderContext) noexcept
         0, 0, 1, 0,
         0, 0, 0, 1
     ); // ’PˆÊs—ñ
-    mat[1] = In_RenderContext->GetView(false);
-    mat[2] = In_RenderContext->GetProj(false);
+    mat[1] = In_RenderContext->GetView();
+    mat[2] = In_RenderContext->GetProj();
 
     m_pVS->WriteBuffer(0, mat);
     m_pVS->SetInstanceSRV(m_InstanceBuffer->GetInstanceSRV());

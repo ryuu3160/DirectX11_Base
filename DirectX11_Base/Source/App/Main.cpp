@@ -48,6 +48,7 @@ HRESULT Main::Init()
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
+	CameraManager::GetInstance();
 	SceneManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();
