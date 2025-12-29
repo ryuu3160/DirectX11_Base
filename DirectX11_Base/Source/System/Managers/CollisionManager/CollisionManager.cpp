@@ -106,9 +106,13 @@ void CollisionManager::CheckAllCollisions() noexcept
 	m_ColliderPairList.merge(ColPairs);
 
 	// コライダー同士の当たり判定をチェック
+	bool IsActive = false;
 	for(auto itr = m_ColliderPairList.begin(); itr != m_ColliderPairList.end();)
 	{
-		if(itr->first.pColliderA->CheckCollision(itr->first.pColliderB))
+		// コライダーが有効かチェック
+		IsActive = itr->first.pColliderA->IsActive() && itr->first.pColliderB->IsActive();
+
+		if(itr->first.pColliderA->CheckCollision(itr->first.pColliderB) && IsActive)
 		{
 			auto *pColliderA = itr->first.pColliderA;
 			auto *pColliderB = itr->first.pColliderB;
