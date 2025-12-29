@@ -137,7 +137,7 @@ namespace Util
     /// <param name="[In_Str]">解析対象の入力文字列(std::string_view)</param>
     /// <returns>解析結果の値(POD型)、解析に失敗した場合は初期化されたTの値が返されます</returns>
     template<TypePOD T>
-    T FromString(_In_ const std::string_view &In_Str) noexcept
+    T FromString(_In_ std::string_view In_Str) noexcept
     {
         T result{};
         std::from_chars(In_Str.data(), In_Str.data() + In_Str.size(), result);
@@ -156,7 +156,7 @@ namespace Util
 	/// </summary>
     /// <param name="[In_UTF8Str]">変換するUTF-8文字列</param>
 	/// <returns>>ワイド文字列に変換したstd::wstring型の文字列</returns>
-	std::wstring UTF8ToWide(_In_ const std::string_view In_UTF8Str);
+	std::wstring UTF8ToWide(_In_ std::string_view In_UTF8Str);
 
 	/// <summary>
 	/// UTF-16文字列をUTF-8文字列に変換します
@@ -170,14 +170,14 @@ namespace Util
 	/// </summary>
 	/// <param name="[In_UTF8Str]">変換するUTF-8文字列</param>
 	/// <returns>>UTF16に変換したstd::u16string型の文字列</returns>
-	std::u16string UTF8ToUTF16(_In_ const std::string_view In_UTF8Str);
+	std::u16string UTF8ToUTF16(_In_ std::string_view In_UTF8Str);
 
 	/// <summary>
 	/// Shift-JIS文字列をUTF-8文字列に変換します
 	/// </summary>
 	/// <param name="[In_ShiftJISStr]">変換するShift-JIS文字列</param>
 	/// <returns>>UTF8に変換したstd::string型の文字列</returns>
-	std::string ShiftJISToUTF8(_In_ const std::string_view In_ShiftJISStr);
+	std::string ShiftJISToUTF8(_In_ std::string_view In_ShiftJISStr);
 }
 
 using namespace Util; // Util名前空間をグローバルに展開

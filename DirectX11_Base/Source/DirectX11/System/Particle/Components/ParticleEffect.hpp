@@ -12,6 +12,7 @@
 #include "DirectX11/Renderer/RenderComponent.hpp"
 #include "DirectX11/System/Particle/Core/ParticleEmitter.hpp"
 #include "DirectX11/Resource/Meshes/InstancedMeshBuffer.hpp"
+#include "DirectX11/Resource/Meshes/InstancedMesh.hpp"
 
 /// <summary>
 /// ParticleEffectクラス
@@ -63,20 +64,38 @@ private:
     /// </summary>
     void MakeDefaultShader();
 
+    /// <summary>
+    /// 板ポリゴンメッシュの作成
+    /// </summary>
+    void CreateQuadMesh();
+
 private:
-    std::vector<std::unique_ptr<ParticleEmitter>> m_Emitters;
-    std::shared_ptr<InstancedMeshBuffer> m_InstanceBuffer;
-    std::shared_ptr<Texture> m_Texture;
+    /// <summary>
+    /// 板ポリゴン用の頂点構造体
+    /// </summary>
+    struct ParticleVertex
+    {
+        DirectX::XMFLOAT3 Position;
+        DirectX::XMFLOAT2 TexCoord;
+    };
 
-    DirectX::XMFLOAT3 m_Gravity;
-
-    InstancedVertexShader *m_pVS;
-    PixelShader *m_pPS;
-
+    /// <summary>
+    /// インスタンスデータ構造体
+    /// </summary>
     struct InstanceData
     {
         DirectX::XMFLOAT4X4 World;
         DirectX::XMFLOAT4 Color;
     };
+
+    std::shared_ptr<InstancedMeshBuffer> m_InstanceBuffer;
+    std::shared_ptr<Texture> m_Texture;
+    std::vector<std::unique_ptr<ParticleEmitter>> m_Emitters;
     std::vector<InstanceData> m_InstanceDataArray;
+
+    DirectX::XMFLOAT3 m_Gravity;
+    bool m_bMeshInitialized; // メッシュが初期化済みか
+
+    InstancedVertexShader *m_pVS;
+    PixelShader *m_pPS;
 };

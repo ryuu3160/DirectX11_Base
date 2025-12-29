@@ -29,7 +29,11 @@ void ParticleEffect::Init() noexcept
 {
     RenderComponent::Init();
 
-    // インスタンスバッファの初期化は Update で行う
+    if(!m_bMeshInitialized)
+    {
+        CreateQuadMesh();
+        m_bMeshInitialized = true;
+    }
 }
 
 void ParticleEffect::Update(_In_ float In_Tick) noexcept
@@ -51,7 +55,8 @@ void ParticleEffect::Update(_In_ float In_Tick) noexcept
 
 void ParticleEffect::Draw(_In_ RenderContext *In_RenderContext) noexcept
 {
-    if(m_InstanceDataArray.empty()) return;
+    if(m_InstanceDataArray.empty() || !m_InstanceBuffer)
+        return;
 
     auto &DX11 = DX11_Core::GetInstance();
 
@@ -60,9 +65,7 @@ void ParticleEffect::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	DX11.SetDepthTest(DepthState::DEPTH_ENABLE_TEST); // 書き込み無効
 	DX11.SetCullingMode(D3D11_CULL_NONE); // カリング無効
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // シェーダー設定
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	// シェーダー設定
     DirectX::XMFLOAT4X4 mat[3];
     mat[0] = DirectX::XMFLOAT4X4(
         1, 0, 0, 0,
@@ -154,14 +157,43 @@ void ParticleEffect::UpdateInstanceBuffer()
         }
     }
 
-    // インスタンスバッファの作成/更新
-    if(!m_InstanceDataArray.empty())
-    {
-        // 既存のメッシュバッファから頂点データを取得するか、
-        // ビルボード用の板ポリゴンを作成
+    if(m_InstanceDataArray.empty())
+        return;
 
-        // ここでは簡略化のため省略
-        // 実際には InstancedMeshBuffer を再作成する必要がある
+    DirectX::XMFLOAT3 cameraPos = CameraManager::GetInstance().GetMainCameraObj()->GetPosition();
+
+    std::sort(m_InstanceDataArray.begin(), m_InstanceDataArray.end(),
+        [&cameraPos](const InstanceData &a, const InstanceData &b)
+        {
+            // ワールド行列から位置を抽出
+            DirectX::XMFLOAT3 posA(a.World._41, a.World._42, a.World._43);
+            DirectX::XMFLOAT3 posB(b.World._41, b.World._42, b.World._43);
+
+            // カメラからの距離を計算
+            float distA = DirectX::XMVectorGetX(DirectX::XMVector3Length(
+                DirectX::XMVectorSubtract(
+                    DirectX::XMLoadFloat3(&posA),
+                    DirectX::XMLoadFloat3(&cameraPos)
+                )
+            ));
+            float distB = DirectX::XMVectorGetX(DirectX::XMVector3Length(
+                DirectX::XMVectorSubtract(
+                    DirectX::XMLoadFloat3(&posB),
+                    DirectX::XMLoadFloat3(&cameraPos)
+                )
+            ));
+
+            return distA > distB; // 遠い順
+        });
+
+    // インスタンスバッファの作成/更新
+    if(m_InstanceBuffer)
+    {
+        m_InstanceBuffer->UpdateInstanceBuffer(
+            m_InstanceDataArray.data(),
+            sizeof(InstanceData),
+            static_cast<UINT>(m_InstanceDataArray.size())
+        );
     }
 }
 
@@ -175,4 +207,38 @@ void ParticleEffect::MakeDefaultShader()
     m_defPS = std::make_shared<PixelShader>();
     m_defPS->Load("Assets/Shader/PS_Particle.cso");
     m_pPS = m_defPS.get();
+}
+
+void ParticleEffect::CreateQuadMesh()
+{
+    // 頂点データの作成
+    ParticleVertex vertices[] = {
+        // Position              TexCoord
+        { { -0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f } }, // 左上
+        { {  0.5f,  0.5f, 0.0f }, { 1.0f, 0.0f } }, // 右上
+        { { -0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f } }, // 左下
+        { {  0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f } }, // 右下
+    };
+
+	// インデックスデータの作成
+    WORD indices[] = {
+        0, 1, 2, // 1つ目の三角形
+        2, 1, 3, // 2つ目の三角形
+    };
+
+	// Descriptionの作成
+    InstancedMeshBuffer::InstancingDesc desc = {};
+    desc.pVtx = vertices;
+    desc.vtxSize = sizeof(ParticleVertex);
+    desc.vtxCount = 4;
+    desc.pIdx = indices;
+    desc.idxSize = sizeof(WORD);
+    desc.idxCount = 6;
+    desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    desc.pInstance = nullptr; // 後で更新
+    desc.instanceSize = sizeof(InstanceData);
+    desc.instanceCount = 0;
+
+	// InstancedMeshBufferの作成
+    m_InstanceBuffer = std::make_shared<InstancedMeshBuffer>(desc);
 }

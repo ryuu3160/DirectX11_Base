@@ -95,6 +95,7 @@ using Microsoft::WRL::ComPtr;
 #include "Defines.hpp"
 #include "System/Utility/Utility.hpp"
 #include "DirectX11/DX11_Core.hpp"
+#include "System/Managers/CameraManager/CameraManager.hpp"
 #include "System/Managers/DebugManager/DebugManager.hpp"
 #include "DirectX11/ResourceManager/RenderTargetManager.hpp"
 #include "System/Object/GameObject.hpp"

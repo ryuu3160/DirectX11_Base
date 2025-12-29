@@ -25,7 +25,7 @@ void ShaderManager::SetupShaders(_In_ const std::vector<std::string> &In_FileNam
 		future.get();
 }
 
-void ShaderManager::SetupShader(_In_ const std::string_view In_FileName) noexcept
+void ShaderManager::SetupShader(_In_ std::string_view In_FileName) noexcept
 {
 	Shader *shader = nullptr;
 	// シェーダーの種類を判定

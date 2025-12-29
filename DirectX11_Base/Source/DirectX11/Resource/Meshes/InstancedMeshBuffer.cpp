@@ -89,6 +89,66 @@ HRESULT InstancedMeshBuffer::Write(_In_ void *In_pVtx) noexcept
 	return E_NOTIMPL;
 }
 
+HRESULT InstancedMeshBuffer::UpdateInstanceBuffer(_In_ const void *In_pInstanceData, _In_ UINT In_InstanceSize, _In_ UINT In_InstanceCount) noexcept
+{
+	if(!In_pInstanceData || In_InstanceCount == 0)
+		return E_INVALIDARG;
+
+	auto &DX11 = DX11_Core::GetInstance();
+	ID3D11Device *pDevice = DX11.GetDevice();
+	ID3D11DeviceContext *pContext = DX11.GetDeviceContext();
+
+	// インスタンス数またはサイズが変わった場合はバッファを再作成
+	if(m_Desc.instanceCount != In_InstanceCount ||
+		m_Desc.instanceSize != In_InstanceSize)
+	{
+		// 既存のSRVとバッファを解放
+		m_pInstanceSRV = nullptr;
+		m_pInstanceBuffer = nullptr;
+
+		// 新しいバッファを作成
+		HRESULT hr = CreateInstanceBuffer(
+			In_pInstanceData,
+			In_InstanceSize,
+			In_InstanceCount,
+			true // 動的更新可能
+		);
+		if(FAILED(hr))
+			return hr;
+
+		hr = CreateInstanceSRV(In_InstanceCount);
+		if(FAILED(hr))
+			return hr;
+
+		m_Desc.instanceCount = In_InstanceCount;
+		m_Desc.instanceSize = In_InstanceSize;
+	}
+	else
+	{
+		// インスタンス数とサイズが同じ場合は、既存のバッファを更新
+		D3D11_MAPPED_SUBRESOURCE mapped;
+		HRESULT hr = pContext->Map(
+			m_pInstanceBuffer.Get(),
+			0,
+			D3D11_MAP_WRITE_DISCARD,
+			0,
+			&mapped
+		);
+
+		if(SUCCEEDED(hr))
+		{
+			memcpy(mapped.pData, In_pInstanceData, In_InstanceSize * In_InstanceCount);
+			pContext->Unmap(m_pInstanceBuffer.Get(), 0);
+		}
+		else
+		{
+			return hr;
+		}
+	}
+
+	return S_OK;
+}
+
 HRESULT InstancedMeshBuffer::CreateVertexBuffer(_In_ const void *In_pVtx, _In_ const UINT &In_Size, _In_ const UINT &In_Count, _In_ const bool &In_IsWrite) noexcept
 {
 	//--- 作成するバッファの情報

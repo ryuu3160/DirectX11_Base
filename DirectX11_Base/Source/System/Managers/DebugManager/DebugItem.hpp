@@ -83,11 +83,11 @@ public:
 	DirectX::XMFLOAT4 GetColor();
 	std::string GetStr();
 
-	DebugItem &operator[](_In_ const std::string_view In_Name);
+	DebugItem &operator[](_In_ std::string_view In_Name);
 
 	// リストで使用する関数
-	void AddListItem(_In_ const std::string_view In_Name);
-	void RemoveListItem(_In_ const std::string_view In_Name);
+	void AddListItem(_In_ std::string_view In_Name);
+	void RemoveListItem(_In_ std::string_view In_Name);
 
 	virtual void DrawImGui() {};
 
@@ -252,10 +252,10 @@ public:
 	// グループで使用する関数
 	template <typename T, typename ...Args>
 	requires std::derived_from<T, DebugItem>
-	T *CreateGroupItem(_In_ const std::string_view In_Name, _In_ Args&& ...args);
+	T *CreateGroupItem(_In_ std::string_view In_Name, _In_ Args&& ...args);
 
 private:
-	void DataRead(_In_ const std::string_view In_FullPath, _In_ DebugItem *In_pItem);
+	void DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem);
 private:
 	std::vector<DebugItem *> m_Items;
 };
@@ -292,15 +292,15 @@ public:
 	~ItemConsole();
 	void DrawImGui() override;
 
-	void AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+	void AddLevel(_In_ std::string_view In_Name, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	void AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f), _In_ const std::string_view In_Level = "Default");
+	void AddOutput(_In_ std::string_view In_Text, _In_ const ImVec4 &In_Color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f), _In_ std::string_view In_Level = "Default");
 
 	void SetShowClearButton(_In_ bool In_IsShow) { m_IsShowClearButton = In_IsShow; }
 	void SetShowAutoScrollButton(_In_ bool In_IsShow) { m_IsShowAutoScrollButton = In_IsShow; }
 	void SetShowSerchBox(_In_ bool In_IsShow) { m_IsShowSerchBox = In_IsShow; }
 
-	void SetOutputFolderPath(_In_ const std::string_view In_FolderPath) { m_FolderPath = In_FolderPath.data(); }
+	void SetOutputFolderPath(_In_ std::string_view In_FolderPath) { m_FolderPath = In_FolderPath.data(); }
 
 private:
 	struct OutputData
@@ -495,7 +495,7 @@ public:
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, DebugItem>
-inline T *ItemGroup::CreateGroupItem(const std::string_view In_Name, Args && ...args)
+inline T *ItemGroup::CreateGroupItem(std::string_view In_Name, Args && ...args)
 {
 	if (m_Kind != Kind::Group)
 		return nullptr;

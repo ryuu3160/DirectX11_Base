@@ -82,7 +82,7 @@ public:
 	/// </summary>
 	/// <param name="[In_SpriteName]">スプライト名</param>
 	/// <returns>スプライトへのポインタ</returns>
-	GameObject *GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept;
+	GameObject *GetSprite(_In_ std::string_view In_SpriteName) const noexcept;
 
 	/// <summary>
 	/// スプライトを作成し、操作中のディレクトリに追加します。
@@ -94,7 +94,7 @@ public:
 	/// <param name="[In_Layer]">レイヤー</param>
 	/// <param name="[In_Scale]">スケール</param>
 	/// <returns>追加されたスプライトへのポインタ。</returns>
-	GameObject* CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath,_In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard = false,_In_ const int &In_Layer = 0, _In_ const float &In_Scale = 1.0f) noexcept;
+	GameObject* CreateSprite(_In_ std::string_view In_SpriteName, _In_ const FilePath &In_FilePath,_In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard = false,_In_ const int &In_Layer = 0, _In_ const float &In_Scale = 1.0f) noexcept;
 
 	/// <summary>
 	/// スプライト名が指定されたレンダーモードで競合しているかどうかを判定します。
@@ -102,13 +102,13 @@ public:
 	/// <param name="[In_SpriteName]">確認するスプライト名。</param>
 	/// <param name="[In_Mode]">スプライト名の競合を確認するレンダーモード。</param>
 	/// <returns>スプライト名が競合している場合は true、そうでない場合は false を返します。</returns>
-	bool CheckConflictSpriteName(_In_ const std::string_view &In_SpriteName, _In_ const RenderMode &In_Mode) const noexcept;
+	bool CheckConflictSpriteName(_In_ std::string_view In_SpriteName, _In_ const RenderMode &In_Mode) const noexcept;
 
 	/// <summary>
 	/// 指定されたスプライト名のスプライトを削除します。
 	/// </summary>
 	/// <param name="[In_SpriteName]">削除するスプライトの名前を表す文字列ビュー。</param>
-	void DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept;
+	void DeleteSprite(_In_ std::string_view In_SpriteName) noexcept;
 
 	/// <summary>
 	/// 全てのスプライトオブジェクトを解放、削除する。
@@ -124,7 +124,7 @@ public:
 	/// 指定されたシーン名で新しいシーンを作成します。
 	/// </summary>
 	/// <param name="[In_SceneName]">作成するシーンの名前を表す文字列ビュー。</param>
-	void CreateScene(_In_ const std::string_view &In_SceneName) noexcept;
+	void CreateScene(_In_ std::string_view In_SceneName) noexcept;
 
 	/// <summary>
 	/// シーンを変更します。
@@ -136,7 +136,7 @@ public:
 	/// 指定されたシーン名にシーンを変更します。
 	/// </summary>
 	/// <param name="In_SceneName">変更先のシーン名を表す文字列ビュー。</param>
-	void ChangeScene(_In_ const std::string_view &In_SceneName) noexcept;
+	void ChangeScene(_In_ std::string_view In_SceneName) noexcept;
 
 	/// <summary>
 	/// 指定されたシーン名のシーンを削除します。

@@ -58,7 +58,7 @@ public:
 	/// <param name="[In_Key]">検索するキー。std::string_view 型で渡します</param>
 	/// <returns>キーに対応する値への参照 (T&)。存在しないキーでは未定義動作になり得ます</returns>
 	template<TypeValue T>
-	T &GetValue(_In_ const std::string_view In_Key)
+	T &GetValue(_In_ std::string_view In_Key)
 	{
 		auto itr = m_BlockData.find(std::string(In_Key));
 		if(itr != m_BlockData.end())
@@ -87,7 +87,7 @@ public:
 	}
 
 	template<TypeValue T>
-	T* GetValuePtr(_In_ const std::string_view In_Key)
+	T* GetValuePtr(_In_ std::string_view In_Key)
 	{
 		auto itr = m_BlockData.find(std::string(In_Key));
 		if(itr != m_BlockData.end())
@@ -115,7 +115,7 @@ public:
 	}
 
 	template<TypeValue T>
-	std::optional<std::reference_wrapper<std::vector<T>>> GetArray(_In_ const std::string_view In_Key)
+	std::optional<std::reference_wrapper<std::vector<T>>> GetArray(_In_ std::string_view In_Key)
 	{
 		auto itr = m_BlockData.find(std::string(In_Key));
 		if(itr != m_BlockData.end())
@@ -146,7 +146,7 @@ public:
 	}
 
 	template<TypeValue T>
-	std::vector<T> *GetArrayPtr(_In_ const std::string_view In_Key)
+	std::vector<T> *GetArrayPtr(_In_ std::string_view In_Key)
 	{
 		auto itr = m_BlockData.find(std::string(In_Key));
 		if(itr != m_BlockData.end())
@@ -179,10 +179,10 @@ public:
 	/// </summary>
 	/// <param name="[In_Key]">値を設定する対象のキー</param>
 	/// <param name="[In_Value]">設定する値</param>
-	void SetValue(_In_ const std::string_view In_Key, _In_ const DataItem &In_Value);
+	void SetValue(_In_ std::string_view In_Key, _In_ const DataItem &In_Value);
 
 	template<TypeValue T>
-	std::vector<T> *CreateArray(_In_ const std::string_view In_Key, _In_ T In_Value, _In_ const size_t In_Count = 1)
+	std::vector<T> *CreateArray(_In_ std::string_view In_Key, _In_ T In_Value, _In_ const size_t In_Count = 1)
 	{
 		std::vector<T> array;
 		array.resize(In_Count, In_Value);
@@ -196,7 +196,7 @@ public:
 	}
 
 	template<TypeValue T>
-	std::vector<T> *CreateArray(_In_ const std::string_view In_Key, _In_ const std::vector<T> &In_Values)
+	std::vector<T> *CreateArray(_In_ std::string_view In_Key, _In_ const std::vector<T> &In_Values)
 	{
 		std::vector<T> array;
 		for(const auto &value : In_Values)
@@ -218,14 +218,14 @@ public:
 	/// <param name="[In_Key]">配列に関連付けるキー</param>
 	/// <param name="[In_Values]">使用する配列データ</param>
 	/// <returns>作成されたArrayへのポインタ</returns>
-	Array *CreateArray(_In_ const std::string_view In_Key, _In_ const Array &In_Array);
+	Array *CreateArray(_In_ std::string_view In_Key, _In_ const Array &In_Array);
 
 	/// <summary>
 	/// 指定されたキーに基づいてObjectを作成して返します
 	/// </summary>
 	/// <param name="[In_Key]">オブジェクト名</param>
 	/// <returns>作成されたObjectへのシェアポインタ</returns>
-	Object CreateObject(_In_ const std::string_view In_Key);
+	Object CreateObject(_In_ std::string_view In_Key);
 
 	/// <summary>
 	/// 既存のオブジェクトをブロックデータに追加します
@@ -242,7 +242,7 @@ public:
 	/// <para>指定したキーに対応するObjectを値で返します</para>
 	/// <para>※キーが見つからない場合の挙動は実装依存です</para>
 	/// </returns>
-	Object GetObject(_In_ const std::string_view In_Key);
+	Object GetObject(_In_ std::string_view In_Key);
 
 	/// <summary>
 	/// ブロックデータが空であるかを確認します
@@ -288,7 +288,7 @@ private:
 		}
 	};
 
-	void CreateHints(_In_ const std::string_view In_TagName, _In_ DataItem In_Data);
+	void CreateHints(_In_ std::string_view In_TagName, _In_ DataItem In_Data);
 
 	template<TypeValue T>
 	bool VariantArrayCheckType(_In_ Array In_Array)
@@ -357,7 +357,7 @@ public:
 	/// オブジェクト名を設定します
 	/// </summary>
 	/// <param name="[In_ObjectName]">設定するオブジェクト名</param>
-	void SetObjectName(_In_ const std::string_view In_ObjectName) { m_ObjectName = std::string(In_ObjectName); }
+	void SetObjectName(_In_ std::string_view In_ObjectName) { m_ObjectName = std::string(In_ObjectName); }
 
 	/// <summary>
 	/// オブジェクトデータをクリアします
@@ -367,7 +367,7 @@ public:
 private:
 
 	std::string GetHints() const noexcept { return m_BlockHints; }
-	std::string SetHints(_In_ const std::string_view In_Hints) noexcept { return m_BlockHints = std::string(In_Hints); }
+	std::string SetHints(_In_ std::string_view In_Hints) noexcept { return m_BlockHints = std::string(In_Hints); }
 	void SetDataCount(_In_ const int In_Count) noexcept { m_DataCount = In_Count; }
 
 	void ResetBlockNestedLevel() noexcept;

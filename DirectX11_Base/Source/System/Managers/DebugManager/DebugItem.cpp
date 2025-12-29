@@ -122,7 +122,7 @@ std::string DebugItem::GetStr()
 	return "";
 }
 
-DebugItem &DebugItem::operator[](_In_ const std::string_view In_Name)
+DebugItem &DebugItem::operator[](_In_ std::string_view In_Name)
 {
 	if (m_Kind != Kind::Group)
 		return *s_NullItem;
@@ -145,7 +145,7 @@ DebugItem &DebugItem::operator[](_In_ const std::string_view In_Name)
 	return *s_NullItem;
 }
 
-void DebugItem::AddListItem(_In_ const std::string_view In_Name)
+void DebugItem::AddListItem(_In_ std::string_view In_Name)
 {
 	if (m_Kind != Kind::List)
 		return;
@@ -157,7 +157,7 @@ void DebugItem::AddListItem(_In_ const std::string_view In_Name)
 	}
 }
 
-void DebugItem::RemoveListItem(_In_ const std::string_view In_Name)
+void DebugItem::RemoveListItem(_In_ std::string_view In_Name)
 {
 	if (m_Kind != Kind::List)
 		return;
@@ -652,7 +652,7 @@ void ItemGroup::DrawImGui()
 	}
 }
 
-void ItemGroup::DataRead(_In_ const std::string_view In_FullPath, _In_ DebugItem *In_pItem)
+void ItemGroup::DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem)
 {
 	DebugManager::GetInstance().DataRead(In_FullPath.data(), In_pItem);
 }
@@ -870,7 +870,7 @@ void ItemConsole::DrawImGui()
 	}
 }
 
-void ItemConsole::AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec4 &In_Color)
+void ItemConsole::AddLevel(_In_ std::string_view In_Name, _In_ const ImVec4 &In_Color)
 {
 	std::lock_guard<std::mutex> lock(m_Mutex);
 	LevelData Data;
@@ -882,7 +882,7 @@ void ItemConsole::AddLevel(_In_ const std::string_view In_Name, _In_ const ImVec
 		DebugManager::GetInstance().DebugLogWarning("ItemConsole::AddLevel: Level already exists: %s", In_Name.data());
 }
 
-void ItemConsole::AddOutput(_In_ const std::string_view In_Text, _In_ const ImVec4 &In_Color, _In_ const std::string_view In_Level)
+void ItemConsole::AddOutput(_In_ std::string_view In_Text, _In_ const ImVec4 &In_Color, _In_ std::string_view In_Level)
 {
 	std::lock_guard<std::mutex> lock(m_Mutex);
 	// デフォルトレベルの場合は無条件で追加

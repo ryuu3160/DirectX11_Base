@@ -232,18 +232,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\CollisionManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Camera.cpp">
       <SubType>
       </SubType>
@@ -279,26 +267,6 @@
     </ClCompile>
     <ClCompile Include="Source\System\CPON\cpon.cpp" />
     <ClCompile Include="Source\System\CPON\cpon_object.cpp" />
-    <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\DebugManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\InitializeImGui.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\System\ImGui\imgui.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Source\System\ImGui\imgui_impl_dx11.cpp" />
@@ -307,6 +275,20 @@
     <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Source\System\Input\Input.cpp" />
     <ClCompile Include="Source\System\Input\InputSystem.cpp" />
+    <ClCompile Include="Source\System\Managers\CameraManager\CameraManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\CollisionManager\CollisionManager.cpp" />
+    <ClCompile Include="Source\System\Managers\CollisionManager\OctreeCell.cpp" />
+    <ClCompile Include="Source\System\Managers\CollisionManager\TreeData.cpp" />
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugItem.cpp" />
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugManager.cpp" />
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugWindow.cpp" />
+    <ClCompile Include="Source\System\Managers\DebugManager\InitializeImGui.cpp" />
+    <ClCompile Include="Source\System\Managers\FadeManager\FadeManager.cpp" />
+    <ClCompile Include="Source\System\Managers\SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Source\System\Managers\SoundManager\SoundManager.cpp" />
     <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
       <SubType>
       </SubType>
@@ -344,15 +326,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Source\System\Scene\SceneManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Sound\SoundManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -442,18 +416,6 @@
     </ClInclude>
     <ClInclude Include="Source\EntryPoint.hpp" />
     <ClInclude Include="Source\pch.h" />
-    <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\OctreeCell.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Source\System\Component\Camera.hpp">
       <SubType>
       </SubType>
@@ -489,26 +451,6 @@
     </ClInclude>
     <ClInclude Include="Source\System\CPON\cpon.hpp" />
     <ClInclude Include="Source\System\CPON\cpon_object.hpp" />
-    <ClInclude Include="Source\System\DebugManager\DebugItem.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\DebugManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\FadeManager\FadeManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Source\System\ImGui\imconfig.h" />
     <ClInclude Include="Source\System\ImGui\imgui.h" />
     <ClInclude Include="Source\System\ImGui\imgui_impl_dx11.h" />
@@ -519,6 +461,20 @@
     <ClInclude Include="Source\System\ImGui\imstb_truetype.h" />
     <ClInclude Include="Source\System\Input\Input.hpp" />
     <ClInclude Include="Source\System\Input\InputSystem.hpp" />
+    <ClInclude Include="Source\System\Managers\CameraManager\CameraManager.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\CollisionManager\CollisionManager.hpp" />
+    <ClInclude Include="Source\System\Managers\CollisionManager\OctreeCell.hpp" />
+    <ClInclude Include="Source\System\Managers\CollisionManager\TreeData.hpp" />
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugItem.hpp" />
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugManager.hpp" />
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugWindow.hpp" />
+    <ClInclude Include="Source\System\Managers\DebugManager\InitializeImGui.hpp" />
+    <ClInclude Include="Source\System\Managers\FadeManager\FadeManager.hpp" />
+    <ClInclude Include="Source\System\Managers\SceneManager\SceneManager.hpp" />
+    <ClInclude Include="Source\System\Managers\SoundManager\SoundManager.hpp" />
     <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
       <SubType>
       </SubType>
@@ -558,15 +514,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Source\System\Scene\SceneManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Sound\SoundManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>

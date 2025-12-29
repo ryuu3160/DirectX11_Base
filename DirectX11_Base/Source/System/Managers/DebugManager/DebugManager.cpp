@@ -210,7 +210,7 @@ void DebugManager::Draw() noexcept
 	}
 }
 
-DebugWindow *DebugManager::CreateDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
+DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
 {
 	auto itr = m_ToolBarFuncs.try_emplace(In_GroupName.data());
 
@@ -240,7 +240,7 @@ DebugWindow *DebugManager::CreateDebugWindow(_In_ const std::string_view In_Grou
 	return NewWindow;
 }
 
-void DebugManager::AddToolBarMenu(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name, _In_ std::function<void()> In_Func)
+void DebugManager::AddToolBarMenu(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ std::function<void()> In_Func)
 {
 	auto menu = m_ToolBarFuncs.try_emplace(In_GroupName.data());
 
@@ -258,7 +258,7 @@ void DebugManager::AddToolBarMenu(_In_ const std::string_view In_GroupName, _In_
 	menu.first->second.push_back(NewMenu);
 }
 
-DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
+DebugWindow *DebugManager::GetDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
 {
 	auto itr = m_ToolBarFuncs.find(In_GroupName.data());
 
@@ -275,7 +275,7 @@ DebugWindow *DebugManager::GetDebugWindow(_In_ const std::string_view In_GroupNa
 	return c_NullWindow;
 }
 
-DebugWindow &DebugManager::GetDebugWindowRef(_In_ const std::string_view In_GroupName, _In_ const std::string_view In_Name)
+DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
 {
 	return *GetDebugWindow(In_GroupName, In_Name);
 }

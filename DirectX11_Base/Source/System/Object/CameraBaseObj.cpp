@@ -19,10 +19,12 @@ CameraBaseObj::CameraBaseObj(_In_ std::string In_Name)
 	: GameObject(In_Name)
 	, m_pComponent(nullptr)
 {
+	CameraManager::GetInstance().AddCameraObj(this);
 }
 
 CameraBaseObj::~CameraBaseObj()
 {
+	CameraManager::GetInstance().RemoveCameraObj(this);
 }
 
 void CameraBaseObj::Awake() noexcept

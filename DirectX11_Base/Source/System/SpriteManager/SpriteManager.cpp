@@ -81,7 +81,7 @@ std::list<GameObject *> SpriteManager::Get3DSprites() noexcept
 	return m_SpriteObjects[_3D];
 }
 
-GameObject *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName) const noexcept
+GameObject *SpriteManager::GetSprite(_In_ std::string_view In_SpriteName) const noexcept
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
@@ -95,7 +95,7 @@ GameObject *SpriteManager::GetSprite(_In_ const std::string_view &In_SpriteName)
 	return nullptr;
 }
 
-GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteName, _In_ const FilePath &In_FilePath, _In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard, _In_ const int &In_Layer, _In_ const float &In_Scale) noexcept
+GameObject *SpriteManager::CreateSprite(_In_ std::string_view In_SpriteName, _In_ const FilePath &In_FilePath, _In_ const bool &In_Is3D, _In_ const bool &In_IsBillBoard, _In_ const int &In_Layer, _In_ const float &In_Scale) noexcept
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
@@ -144,7 +144,7 @@ GameObject *SpriteManager::CreateSprite(_In_ const std::string_view &In_SpriteNa
 	return obj;
 }
 
-void SpriteManager::DeleteSprite(_In_ const std::string_view &In_SpriteName) noexcept
+void SpriteManager::DeleteSprite(_In_ std::string_view In_SpriteName) noexcept
 {
 	for (int i = 0; i < _MAX_RENDER_MODE; ++i)
 	{
@@ -327,7 +327,7 @@ void SpriteManager::DrawImGui() noexcept
 	}
 }
 
-void SpriteManager::CreateScene(_In_ const std::string_view &In_SceneName) noexcept
+void SpriteManager::CreateScene(_In_ std::string_view In_SceneName) noexcept
 {
 	// シーンを作成
 	if (m_SceneSaveData.find(In_SceneName.data()) == m_SceneSaveData.end())
@@ -367,7 +367,7 @@ void SpriteManager::ChangeScene(_In_ const int &In_Index) noexcept
 	m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを更新
 }
 
-void SpriteManager::ChangeScene(_In_ const std::string_view &In_SceneName) noexcept
+void SpriteManager::ChangeScene(_In_ std::string_view In_SceneName) noexcept
 {
 	if(m_CurrentSceneName == In_SceneName.data())
 		return; // 同じシーンなら何もしない
@@ -695,7 +695,7 @@ void SpriteManager::LoadAllScene() noexcept
 	}
 }
 
-bool SpriteManager::CheckConflictSpriteName(_In_ const std::string_view &In_SpriteName, _In_ const RenderMode &In_Mode) const noexcept
+bool SpriteManager::CheckConflictSpriteName(_In_ std::string_view In_SpriteName, _In_ const RenderMode &In_Mode) const noexcept
 {
 	// 指定されたレンダーモードのスプライト名が既に存在するか確認
 	for (auto &itr : m_SpriteNames[In_Mode])

@@ -25,7 +25,7 @@ class DebugWindow
 {
 	friend class DebugManager;
 public:
-	DebugWindow(_In_ const std::string_view In_Name);
+	DebugWindow(_In_ std::string_view In_Name);
 	~DebugWindow();
 
 	void Draw() noexcept;
@@ -36,7 +36,7 @@ public:
 
 	template <typename T, typename ...Args>
 	requires std::derived_from<T, DebugItem>
-	T *CreateItem(const std::string_view In_Name, Args&& ...args);
+	T *CreateItem(std::string_view In_Name, Args&& ...args);
 
 	void RemoveItem(_In_ std::string_view In_Name);
 
@@ -75,7 +75,7 @@ private:
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, DebugItem>
-inline T *DebugWindow::CreateItem(const std::string_view In_Name, Args && ...args)
+inline T *DebugWindow::CreateItem(std::string_view In_Name, Args && ...args)
 {
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
 	item->m_GroupName = m_GroupName;

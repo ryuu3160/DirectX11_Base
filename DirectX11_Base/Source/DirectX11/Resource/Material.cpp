@@ -159,7 +159,7 @@ void Material::MakeDefaultShader()
 	m_defPS->Load("Assets/Shader/PS_Model.cso");
 }
 
-bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcept
+bool Material::LoadShaderInfo(_In_ std::string_view In_Directory) noexcept
 {
 	std::fstream file;
 	std::string FbxName = ResourceSetting::ExtractFbxNameFromMaterialName(m_strMaterialName, true);
@@ -236,7 +236,7 @@ bool Material::LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcep
 	return true;
 }
 
-void Material::LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexcept
+void Material::LoadWriteParam(_In_ std::string_view In_WriteParam) noexcept
 {
 	std::string WriteParam = std::string(In_WriteParam);
 
@@ -263,7 +263,7 @@ void Material::LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexce
 	}
 }
 
-void Material::SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory) const noexcept
+void Material::SaveMaterialShaderInfo(_In_ std::string_view In_Directory) const noexcept
 {
 	std::fstream file;
 	std::string FbxName = ResourceSetting::ExtractFbxNameFromMaterialName(m_strMaterialName, true);

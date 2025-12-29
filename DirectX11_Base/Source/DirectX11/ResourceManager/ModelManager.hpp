@@ -29,7 +29,7 @@ public:
 	/// </summary>
 	/// <param name="[In_MeshName]">メッシュの固有名</param>
 	/// <returns>取得したメッシュを保持する std::shared_ptr<Mesh> オブジェクト。</returns>
-	std::shared_ptr<Mesh> GetMesh(_In_ const std::string_view &In_MeshName) noexcept;
+	std::shared_ptr<Mesh> GetMesh(_In_ std::string_view In_MeshName) noexcept;
 
 	/// <summary>
 	/// メッシュを作成する

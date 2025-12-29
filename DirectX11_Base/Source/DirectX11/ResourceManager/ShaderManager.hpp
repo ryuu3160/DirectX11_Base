@@ -29,7 +29,7 @@ public:
 	/// シェーダーファイルの読み込みとセットアップを行う
 	/// </summary>
 	/// <param name="[In_FileName]">読みこむシェーダーファイルの名前</param>
-	void SetupShader(_In_ const std::string_view In_FileName) noexcept;
+	void SetupShader(_In_ std::string_view In_FileName) noexcept;
 
 	/// <summary>
 	/// 指定されたファイル名からシェーダーを取得します。

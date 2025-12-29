@@ -38,7 +38,7 @@ public:
 		}
 
 		template<TypeValue T>
-		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
 		{
 			if(Inout_Value == nullptr)
 				return;
@@ -58,7 +58,7 @@ public:
 
 		template<typename T>
 			requires std::same_as<T, DirectX::XMFLOAT2>
-		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
 		{
 			if(Inout_Value == nullptr)
 				return;
@@ -86,7 +86,7 @@ public:
 
 		template<typename T>
 		requires std::same_as<T, DirectX::XMFLOAT3>
-		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
 		{
 			if (Inout_Value == nullptr)
 				return;
@@ -115,7 +115,7 @@ public:
 
 		template<typename T>
 		requires std::same_as<T, DirectX::XMFLOAT4>
-		void AccessValue(_In_ const std::string_view In_Key, _Inout_ T *Inout_Value)
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
 		{
 			if(Inout_Value == nullptr)
 				return;
@@ -144,7 +144,7 @@ public:
 		}
 
 		template<TypeValue T>
-		void AccessArray(_In_ const std::string_view In_Key, _Inout_ std::vector<T> *Inout_Array)
+		void AccessArray(_In_ std::string_view In_Key, _Inout_ std::vector<T> *Inout_Array)
 		{
 			if(Inout_Array == nullptr)
 				return;
@@ -159,7 +159,7 @@ public:
 			}
 		}
 
-		void AccessObject(_In_ const std::string_view In_Key, _Inout_opt_ cpon_block::Object Inout_Object)
+		void AccessObject(_In_ std::string_view In_Key, _Inout_opt_ cpon_block::Object Inout_Object)
 		{
 			if (m_IsWrite)
 			{

@@ -21,7 +21,7 @@
 #pragma comment (lib, "assimp-vc143-mt.lib")
 #endif
 
-std::shared_ptr<InstancedMesh> InstancedModelManager::GetMesh(_In_ const std::string_view &In_MeshName) noexcept
+std::shared_ptr<InstancedMesh> InstancedModelManager::GetMesh(_In_ std::string_view In_MeshName) noexcept
 {
 	auto itr = m_mapMeshes.find(In_MeshName.data());
 

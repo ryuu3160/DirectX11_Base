@@ -68,6 +68,15 @@ public:
 	/// </summary>
 	/// <returns>インスタンスの ID3D11ShaderResourceView への ComPtr を返します。</returns>
 	inline ID3D11ShaderResourceView* GetInstanceSRV() const noexcept { return m_pInstanceSRV.Get(); }
+
+	/// <summary>
+	/// インスタンスバッファを動的に更新(パーティクル用)
+	/// </summary>
+	/// <param name="[In_pInstanceData]">新しいインスタンスデータへのポインタ</param>
+	/// <param name="[In_InstanceSize]">1インスタンスのサイズ (バイト)</param>
+	/// <param name="[In_InstanceCount]">インスタンス数</param>
+	/// <returns>成功時はS_OK、失敗時はエラーコード</returns>
+	HRESULT UpdateInstanceBuffer(_In_ const void *In_pInstanceData, _In_ UINT In_InstanceSize, _In_ UINT In_InstanceCount) noexcept;
 private:
 
 	/// <summary>

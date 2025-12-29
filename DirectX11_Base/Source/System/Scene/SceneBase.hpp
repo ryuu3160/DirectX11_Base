@@ -72,7 +72,7 @@ public:
 	/// <param name="[In_Name]">検索するオブジェクトの名前を表す文字列ビュー。</param>
 	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します。</returns>
 	template <class T>
-	T *GetObject(_In_ const std::string_view &In_Name) noexcept;
+	T *GetObject(_In_ std::string_view In_Name) noexcept;
 
 	/// <summary>
 	/// 指定された名前のオブジェクトを破棄します。
@@ -260,7 +260,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(const std::string &In_Name, Ar
 /// <param name="[In_Name]">検索するオブジェクトの名前。</param>
 /// <returns>見つかった場合は指定した型Tのポインタ、見つからなかった場合はnullptrを返します。</returns>
 template<class T>
-T *SceneBase::GetObject(_In_ const std::string_view &In_Name) noexcept
+T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
 {
 	// オブジェクトの探索
 	Objects::iterator itr = m_Objects.find(In_Name.data());

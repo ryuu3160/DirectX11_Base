@@ -31,7 +31,7 @@ namespace Util
 		WideCharToMultiByte(CP_UTF8, 0, In_WideStr.data(), -1, &utf8Str[0], sizeNeeded, nullptr, nullptr);
 		return utf8Str;
 	}
-	std::wstring UTF8ToWide(_In_ const std::string_view In_UTF8Str)
+	std::wstring UTF8ToWide(_In_ std::string_view In_UTF8Str)
 	{
 		// まず必要なバッファサイズを取得
 		int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), -1, nullptr, 0);
@@ -65,7 +65,7 @@ namespace Util
 		}
 		return utf8Str;
 	}
-	std::u16string UTF8ToUTF16(_In_ const std::string_view In_UTF8Str)
+	std::u16string UTF8ToUTF16(_In_ std::string_view In_UTF8Str)
 	{
 		int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), -1, nullptr, 0);
 		std::u16string utf16Str(sizeNeeded, u'\0');
@@ -73,7 +73,7 @@ namespace Util
 		MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), -1, reinterpret_cast<wchar_t *>(&utf16Str[0]), sizeNeeded);
 		return utf16Str;
 	}
-	std::string ShiftJISToUTF8(_In_ const std::string_view In_ShiftJISStr)
+	std::string ShiftJISToUTF8(_In_ std::string_view In_ShiftJISStr)
 	{
 		// Shift-JIS → UTF-16 に変換
 		int wideCharSize = MultiByteToWideChar(CP_ACP, 0, In_ShiftJISStr.data(), -1, nullptr, 0);

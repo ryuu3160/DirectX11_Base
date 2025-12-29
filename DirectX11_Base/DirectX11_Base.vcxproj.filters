@@ -83,23 +83,11 @@
     <Filter Include="Source\DirectX11\Resource">
       <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\System\Sound">
-      <UniqueIdentifier>{14d532be-f130-4ce5-b08a-af5c3012c022}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\FadeManager">
-      <UniqueIdentifier>{f19bf3e2-fe69-421f-97d4-a704c3925f3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\CollisionManager">
-      <UniqueIdentifier>{e4e7216c-bf19-4bd9-95c7-b24052fae248}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\System\Component\Collider">
       <UniqueIdentifier>{b34bb0cd-66cd-4b0d-83f1-efb72566b987}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\DirectX11\Renderer">
       <UniqueIdentifier>{48544fe2-3d7e-46af-bbc7-bff1c4024329}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\DebugManager">
-      <UniqueIdentifier>{a69a2225-a546-490a-a4fd-7fe47e67b5f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\DirectX11\ResourceManager">
       <UniqueIdentifier>{85f376bf-44db-4f22-8a49-2a0640b29773}</UniqueIdentifier>
@@ -133,6 +121,27 @@
     </Filter>
     <Filter Include="Source\DirectX11\System\Particle\Components">
       <UniqueIdentifier>{3fdecfa1-498b-45db-a8f2-02e4bfed756d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers">
+      <UniqueIdentifier>{9d2ea966-bf1c-4f8d-ba7c-e7132ef6c682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\CollisionManager">
+      <UniqueIdentifier>{a8b533a6-d9f4-49e2-aefa-a81af904d92b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\DebugManager">
+      <UniqueIdentifier>{1b82ebad-332c-448e-8540-3a8d148dcd7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\SoundManager">
+      <UniqueIdentifier>{e46e3437-bfcd-41dc-bfff-9aa4aad7f7ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\SceneManager">
+      <UniqueIdentifier>{834979a9-3b29-4bd1-af60-cd94ecb03d69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\FadeManager">
+      <UniqueIdentifier>{0b98c6ee-c950-45c4-9812-44d70937a622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\System\Managers\CameraManager">
+      <UniqueIdentifier>{29784f21-4cbd-48af-9990-1f78b46ad06b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -241,18 +250,6 @@
     <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
       <Filter>Source\System\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\Sound\SoundManager.cpp">
-      <Filter>Source\System\Sound</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Scene\SceneManager.cpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\FadeManager\FadeManager.cpp">
-      <Filter>Source\System\FadeManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\CollisionManager.cpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClCompile>
@@ -276,12 +273,6 @@
     </ClCompile>
     <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
       <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\DebugManager.cpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\DebugWindow.cpp">
-      <Filter>Source\System\DebugManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\DirectX11\ResourceManager\ModelManager.cpp">
       <Filter>Source\DirectX11\ResourceManager</Filter>
@@ -331,23 +322,11 @@
     <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp">
       <Filter>Source\DirectX11\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\DebugItem.cpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\DebugManager\InitializeImGui.cpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp">
       <Filter>Source\System\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\OctreeCell.cpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\CollisionManager\TreeData.cpp">
-      <Filter>Source\System\CollisionManager</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Utility\Utility.cpp">
       <Filter>Source\System\Utility</Filter>
@@ -393,6 +372,39 @@
     </ClCompile>
     <ClCompile Include="Source\DirectX11\System\Particle\Components\ParticleEffect.cpp">
       <Filter>Source\DirectX11\System\Particle\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\CollisionManager\CollisionManager.cpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\CollisionManager\OctreeCell.cpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\CollisionManager\TreeData.cpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugItem.cpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugManager.cpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\DebugManager\DebugWindow.cpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\DebugManager\InitializeImGui.cpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\FadeManager\FadeManager.cpp">
+      <Filter>Source\System\Managers\FadeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\SceneManager\SceneManager.cpp">
+      <Filter>Source\System\Managers\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\SoundManager\SoundManager.cpp">
+      <Filter>Source\System\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\System\Managers\CameraManager\CameraManager.cpp">
+      <Filter>Source\System\Managers\CameraManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -516,18 +528,6 @@
     <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
       <Filter>Source\System\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\Sound\SoundManager.hpp">
-      <Filter>Source\System\Sound</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Scene\SceneManager.hpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\FadeManager\FadeManager.hpp">
-      <Filter>Source\System\FadeManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\CollisionManager.hpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Component\Collider\SphereCollider.hpp">
       <Filter>Source\System\Component\Collider</Filter>
     </ClInclude>
@@ -551,12 +551,6 @@
     </ClInclude>
     <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
       <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\DebugManager.hpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\DebugWindow.hpp">
-      <Filter>Source\System\DebugManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectX11\ResourceManager\ModelManager.hpp">
       <Filter>Source\DirectX11\ResourceManager</Filter>
@@ -609,23 +603,11 @@
     <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp">
       <Filter>Source\DirectX11\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\DebugItem.hpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\DebugManager\InitializeImGui.hpp">
-      <Filter>Source\System\DebugManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
       <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp">
       <Filter>Source\System\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\OctreeCell.hpp">
-      <Filter>Source\System\CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CollisionManager\TreeData.hpp">
-      <Filter>Source\System\CollisionManager</Filter>
     </ClInclude>
     <ClInclude Include="Source\System\Utility\Concept.hpp">
       <Filter>Source\System\Utility</Filter>
@@ -674,6 +656,39 @@
     </ClInclude>
     <ClInclude Include="Source\DirectX11\System\Particle\Components\ParticleEffect.hpp">
       <Filter>Source\DirectX11\System\Particle\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\CollisionManager\CollisionManager.hpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\CollisionManager\OctreeCell.hpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\CollisionManager\TreeData.hpp">
+      <Filter>Source\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugItem.hpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugManager.hpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\DebugManager\DebugWindow.hpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\DebugManager\InitializeImGui.hpp">
+      <Filter>Source\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\FadeManager\FadeManager.hpp">
+      <Filter>Source\System\Managers\FadeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\SceneManager\SceneManager.hpp">
+      <Filter>Source\System\Managers\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\SoundManager\SoundManager.hpp">
+      <Filter>Source\System\Managers\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\System\Managers\CameraManager\CameraManager.hpp">
+      <Filter>Source\System\Managers\CameraManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -114,18 +114,18 @@ private:
 	/// </summary>
 	/// <param name="[In_Directory]">シェーダー名を検索するディレクトリへの参照。</param>
 	/// <returns>読み取りが成功したかどうか</returns>
-	bool LoadShaderInfo(_In_ const std::string_view &In_Directory) noexcept;
+	bool LoadShaderInfo(_In_ std::string_view In_Directory) noexcept;
 
 	/// <summary>
 	/// 書き込みパラメータを読み込みます。
 	/// </summary>
 	/// <param name="[In_WriteParam]">読み込む書き込みパラメータを表す文字列ビュー。</param>
-	void LoadWriteParam(_In_ const std::string_view &In_WriteParam) noexcept;
+	void LoadWriteParam(_In_ std::string_view In_WriteParam) noexcept;
 
 	/// <summary>
 	/// マテリアルシェーダー情報を保存します。
 	/// </summary>
-	void SaveMaterialShaderInfo(_In_ const std::string_view &In_Directory) const noexcept;
+	void SaveMaterialShaderInfo(_In_ std::string_view In_Directory) const noexcept;
 
 private:
 	std::string m_strMaterialName; // マテリアル名

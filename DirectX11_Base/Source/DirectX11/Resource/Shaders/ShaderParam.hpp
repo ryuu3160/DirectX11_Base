@@ -51,7 +51,7 @@ public:
 	/// <returns>m_Type を unsigned int 型にキャストした値（スロット番号）。</returns>
 	inline const unsigned int GetSlotNum() const noexcept { return m_SlotNum; }
 
-	inline const std::string_view GetParamName() const noexcept { return m_ParamName; }
+	inline std::string_view GetParamName() const noexcept { return m_ParamName; }
 
 protected:
 	std::string m_ParamName;
