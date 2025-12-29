@@ -22,6 +22,7 @@
 #include "System/Component/Collider/SphereCollider.hpp"
 #include "System/Component/Collider/BoxCollider.hpp"
 #include "System/Component/Collider/CapsuleCollider.hpp"
+#include "DirectX11/System/Particle/Components/ParticleEffect.hpp"
 
 // ==============================
 //  定数
@@ -55,7 +56,7 @@ void SceneRoot::Init()
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
 
-	pModel->SetPosition({0.0f, 1.0f, 0.0f});
+	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
 	pModel->AddComponent<SphereCollider>();
 
 	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
@@ -77,7 +78,7 @@ void SceneRoot::Init()
 
 	// F15Eの移動処理
 	pModel2->AddComponent<MovementComponent>();
-	auto input = pModel2->AddComponent<PlayerController>();
+	//auto input = pModel2->AddComponent<PlayerController>();
 	/*input->RegisterKeyCallBack('W', InputSystem::KeyState::Press, [pModel2]() {
 		auto pos = pModel2->GetPosition();
 		pos.z += 0.1f;
@@ -112,6 +113,46 @@ void SceneRoot::Init()
 
 	//pModel2->SetPosition({ -2.0f, 0.0f, 0.0f });
 	pModel2->SetScale({ 1.0f, 1.0f, 1.0f });
+
+	// パーティクルテスト
+	auto ParticleObj = CreateObject<GameObject>("ParticleTest");
+	auto ParticleCmp = ParticleObj->AddComponent<ParticleEffect>();
+	ParticleObj->AddComponent<BoxCollider>();
+	ParticleCmp->SetTexture("Assets/Texture/TestTexture.png");
+
+	// エミッター設定
+	EmitterSettings settings;
+	settings.EmitRate = 100.0f;              // 1秒間に100個放出
+	settings.MaxParticles = 500;             // 最大500個
+	settings.Duration = 2.0f;                // 2秒間だけ放出
+	settings.IsLooping = false;              // ループしない
+
+	// 速度の範囲
+	settings.VelocityMin = DirectX::XMFLOAT3(-3, 2, -3);
+	settings.VelocityMax = DirectX::XMFLOAT3(3, 5, 3);
+
+	// 色の変化 (オレンジ → 透明な赤)
+	settings.ColorStart = DirectX::XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f);
+	settings.ColorEnd = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f);
+
+	// サイズの変化
+	settings.SizeStart = DirectX::XMFLOAT2(1.0f, 1.0f);
+	settings.SizeEnd = DirectX::XMFLOAT2(0.2f, 0.2f);
+
+	// 寿命
+	settings.LifeTimeMin = 0.5f;
+	settings.LifeTimeMax = 1.5f;
+
+	// 重力 (上に吹き上がる)
+	settings.GravityScale = -0.3f;
+
+	// 放出形状 (球状)
+	settings.EmitShape = EmitterSettings::Shape::Sphere;
+	settings.ShapeRadius = 0.5f;
+
+	ParticleCmp->AddEmitter(settings);
+	ParticleCmp->Play();
+	
 
 	// スカイボックスを作成
 	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
@@ -186,6 +227,8 @@ void SceneRoot::Update(_In_ float In_DeltaTime)
 	auto pPatternScale = GetObject<GameObject>("PatternScale");
 	auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
 	PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
+
+	//GetObject<GameObject>("ParticleTest")->GetComponent<ParticleEffect>()->Play();
 
 	//ResourceSetting::PBR_Param pbr;
 	//pbr.Metallic = 0.8f;
