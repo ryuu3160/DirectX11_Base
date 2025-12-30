@@ -45,7 +45,8 @@ struct EmitterSettings
         Sphere,     // 球
         Cone,       // コーン
         Box,        // ボックス
-    } EmitShape = Shape::Point;
+    };
+    Shape EmitShape = Shape::Point;
 
     float ShapeRadius = 1.0f;    // Sphere/Cone用
     float ShapeAngle = 30.0f;    // Cone用 (度数)

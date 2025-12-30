@@ -74,6 +74,13 @@ using Microsoft::WRL::ComPtr;
 #include <DirectXMath.h>
 
 // ------------------------------
+//  OpenMP
+// ------------------------------
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+// ------------------------------
 //  ryuu_lib
 // ------------------------------
 #include "System/ryuu_lib/Singleton/Singleton.hpp"

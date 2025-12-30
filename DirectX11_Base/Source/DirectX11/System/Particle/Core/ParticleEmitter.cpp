@@ -19,6 +19,9 @@ ParticleEmitter::ParticleEmitter()
 
 void ParticleEmitter::Init(_In_ const EmitterSettings &In_Settings)
 {
+    m_Settings = In_Settings;
+    m_Particles.clear();
+    m_Particles.reserve(m_Settings.MaxParticles);
 }
 
 void ParticleEmitter::Play()
@@ -54,7 +57,6 @@ void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOA
     // 放出時間のチェック
     if(m_Settings.Duration > 0.0f)
     {
-        m_DurationTimer += In_DeltaTime;
         if(m_DurationTimer >= m_Settings.Duration)
         {
             if(m_Settings.IsLooping)
@@ -67,6 +69,7 @@ void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOA
                 return;
             }
         }
+        m_DurationTimer += In_DeltaTime;
     }
 
     // パーティクル放出
