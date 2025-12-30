@@ -227,18 +227,34 @@ void ParticleEffect::CreateQuadMesh()
         2, 1, 3, // 2つ目の三角形
     };
 
+    InstanceData dummyInstance = {};
+    dummyInstance.World = DirectX::XMFLOAT4X4(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
+    dummyInstance.Color = DirectX::XMFLOAT4(1, 1, 1, 1);
+
 	// Descriptionの作成
     InstancedMeshBuffer::InstancingDesc desc = {};
+
+    // 頂点バッファ
     desc.pVtx = vertices;
     desc.vtxSize = sizeof(ParticleVertex);
     desc.vtxCount = 4;
+    desc.isWrite = false;
+    // インデックスバッファ
     desc.pIdx = indices;
     desc.idxSize = sizeof(WORD);
     desc.idxCount = 6;
     desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    desc.pInstance = nullptr; // 後で更新
+
+    // インスタンスバッファ
+    desc.pInstance = &dummyInstance;
     desc.instanceSize = sizeof(InstanceData);
-    desc.instanceCount = 0;
+    desc.instanceCount = 1;
+    desc.isInstanceWrite = true;
 
 	// InstancedMeshBufferの作成
     m_InstanceBuffer = std::make_shared<InstancedMeshBuffer>(desc);

@@ -48,7 +48,8 @@ void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOA
         m_Particles.end()
     );
 
-    if(!m_IsPlaying) return;
+    if(!m_IsPlaying)
+        return;
 
     // 放出時間のチェック
     if(m_Settings.Duration > 0.0f)
