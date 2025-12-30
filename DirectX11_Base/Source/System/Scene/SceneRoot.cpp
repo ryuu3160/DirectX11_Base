@@ -128,8 +128,8 @@ void SceneRoot::Init()
 	settings.IsLooping = false;              // ループしない
 
 	// 速度の範囲
-	settings.VelocityMin = DirectX::XMFLOAT3(-3, 2, -3);
-	settings.VelocityMax = DirectX::XMFLOAT3(3, 5, 3);
+	settings.VelocityMin = DirectX::XMFLOAT3(-3, -3, -3);
+	settings.VelocityMax = DirectX::XMFLOAT3(3, 3, 3);
 
 	// 色の変化 (オレンジ → 透明な赤)
 	settings.ColorStart = DirectX::XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f);
