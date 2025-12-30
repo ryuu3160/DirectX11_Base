@@ -121,6 +121,17 @@ DirectX::XMFLOAT3 ParticleEmitter::GeneratePosition()
         offset.z = RandomRange(-m_Settings.ShapeSize.z * 0.5f, m_Settings.ShapeSize.z * 0.5f);
         break;
     }
+    case EmitterSettings::Shape::Cone:
+    {
+        float height = RandomRange(0.0f, m_Settings.ShapeRadius);
+        float radiusAtHeight = height * tanf(DirectX::XMConvertToRadians(m_Settings.ShapeAngle));
+        float r = RandomRange(0.0f, radiusAtHeight);
+        float theta = RandomRange(0.0f, DirectX::XM_2PI);
+        offset.x = r * cosf(theta);
+        offset.y = height;
+        offset.z = r * sinf(theta);
+        break;
+	}
     // Point ÇÃèÍçáÇÕ offset (0,0,0) ÇÃÇ‹Ç‹
     }
 
