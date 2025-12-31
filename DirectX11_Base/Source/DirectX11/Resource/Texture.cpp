@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Texture.hpp"
-#include "DirectX11/DirectXTex/TextureLoad.h"
+#include "ThirdParty/DirectXTex/TextureLoad.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

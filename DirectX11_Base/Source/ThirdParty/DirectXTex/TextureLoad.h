@@ -5,15 +5,15 @@
 
 #ifdef _X86_
 #ifdef _DEBUG
-#pragma comment(lib, "Source/DirectX11/DirectXTex/32/D/DirectXTex.lib")
+#pragma comment(lib, "Source/ThirdParty/DirectXTex/32/D/DirectXTex.lib")
 #else
-#pragma comment(lib, "Source/DirectX11/DirectXTex/32/R/DirectXTex.lib")
+#pragma comment(lib, "Source/ThirdParty/DirectXTex/32/R/DirectXTex.lib")
 #endif
 #else
 #ifdef _DEBUG
-#pragma comment(lib, "Source/DirectX11/DirectXTex/64/D/DirectXTex.lib")
+#pragma comment(lib, "Source/ThirdParty/DirectXTex/64/D/DirectXTex.lib")
 #else
-#pragma comment(lib, "Source/DirectX11/DirectXTex/64/R/DirectXTex.lib")
+#pragma comment(lib, "Source/ThirdParty/DirectXTex/64/R/DirectXTex.lib")
 #endif
 #endif
 

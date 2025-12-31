@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: SpriteManagerHierarchy.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: スプライトマネージャーのヒエラルキービューウィンドウ
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/07/26 Sat AM 11:37:11 初回作成
 ===================================================================+*/
@@ -9,9 +9,9 @@
 //	include
 // ==============================
 #include "SpriteManagerHierarchy.hpp"
-#include "System/ImGui/imgui.h"
-#include "System/ImGui/imgui_impl_dx11.h"
-#include "System/ImGui/imgui_impl_win32.h"
+#include "ThirdParty/ImGui/imgui.h"
+#include "ThirdParty/ImGui/imgui_impl_dx11.h"
+#include "ThirdParty/ImGui/imgui_impl_win32.h"
 
 SpriteManagerHierarchy::SpriteManagerHierarchy()
 	: SpriteManagerWindow("Hierarchy##SpriteManager")

@@ -19,7 +19,7 @@
 #include "System/Input/Input.hpp"
 #include "System/Scene/SceneRoot.hpp"
 #include "System/Object/CameraDCC.hpp"
-#include "System/ImGui/imgui_impl_win32.h"
+#include "ThirdParty/ImGui/imgui_impl_win32.h"
 
 // ==============================
 //  プロトタイプ宣言

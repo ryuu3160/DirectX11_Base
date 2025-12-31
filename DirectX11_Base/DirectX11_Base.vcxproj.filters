@@ -59,9 +59,6 @@
     <Filter Include="Source\System\Scene">
       <UniqueIdentifier>{21fa017c-a310-442c-aba6-e901c6b760dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\System\ImGui">
-      <UniqueIdentifier>{18b9022a-3be1-4ad4-95b3-fe1f3eb0dac3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\System\Object">
       <UniqueIdentifier>{14a13e31-0a80-4cc5-bc59-c2cb32622f4a}</UniqueIdentifier>
     </Filter>
@@ -143,6 +140,12 @@
     <Filter Include="Source\System\Managers\CameraManager">
       <UniqueIdentifier>{29784f21-4cbd-48af-9990-1f78b46ad06b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ThirdParty">
+      <UniqueIdentifier>{5296f2ae-d1e7-4737-85f0-11faa8481dab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ThirdParty\ImGui">
+      <UniqueIdentifier>{26bc9b34-0cbb-42a8-9535-dd0015a4af3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
@@ -187,18 +190,6 @@
     <ClCompile Include="Source\System\Scene\SceneBase.cpp">
       <Filter>Source\System\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui.cpp">
-      <Filter>Source\System\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui_draw.cpp">
-      <Filter>Source\System\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui_tables.cpp">
-      <Filter>Source\System\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui_widgets.cpp">
-      <Filter>Source\System\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
       <Filter>Source\System\Scene</Filter>
     </ClCompile>
@@ -207,12 +198,6 @@
     </ClCompile>
     <ClCompile Include="Source\System\Component\Component.cpp">
       <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui_impl_dx11.cpp">
-      <Filter>Source\System\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ImGui\imgui_impl_win32.cpp">
-      <Filter>Source\System\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Source\System\Component\Camera.cpp">
       <Filter>Source\System\Component</Filter>
@@ -406,6 +391,30 @@
     <ClCompile Include="Source\System\Managers\CameraManager\CameraManager.cpp">
       <Filter>Source\System\Managers\CameraManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_draw.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
@@ -453,24 +462,6 @@
     <ClInclude Include="Source\System\Scene\SceneBase.hpp">
       <Filter>Source\System\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imgui.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imgui_internal.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imstb_rectpack.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imstb_textedit.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imstb_truetype.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imconfig.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
       <Filter>Source\System\Scene</Filter>
     </ClInclude>
@@ -479,12 +470,6 @@
     </ClInclude>
     <ClInclude Include="Source\System\Component\Component.hpp">
       <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imgui_impl_dx11.h">
-      <Filter>Source\System\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ImGui\imgui_impl_win32.h">
-      <Filter>Source\System\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Defines.hpp">
       <Filter>Source</Filter>
@@ -689,6 +674,33 @@
     </ClInclude>
     <ClInclude Include="Source\System\Managers\CameraManager\CameraManager.hpp">
       <Filter>Source\System\Managers\CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
+      <Filter>Source\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imgui.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_dx11.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_win32.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imgui_internal.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imstb_rectpack.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imstb_textedit.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h">
+      <Filter>Source\ThirdParty\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
