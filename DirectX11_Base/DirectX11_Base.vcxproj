@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)\;</IncludePath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)Engine\</IncludePath>
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
   </PropertyGroup>
@@ -117,7 +117,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories);$(ProjectDir)/Source/ThirdParty/NlohmannJson</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Engine;$(ProjectDir)/Engine/Core;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
@@ -127,7 +127,7 @@
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>$(ProjectDir)Assets\Shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Binaries\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PreBuildEvent>
       <Command>
@@ -147,7 +147,7 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories);$(ProjectDir)/Source/ThirdParty/NlohmannJson</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/Source;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>false</OpenMPSupport>
     </ClCompile>
@@ -159,468 +159,287 @@
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>$(ProjectDir)Assets\Shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Engine\Assets\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\App\Main.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)/Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp" />
-    <ClCompile Include="Source\DirectX11\Renderer\LineRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\ModelRenderer.cpp" />
-    <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp" />
-    <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp" />
-    <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp" />
-    <ClCompile Include="Source\DirectX11\ResourceManager\InstancedModelManager.cpp" />
-    <ClCompile Include="Source\DirectX11\ResourceManager\MaterialManager.cpp" />
-    <ClCompile Include="Source\DirectX11\ResourceManager\ModelManager.cpp" />
-    <ClCompile Include="Source\DirectX11\ResourceManager\RenderTargetManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\ShaderManager.cpp" />
-    <ClCompile Include="Source\DirectX11\ResourceManager\TextureManager.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMesh.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\Mesh.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\MeshBuffer.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\Shader.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\ShaderParam.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp" />
-    <ClCompile Include="Source\DirectX11\Resource\Texture.cpp" />
-    <ClCompile Include="Source\DirectX11\System\Gizmos.cpp" />
-    <ClCompile Include="Source\DirectX11\System\Particle\Components\ParticleEffect.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\Particle.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\EntryPoint.cpp" />
-    <ClCompile Include="Source\pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Camera.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\BoxCollider.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\CapsuleCollider.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp" />
-    <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Component.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\MovementComponent.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\PlayerController.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Transform.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\CPON\cpon.cpp" />
-    <ClCompile Include="Source\System\CPON\cpon_object.cpp" />
-    <ClCompile Include="Source\System\Input\Input.cpp" />
-    <ClCompile Include="Source\System\Input\InputSystem.cpp" />
-    <ClCompile Include="Source\System\Managers\CameraManager\CameraManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\CollisionManager\CollisionManager.cpp" />
-    <ClCompile Include="Source\System\Managers\CollisionManager\OctreeCell.cpp" />
-    <ClCompile Include="Source\System\Managers\CollisionManager\TreeData.cpp" />
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugItem.cpp" />
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugManager.cpp" />
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugWindow.cpp" />
-    <ClCompile Include="Source\System\Managers\DebugManager\InitializeImGui.cpp" />
-    <ClCompile Include="Source\System\Managers\FadeManager\FadeManager.cpp" />
-    <ClCompile Include="Source\System\Managers\SceneManager\SceneManager.cpp" />
-    <ClCompile Include="Source\System\Managers\SoundManager\SoundManager.cpp" />
-    <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\CameraDCC.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\GameObject.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\GridObject.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\Object.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\IME_Controller\IME.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\Observer\Observer.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\Singleton\SingletonController.cpp" />
-    <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp" />
-    <ClCompile Include="Source\System\Scene\SceneBase.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp" />
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerHierarchy.cpp" />
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp" />
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp" />
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp" />
-    <ClCompile Include="Source\System\Utility\Utility.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\App\Main.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\Defines.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\DX11_Core.hpp" />
-    <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp" />
-    <ClInclude Include="Source\DirectX11\Renderer\LineRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp" />
-    <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp" />
-    <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp" />
-    <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp" />
-    <ClInclude Include="Source\DirectX11\ResourceManager\InstancedModelManager.hpp" />
-    <ClInclude Include="Source\DirectX11\ResourceManager\MaterialManager.hpp" />
-    <ClInclude Include="Source\DirectX11\ResourceManager\ModelManager.hpp" />
-    <ClInclude Include="Source\DirectX11\ResourceManager\RenderTargetManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\ShaderManager.hpp" />
-    <ClInclude Include="Source\DirectX11\ResourceManager\TextureManager.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMesh.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\Mesh.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\MeshBuffer.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\ResourceSetting.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\Shader.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\ShaderParam.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.hpp" />
-    <ClInclude Include="Source\DirectX11\Resource\Texture.hpp" />
-    <ClInclude Include="Source\DirectX11\System\DX11_Math.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Gizmos.hpp" />
-    <ClInclude Include="Source\DirectX11\System\Particle\Components\ParticleEffect.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\Particle.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\EntryPoint.hpp" />
-    <ClInclude Include="Source\pch.h" />
-    <ClInclude Include="Source\System\Component\Camera.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\BoxCollider.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\CapsuleCollider.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp" />
-    <ClInclude Include="Source\System\Component\Collider\SphereCollider.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Component.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\MovementComponent.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\PlayerController.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Transform.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\CPON\cpon.hpp" />
-    <ClInclude Include="Source\System\CPON\cpon_object.hpp" />
-    <ClInclude Include="Source\System\Input\Input.hpp" />
-    <ClInclude Include="Source\System\Input\InputSystem.hpp" />
-    <ClInclude Include="Source\System\Managers\CameraManager\CameraManager.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\CollisionManager\CollisionManager.hpp" />
-    <ClInclude Include="Source\System\Managers\CollisionManager\OctreeCell.hpp" />
-    <ClInclude Include="Source\System\Managers\CollisionManager\TreeData.hpp" />
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugItem.hpp" />
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugManager.hpp" />
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugWindow.hpp" />
-    <ClInclude Include="Source\System\Managers\DebugManager\InitializeImGui.hpp" />
-    <ClInclude Include="Source\System\Managers\FadeManager\FadeManager.hpp" />
-    <ClInclude Include="Source\System\Managers\SceneManager\SceneManager.hpp" />
-    <ClInclude Include="Source\System\Managers\SoundManager\SoundManager.hpp" />
-    <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\CameraDCC.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\GameObject.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\GridObject.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\Object.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\MultiComparison\MultiComparison.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\RandomModule\Random.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp" />
-    <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp" />
-    <ClInclude Include="Source\System\Scene\SceneBase.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp" />
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp" />
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp" />
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerLoader.hpp" />
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp" />
-    <ClInclude Include="Source\System\Utility\Concept.hpp" />
-    <ClInclude Include="Source\System\Utility\Utility.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_dx11.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_internal.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_textedit.h" />
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="cpp.hint" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Geometory.hlsl" />
-    <FxCompile Include="Source\Shader\PixelShader\PS_Model.hlsl" />
-    <FxCompile Include="Source\Shader\PixelShader\PS_Particle.hlsl">
+    <ClCompile Include="Engine\Core\DirectX11\DX11_Core.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\LineRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\ModelRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\RenderComponent.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ModelManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\TextureManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\Material.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ResourceSetting.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\Resource\Texture.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\Gizmos.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\Particle.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\RenderContext.cpp" />
+    <ClCompile Include="Engine\Core\DirectX11\System\RenderManager.cpp" />
+    <ClCompile Include="Engine\Core\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Camera.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Collider\BoxCollider.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Collider\CapsuleCollider.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Collider\ColliderBase.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Collider\SphereCollider.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Component.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\MovementComponent.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\PlayerController.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Transform.cpp" />
+    <ClCompile Include="Engine\Core\System\CPON\cpon.cpp" />
+    <ClCompile Include="Engine\Core\System\CPON\cpon_object.cpp" />
+    <ClCompile Include="Engine\Core\System\Input\Input.cpp" />
+    <ClCompile Include="Engine\Core\System\Input\InputSystem.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\CameraManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\TreeData.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugItem.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugWindow.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\FadeManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\SceneManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\CameraBaseObj.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\CameraDCC.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\GameObject.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\GridObject.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\Object.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\SkyBoxObj.cpp" />
+    <ClCompile Include="Engine\Core\System\Scene\SceneBase.cpp" />
+    <ClCompile Include="Engine\Core\System\Scene\SceneRoot.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManager.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerHierarchy.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerInspector.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.cpp" />
+    <ClCompile Include="Engine\Core\System\Utility\Utility.cpp" />
+    <ClCompile Include="Engine\EntryPoint\EntryPoint.cpp" />
+    <ClCompile Include="Engine\EntryPoint\Main.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\Easing\Easing.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\FrameManager\FrameManager.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\FrameManager\Timer\Timer.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\IME_Controller\IME.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\Observer\Observer.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\RandomModule\Random.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\Singleton\SingletonController.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\WindowGenerator\Window.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Core\Defines.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\DX11_Core.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\LineRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\ModelRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\RenderComponent.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ModelManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\TextureManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\Material.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ResourceSetting.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\Resource\Texture.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\DX11_Math.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\Gizmos.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\Particle.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp" />
+    <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp" />
+    <ClInclude Include="Engine\Core\pch.h" />
+    <ClInclude Include="Engine\Core\System\Component\Camera.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Collider\BoxCollider.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Collider\CapsuleCollider.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Collider\ColliderBase.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Collider\SphereCollider.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Component.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\MovementComponent.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\PlayerController.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Transform.hpp" />
+    <ClInclude Include="Engine\Core\System\CPON\cpon.hpp" />
+    <ClInclude Include="Engine\Core\System\CPON\cpon_object.hpp" />
+    <ClInclude Include="Engine\Core\System\Input\Input.hpp" />
+    <ClInclude Include="Engine\Core\System\Input\InputSystem.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\CameraManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\TreeData.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugItem.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugWindow.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\FadeManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\SceneManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\CameraBaseObj.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\CameraDCC.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\GameObject.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\GridObject.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\Object.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\SkyBoxObj.hpp" />
+    <ClInclude Include="Engine\Core\System\Scene\SceneBase.hpp" />
+    <ClInclude Include="Engine\Core\System\Scene\SceneRoot.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManager.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerHierarchy.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerInspector.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\Concept.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\Utility.hpp" />
+    <ClInclude Include="Engine\EntryPoint\EntryPoint.hpp" />
+    <ClInclude Include="Engine\EntryPoint\Main.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\Easing\Easing.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\FrameManager\FrameManager.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\FrameManager\Timer\Timer.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\IME_Controller\IME.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\MultiComparison\MultiComparison.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\Observer\Observer.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\RandomModule\Random.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\Singleton\Singleton.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\Singleton\SingletonController.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\WindowGenerator\Window.hpp" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imconfig.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_internal.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Geometory.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_POM.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Model.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Sprite.hlsl" />
-    <FxCompile Include="Source\Shader\PixelShader\PS_TexColor.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Particle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_DepthShadow.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_PatternScale.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_PCF.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_POM.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_ProjectionShadow.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Sprite.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_WriteShadow.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_TexColor.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_Bumpmap.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_DepthShadow.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_PCF.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_ProjectionShadow.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_WriteShadow.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_Bumpmap.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_Particle.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Geometory.hlsl" />
-    <FxCompile Include="Source\Shader\VertexShader\VS_Model.hlsl" />
-    <FxCompile Include="Source\Shader\VertexShader\VS_Object.hlsl">
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_InstancedObject.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Shadow.hlsl">
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_Particle.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Sprite.hlsl" />
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Bumpmap.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Geometory.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Model.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Object.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Shadow.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Sprite.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Engine\Assets\Shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

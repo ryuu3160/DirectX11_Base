@@ -1,770 +1,760 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{18b3ecc8-5696-48d8-b559-0899ccaf461d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="リソース ファイル\Shader">
-      <UniqueIdentifier>{b10e3103-14d0-46c3-b3a6-ec1f3eade95c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11">
-      <UniqueIdentifier>{8cda81ea-19aa-4e93-af7e-896524b9f5d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\App">
-      <UniqueIdentifier>{b87f74a5-89db-40db-9a52-9cef2625feea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System">
-      <UniqueIdentifier>{6e3a07cc-1a60-48ea-9c88-58408954477a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\System">
-      <UniqueIdentifier>{57613732-92ce-4310-9d78-4aaa06eae2fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib">
-      <UniqueIdentifier>{0e6f99b9-aa4d-46fa-b2c4-5def24b407d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\Singleton">
-      <UniqueIdentifier>{283ede98-0f56-40ed-ad6e-0f8101b18787}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\WindowGenerator">
-      <UniqueIdentifier>{c99e992c-7b7f-4d23-8256-2126e16ce848}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\RandomModule">
-      <UniqueIdentifier>{7c2da15c-f68e-4580-a26a-ce45501ff175}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\Observer">
-      <UniqueIdentifier>{2446a2e2-57e9-4351-94bf-4c94c43dcfae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\IME_Controller">
-      <UniqueIdentifier>{7389d220-369c-4170-92df-75da7a200a91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\FrameManager">
-      <UniqueIdentifier>{18675544-67e8-46a2-9f00-eb191d140bff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\Easing">
-      <UniqueIdentifier>{8a393d85-d628-40f4-839d-c17069b36b37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\CRC31_HashGenerator">
-      <UniqueIdentifier>{b5238888-7062-49fe-b0c2-957286dd4a15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Input">
-      <UniqueIdentifier>{ddbead5c-28a6-46fb-b1c3-4ee858584f62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\App\Scene">
-      <UniqueIdentifier>{1cd1d12b-2c87-4c03-b92a-25d18b3128ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Scene">
-      <UniqueIdentifier>{21fa017c-a310-442c-aba6-e901c6b760dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Object">
-      <UniqueIdentifier>{14a13e31-0a80-4cc5-bc59-c2cb32622f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Component">
-      <UniqueIdentifier>{ae5c6251-7f69-4d65-bb84-667ec22e5e68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="リソース ファイル\Shader\VertexShader">
-      <UniqueIdentifier>{c1b8c8ea-43dc-4912-8737-11a9a0d31fde}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="リソース ファイル\Shader\PixelShader">
-      <UniqueIdentifier>{4324fb67-9ca3-4945-ab45-49cc1c85313a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\SpriteManager">
-      <UniqueIdentifier>{692f91d4-8d5d-4441-84f0-e00b27082ad4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\Resource">
-      <UniqueIdentifier>{74775034-69be-4457-8310-63ba0a58e1f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Component\Collider">
-      <UniqueIdentifier>{b34bb0cd-66cd-4b0d-83f1-efb72566b987}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\Renderer">
-      <UniqueIdentifier>{48544fe2-3d7e-46af-bbc7-bff1c4024329}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\ResourceManager">
-      <UniqueIdentifier>{85f376bf-44db-4f22-8a49-2a0640b29773}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\Resource\Meshes">
-      <UniqueIdentifier>{be644f4b-82ae-4c3e-b4ce-70c979947676}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\Resource\Shaders">
-      <UniqueIdentifier>{7aa0ef16-d438-44af-a261-7afe122c6371}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\MultiComparison">
-      <UniqueIdentifier>{5471ce5e-28f8-436b-b6a9-bb7ab653e9ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="リソース ファイル\Shader\PixelShader\Shadow">
-      <UniqueIdentifier>{c4c2ac24-3e8d-40fb-b82f-7d6324137349}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\ryuu_lib\FrameManager\Timer">
-      <UniqueIdentifier>{738996eb-eb5b-40e9-802d-3865f6c2d792}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Utility">
-      <UniqueIdentifier>{49e24936-1e7c-492c-a078-c9a38aa48fe3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\CPON">
-      <UniqueIdentifier>{48d9f31c-8e52-4fac-80ee-2471ab33b1f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\System\Particle">
-      <UniqueIdentifier>{e8f07fcc-5ff5-45a6-bf5e-a316810a831d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\System\Particle\Core">
-      <UniqueIdentifier>{dc92863e-3419-4945-9d75-92ed589f86a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\DirectX11\System\Particle\Components">
-      <UniqueIdentifier>{3fdecfa1-498b-45db-a8f2-02e4bfed756d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers">
-      <UniqueIdentifier>{9d2ea966-bf1c-4f8d-ba7c-e7132ef6c682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\CollisionManager">
-      <UniqueIdentifier>{a8b533a6-d9f4-49e2-aefa-a81af904d92b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\DebugManager">
-      <UniqueIdentifier>{1b82ebad-332c-448e-8540-3a8d148dcd7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\SoundManager">
-      <UniqueIdentifier>{e46e3437-bfcd-41dc-bfff-9aa4aad7f7ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\SceneManager">
-      <UniqueIdentifier>{834979a9-3b29-4bd1-af60-cd94ecb03d69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\FadeManager">
-      <UniqueIdentifier>{0b98c6ee-c950-45c4-9812-44d70937a622}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\System\Managers\CameraManager">
-      <UniqueIdentifier>{29784f21-4cbd-48af-9990-1f78b46ad06b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ThirdParty">
-      <UniqueIdentifier>{5296f2ae-d1e7-4737-85f0-11faa8481dab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ThirdParty\ImGui">
-      <UniqueIdentifier>{26bc9b34-0cbb-42a8-9535-dd0015a4af3c}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\DirectX11\DX11_Core.cpp">
-      <Filter>Source\DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\pch.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\Singleton\SingletonController.cpp">
-      <Filter>Source\System\ryuu_lib\Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\WindowGenerator\Window.cpp">
-      <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\RandomModule\Random.cpp">
-      <Filter>Source\System\ryuu_lib\RandomModule</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\Observer\Observer.cpp">
-      <Filter>Source\System\ryuu_lib\Observer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\IME_Controller\IME.cpp">
-      <Filter>Source\System\ryuu_lib\IME_Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\FrameManager\FrameManager.cpp">
-      <Filter>Source\System\ryuu_lib\FrameManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\Easing\Easing.cpp">
-      <Filter>Source\System\ryuu_lib\Easing</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp">
-      <Filter>Source\System\ryuu_lib\CRC31_HashGenerator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EntryPoint.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\App\Main.cpp">
-      <Filter>Source\App</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Input\Input.cpp">
-      <Filter>Source\System\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Scene\SceneBase.cpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Scene\SceneRoot.cpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\GameObject.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Component.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Camera.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\CameraDCC.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderManager.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerLoader.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerWindow.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManager.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerHierarchy.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\SpriteManager\SpriteManagerInspector.cpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Material.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\ResourceSetting.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\SkyBoxObj.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\SphereCollider.cpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\Object.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\InstancedModelRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\ModelRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\RenderComponent.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\SkyBoxRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\SpriteRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\CameraBaseObj.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\ModelManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\ShaderManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\TextureManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\InstancedModelManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\MaterialManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMesh.cpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\Mesh.cpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.cpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Meshes\MeshBuffer.cpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\Shader.cpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\ShaderParam.cpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.cpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Resource\Texture.cpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\ResourceManager\RenderTargetManager.cpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\RenderContext.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\RTSpriteRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.cpp">
-      <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\ColliderBase.cpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Utility\Utility.cpp">
-      <Filter>Source\System\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\CPON\cpon.cpp">
-      <Filter>Source\System\CPON</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\CPON\cpon_object.cpp">
-      <Filter>Source\System\CPON</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\Renderer\LineRenderer.cpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Object\GridObject.cpp">
-      <Filter>Source\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Gizmos.cpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\BoxCollider.cpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Transform.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\Collider\CapsuleCollider.cpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Input\InputSystem.cpp">
-      <Filter>Source\System\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\PlayerController.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Component\MovementComponent.cpp">
-      <Filter>Source\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\Particle.cpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Components\ParticleEffect.cpp">
-      <Filter>Source\DirectX11\System\Particle\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\CollisionManager\CollisionManager.cpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\CollisionManager\OctreeCell.cpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\CollisionManager\TreeData.cpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugItem.cpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugManager.cpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\DebugManager\DebugWindow.cpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\DebugManager\InitializeImGui.cpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\FadeManager\FadeManager.cpp">
-      <Filter>Source\System\Managers\FadeManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\SceneManager\SceneManager.cpp">
-      <Filter>Source\System\Managers\SceneManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\SoundManager\SoundManager.cpp">
-      <Filter>Source\System\Managers\SoundManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\System\Managers\CameraManager\CameraManager.cpp">
-      <Filter>Source\System\Managers\CameraManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_demo.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_draw.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_dx11.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_impl_win32.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_tables.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ThirdParty\ImGui\imgui_widgets.cpp">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\DirectX11\DX11_Core.hpp">
-      <Filter>Source\DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\pch.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\Singleton\Singleton.hpp">
-      <Filter>Source\System\ryuu_lib\Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\Singleton\SingletonController.hpp">
-      <Filter>Source\System\ryuu_lib\Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\WindowGenerator\Window.hpp">
-      <Filter>Source\System\ryuu_lib\WindowGenerator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\RandomModule\Random.hpp">
-      <Filter>Source\System\ryuu_lib\RandomModule</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\Observer\Observer.hpp">
-      <Filter>Source\System\ryuu_lib\Observer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\IME_Controller\IME.hpp">
-      <Filter>Source\System\ryuu_lib\IME_Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\FrameManager\FrameManager.hpp">
-      <Filter>Source\System\ryuu_lib\FrameManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\Easing\Easing.hpp">
-      <Filter>Source\System\ryuu_lib\Easing</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp">
-      <Filter>Source\System\ryuu_lib\CRC31_HashGenerator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntryPoint.hpp">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\App\Main.hpp">
-      <Filter>Source\App</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Input\Input.hpp">
-      <Filter>Source\System\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Scene\SceneBase.hpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Scene\SceneRoot.hpp">
-      <Filter>Source\System\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\GameObject.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Component.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Defines.hpp">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Camera.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\CameraDCC.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\DX11_Math.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderManager.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerInspector.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerLoader.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerSceneSelecter.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerWindow.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManager.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\SpriteManager\SpriteManagerHierarchy.hpp">
-      <Filter>Source\System\SpriteManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Material.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\ResourceSetting.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\SkyBoxObj.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\SphereCollider.hpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\Object.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\InstancedModelRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\ModelRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\RenderComponent.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\SkyBoxRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\SpriteRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\CameraBaseObj.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\ModelManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\ShaderManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\TextureManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\InstancedModelManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\MaterialManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMesh.hpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\Mesh.hpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\InstancedMeshBuffer.hpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Meshes\MeshBuffer.hpp">
-      <Filter>Source\DirectX11\Resource\Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\Shader.hpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\ShaderParam.hpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Shaders\UnorderedAccessView.hpp">
-      <Filter>Source\DirectX11\Resource\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Resource\Texture.hpp">
-      <Filter>Source\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\ResourceManager\RenderTargetManager.hpp">
-      <Filter>Source\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\RenderContext.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\MultiComparison\MultiComparison.hpp">
-      <Filter>Source\System\ryuu_lib\MultiComparison</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\RTSpriteRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\ryuu_lib\FrameManager\Timer\Timer.hpp">
-      <Filter>Source\System\ryuu_lib\FrameManager\Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\ColliderBase.hpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Utility\Concept.hpp">
-      <Filter>Source\System\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Utility\Utility.hpp">
-      <Filter>Source\System\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CPON\cpon_object.hpp">
-      <Filter>Source\System\CPON</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\CPON\cpon.hpp">
-      <Filter>Source\System\CPON</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\Renderer\LineRenderer.hpp">
-      <Filter>Source\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Object\GridObject.hpp">
-      <Filter>Source\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Gizmos.hpp">
-      <Filter>Source\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\BoxCollider.hpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Transform.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\Collider\CapsuleCollider.hpp">
-      <Filter>Source\System\Component\Collider</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Input\InputSystem.hpp">
-      <Filter>Source\System\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\PlayerController.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Component\MovementComponent.hpp">
-      <Filter>Source\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\Particle.hpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Components\ParticleEffect.hpp">
-      <Filter>Source\DirectX11\System\Particle\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\CollisionManager\CollisionManager.hpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\CollisionManager\OctreeCell.hpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\CollisionManager\TreeData.hpp">
-      <Filter>Source\System\Managers\CollisionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugItem.hpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugManager.hpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\DebugManager\DebugWindow.hpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\DebugManager\InitializeImGui.hpp">
-      <Filter>Source\System\Managers\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\FadeManager\FadeManager.hpp">
-      <Filter>Source\System\Managers\FadeManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\SceneManager\SceneManager.hpp">
-      <Filter>Source\System\Managers\SceneManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\SoundManager\SoundManager.hpp">
-      <Filter>Source\System\Managers\SoundManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\System\Managers\CameraManager\CameraManager.hpp">
-      <Filter>Source\System\Managers\CameraManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
-      <Filter>Source\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imconfig.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_dx11.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_impl_win32.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imgui_internal.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_rectpack.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_textedit.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ThirdParty\ImGui\imstb_truetype.h">
-      <Filter>Source\ThirdParty\ImGui</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="ClassDiagram.cd" />
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Object.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{313b8813-2552-4013-93eb-d5f58e44f28e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{b3d92f5b-8b68-4fd6-bd7d-a871f54f6163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EntryPoint">
+      <UniqueIdentifier>{fcbc3ac8-6460-4c54-8807-295b3bc57f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders">
+      <UniqueIdentifier>{69c9c2cd-c99a-45e3-9ff6-19f5b386b6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ThirdParty">
+      <UniqueIdentifier>{ac279576-98ac-4359-8694-938782d53a81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib">
+      <UniqueIdentifier>{5e3efb9a-a034-4ad9-b529-260f38005570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11">
+      <UniqueIdentifier>{7ccac925-3b40-4c87-b7cf-5d697f044303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System">
+      <UniqueIdentifier>{daf4a1ed-17a2-45cf-abed-3901f4548c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\Renderer">
+      <UniqueIdentifier>{1f4ab04d-1146-4135-be32-1bc1938f5f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\Resource">
+      <UniqueIdentifier>{ff7b2166-10c5-4e64-98a6-31d37e03ed09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\ResourceManager">
+      <UniqueIdentifier>{7e426195-d9e3-4c1a-9688-99bba0737451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\System">
+      <UniqueIdentifier>{84e686e6-6f24-4210-9951-be04f4138fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\Resource\MesheResource">
+      <UniqueIdentifier>{feb1611e-f10a-40bd-9a97-059e5bde1345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\Resource\ShaderResource">
+      <UniqueIdentifier>{221f7f8c-1c57-41c5-bbdf-70487c95d4b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\System\Particle">
+      <UniqueIdentifier>{5086d289-2de5-4279-a9b7-f4138f02f1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\System\Particle\Core">
+      <UniqueIdentifier>{f68706e7-c205-4546-a7b2-a533b1acbf8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX11\System\Particle\Components">
+      <UniqueIdentifier>{b7356017-0eca-47c2-a82c-f6602dc38d42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Component">
+      <UniqueIdentifier>{174fbf91-7a33-47a4-bfc7-6e812a88b760}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\CPON">
+      <UniqueIdentifier>{82ff5062-fdd0-4933-ad8f-6099700a241d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Input">
+      <UniqueIdentifier>{b4fd3f7d-41c3-42ed-b550-d473f2dfec9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Utility">
+      <UniqueIdentifier>{a0b3bf75-4053-4791-a457-14ab3074815a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\SpriteManager">
+      <UniqueIdentifier>{ca51bb59-39cd-4bf7-98b5-d4628d91bb89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Scene">
+      <UniqueIdentifier>{f389f8fe-1ec7-49e6-980b-bc3507d55e6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Object">
+      <UniqueIdentifier>{a6cddae8-2914-4706-9dee-7e4cda95931b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Managers">
+      <UniqueIdentifier>{98e4b5f0-a08c-4eea-ab4d-b06114a96442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Component\Collider">
+      <UniqueIdentifier>{13d63491-de84-4652-8471-747f23abcd90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Managers\CollisionManager">
+      <UniqueIdentifier>{3ffaaef8-9b2a-415a-97ab-49c8dce23eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Managers\DebugManager">
+      <UniqueIdentifier>{212845cb-f8dc-47dc-820f-f1e4ea4575d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\CRC31_HashGenerator">
+      <UniqueIdentifier>{b82a7480-e1ec-404a-a957-3b1ac0d3343a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\Easing">
+      <UniqueIdentifier>{5a4b15b9-e8a1-4d00-9f4f-d3fc60290db2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\FrameManager">
+      <UniqueIdentifier>{21a99fb6-9197-4af7-bd63-f0692338f8a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\IME_Controller">
+      <UniqueIdentifier>{54fcc03b-4d90-47d0-ae6d-32f85983fc77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\MultiComparison">
+      <UniqueIdentifier>{5d752ad2-4b69-4381-a4a1-5b67c21260ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\WindowGenerator">
+      <UniqueIdentifier>{eb8c5373-b7b3-4293-a1a8-d5f2761a6ee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\Singleton">
+      <UniqueIdentifier>{46457011-658b-41c3-b868-83c294cedfae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\RandomModule">
+      <UniqueIdentifier>{23d57945-b034-4ae5-9c45-d71e48d8c049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\Observer">
+      <UniqueIdentifier>{c22a093d-dc3c-4634-b4ad-1bbc3dbf61db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\FrameManager\Timer">
+      <UniqueIdentifier>{a8c89def-8c97-40a5-bcd6-7f130864a24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders\PixelShader">
+      <UniqueIdentifier>{b106a27f-364b-4ed8-9986-9b4189801fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders\VertexShader">
+      <UniqueIdentifier>{db03f831-053a-4b8b-a1e7-bcc1657d9c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders\PixelShader\Shadow">
+      <UniqueIdentifier>{f6c65478-800c-4e4f-9339-c295bcda73ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ThirdParty\ImGui">
+      <UniqueIdentifier>{28b6f403-b9ec-4edd-a2e1-d641edf0c59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{4dda4223-894e-469b-a87d-c3cd55ed5709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Source">
+      <UniqueIdentifier>{f0d793d5-dec2-49c8-9ccf-2752fab45bd8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\LineRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\ModelRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\RenderComponent.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.cpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\Material.cpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ResourceSetting.cpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\Texture.cpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.cpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ModelManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\TextureManager.cpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.cpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\Particle.cpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\Gizmos.cpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\RenderContext.cpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\System\RenderManager.cpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX11\DX11_Core.cpp">
+      <Filter>Engine\Core\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\pch.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Collider\BoxCollider.cpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Collider\CapsuleCollider.cpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Collider\ColliderBase.cpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Collider\SphereCollider.cpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Camera.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Component.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\MovementComponent.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\PlayerController.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Transform.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\CPON\cpon.cpp">
+      <Filter>Engine\Core\System\CPON</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\CPON\cpon_object.cpp">
+      <Filter>Engine\Core\System\CPON</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Input\Input.cpp">
+      <Filter>Engine\Core\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Input\InputSystem.cpp">
+      <Filter>Engine\Core\System\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.cpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.cpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\CollisionManager\TreeData.cpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugItem.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugManager.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugWindow.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\CameraManager.cpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\FadeManager.cpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\SceneManager.cpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\CameraBaseObj.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\CameraDCC.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\GameObject.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\GridObject.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\Object.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Object\SkyBoxObj.cpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Scene\SceneBase.cpp">
+      <Filter>Engine\Core\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Scene\SceneRoot.cpp">
+      <Filter>Engine\Core\System\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManager.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerHierarchy.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerInspector.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.cpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\Utility.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EntryPoint\EntryPoint.cpp">
+      <Filter>Engine\EntryPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EntryPoint\Main.cpp">
+      <Filter>Engine\EntryPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp">
+      <Filter>Engine\ryuu_lib\CRC31_HashGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\Easing\Easing.cpp">
+      <Filter>Engine\ryuu_lib\Easing</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\FrameManager\FrameManager.cpp">
+      <Filter>Engine\ryuu_lib\FrameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\FrameManager\Timer\Timer.cpp">
+      <Filter>Engine\ryuu_lib\FrameManager\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\IME_Controller\IME.cpp">
+      <Filter>Engine\ryuu_lib\IME_Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\Observer\Observer.cpp">
+      <Filter>Engine\ryuu_lib\Observer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\RandomModule\Random.cpp">
+      <Filter>Engine\ryuu_lib\RandomModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\Singleton\SingletonController.cpp">
+      <Filter>Engine\ryuu_lib\Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\WindowGenerator\Window.cpp">
+      <Filter>Engine\ryuu_lib\WindowGenerator</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_demo.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_draw.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_impl_win32.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_tables.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\LineRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\ModelRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\RenderComponent.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.hpp">
+      <Filter>Engine\Core\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\Material.hpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ResourceSetting.hpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\Texture.hpp">
+      <Filter>Engine\Core\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.hpp">
+      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ModelManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\TextureManager.hpp">
+      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.hpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\Particle.hpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
+      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\DX11_Math.hpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\Gizmos.hpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp">
+      <Filter>Engine\Core\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX11\DX11_Core.hpp">
+      <Filter>Engine\Core\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Defines.hpp">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\pch.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Collider\BoxCollider.hpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Collider\CapsuleCollider.hpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Collider\ColliderBase.hpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Collider\SphereCollider.hpp">
+      <Filter>Engine\Core\System\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Camera.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Component.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\MovementComponent.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\PlayerController.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Transform.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\CPON\cpon.hpp">
+      <Filter>Engine\Core\System\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\CPON\cpon_object.hpp">
+      <Filter>Engine\Core\System\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Input\Input.hpp">
+      <Filter>Engine\Core\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Input\InputSystem.hpp">
+      <Filter>Engine\Core\System\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.hpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.hpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\CollisionManager\TreeData.hpp">
+      <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugItem.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugManager.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugWindow.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\CameraManager.hpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\FadeManager.hpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\SceneManager.hpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp">
+      <Filter>Engine\Core\System\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\CameraBaseObj.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\CameraDCC.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\GameObject.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\GridObject.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\Object.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Object\SkyBoxObj.hpp">
+      <Filter>Engine\Core\System\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Scene\SceneBase.hpp">
+      <Filter>Engine\Core\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Scene\SceneRoot.hpp">
+      <Filter>Engine\Core\System\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManager.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerHierarchy.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerInspector.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.hpp">
+      <Filter>Engine\Core\System\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\Concept.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\Utility.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EntryPoint\EntryPoint.hpp">
+      <Filter>Engine\EntryPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EntryPoint\Main.hpp">
+      <Filter>Engine\EntryPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp">
+      <Filter>Engine\ryuu_lib\CRC31_HashGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\Easing\Easing.hpp">
+      <Filter>Engine\ryuu_lib\Easing</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\FrameManager\FrameManager.hpp">
+      <Filter>Engine\ryuu_lib\FrameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\FrameManager\Timer\Timer.hpp">
+      <Filter>Engine\ryuu_lib\FrameManager\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\IME_Controller\IME.hpp">
+      <Filter>Engine\ryuu_lib\IME_Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\MultiComparison\MultiComparison.hpp">
+      <Filter>Engine\ryuu_lib\MultiComparison</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\Observer\Observer.hpp">
+      <Filter>Engine\ryuu_lib\Observer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\RandomModule\Random.hpp">
+      <Filter>Engine\ryuu_lib\RandomModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\Singleton\Singleton.hpp">
+      <Filter>Engine\ryuu_lib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\Singleton\SingletonController.hpp">
+      <Filter>Engine\ryuu_lib\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\WindowGenerator\Window.hpp">
+      <Filter>Engine\ryuu_lib\WindowGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imconfig.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_impl_dx11.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_impl_win32.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imgui_internal.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_rectpack.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_textedit.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\ImGui\imstb_truetype.h">
+      <Filter>Engine\ThirdParty\ImGui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_DepthShadow.hlsl">
+      <Filter>Engine\Shaders\PixelShader\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_TexColor.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_PCF.hlsl">
+      <Filter>Engine\Shaders\PixelShader\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_InstancedObject.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_ProjectionShadow.hlsl">
+      <Filter>Engine\Shaders\PixelShader\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_POM.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_WriteShadow.hlsl">
+      <Filter>Engine\Shaders\PixelShader\Shadow</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_Bumpmap.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Geometory.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Bumpmap.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Model.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_PatternScale.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Particle.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_DepthShadow.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_PatternScale.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_PCF.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_POM.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_ProjectionShadow.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_Sprite.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\Shadow\PS_WriteShadow.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader\Shadow</Filter>
+    <FxCompile Include="Engine\Shaders\PixelShader\PS_TexColor.hlsl">
+      <Filter>Engine\Shaders\PixelShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Shadow.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_Bumpmap.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\IVS_Particle.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_InstancedObject.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Particle.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\IVS_Particle.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Bumpmap.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Model.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Geometory.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\PixelShader\PS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Model.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Object.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Model.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Shadow.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\VertexShader\VS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    <FxCompile Include="Engine\Shaders\VertexShader\VS_Sprite.hlsl">
+      <Filter>Engine\Shaders\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
