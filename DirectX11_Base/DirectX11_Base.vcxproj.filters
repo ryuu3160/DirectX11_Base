@@ -65,9 +65,6 @@
     <Filter Include="Source\System\Component">
       <UniqueIdentifier>{ae5c6251-7f69-4d65-bb84-667ec22e5e68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Shader\Original">
-      <UniqueIdentifier>{96a9b3fc-0f0b-47f9-b015-03e5e7c8feec}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Shader\VertexShader">
       <UniqueIdentifier>{c1b8c8ea-43dc-4912-8737-11a9a0d31fde}</UniqueIdentifier>
     </Filter>
@@ -709,24 +706,6 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Source\Shader\Original\PS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Original\VS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Original\VS_Model.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Original\VS_Sprite.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Original\PS_Geometory.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
-    <FxCompile Include="Source\Shader\Original\PS_Model.hlsl">
-      <Filter>リソース ファイル\Shader\Original</Filter>
-    </FxCompile>
     <FxCompile Include="Source\Shader\VertexShader\VS_Object.hlsl">
       <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
@@ -768,6 +747,24 @@
     </FxCompile>
     <FxCompile Include="Source\Shader\PixelShader\PS_Particle.hlsl">
       <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_Geometory.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_Model.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\PixelShader\PS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Geometory.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Model.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\VertexShader\VS_Sprite.hlsl">
+      <Filter>リソース ファイル\Shader\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
