@@ -123,9 +123,9 @@ void SceneRoot::Init()
 	// エミッター設定
 	EmitterSettings settings;
 	settings.EmitRate = 100.0f;              // 1秒間に100個放出
-	settings.MaxParticles = 500;             // 最大500個
+	settings.MaxParticles = 5000;             // 最大500個
 	settings.Duration = 2.0f;                // 2秒間だけ放出
-	settings.IsLooping = false;              // ループしない
+	settings.IsLooping = true;              // ループしない
 
 	// 速度の範囲
 	settings.VelocityMin = DirectX::XMFLOAT3(-3, -3, -3);

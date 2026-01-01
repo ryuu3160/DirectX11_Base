@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "ParticleEmitter.hpp"
+#include "ParticlePoolManager.hpp"
 
 ParticleEmitter::ParticleEmitter()
     : m_EmitTimer(0.0f), m_DurationTimer(0.0f)
@@ -38,18 +39,25 @@ void ParticleEmitter::Stop()
 void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOAT3 &In_Gravity)
 {
     // 既存パーティクルの更新
-    for(auto &particle : m_Particles)
+    for(auto itr = m_Particles.begin(); itr != m_Particles.end(); )
     {
-        if(particle.m_IsActive)
-            particle.Update(In_DeltaTime, In_Gravity);
-    }
+        Particle *particle = *itr;
 
-    // 非アクティブなパーティクルを削除
-    m_Particles.erase(
-        std::remove_if(m_Particles.begin(), m_Particles.end(),
-            [](const Particle &p) { return !p.m_IsActive; }),
-        m_Particles.end()
-    );
+        if(particle->m_IsActive)
+        {
+            particle->Update(In_DeltaTime, In_Gravity);
+
+            if(!particle->m_IsActive)
+            {
+                // ★Pool に返却★
+                ParticlePoolManager::GetInstance().ReleaseParticle(particle);
+                itr = m_Particles.erase(itr);
+                continue;
+            }
+        }
+
+        ++itr;
+    }
 
     if(!m_IsPlaying)
         return;
@@ -85,14 +93,21 @@ void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOA
 
 void ParticleEmitter::EmitParticle()
 {
-    Particle particle;
-    particle.m_IsActive = true;
-    particle.m_Position = GeneratePosition();
-    particle.m_Velocity = GenerateVelocity();
-    particle.m_Color = m_Settings.ColorStart;
-    particle.m_Size = m_Settings.SizeStart;
-    particle.m_MaxLifeTime = RandomRange(m_Settings.LifeTimeMin, m_Settings.LifeTimeMax);
-    particle.m_GravityScale = m_Settings.GravityScale;
+    Particle *particle = ParticlePoolManager::GetInstance().GetParticleFromPool();
+
+    if(!particle)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to acquire particle from pool!");
+        return;
+    }
+
+    particle->m_IsActive = true;
+    particle->m_Position = GeneratePosition();
+    particle->m_Velocity = GenerateVelocity();
+    particle->m_Color = m_Settings.ColorStart;
+    particle->m_Size = m_Settings.SizeStart;
+    particle->m_MaxLifeTime = RandomRange(m_Settings.LifeTimeMin, m_Settings.LifeTimeMax);
+    particle->m_GravityScale = m_Settings.GravityScale;
 
     m_Particles.push_back(particle);
 }

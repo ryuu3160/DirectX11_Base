@@ -16,6 +16,7 @@
 #include "Engine/Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Engine/Core/System/SpriteManager/SpriteManager.hpp"
 #include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Engine/Core/DirectX11/System/Particle/Core/ParticlePoolManager.hpp"
 #include "Engine/Core/System/Input/Input.hpp"
 #include "Engine/Core/System/Scene/SceneRoot.hpp"
 #include "Engine/Core/System/Object/CameraDCC.hpp"
@@ -50,6 +51,7 @@ HRESULT Main::Init()
 	auto &Sound = SoundManager::GetInstance();
 	CameraManager::GetInstance();
 	SceneManager::GetInstance();
+	ParticlePoolManager::GetInstance();
 	FadeManager::GetInstance();
 	Input::Init();
 

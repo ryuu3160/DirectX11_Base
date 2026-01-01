@@ -135,16 +135,16 @@ void ParticleEffect::UpdateInstanceBuffer()
         const auto &particles = emitter->GetParticles();
         for(const auto &particle : particles)
         {
-            if(!particle.m_IsActive) continue;
+            if(!particle->m_IsActive) continue;
 
             InstanceData data;
 
             // ワールド行列作成 (ビルボード化)
-            DirectX::XMMATRIX S = DirectX::XMMatrixScaling(particle.m_Size.x, particle.m_Size.y, 1.0f);
+            DirectX::XMMATRIX S = DirectX::XMMatrixScaling(particle->m_Size.x, particle->m_Size.y, 1.0f);
             DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(
-                particle.m_Position.x,
-                particle.m_Position.y,
-                particle.m_Position.z
+                particle->m_Position.x,
+                particle->m_Position.y,
+                particle->m_Position.z
             );
 
             // ビルボード (カメラ方向を向く)
@@ -152,7 +152,7 @@ void ParticleEffect::UpdateInstanceBuffer()
             DirectX::XMMATRIX World = S * T;
             DirectX::XMStoreFloat4x4(&data.World, DirectX::XMMatrixTranspose(World));
 
-            data.Color = particle.m_Color;
+            data.Color = particle->m_Color;
 
             m_InstanceDataArray.push_back(data);
         }

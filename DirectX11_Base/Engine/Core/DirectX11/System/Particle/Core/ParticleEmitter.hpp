@@ -89,7 +89,7 @@ public:
     /// パーティクルリストの取得
     /// </summary>
 	/// <returns>パーティクルのベクターへの定数参照を返します</returns>
-    inline const std::vector<Particle> &GetParticles() const noexcept { return m_Particles; }
+    inline const std::vector<Particle*> &GetParticles() const noexcept { return m_Particles; }
 
     /// <summary>
     /// アクティブなパーティクル数を取得
@@ -137,7 +137,7 @@ private:
 
 private:
     EmitterSettings m_Settings;
-    std::vector<Particle> m_Particles;
+    std::vector<Particle*> m_Particles;
 
     float m_EmitTimer;
     float m_DurationTimer;
