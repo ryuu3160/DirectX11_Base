@@ -153,9 +153,6 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 
 		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
 		{
-			// 物理前処理（力の適用・入力を velocity 等に反映する等）
-			//PrePhysics(FixedDeltaTime);
-
 			// 固定刻みで物理更新（衝突検出・解決を含む）
 			FixedUpdate(FixedDeltaTime);
 
