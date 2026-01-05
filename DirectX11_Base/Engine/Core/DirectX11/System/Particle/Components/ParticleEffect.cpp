@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ParticleEffect.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: パーティクルエフェクトコンポーネント
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/12/28 Sun AM 11:22:17 初回作成
 ===================================================================+*/
@@ -106,7 +106,8 @@ void ParticleEffect::Play()
 {
     for(auto &emitter : m_Emitters)
     {
-        if(emitter) emitter->Play();
+        if(emitter)
+            emitter->Play();
     }
 }
 
@@ -114,14 +115,56 @@ void ParticleEffect::Stop()
 {
     for(auto &emitter : m_Emitters)
     {
-        if(emitter) emitter->Stop();
+        if(emitter)
+            emitter->Stop();
     }
 }
 
 void ParticleEffect::SetTexture(_In_ const FilePath &In_Path)
 {
+    m_AssetPath = In_Path.data();
 	m_Texture = TextureManager::GetInstance().LoadTexture(In_Path);
 }
+
+#ifdef _DEBUG
+void ParticleEffect::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+{
+    RenderComponent::RegisterDebugInspector(In_pWindow);
+    auto &group = In_pWindow->GetGroupItem(m_Name);
+    group.CreateGroupItem<ItemCallback>("Play", DebugItem::Command, [this](bool IsSet, void *ptr)
+        {
+            this->Play();
+        });
+    group.CreateGroupItem<ItemSameLine>();
+    group.CreateGroupItem<ItemCallback>("Stop", DebugItem::Command, [this](bool IsSet, void *ptr)
+        {
+            this->Stop();
+        });
+    group.CreateGroupItem<ItemIndent>();
+    
+    // エミッター
+    int num = 0;
+    for(auto &itr : m_Emitters)
+    {
+        std::string Name = "Emitter";
+        Name += ToString(num);
+        auto EmitterGroup = group.CreateGroupItem<ItemGroup>(Name);
+        auto &Settings = itr->GetSettings();
+        EmitterGroup->CreateGroupItem<ItemBind>("Position", DebugItem::Vector, &Settings.Position);
+        EmitterGroup->CreateGroupItem<ItemBind>("Rate", DebugItem::Float, &Settings.EmitRate);
+        EmitterGroup->CreateGroupItem<ItemBind>("MaxParticle", DebugItem::Int, &Settings.MaxParticles);
+        EmitterGroup->CreateGroupItem<ItemBind>("Duration", DebugItem::Float, &Settings.Duration);
+        EmitterGroup->CreateGroupItem<ItemBind>("IsLoop", DebugItem::Bool, &Settings.IsLooping);
+        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMin", DebugItem::Float, &Settings.LifeTimeMin);
+        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMax", DebugItem::Float, &Settings.LifeTimeMax);
+        EmitterGroup->CreateGroupItem<ItemBind>("GravityScale", DebugItem::Float, &Settings.GravityScale);
+        EmitterGroup->CreateGroupItem<ItemBind>("Radius", DebugItem::Float, &Settings.ShapeRadius);
+        EmitterGroup->CreateGroupItem<ItemBind>("Angle", DebugItem::Float, &Settings.ShapeAngle);
+        ++num;
+    }
+    group.CreateGroupItem<ItemUnIndent>();
+}
+#endif
 
 void ParticleEffect::UpdateInstanceBuffer()
 {

@@ -49,7 +49,7 @@ void ParticleEmitter::Update(_In_ float In_DeltaTime, _In_ const DirectX::XMFLOA
 
             if(!particle->m_IsActive)
             {
-                // ★Pool に返却★
+				// 非アクティブになったパーティクルをプールに返却
                 ParticlePoolManager::GetInstance().ReleaseParticle(particle);
                 itr = m_Particles.erase(itr);
                 continue;
@@ -147,7 +147,9 @@ DirectX::XMFLOAT3 ParticleEmitter::GeneratePosition()
         offset.z = r * sinf(theta);
         break;
 	}
-    // Point の場合は offset (0,0,0) のまま
+	// Pointはオフセットなし
+    default:
+        break;
     }
 
     DirectX::XMVECTOR pos = DirectX::XMLoadFloat3(&m_Settings.Position);

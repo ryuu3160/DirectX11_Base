@@ -9,16 +9,6 @@ PatternScale[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
   ModelRenderer:[1]{AssetPath:string}:
     AssetPath:Engine/Assets/Model/plane/plane.fbx
 
-RootModel0Child(RootModel0_Child)[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Model/spot/spot.fbx
-
 EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -36,30 +26,6 @@ EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
     Focus:6.35099
     IsShow:false
 
-RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,SphereCollider:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]3, 1, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Model/spot/spot.fbx
-  SphereCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,Radius:float}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-    Radius:1
-
-GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  LineRenderer:[1]{AssetPath:string}:
-    AssetPath:
-
 RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
@@ -74,29 +40,15 @@ RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollide
     LocalCenter:[3]0, 1, 0
   MovementComponent:[0]{}:
 
-TestSprite[1]{IsActive:bool,Transform:object,SpriteRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]3.1875, -1.3377779, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  SpriteRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Texture/TestTexture.png
-
-ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider:object}:
+GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]0, 0, 0
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  ParticleEffect:[1]{AssetPath:string}:
+  LineRenderer:[1]{AssetPath:string}:
     AssetPath:
-  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-    HalfExtents:[3]0.5, 0.5, 0.5
 
 SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
   IsActive:true
@@ -107,6 +59,44 @@ SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
     Euler:[3]0, 0, 0
   SkyBoxRenderer:[1]{AssetPath:string}:
     AssetPath:Engine/Assets/Model/SkyBox/sky.obj
+
+RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,SphereCollider:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]3, 1, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Model/spot/spot.fbx
+  SphereCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,Radius:float}:
+    IsTrigger:true
+    LocalCenter:[3]0, 0, 0
+    Radius:1
+
+RootModel0Child(RootModel0_Child)[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]1, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Model/spot/spot.fbx
+
+ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ParticleEffect:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Texture/TestTexture.png
+  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 0, 0
+    HalfExtents:[3]0.5, 0.5, 0.5
 
 GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
@@ -134,4 +124,14 @@ RTSprite[1]{IsActive:bool,Transform:object,RTSpriteRenderer:object}:
     Euler:[3]0, 0, 0
   RTSpriteRenderer:[1]{AssetPath:string}:
     AssetPath:
+
+TestSprite[1]{IsActive:bool,Transform:object,SpriteRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]3.1875, -1.3377779, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  SpriteRenderer:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Texture/TestTexture.png
 

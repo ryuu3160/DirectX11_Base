@@ -14,14 +14,7 @@
 //  前方宣言
 // ==============================
 class ItemGroup;
-
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-
-}
+class ItemLayoutFunc;
 
 /// <summary>
 /// DebugItemクラス
@@ -221,7 +214,7 @@ private:
 /// </summary>
 /// <param name="[In_Name]">アイテム名</param>
 /// <param name="[In_Kind]">保存する型を表すKind情報</param>
-/// param name="[In_Func]">コールバック関数</param>
+/// <param name="[In_Func]">コールバック関数</param>
 class ItemCallback : public DebugItem
 {
 public:
@@ -250,9 +243,51 @@ public:
 	std::vector<DebugItem *> &GetGroupItems() { return m_Items; }
 
 	// グループで使用する関数
+
 	template <typename T, typename ...Args>
-	requires std::derived_from<T, DebugItem>
-	T *CreateGroupItem(_In_ std::string_view In_Name, _In_ Args&& ...args);
+	requires (std::derived_from<T, DebugItem>)
+	T *CreateGroupItem(_In_ std::string_view In_Name, _In_ Args&& ...In_Args)
+	{
+		if(m_Kind != Kind::Group)
+			return nullptr;
+
+		T *item = new T(In_Name.data(), std::forward<Args>(In_Args)...);
+
+		std::string Path = m_GroupName + "/" + m_WindowName + "/" + m_Name + "/";
+		DataRead(Path, item);
+
+		dynamic_cast<ItemGroup *>(this)->m_Items.push_back(static_cast<DebugItem *>(item));
+		return item;
+	}
+
+	template<typename T, typename ...Args>
+	requires std::derived_from<T, ItemLayoutFunc>
+	T *CreateGroupItem(_In_ Args&& ...In_Args)
+	{
+		if(m_Kind != Kind::Group)
+			return nullptr;
+
+		T *item = new T(std::forward<Args>(In_Args)...);
+
+		std::string Path = m_GroupName + "/" + m_WindowName + "/" + m_Name + "/";
+		DataRead(Path, item);
+
+		dynamic_cast<ItemGroup *>(this)->m_Items.push_back(static_cast<DebugItem *>(item));
+		return item;
+	}
+
+	template<typename T>
+	requires std::derived_from<T, ItemLayoutFunc>
+	T* CreateGroupItem()
+	{
+		if (m_Kind != Kind::Group)
+			return nullptr;
+		T* item = new T();
+		std::string Path = m_GroupName + "/" + m_WindowName + "/" + m_Name + "/";
+		DataRead(Path, item);
+		dynamic_cast<ItemGroup*>(this)->m_Items.push_back(static_cast<DebugItem*>(item));
+		return item;
+	}
 
 private:
 	void DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem);
@@ -376,7 +411,7 @@ private:
 class ItemSameLine : public ItemLayoutFunc
 {
 public:
-	ItemSameLine(_In_ std::string In_Name, _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
+	ItemSameLine(_In_ std::string In_Name = "SameLine", _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
 	~ItemSameLine();
 	void DrawImGui() override;
 private:
@@ -390,7 +425,7 @@ private:
 class ItemNewLine : public ItemLayoutFunc
 {
 public:
-	ItemNewLine(_In_ std::string In_Name);
+	ItemNewLine(_In_ std::string In_Name = "NewLine");
 	~ItemNewLine();
 	void DrawImGui() override;
 };
@@ -401,7 +436,7 @@ public:
 class ItemSpacing : public ItemLayoutFunc
 {
 public:
-	ItemSpacing(_In_ std::string In_Name, _In_ int In_SpaceNum = 1);
+	ItemSpacing(_In_ std::string In_Name = "Spacing", _In_ int In_SpaceNum = 1);
 	~ItemSpacing();
 	void DrawImGui() override;
 private:
@@ -414,7 +449,7 @@ private:
 class ItemSeparator : public ItemLayoutFunc
 {
 public:
-	ItemSeparator(_In_ std::string In_Name);
+	ItemSeparator(_In_ std::string In_Name = "Separator");
 	~ItemSeparator();
 	void DrawImGui() override;
 };
@@ -427,7 +462,7 @@ public:
 class ItemIndent : public ItemLayoutFunc
 {
 public:
-	ItemIndent(_In_ std::string In_Name, _In_ float In_IndentW = 0.0f);
+	ItemIndent(_In_ std::string In_Name = "Indent", _In_ float In_IndentW = 0.0f);
 	~ItemIndent();
 	void DrawImGui() override;
 private:
@@ -442,7 +477,7 @@ private:
 class ItemUnIndent : public ItemLayoutFunc
 {
 public:
-	ItemUnIndent(_In_ std::string In_Name, _In_ float In_IndentW = 0.0f);
+	ItemUnIndent(_In_ std::string In_Name = "UnIndent", _In_ float In_IndentW = 0.0f);
 	~ItemUnIndent();
 	void DrawImGui() override;
 private:
@@ -458,7 +493,7 @@ private:
 class ItemDummy : public ItemLayoutFunc
 {
 public:
-	ItemDummy(_In_ std::string In_Name, _In_ float In_Width, _In_ float In_Height);
+	ItemDummy(_In_ std::string In_Name = "Dummy", _In_ float In_Width = 0.0f, _In_ float In_Height = 0.0f);
 	~ItemDummy();
 	void DrawImGui() override;
 private:
@@ -474,7 +509,7 @@ private:
 class ItemSetNextItemWidth : public ItemLayoutFunc
 {
 public:
-	ItemSetNextItemWidth(_In_ std::string In_Name, _In_ float In_Width);
+	ItemSetNextItemWidth(_In_ std::string In_Name = "NextItemWidth", _In_ float In_Width = 16.0f);
 	~ItemSetNextItemWidth();
 	void DrawImGui() override;
 private:
@@ -484,27 +519,7 @@ private:
 class ItemAlignTextToFramePadding : public ItemLayoutFunc
 {
 public:
-	ItemAlignTextToFramePadding(_In_ std::string In_Name);
+	ItemAlignTextToFramePadding(_In_ std::string In_Name = "ItemAlignTextToFramePadding");
 	~ItemAlignTextToFramePadding();
 	void DrawImGui() override;
 };
-
-// -------------------------------
-//	テンプレート関数実装
-// -------------------------------
-
-template<typename T, typename ...Args>
-requires std::derived_from<T, DebugItem>
-inline T *ItemGroup::CreateGroupItem(std::string_view In_Name, Args && ...args)
-{
-	if (m_Kind != Kind::Group)
-		return nullptr;
-
-	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
-
-	std::string Path = m_GroupName + "/" + m_WindowName + "/" + m_Name + "/";
-	DataRead(Path, item);
-
-	dynamic_cast<ItemGroup *>(this)->m_Items.push_back(static_cast<DebugItem *>(item));
-	return item;
-}

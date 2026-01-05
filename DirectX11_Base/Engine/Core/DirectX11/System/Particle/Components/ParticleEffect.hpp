@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ParticleEffect.hpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: パーティクルエフェクトコンポーネント
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/12/28 Sun AM 11:21:59 初回作成
 ===================================================================+*/
@@ -52,6 +52,11 @@ public:
     /// テクスチャ設定
     /// </summary>
     void SetTexture(_In_ const FilePath &In_Path);
+
+protected:
+#ifdef _DEBUG
+    virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+#endif
 
 private:
     /// <summary>
