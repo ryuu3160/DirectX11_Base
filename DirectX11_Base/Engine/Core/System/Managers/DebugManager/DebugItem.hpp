@@ -246,7 +246,7 @@ public:
 
 	template <typename T, typename ...Args>
 	requires (std::derived_from<T, DebugItem>)
-	T *CreateGroupItem(_In_ std::string_view In_Name, _In_ Args&& ...In_Args)
+	T *CreateGroupItem(std::string_view In_Name, Args&& ...In_Args)
 	{
 		if(m_Kind != Kind::Group)
 			return nullptr;
@@ -262,7 +262,7 @@ public:
 
 	template<typename T, typename ...Args>
 	requires std::derived_from<T, ItemLayoutFunc>
-	T *CreateGroupItem(_In_ Args&& ...In_Args)
+	T *CreateGroupItem(Args&& ...In_Args)
 	{
 		if(m_Kind != Kind::Group)
 			return nullptr;

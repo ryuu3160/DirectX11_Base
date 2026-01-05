@@ -1,20 +1,10 @@
 #ObjNum : 11
-PatternScale[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
-  IsActive:false
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, -0.5, 0
-    Scale:[3]1000, 1, 1000
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Model/plane/plane.fbx
-
 EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
     Position:[3]1.948489, 2.7568624, -8.530543
     Scale:[3]1, 1, 1
-    Quat:[4]0.18239194, -0.077213146, 0.06470211, 0.97802514
+    Quat:[4]0.1783002, -0.0765142, 0.04924098, 0.9797286
     Euler:[3]43.658302, -41.219685, -24.916674
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
@@ -25,6 +15,16 @@ EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
     Aspect:1.77778
     Focus:6.35099
     IsShow:false
+
+SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]1.948489, 2.7568624, -8.530543
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  SkyBoxRenderer:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Model/SkyBox/sky.obj
 
 RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object}:
   IsActive:true
@@ -49,16 +49,6 @@ GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object}:
     Euler:[3]0, 0, 0
   LineRenderer:[1]{AssetPath:string}:
     AssetPath:
-
-SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1.948489, 2.7568624, -8.530543
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  SkyBoxRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Model/SkyBox/sky.obj
 
 RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,SphereCollider:object}:
   IsActive:true
@@ -97,6 +87,16 @@ ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider
     IsTrigger:true
     LocalCenter:[3]0, 0, 0
     HalfExtents:[3]0.5, 0.5, 0.5
+
+PatternScale[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+    Position:[3]0, -0.5, 0
+    Scale:[3]1000, 1, 1000
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+  ModelRenderer:[1]{AssetPath:string}:
+    AssetPath:Engine/Assets/Model/plane/plane.fbx
 
 GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true

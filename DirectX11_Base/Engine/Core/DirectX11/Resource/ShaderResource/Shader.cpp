@@ -223,18 +223,28 @@ HRESULT VertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &In_Size) 
 		BYTE elementCount = sigDesc.Mask;
 		elementCount = (elementCount & 0x05) + ((elementCount >> 1) & 0x05);
 		elementCount = (elementCount & 0x03) + ((elementCount >> 2) & 0x03);
-
-		switch (sigDesc.ComponentType)
+		if (elementCount == 0 || elementCount > 4)
 		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-			pInputDesc[i].Format = formats[0][elementCount - 1];
-			break;
-		case D3D_REGISTER_COMPONENT_SINT32:
-			pInputDesc[i].Format = formats[1][elementCount - 1];
-			break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
-			pInputDesc[i].Format = formats[2][elementCount - 1];
-			break;
+			// 範囲外の場合はデフォルト値を設定
+			pInputDesc[i].Format = DXGI_FORMAT_UNKNOWN;
+		}
+		else
+		{
+			switch (sigDesc.ComponentType)
+			{
+			case D3D_REGISTER_COMPONENT_UINT32:
+				pInputDesc[i].Format = formats[0][elementCount - 1];
+				break;
+			case D3D_REGISTER_COMPONENT_SINT32:
+				pInputDesc[i].Format = formats[1][elementCount - 1];
+				break;
+			case D3D_REGISTER_COMPONENT_FLOAT32:
+				pInputDesc[i].Format = formats[2][elementCount - 1];
+				break;
+			default:
+				pInputDesc[i].Format = DXGI_FORMAT_UNKNOWN;
+				break;
+			}
 		}
 		pInputDesc[i].InputSlot = 0;
 		pInputDesc[i].AlignedByteOffset = i == 0 ? 0 : D3D11_APPEND_ALIGNED_ELEMENT;
@@ -340,18 +350,28 @@ HRESULT InstancedVertexShader::MakeShader(_In_ void *In_pData, _In_ const UINT &
 		BYTE elementCount = sigDesc.Mask;
 		elementCount = (elementCount & 0x05) + ((elementCount >> 1) & 0x05);
 		elementCount = (elementCount & 0x03) + ((elementCount >> 2) & 0x03);
-
-		switch (sigDesc.ComponentType)
+		if (elementCount == 0 || elementCount > 4)
 		{
-		case D3D_REGISTER_COMPONENT_UINT32:
-			pInputDesc[i].Format = formats[0][elementCount - 1];
-			break;
-		case D3D_REGISTER_COMPONENT_SINT32:
-			pInputDesc[i].Format = formats[1][elementCount - 1];
-			break;
-		case D3D_REGISTER_COMPONENT_FLOAT32:
-			pInputDesc[i].Format = formats[2][elementCount - 1];
-			break;
+			// 範囲外の場合はデフォルト値を設定
+			pInputDesc[i].Format = DXGI_FORMAT_UNKNOWN;
+		}
+		else
+		{
+			switch (sigDesc.ComponentType)
+			{
+			case D3D_REGISTER_COMPONENT_UINT32:
+				pInputDesc[i].Format = formats[0][elementCount - 1];
+				break;
+			case D3D_REGISTER_COMPONENT_SINT32:
+				pInputDesc[i].Format = formats[1][elementCount - 1];
+				break;
+			case D3D_REGISTER_COMPONENT_FLOAT32:
+				pInputDesc[i].Format = formats[2][elementCount - 1];
+				break;
+			default:
+				pInputDesc[i].Format = DXGI_FORMAT_UNKNOWN;
+				break;
+			}
 		}
 		pInputDesc[i].InputSlot = 0;
 		pInputDesc[i].AlignedByteOffset = i == 0 ? 0 : D3D11_APPEND_ALIGNED_ELEMENT;
