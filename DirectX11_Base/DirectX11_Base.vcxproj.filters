@@ -138,6 +138,12 @@
     <Filter Include="Game\Source">
       <UniqueIdentifier>{f0d793d5-dec2-49c8-9ccf-2752fab45bd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Source\Scene">
+      <UniqueIdentifier>{74f19f34-c48e-4cd8-aa14-a141028be834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Source\Object">
+      <UniqueIdentifier>{e6dfc3d1-7980-4e4b-872a-d6db9ae72b2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
