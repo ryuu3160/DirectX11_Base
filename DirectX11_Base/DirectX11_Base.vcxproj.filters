@@ -144,6 +144,12 @@
     <Filter Include="Game\Source\Object">
       <UniqueIdentifier>{e6dfc3d1-7980-4e4b-872a-d6db9ae72b2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Source\Object\Character">
+      <UniqueIdentifier>{4f7abe01-2374-40a6-bf71-b4903829010d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Source\Object\Environment">
+      <UniqueIdentifier>{1720234c-cf44-497f-a3df-6e2ccc5641c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
@@ -415,6 +421,21 @@
     </ClCompile>
     <ClCompile Include="Game\Source\Scene\SceneGame.cpp">
       <Filter>Game\Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Object\Character\Enemy.cpp">
+      <Filter>Game\Source\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Object\Character\Player.cpp">
+      <Filter>Game\Source\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Object\Environment\SeaLevel.cpp">
+      <Filter>Game\Source\Object\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Object\MainCamera.cpp">
+      <Filter>Game\Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Object\Missile.cpp">
+      <Filter>Game\Source\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -705,6 +726,21 @@
     </ClInclude>
     <ClInclude Include="Game\Source\Scene\SceneGame.hpp">
       <Filter>Game\Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Object\Character\Enemy.hpp">
+      <Filter>Game\Source\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Object\Character\Player.hpp">
+      <Filter>Game\Source\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Object\Environment\SeaLevel.hpp">
+      <Filter>Game\Source\Object\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Object\MainCamera.hpp">
+      <Filter>Game\Source\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Object\Missile.hpp">
+      <Filter>Game\Source\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

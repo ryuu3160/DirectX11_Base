@@ -260,6 +260,11 @@
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Game\Source\Object\Character\Enemy.cpp" />
+    <ClCompile Include="Game\Source\Object\Character\Player.cpp" />
+    <ClCompile Include="Game\Source\Object\Environment\SeaLevel.cpp" />
+    <ClCompile Include="Game\Source\Object\MainCamera.cpp" />
+    <ClCompile Include="Game\Source\Object\Missile.cpp" />
     <ClCompile Include="Game\Source\Scene\SceneGame.cpp">
       <SubType>
       </SubType>
@@ -361,6 +366,11 @@
     <ClInclude Include="Engine\ThirdParty\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Engine\ThirdParty\ImGui\imstb_textedit.h" />
     <ClInclude Include="Engine\ThirdParty\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Game\Source\Object\Character\Enemy.hpp" />
+    <ClInclude Include="Game\Source\Object\Character\Player.hpp" />
+    <ClInclude Include="Game\Source\Object\Environment\SeaLevel.hpp" />
+    <ClInclude Include="Game\Source\Object\MainCamera.hpp" />
+    <ClInclude Include="Game\Source\Object\Missile.hpp" />
     <ClInclude Include="Game\Source\Scene\SceneGame.hpp">
       <SubType>
       </SubType>
