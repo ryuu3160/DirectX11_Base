@@ -236,12 +236,7 @@ DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
-	return m_pTransform->GetWorld(In_IsTranspose);
-}
-
-DirectX::XMMATRIX GameObject::GetWorldMatrix() const noexcept
-{
-	return DirectX::XMMATRIX();
+	return m_pTransform->GetWorldMatrix(In_IsTranspose);
 }
 
 void GameObject::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept

@@ -112,7 +112,6 @@ public:
 	DirectX::XMFLOAT3 GetRight() const noexcept;
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
-	DirectX::XMMATRIX GetWorldMatrix() const noexcept;
 
 	void SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
 

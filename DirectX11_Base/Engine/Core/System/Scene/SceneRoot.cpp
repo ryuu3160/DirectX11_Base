@@ -46,12 +46,13 @@ void SceneRoot::Init()
 	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
 	pModel->AddComponent<SphereCollider>();
 
-	auto child = CreateObject<GameObject>("RootModel0Child",pModel->GetTransform());
+	auto child = CreateObject<GameObject>("RootModel0Child");
+	child->GetTransform()->SetParent(pModel->GetTransform());
 	auto comp = child->AddComponent<ModelRenderer>();
 	comp->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
-	child->SetPosition({ 1.0f, 0.0f, 0.0f });
+	//child->SetPosition({ 1.0f, 0.0f, 0.0f });
 
 	// F15E‚Ìƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
 	GameObject *pModel2 = GetObject<GameObject>("RootModel1");
