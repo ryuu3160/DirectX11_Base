@@ -9,8 +9,9 @@
 //	include
 // ==============================
 #include "SpriteRenderer.hpp"
-#include "Engine/Core/System/Component/Camera.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/System/Component/Camera.hpp"
+#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //	’è”’è‹`

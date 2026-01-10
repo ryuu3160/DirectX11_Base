@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "ModelManager.hpp"
+#include "Core/System/Utility/Utility.hpp"
 
 #include <assimp/scene.h>
 

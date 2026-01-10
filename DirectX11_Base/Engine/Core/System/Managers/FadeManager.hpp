@@ -9,14 +9,14 @@
 // ==============================
 //	include
 // ==============================
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "ryuu_lib/Easing/Easing.hpp"
+#include "Core/Defines.hpp"
 
 // ==============================
-//	定数定義
+//	前方宣言
 // ==============================
-namespace
-{
-
-}
+class GameObject;
 
 /// <summary>
 /// FadeManagerクラス

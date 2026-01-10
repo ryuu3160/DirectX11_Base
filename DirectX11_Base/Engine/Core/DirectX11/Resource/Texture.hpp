@@ -9,7 +9,8 @@
 // ===============================
 //	include
 // ===============================
-#include "Engine/Core/DirectX11/DX11_Core.hpp"
+#include "Core/DirectX11/DX11_Core.hpp"
+#include "Core/Defines.hpp"
 
 // ===============================
 //	‘O•ûéŒ¾

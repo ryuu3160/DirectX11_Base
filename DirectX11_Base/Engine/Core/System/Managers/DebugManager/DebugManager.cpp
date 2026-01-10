@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "DebugManager.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
-#include "Engine/Core/DirectX11/System/RenderManager.hpp"
-#include "Engine/ryuu_lib/FrameManager/FrameManager.hpp"
+#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/DirectX11/System/RenderManager.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
+#include "ryuu_lib/FrameManager/FrameManager.hpp"
 
 // ==============================
 //	’è”’è‹`

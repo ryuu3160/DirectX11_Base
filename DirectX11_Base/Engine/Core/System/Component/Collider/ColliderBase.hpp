@@ -9,12 +9,14 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Component/Component.hpp"
+#include "Core/System/Component/Component.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
 // ==============================
 class TreeData;
+class CollisionManager;
 
 // ==============================
 //  —ñ‹“Œ^’è‹`

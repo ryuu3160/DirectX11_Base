@@ -9,6 +9,8 @@
 //	include
 // ==============================
 #include "MovementComponent.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Component/Transform.hpp"
 
 MovementComponent::MovementComponent()
 	: Component("MovementComponent")

@@ -9,6 +9,9 @@
 //	include
 // ==============================
 #include "Transform.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //	定数定義
@@ -21,6 +24,7 @@ Transform::Transform()
 	: Component("Transform")
 	, m_Pos{ 0.0f, 0.0f, 0.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Euler{ 0.0f, 0.0f, 0.0f }
 	, m_IsSyncEuler(false), m_AccumEuler{ 0.0f, 0.0f, 0.0f }
+	, m_pParent(nullptr)
 {
 }
 
@@ -38,6 +42,79 @@ void Transform::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<DirectX::XMFLOAT3>("Scale", &m_Scale);
 	In_Data->AccessValue<DirectX::XMFLOAT4>("Quat", &m_Quat);
 	In_Data->AccessValue<DirectX::XMFLOAT3>("Euler", &m_Euler);
+}
+
+void Transform::SetParent(_In_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays)
+{
+	if(m_pParent == In_Parent)
+		return;
+	DirectX::XMMATRIX worldMatrix = GetWorldMatrix();
+	// 既存の親子関係を解除
+	if(m_pParent)
+	{
+		auto &siblings = m_pParent->m_Children;
+		siblings.erase(std::remove(siblings.begin(), siblings.end(), this), siblings.end());
+	}
+	m_pParent = In_Parent;
+	// 新しい親に追加
+	if(m_pParent)
+	{
+		m_pParent->m_Children.push_back(this);
+	}
+	if(In_IsWorldPositionStays)
+	{
+		// ワールド行列を維持するためにローカル行列を再計算
+		DirectX::XMMATRIX parentWorldMatrix = DirectX::XMMatrixIdentity();
+		if(m_pParent)
+		{
+			parentWorldMatrix = m_pParent->GetWorldMatrix();
+		}
+		DirectX::XMMATRIX localMatrix = DirectX::XMMatrixInverse(nullptr, parentWorldMatrix) * worldMatrix;
+		// ローカル行列から位置、回転、スケールを抽出して設定
+		DirectX::XMVECTOR scale;
+		DirectX::XMVECTOR rotationQuat;
+		DirectX::XMVECTOR translation;
+		DirectX::XMMatrixDecompose(&scale, &rotationQuat, &translation, localMatrix);
+		DirectX::XMFLOAT3 newPos;
+		DirectX::XMStoreFloat3(&newPos, translation);
+		SetPosition(newPos);
+		DirectX::XMFLOAT4 newQuat;
+		DirectX::XMStoreFloat4(&newQuat, rotationQuat);
+		SetQuat(newQuat);
+		DirectX::XMFLOAT3 newScale;
+		DirectX::XMStoreFloat3(&newScale, scale);
+		SetScale(newScale);
+	}
+}
+
+Transform *Transform::GetParent() const
+{
+	return m_pParent;
+}
+
+int Transform::GetChildCount() const
+{
+	return static_cast<int>(m_Children.size());
+}
+
+Transform *Transform::GetChild(_In_ int In_Index) const
+{
+	return m_Children[In_Index];
+}
+
+Transform *Transform::FindChild(_In_ std::string_view In_Name) const
+{
+	for(auto *child : m_Children)
+	{
+		if(child->GetGameObject()->GetName() == In_Name)
+			return child;
+	}
+	return nullptr;
+}
+
+const std::vector<Transform *> &Transform::GetChildren() const
+{
+	return m_Children;
 }
 
 void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept
@@ -95,6 +172,74 @@ void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float 
 		m_AccumEuler.z += 360.0f;
 		m_Euler.z += 360.0f;
 	}
+}
+
+DirectX::XMFLOAT4X4 Transform::GetWorld(_In_ bool In_IsTranspose) const noexcept
+{
+	auto Pos = m_Pos;
+	auto Quat = m_Quat;
+	auto Scale = m_Scale;
+
+	// 各要素の行列を取得
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
+		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
+	);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+
+	// 行列の合算
+	DirectX::XMMATRIX M = S * R * T;
+
+	if(m_pParent)
+	{
+		auto ParPos = m_pParent->GetPosition();
+		auto ParQuat = m_pParent->GetQuat();
+		auto ParScale = m_pParent->GetScale();
+		T = DirectX::XMMatrixTranslation(ParPos.x, ParPos.y, ParPos.z);
+		R = DirectX::XMMatrixRotationQuaternion(
+			DirectX::XMVectorSet(ParQuat.x, ParQuat.y, ParQuat.z, ParQuat.w)
+		);
+		S = DirectX::XMMatrixScaling(ParScale.x, ParScale.y, ParScale.z);
+
+		M = M * (S * R * T);
+	}
+
+	// 転置
+	if(In_IsTranspose)
+		M = DirectX::XMMatrixTranspose(M);
+	// XMMATRIXからXMFLOATへ変換
+	DirectX::XMFLOAT4X4 fMat;
+	DirectX::XMStoreFloat4x4(&fMat, M);
+
+	return fMat;
+}
+
+DirectX::XMMATRIX Transform::GetWorldMatrix() const noexcept
+{
+	auto Pos = m_Pos;
+	auto Quat = m_Quat;
+	auto Scale = m_Scale;
+	// 各要素の行列を取得
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
+		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
+	);
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
+	// 行列の合算
+	DirectX::XMMATRIX M = S * R * T;
+	if(m_pParent)
+	{
+		auto ParPos = m_pParent->GetPosition();
+		auto ParQuat = m_pParent->GetQuat();
+		auto ParScale = m_pParent->GetScale();
+		T = DirectX::XMMatrixTranslation(ParPos.x, ParPos.y, ParPos.z);
+		R = DirectX::XMMatrixRotationQuaternion(
+			DirectX::XMVectorSet(ParQuat.x, ParQuat.y, ParQuat.z, ParQuat.w)
+		);
+		S = DirectX::XMMatrixScaling(ParScale.x, ParScale.y, ParScale.z);
+		M = M * (S * R * T);
+	}
+	return M;
 }
 
 DirectX::XMFLOAT3 Transform::GetRotation(_In_ bool In_IsDegree) noexcept

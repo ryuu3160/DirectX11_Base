@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "RenderComponent.hpp"
-#include "Engine/Core/DirectX11/System/RenderManager.hpp"
-#include "Engine/Core/System/Component/Camera.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
+#include "Core/DirectX11/System/RenderManager.hpp"
+#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 RenderComponent::RenderComponent(_In_ std::string In_Name)
 	: Component(In_Name)
@@ -57,6 +58,10 @@ void RenderComponent::Update(_In_ float In_DeltaTime) noexcept
 void RenderComponent::SaveLoad(_In_ DataAccessor *In_Data)
 {
 	In_Data->AccessValue<FilePathHold>("AssetPath", &m_AssetPath);
+	int LayerGroupInt = static_cast<int>(m_LayerGroup);
+	In_Data->AccessValue<int>("LayerGroup", &LayerGroupInt);
+	m_LayerGroup = static_cast<LayerGroup>(LayerGroupInt);
+	In_Data->AccessValue<int>("Layer", &m_nLayer);
 }
 
 #ifdef _DEBUG

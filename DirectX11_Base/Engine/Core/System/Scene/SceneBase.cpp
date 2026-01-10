@@ -9,10 +9,10 @@
 //	include
 // ==============================
 #include "SceneBase.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
-#include "Engine/Core/System/Object/GameObject.hpp"
-#include "Engine/Core/System/Managers/SceneManager.hpp"
-#include "Engine/Core/System/Object/GridObject.hpp"
+#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
+#include "Core/System/Object/GridObject.hpp"
 
 // ==============================
 //  前方宣言
@@ -22,7 +22,7 @@ SceneBase::Objects SceneBase::m_Objects;
 ItemList *SceneBase::m_Hierarchy = nullptr;
 #endif // DEBUG
 
-SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
+SceneBase::SceneBase(_In_ std::string_view In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
 	, m_Data(nullptr)
@@ -80,15 +80,16 @@ void SceneBase::CommonProcessScene() noexcept
 #endif
 }
 
-template<> GameObject
-*SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
+template<>
+GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name);
+	Objects::iterator itr = m_Objects.find(In_Name.data());
 	if (itr != m_Objects.end())
 	{
-		std::string buf = "Failed to create object." + In_Name;
+		std::string buf = "Failed to create object.";
+		buf += In_Name.data();
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
@@ -96,12 +97,16 @@ template<> GameObject
 	m_Hierarchy->AddListItem(In_Name.data());
 #endif // _DEBUG
 
-	GameObject *ptr = new GameObject(In_Name);
+	GameObject *ptr = new GameObject(In_Name.data());
 	ptr->m_pScene = this; // 所属シーンを設定
-	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	ptr->DataRead(m_Data->GetObjectPtr(In_Name.data())); // CPONデータ読み込み
 	ptr->ExecuteAwake(); // Awake呼び出し
-	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
-	m_Items.push_back(In_Name);
+
+	if(In_pParent)
+		ptr->GetTransform()->SetParent(In_pParent); // 親設定
+
+	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name.data(), ptr));
+	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
 	return ptr;

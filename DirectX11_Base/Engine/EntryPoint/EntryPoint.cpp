@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "EntryPoint.hpp"
-#include "Engine/EntryPoint/Main.hpp"
-#include "Engine/Core/System/Managers/DebugManager/InitializeImGui.hpp"
-#include "Engine/Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "EntryPoint/Main.hpp"
+#include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "ryuu_lib/WindowGenerator/Window.hpp"
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {

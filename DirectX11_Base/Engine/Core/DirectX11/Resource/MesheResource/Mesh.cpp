@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "Mesh.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // assimp‚Ìƒ‰ƒCƒuƒ‰ƒŠƒŠƒ“ƒN
 #ifdef _DEBUG

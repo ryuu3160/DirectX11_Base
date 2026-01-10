@@ -9,8 +9,10 @@
 //	include
 // ==============================
 #include "RenderManager.hpp"
-#include "Engine/Core/System/Component/Camera.hpp"
-#include "Engine/Core/DirectX11/System/Gizmos.hpp"
+#include "Core/System/Component/Camera.hpp"
+#include "Core/DirectX11/System/Gizmos.hpp"
+#include "Core/System/Utility/Utility.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 void RenderManager::AddRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_Layer) noexcept
 {
@@ -22,6 +24,7 @@ void RenderManager::AddRenderComponent(_In_ RenderComponent *In_RenderComponent,
 	// 構築された、又は既に存在するレイヤーへRenderComponentを追加
 	itr.first->second.push_back(In_RenderComponent);
 	m_ObjectsToDrawGizmos.insert(In_RenderComponent->GetGameObject());
+	LayerSortRequest(In_Layer);
 }
 
 void RenderManager::RemoveRenderComponent(_In_ RenderComponent *In_RenderComponent, _In_ LayerGroup In_LayerGroup) noexcept

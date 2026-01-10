@@ -10,6 +10,7 @@
 // ==============================
 #include "ParticleEmitter.hpp"
 #include "ParticlePoolManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 ParticleEmitter::ParticleEmitter()
     : m_EmitTimer(0.0f), m_DurationTimer(0.0f)

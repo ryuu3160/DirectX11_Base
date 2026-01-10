@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ResourceSetting.hpp
-	Summary: 定数とか保持しておくやつ
+	Summary: リソース設定
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/08/16 Sat AM 03:54:05 初回作成
 ===================================================================+*/
@@ -12,6 +12,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Core/Defines.hpp"
 
 namespace ResourceSetting
 {

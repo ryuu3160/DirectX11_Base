@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "SoundManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 XAUDIO2_BUFFER *SoundManager::Load(_In_ const std::string &In_strSoundName, _In_ const FilePath &In_strFileName, _In_ const bool &In_bIsSE, _In_ const bool &In_bLoop) noexcept
 {

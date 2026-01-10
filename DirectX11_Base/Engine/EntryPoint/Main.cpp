@@ -9,18 +9,7 @@
 //	include
 // ==============================
 #include "Main.hpp"
-#include "Engine/Core/DirectX11/System/Gizmos.hpp"
-#include "Engine/Core/DirectX11/System/RenderManager.hpp"
-#include "Engine/Core/System/Managers/CollisionManager/CollisionManager.hpp"
-#include "Engine/Core/System/Managers/DebugManager/InitializeImGui.hpp"
-#include "Engine/Core/System/Managers/DebugManager/DebugManager.hpp"
-#include "Engine/Core/System/SpriteManager/SpriteManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
-#include "Engine/Core/DirectX11/System/Particle/Core/ParticlePoolManager.hpp"
-#include "Engine/Core/System/Input/Input.hpp"
-#include "Engine/Core/System/Scene/SceneRoot.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
-#include "Engine/ThirdParty/ImGui/imgui_impl_win32.h"
+#include "Engine.hpp"
 
 // ==============================
 //  プロトタイプ宣言

@@ -9,6 +9,8 @@
 //	include
 // ==============================
 #include "ParticlePoolManager.hpp"
+#include "Core/System/Utility/Utility.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // -------------------------------
 //	パーティクルプール管理

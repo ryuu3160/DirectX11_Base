@@ -9,8 +9,9 @@
 //	include
 // ==============================
 #include "SceneManager.hpp"
-#include "Engine/Core/DirectX11/System/RenderManager.hpp"
-#include "Engine/Core/System/Managers/CollisionManager/CollisionManager.hpp"
+#include "Core/DirectX11/System/RenderManager.hpp"
+#include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
+#include "Core/System/Managers/FadeManager.hpp"
 
 SceneManager::SceneManager()
 	: m_RenderManager(RenderManager::GetInstance())

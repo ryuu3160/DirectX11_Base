@@ -9,9 +9,9 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Resource/MesheResource/InstancedMeshBuffer.hpp"
-#include "Engine/Core/DirectX11/Resource/Material.hpp"
-#include "Engine/Core/DirectX11/Resource/ResourceSetting.hpp"
+#include "Core/DirectX11/Resource/MesheResource/InstancedMeshBuffer.hpp"
+#include "Core/DirectX11/Resource/Material.hpp"
+#include "Core/DirectX11/Resource/ResourceSetting.hpp"
 
 // ==============================
 //	ëOï˚êÈåæ

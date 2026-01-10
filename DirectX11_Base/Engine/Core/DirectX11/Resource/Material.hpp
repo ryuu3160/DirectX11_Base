@@ -9,8 +9,8 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Resource/ShaderResource/Shader.hpp"
-#include "Engine/Core/DirectX11/Resource/Texture.hpp"
+#include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
+#include "Core/DirectX11/Resource/Texture.hpp"
 #include "ResourceSetting.hpp"
 
 // ==============================

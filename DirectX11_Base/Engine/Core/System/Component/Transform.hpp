@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Component/Component.hpp"
+#include "Core/System/Component/Component.hpp"
 
 /// <summary>
 /// Transformクラス
@@ -25,6 +25,43 @@ public:
 	void SaveLoad(_In_ DataAccessor *In_Data) final;
 
 	/// <summary>
+	/// 自身の親を設定します
+	/// </summary>
+	/// <param name="[In_Parent]">親Transformポインタ</param>
+	/// <param name="[In_IsWorldPositionStays]">ワールド座標を維持するかどうか</param>
+	void SetParent(_In_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays = true);
+	/// <summary>
+	/// 自身の親を取得します
+	/// </summary>
+	/// <returns>親Transformポインタ</returns>
+	Transform *GetParent() const;
+
+	/// <summary>
+	/// 子要素の数を取得します
+	/// </summary>
+	/// <returns>子要素の数</returns>
+	int GetChildCount() const;
+	/// <summary>
+	/// 指定されたインデックスの子トランスフォームを取得します
+	/// </summary>
+	/// <param name="[In_Index]">取得する子トランスフォームのインデックス</param>
+	/// <returns>指定されたインデックスの子トランスフォームへのポインタ</returns>
+	Transform *GetChild(_In_ int In_Index) const;
+
+	/// <summary>
+	/// 指定された名前のTransformを検索します
+	/// </summary>
+	/// <param name="[In_Name]">検索するTransformの名前</param>
+	/// <returns>見つかったTransformへのポインタ(見つからない場合はnullptr)</returns>
+	Transform *FindChild(_In_ std::string_view In_Name) const;
+
+	/// <summary>
+	/// 子トランスフォームのリストを取得します
+	/// </summary>
+	/// <returns>子トランスフォームへのポインタを含むベクターへの定数参照</returns>
+	const std::vector<Transform *> &GetChildren() const;
+
+	/// <summary>
 	/// <para>指定された角度で回転を適用します</para>
 	/// <para>連続した回転を行う場合はこちらを使用してください</para>
 	/// </summary>
@@ -34,6 +71,9 @@ public:
 	// ------------------------------
 	//  Getter
 	// ------------------------------
+	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
+	DirectX::XMMATRIX GetWorldMatrix() const noexcept;
+
 	DirectX::XMFLOAT3 GetRotation(_In_ bool In_IsDegree = false) noexcept;
 
 	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_Pos; }
@@ -89,4 +129,7 @@ private:
 	DirectX::XMFLOAT3	m_Euler;		// 回転(オイラー角)
 	DirectX::XMFLOAT3	m_AccumEuler;	// オイラー角の累積
 	bool m_IsSyncEuler;					// オイラー角とクォータニオンの同期が必要かどうか
+
+	Transform *m_pParent;
+	std::vector<Transform *> m_Children;
 };

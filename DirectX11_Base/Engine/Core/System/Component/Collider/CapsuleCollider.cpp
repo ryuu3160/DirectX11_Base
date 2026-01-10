@@ -11,6 +11,7 @@
 #include "CapsuleCollider.hpp"
 #include "SphereCollider.hpp"
 #include "BoxCollider.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //	’è”’è‹`

@@ -10,6 +10,8 @@
 // ==============================
 #include "SpriteManagerInspector.hpp"
 #include "SpriteManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
 
 SpriteManagerInspector::SpriteManagerInspector()
 	: SpriteManagerWindow("Inspector##SpriteManager")

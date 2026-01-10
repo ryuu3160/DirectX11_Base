@@ -9,10 +9,12 @@
 //	include
 // ==============================
 #include "SkyBoxRenderer.hpp"
-#include "Engine/Core/System/Component/Camera.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/MaterialManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/TextureManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ModelManager.hpp"
+#include "Core/System/Component/Camera.hpp"
+#include "Core/DirectX11/ResourceManager/MaterialManager.hpp"
+#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/DirectX11/ResourceManager/ModelManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

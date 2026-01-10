@@ -9,8 +9,10 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Renderer/RenderComponent.hpp"
-#include "Engine/Core/DirectX11/System/RenderContext.hpp"
+#include "Core/DirectX11/Renderer/RenderComponent.hpp"
+#include "Core/DirectX11/System/RenderContext.hpp"
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "ryuu_lib/MultiComparison/MultiComparison.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

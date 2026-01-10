@@ -9,6 +9,9 @@
 //	include
 // ==============================
 #include "InitializeImGui.hpp"
+#include "Core/DirectX11/DX11_Core.hpp"
+#include "ryuu_lib/WindowGenerator/Window.hpp"
+#include "Core/DirectX11/ResourceManager/RenderTargetManager.hpp"
 
 void InitializeImGui::InitImGui()
 {

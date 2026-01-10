@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "Component.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 Component::Component(_In_ std::string In_Name)
 	: m_Name(In_Name), m_pGameObject(nullptr)

@@ -9,8 +9,8 @@
 //	include
 // ==============================
 #include "Camera.hpp"
-#include "Engine/Core/DirectX11/System/Gizmos.hpp"
-#include "Engine/Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/System/Gizmos.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 Camera::Camera()
 	: Component("Camera")

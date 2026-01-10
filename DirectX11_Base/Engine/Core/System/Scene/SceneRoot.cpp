@@ -8,21 +8,8 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/System/RenderManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
-#include "Engine/Core/DirectX11/Resource/ShaderResource/ShaderParam.hpp"
-#include "Engine/Core/DirectX11/System/Gizmos.hpp"
-#include "Engine/Core/DirectX11/Renderer/InstancedModelRenderer.hpp"
-#include "Engine/Core/DirectX11/Renderer/RTSpriteRenderer.hpp"
 #include "SceneRoot.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
-#include "Engine/Core/System/Object/SkyBoxObj.hpp"
-#include "Engine/Core/System/SpriteManager/SpriteManager.hpp"
-#include "Engine/Core/System/Component/PlayerController.hpp"
-#include "Engine/Core/System/Component/Collider/SphereCollider.hpp"
-#include "Engine/Core/System/Component/Collider/BoxCollider.hpp"
-#include "Engine/Core/System/Component/Collider/CapsuleCollider.hpp"
-#include "Engine/Core/DirectX11/System/Particle/Components/ParticleEffect.hpp"
+#include "Engine.hpp"
 
 // ==============================
 //  ’è”
@@ -59,7 +46,7 @@ void SceneRoot::Init()
 	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
 	pModel->AddComponent<SphereCollider>();
 
-	auto child = pModel->AddChildObject<GameObject>("RootModel0Child");
+	auto child = CreateObject<GameObject>("RootModel0Child",pModel->GetTransform());
 	auto comp = child->AddComponent<ModelRenderer>();
 	comp->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));

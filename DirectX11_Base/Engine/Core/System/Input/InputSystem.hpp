@@ -9,7 +9,8 @@
 // ==============================
 //	include
 // ==============================
-
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/System/Input/Input.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================

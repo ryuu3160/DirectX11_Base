@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: PlayerController.hpp
-	Summary: PlayerControllerクラス
+	Summary: デフォルトのプレイヤーコントローラーコンポーネント
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/12/26 Fri PM 08:47:33 初回作成
 ===================================================================+*/
@@ -9,8 +9,8 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Component/Component.hpp"
-#include "Engine/Core/System/Component/MovementComponent.hpp"
+#include "Core/System/Component/Component.hpp"
+#include "Core/System/Component/MovementComponent.hpp"
 
 /// <summary>
 /// PlayerControllerクラス

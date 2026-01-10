@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "ShaderManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 void ShaderManager::SetupShaders(_In_ const std::vector<std::string> &In_FileNames) noexcept
 {

@@ -10,6 +10,7 @@
 // ==============================
 #include "DebugItem.hpp"
 #include "DebugManager.hpp"
+#include "ryuu_lib/FrameManager/FrameManager.hpp"
 
 // ==============================
 //	’è”’è‹`

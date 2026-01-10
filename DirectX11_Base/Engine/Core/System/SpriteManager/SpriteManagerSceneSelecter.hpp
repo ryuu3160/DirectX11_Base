@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "SpriteManagerWindow.hpp"
+#include "Core/Defines.hpp"
 
 /// <summary>
 /// SpriteManagerSceneSelecterƒNƒ‰ƒX

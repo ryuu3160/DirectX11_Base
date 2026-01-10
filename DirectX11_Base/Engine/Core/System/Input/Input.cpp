@@ -1,5 +1,6 @@
 //Input.cpp
 #include "Input.hpp"
+#include "Core/Defines.hpp"
 
 namespace Input
 {

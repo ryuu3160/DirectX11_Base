@@ -9,16 +9,15 @@
 //	include
 // ==============================
 #include "GameObject.hpp"
-#include "Engine/Core/System/Component/Transform.hpp"
-#include "Engine/Core/System/Component/Collider/ColliderBase.hpp"
+#include "Core/System/Component/Transform.hpp"
+#include "Core/System/Component/Collider/ColliderBase.hpp"
+#include "Core/System/Scene/SceneBase.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
-	: m_Name(In_Name), m_ChildNameSaffix("(" + m_Name + "_Child)")
-	, m_bIsChild(false)
-	, m_pScene(nullptr), m_pParent(nullptr)
+	: m_Name(In_Name)
+	, m_pScene(nullptr)
 	, m_Data(nullptr)
 	, m_pTransform(nullptr)
-	//, m_Pos{}, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }
 {
 	m_Data = std::make_shared<cpon_object>();
 	m_Data->SetObjectName(m_Name);
@@ -34,11 +33,6 @@ GameObject::~GameObject()
 		delete (*itr);
 		(*itr) = nullptr;
 	}
-
-	for (auto &child : m_ChildObjects)
-	{
-		child = nullptr;
-	}
 }
 
 void GameObject::OnEnable() noexcept
@@ -50,9 +44,9 @@ void GameObject::OnEnable() noexcept
 	}
 
 	// 子オブジェクトの有効化処理
-	for (auto &child : m_ChildObjects)
+	for (auto &child : m_pTransform->GetChildren())
 	{
-		child->SetActiveParent(true);
+		child->GetGameObject()->SetActiveParent(true);
 	}
 }
 
@@ -64,9 +58,9 @@ void GameObject::OnDisable() noexcept
 		itr->SetActive(false);
 	}
 	// 子オブジェクトの無効化処理
-	for (auto &child : m_ChildObjects)
+	for (auto &child : m_pTransform->GetChildren())
 	{
-		child->SetActiveParent(false);
+		child->GetGameObject()->SetActiveParent(false);
 	}
 }
 
@@ -210,28 +204,14 @@ void GameObject::RemoveComponent(_In_ std::string In_Name)
 	}
 }
 
-std::vector<GameObject *> GameObject::GetChildObjects() const noexcept
-{
-	return m_ChildObjects;
-}
-
-void GameObject::DestroyAllChildObjects() noexcept
-{
-	for (auto &child : m_ChildObjects)
-	{
-		child->DestroySelf();
-	}
-	m_ChildObjects.clear();
-}
-
 void GameObject::DestroySelf() noexcept
 {
 	Object::DestroySelf();
 
 	_destroySelf();
 
-	for (const auto &itr : m_ChildObjects)
-		itr->DestroySelf();
+	for (const auto &itr : m_pTransform->GetChildren())
+		itr->GetGameObject()->DestroySelf();
 }
 
 DirectX::XMFLOAT3 GameObject::GetRotation(_In_ bool In_IsDegree) const noexcept
@@ -256,42 +236,12 @@ DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
 
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept
 {
-	auto Pos = m_pTransform->GetPosition();
-	auto Quat = m_pTransform->GetQuat();
-	auto Scale = m_pTransform->GetScale();
+	return m_pTransform->GetWorld(In_IsTranspose);
+}
 
-	// 各要素の行列を取得
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(Pos.x, Pos.y, Pos.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(
-		DirectX::XMVectorSet(Quat.x, Quat.y, Quat.z, Quat.w)
-	);
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(Scale.x, Scale.y, Scale.z);
-
-	// 行列の合算
-	DirectX::XMMATRIX M = S * R * T;
-
-	if (m_bIsChild && m_pParent)
-	{
-		auto ParPos = m_pParent->m_pTransform->GetPosition();
-		auto ParQuat = m_pParent->m_pTransform->GetQuat();
-		auto ParScale = m_pParent->m_pTransform->GetScale();
-		T = DirectX::XMMatrixTranslation(ParPos.x, ParPos.y, ParPos.z);
-		R = DirectX::XMMatrixRotationQuaternion(
-			DirectX::XMVectorSet(ParQuat.x, ParQuat.y, ParQuat.z, ParQuat.w)
-		);
-		S = DirectX::XMMatrixScaling(ParScale.x, ParScale.y, ParScale.z);
-
-		M = M * (S * R * T);
-	}
-
-	// 転置
-	if (In_IsTranspose)
-		M = DirectX::XMMatrixTranspose(M);
-	// XMMATRIXからXMFLOATへ変換
-	DirectX::XMFLOAT4X4 fMat;
-	DirectX::XMStoreFloat4x4(&fMat, M);
-
-	return fMat;
+DirectX::XMMATRIX GameObject::GetWorldMatrix() const noexcept
+{
+	return DirectX::XMMATRIX();
 }
 
 void GameObject::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept

@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: SceneManager.hpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: シーンマネージャークラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/9/11 Thu AM 05:31:11 初回作成
 ===================================================================+*/
@@ -9,13 +9,14 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Scene/SceneBase.hpp"
+#include "Core/System/Scene/SceneBase.hpp"
 
 // ==============================
 //	前方宣言
 // ==============================
 class RenderManager;
 class CollisionManager;
+class FadeManager;
 
 /// <summary>
 /// SceneManagerクラス

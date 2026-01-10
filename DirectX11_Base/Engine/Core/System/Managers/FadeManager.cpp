@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "FadeManager.hpp"
-#include "Engine/Core/DirectX11/Renderer/SpriteRenderer.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
-#include "Engine/Core/System/Managers/SceneManager.hpp"
+#include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
+#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
 
 void FadeManager::Update(_In_ float In_DeltaTime) noexcept
 {

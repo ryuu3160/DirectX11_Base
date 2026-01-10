@@ -11,6 +11,8 @@
 #include "BoxCollider.hpp"
 #include "SphereCollider.hpp"
 #include "CapsuleCollider.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 BoxCollider::BoxCollider()
 	: ColliderBase("BoxCollider")

@@ -694,6 +694,9 @@
     <ClInclude Include="Engine\ThirdParty\ImGui\imstb_truetype.h">
       <Filter>Engine\ThirdParty\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Engine.hpp">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_DepthShadow.hlsl">

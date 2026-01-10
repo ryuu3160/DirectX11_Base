@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: PlayerController.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: デフォルトのプレイヤーコントローラーコンポーネント
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/12/26 Fri PM 08:47:40 初回作成
 ===================================================================+*/
@@ -9,6 +9,9 @@
 //	include
 // ==============================
 #include "PlayerController.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Input/InputSystem.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 PlayerController::PlayerController()
 	: Component("PlayerController")

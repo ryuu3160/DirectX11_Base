@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "SkyBoxObj.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
 
 SkyBoxObj::SkyBoxObj()
 	: SkyBoxObj("SkyBoxObj")

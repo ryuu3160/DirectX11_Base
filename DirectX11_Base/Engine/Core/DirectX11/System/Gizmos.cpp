@@ -6,6 +6,8 @@
 ===================================================================+*/
 #include "Gizmos.hpp"
 #include "RenderManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 void Gizmos::Init()
 {

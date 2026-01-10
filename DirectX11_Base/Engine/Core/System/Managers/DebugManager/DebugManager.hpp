@@ -9,9 +9,11 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Managers/DebugManager/InitializeImGui.hpp"
-#include "Engine/Core/System/Managers/DebugManager/DebugWindow.hpp"
-#include "Engine/Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
+#include "Core/System/Managers/DebugManager/DebugWindow.hpp"
+#include "Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/System/Utility/Utility.hpp"
 
 // ==============================
 //	’è”’è‹`

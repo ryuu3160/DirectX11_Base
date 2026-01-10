@@ -11,6 +11,7 @@
 // ==============================
 #include "Particle.hpp"
 #include "ParticleEmitter.hpp"
+#include "ryuu_lib/Singleton/Singleton.hpp"
 
 /// <summary>
 /// ParticlePoolManagerƒNƒ‰ƒX

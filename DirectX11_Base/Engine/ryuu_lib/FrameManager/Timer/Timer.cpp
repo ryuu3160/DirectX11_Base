@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "Timer.hpp"
+#include "ryuu_lib/FrameManager/FrameManager.hpp"
 
 Timer::Timer()
 	: m_FrameManager(FrameManager::GetInstance())
