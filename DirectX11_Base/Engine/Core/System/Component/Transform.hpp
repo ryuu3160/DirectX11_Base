@@ -33,7 +33,7 @@ public:
 	/// </summary>
 	/// <param name="[In_Parent]">親Transformポインタ</param>
 	/// <param name="[In_IsWorldPositionStays]">ワールド座標を維持するかどうか</param>
-	void SetParent(_In_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays = true);
+	void SetParent(_In_opt_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays = true);
 	/// <summary>
 	/// 自身の親を取得します
 	/// </summary>

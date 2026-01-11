@@ -45,7 +45,7 @@ void Transform::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<std::string>("ParentName", &m_ParentName);
 }
 
-void Transform::SetParent(_In_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays)
+void Transform::SetParent(_In_opt_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays)
 {
 	// e‚ª“¯‚¶ê‡‚Í‰½‚à‚µ‚È‚¢
 	if(m_pParent == In_Parent)
@@ -100,6 +100,7 @@ void Transform::SetParent(_In_ Transform *In_Parent, _In_ bool In_IsWorldPositio
 	if(m_pParent)
 	{
 		m_pParent->RemoveChild(this);
+		m_ParentName.clear();
 	}
 
 	// V‚µ‚¢e‚ğİ’è
