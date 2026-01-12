@@ -97,6 +97,7 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
+	void Rename(_In_ std::string In_Name) noexcept;
 
 	inline Transform *GetTransform() const noexcept { return m_pTransform; }
 
