@@ -28,6 +28,7 @@ ColliderBase::ColliderBase(_In_ std::string In_Name)
 ColliderBase::~ColliderBase()
 {
 	m_CollisionManager.RemoveColliderComponent(this);
+	m_pTreeData = nullptr;
 }
 
 void ColliderBase::SaveLoad(_In_ DataAccessor *In_Data)

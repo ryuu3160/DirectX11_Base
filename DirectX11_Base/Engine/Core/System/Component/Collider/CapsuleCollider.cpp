@@ -35,8 +35,8 @@ CapsuleCollider::~CapsuleCollider()
 
 void CapsuleCollider::Init() noexcept
 {
-	ColliderBase::Init();
     UpdateWorldSegment();
+	ColliderBase::Init();
 }
 
 void CapsuleCollider::Update(_In_ float In_DeltaTime) noexcept
