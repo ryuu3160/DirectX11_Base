@@ -30,6 +30,10 @@ Transform::Transform()
 
 Transform::~Transform()
 {
+	DetachChildren();
+	if(m_pParent)
+		m_pParent->RemoveChild(this);
+	m_pParent = nullptr;
 }
 
 void Transform::Init() noexcept
