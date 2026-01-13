@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "InitializeImGui.hpp"
+#include "Core/System/Utility/Concept.hpp"
 // ==============================
 //  前方宣言
 // ==============================
@@ -50,6 +51,9 @@ public:
 		Group,		// 表示項目をまとめる
 		List,		// 一覧表示
 		LayoutFunc,	// レイアウト用関数
+
+		// システム専用
+		__Hierarchy // ヒエラルキーウィンドウ
 	};
 
 protected:

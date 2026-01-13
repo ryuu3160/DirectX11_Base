@@ -228,6 +228,10 @@
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugWindow.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Managers\FadeManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SceneManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp" />
@@ -321,6 +325,10 @@
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugWindow.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\System\Managers\FadeManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SceneManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp" />

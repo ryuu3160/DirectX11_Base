@@ -186,6 +186,7 @@ DebugItem::Kind DebugItem::StrToKind(_In_ std::string In_Str)
 	if (In_Str == "Group")		return DebugItem::Group;
 	if (In_Str == "List")		return DebugItem::List;
 	if (In_Str == "LayoutFunc")	return DebugItem::LayoutFunc;
+	if (In_Str == "__Hierarchy")	return DebugItem::__Hierarchy;
 	return DebugItem::Label;
 }
 
@@ -208,6 +209,7 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 	case DebugItem::Group:		return "Group";
 	case DebugItem::List:		return "List";
 	case DebugItem::LayoutFunc:	return "LayoutFunc";
+	case DebugItem::__Hierarchy:	return "__Hierarchy";
 	}
 }
 

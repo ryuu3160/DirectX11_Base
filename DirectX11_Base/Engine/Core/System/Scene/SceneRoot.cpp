@@ -213,8 +213,11 @@ void SceneRoot::Update(_In_ float In_DeltaTime)
 	ps.dummy = { 0.0f,0.0f };
 	std::shared_ptr<ShaderParam> pPatternScaleParam = std::make_shared<ShaderParam>("PatternScale", 0, &ps, 1);
 	auto pPatternScale = GetObject<GameObject>("PatternScale");
-	auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
-	PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
+	if(pPatternScale)
+	{
+		auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
+		PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
+	}
 
 	//GetObject<GameObject>("ParticleTest")->GetComponent<ParticleEffect>()->Play();
 

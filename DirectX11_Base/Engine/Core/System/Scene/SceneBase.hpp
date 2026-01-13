@@ -27,6 +27,7 @@
 //  前方宣言
 // ==============================
 class SceneManager;
+class ItemHierarchy;
 
 /// <summary>
 /// SceneBaseクラス
@@ -76,6 +77,13 @@ public:
 	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します</returns>
 	template <class T>
 	T *GetObject(_In_ std::string_view In_Name) noexcept;
+
+	/// <summary>
+	/// オブジェクト名を変更します
+	/// </summary>
+	/// <param name="[In_OldName]">古い名前</param>
+	/// <param name="[In_NewName]">新しい名前</param>
+	void RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName);
 
 	/// <summary>
 	/// 指定された名前のオブジェクトを破棄します
@@ -153,11 +161,21 @@ private:
 private:
 	static Objects m_Objects;
 #ifdef _DEBUG
-	static ItemList *m_Hierarchy;
-#endif // _DEBUG
+	static std::vector<GameObject *> m_ShowHierarchyObjects;
+	static ItemHierarchy *m_Hierarchy;
+#endif
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;
 	cpon* m_Data; // シーンデータ
+
+public:
+#ifdef _DEBUG
+	/// <summary>
+	/// デバッグ用: ヒエラルキーに表示するオブジェクトリストを取得します
+	/// </summary>
+	/// <returns>ヒエラルキーに表示するオブジェクトリストへの参照を返します</returns>
+	static std::vector<GameObject *> &GetHierarchyObjects() noexcept { return m_ShowHierarchyObjects; }
+#endif
 
 protected:
 	Items m_Items;
@@ -180,11 +198,7 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
-
-	// ヒエラルキーに追加
-	m_Hierarchy->AddListItem(In_Name.data());
-
-#endif // _DEBUG
+#endif
 
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data());
@@ -199,6 +213,12 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
+
+#ifdef _DEBUG
+	// ヒエラルキーに追加
+	m_ShowHierarchyObjects.push_back(ptr);
+#endif
+
 	return ptr;
 }
 
@@ -216,11 +236,7 @@ inline T *SceneBase::CreageObject(_In_ std::string_view In_Name, _In_opt_ Transf
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
-
-	// ヒエラルキーに追加
-	m_Hierarchy->AddListItem(In_Name.data());
-
-#endif // _DEBUG
+#endif
 
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data(), args...);
@@ -234,6 +250,12 @@ inline T *SceneBase::CreageObject(_In_ std::string_view In_Name, _In_opt_ Transf
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
+
+#ifdef _DEBUG
+	// ヒエラルキーに追加
+	m_ShowHierarchyObjects.push_back(ptr);
+#endif
+
 	return ptr;
 }
 
@@ -281,12 +303,17 @@ T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
 {
 	// オブジェクトの探索
 	Objects::iterator itr = m_Objects.find(In_Name.data());
-	if (itr == m_Objects.end()) return nullptr;
+	if (itr == m_Objects.end())
+		return nullptr;
 
 	// 型変換
 	T *ptr = dynamic_cast<T *>(itr->second);
 
 	if(NullCheck(ptr, NullpCheckMode::OUTPUT, "Failed to get object." + std::string(In_Name)))
+		return nullptr;
+
+	// 破棄予約されていた場合は取得不可
+	if(static_cast<GameObject *>(ptr)->IsDestroySelf())
 		return nullptr;
 
 	return ptr;
