@@ -44,7 +44,7 @@ public:
     /// <summary>
     /// オブジェクトを選択
     /// </summary>
-    void SelectObject(_Inout_ GameObject *obj);
+    void SelectObject(_Inout_ GameObject *In_Obj);
 
 private:
     /// <summary>
@@ -55,24 +55,39 @@ private:
     /// <summary>
     /// オブジェクトをツリーノードとして描画(再帰)
     /// </summary>
-    void DrawObjectNode(_Inout_ GameObject *obj);
+    void DrawObjectNode(_Inout_ GameObject *In_Obj);
 
     /// <summary>
     /// ドラッグ&ドロップのソースを設定
     /// </summary>
-    void HandleDragSource(_In_ GameObject *obj);
+    void HandleDragSource(_In_ GameObject *In_Obj);
 
     /// <summary>
     /// ドラッグ&ドロップのターゲットを設定
     /// </summary>
-    void HandleDropTarget(_In_ GameObject *obj);
+    void HandleDropTarget(_In_ GameObject *In_Obj);
 
     /// <summary>
     /// 右クリックメニューを表示
     /// </summary>
-    void ShowContextMenu(_In_ GameObject *obj);
+    void ShowContextMenu(_In_ GameObject *In_Obj);
 
 private:
+
+    /// <summary>
+    /// リネームを開始
+    /// </summary>
+    void StartRename(_In_ GameObject *In_Obj);
+
+    /// <summary>
+    /// リネーム入力を描画
+    /// </summary>
+    void DrawRenameInput(_In_ GameObject *In_Obj, _In_ int In_ChildCountBefore);
+
+    /// <summary>
+    /// リネームを完了
+    /// </summary>
+    void FinishRename(_In_ bool In_IsConfirm);
 
     /// <summary>
     /// 保留中の親の変更を実行します
@@ -91,4 +106,8 @@ private:
     GameObject *m_DraggedObject;            // ドラッグ中のオブジェクト
     SelectCallback m_SelectCallback;        // 選択時のコールバック
 	std::vector<PendingParentChange> m_PendingParentChanges; // 保留中の親子関係変更
+
+    GameObject *m_RenamingObject;           // リネーム中のオブジェクト
+    char m_RenameBuffer[256];               // リネーム用バッファ
+    bool m_RenameJustStarted;               // リネーム開始フラグ
 };

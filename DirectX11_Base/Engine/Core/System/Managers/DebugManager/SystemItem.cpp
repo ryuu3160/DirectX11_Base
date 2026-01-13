@@ -23,9 +23,12 @@ ItemHierarchy::ItemHierarchy(_In_ std::string In_Name, _In_ SceneBase *In_pScene
     , m_SelectedObject(nullptr)
     , m_DraggedObject(nullptr)
     , m_SelectCallback(In_Func)
+	, m_RenamingObject(nullptr)
+	, m_RenameJustStarted(false)
 {
     m_Name = In_Name;
     m_Kind = Kind::__Hierarchy;
+    m_RenameBuffer[0] = '\0';
 }
 
 ItemHierarchy::~ItemHierarchy()
@@ -73,10 +76,21 @@ void ItemHierarchy::DrawRootObjects()
     }
 }
 
-void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *obj)
+void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *In_Obj)
 {
-    if(!obj)
+    if(!In_Obj)
         return;
+
+    Transform *transform = In_Obj->GetTransform();
+    // ドロップ前の子の数を保存
+    int ChildCountBefore = transform->GetChildCount();
+
+    // リネーム中の場合はインライン編集
+    if(m_RenamingObject == In_Obj)
+    {
+        DrawRenameInput(In_Obj, ChildCountBefore);
+        return;  // リネーム中は通常の TreeNode を表示しない
+    }
 
     // ツリーノードのフラグ
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow |
@@ -84,41 +98,55 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *obj)
         ImGuiTreeNodeFlags_SpanAvailWidth;
 
     // 選択状態
-    if(m_SelectedObject == obj)
+    if(m_SelectedObject == In_Obj)
     {
         flags |= ImGuiTreeNodeFlags_Selected;
     }
 
-    Transform *transform = obj->GetTransform();
-    // ドロップ前の子の数を保存
-    int ChildCountBefore = transform->GetChildCount();
     // 子がいない場合は葉ノード
     if(transform->GetChildCount() == 0)
     {
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
     }
 
-    std::string label = obj->GetName();
+    std::string label = In_Obj->GetName();
 
     // ツリーノードを描画
-    bool NodeOpen = ImGui::TreeNodeEx(obj, flags, "%s", label.c_str());
+    bool NodeOpen = ImGui::TreeNodeEx(In_Obj, flags, "%s", label.c_str());
 
     // ドラッグソースとして設定
-    HandleDragSource(obj);
+    HandleDragSource(In_Obj);
 
     // ドロップターゲットとして設定
-    HandleDropTarget(obj);
+    HandleDropTarget(In_Obj);
 
     // クリックで選択
     if(ImGui::IsItemClicked())
     {
-        SelectObject(obj);
+        SelectObject(In_Obj);
+    }
+
+    // F2 キーでリネーム開始
+    if(m_SelectedObject == In_Obj && ImGui::IsKeyPressed(ImGuiKey_F2))
+    {
+        StartRename(In_Obj);
+    }
+
+    // Delで選択しているオブジェクトを削除
+    if(m_SelectedObject == In_Obj && ImGui::IsKeyPressed(ImGuiKey_Delete))
+    {
+        // オブジェクトを削除
+        In_Obj->DestroySelf();
+
+        m_SelectedObject = nullptr;
+        if(m_SelectCallback)
+            m_SelectCallback(nullptr);
     }
 
     // 右クリックメニュー
     if(ImGui::BeginPopupContextItem())
     {
-        ShowContextMenu(obj);
+        ShowContextMenu(In_Obj);
         ImGui::EndPopup();
     }
 
@@ -137,24 +165,24 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *obj)
     }
 }
 
-void ItemHierarchy::HandleDragSource(_In_ GameObject *obj)
+void ItemHierarchy::HandleDragSource(_In_ GameObject *In_Obj)
 {
     // ドラッグ開始
     if(ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
         // ペイロードを設定（GameObject のポインタ）
-        ImGui::SetDragDropPayload("HIERARCHY_OBJECT", &obj, sizeof(GameObject *));
+        ImGui::SetDragDropPayload("HIERARCHY_OBJECT", &In_Obj, sizeof(GameObject *));
 
         // ドラッグ中の表示
-        ImGui::Text("Move:  %s", obj->GetName().c_str());
+        ImGui::Text("Move:  %s", In_Obj->GetName().c_str());
 
-        m_DraggedObject = obj;
+        m_DraggedObject = In_Obj;
 
         ImGui::EndDragDropSource();
     }
 }
 
-void ItemHierarchy::HandleDropTarget(_In_ GameObject *obj)
+void ItemHierarchy::HandleDropTarget(_In_ GameObject *In_Obj)
 {
     // ドロップターゲット
     if(ImGui::BeginDragDropTarget())
@@ -163,11 +191,11 @@ void ItemHierarchy::HandleDropTarget(_In_ GameObject *obj)
         {
             GameObject *DroppedObj = *static_cast<GameObject **>(payload->Data);
 
-            if(DroppedObj && DroppedObj != obj)
+            if(DroppedObj && DroppedObj != In_Obj)
             {
                 // 親子関係を設定
                 Transform *DroppedTransform = DroppedObj->GetTransform();
-                Transform *TargetTransform = obj->GetTransform();
+                Transform *TargetTransform = In_Obj->GetTransform();
 
                 // 循環参照チェック(objがdroppedObj の子孫でないか)
                 bool IsCircular = false;
@@ -194,13 +222,20 @@ void ItemHierarchy::HandleDropTarget(_In_ GameObject *obj)
     }
 }
 
-void ItemHierarchy::ShowContextMenu(_In_ GameObject *obj)
+void ItemHierarchy::ShowContextMenu(_In_ GameObject *In_Obj)
 {
-    if(ImGui::MenuItem("Delete"))
+    if(ImGui::MenuItem("Rename", "F2"))
+    {
+        StartRename(In_Obj);
+    }
+
+    ImGui::Separator();
+
+    if(ImGui::MenuItem("Delete", "Del"))
     {
         // オブジェクトを削除
-        obj->DestroySelf();
-        if(m_SelectedObject == obj)
+        In_Obj->DestroySelf();
+        if(m_SelectedObject == In_Obj)
         {
             m_SelectedObject = nullptr;
             if(m_SelectCallback)
@@ -210,21 +245,100 @@ void ItemHierarchy::ShowContextMenu(_In_ GameObject *obj)
 
     ImGui::Separator();
 
-    if(obj->GetTransform()->GetParent() != nullptr)
+    if(In_Obj->GetTransform()->GetParent() != nullptr)
     {
         if(ImGui::MenuItem("Detach from Parent"))
         {
             // 親から外す処理の予約
-			m_PendingParentChanges.push_back({ obj, nullptr });
+			m_PendingParentChanges.push_back({ In_Obj, nullptr });
+        }
+    }
+}
+
+void ItemHierarchy::StartRename(_In_ GameObject *In_Obj)
+{
+    m_RenamingObject = In_Obj;
+    m_RenameJustStarted = true;
+
+    // 現在の名前をバッファにコピー
+    strncpy_s(m_RenameBuffer, In_Obj->GetName().c_str(), sizeof(m_RenameBuffer) - 1);
+    m_RenameBuffer[sizeof(m_RenameBuffer) - 1] = '\0';
+}
+
+void ItemHierarchy::DrawRenameInput(_In_ GameObject *In_Obj, _In_ int In_ChildCountBefore)
+{
+    // インデントを保持
+    ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+
+    // InputText でリネーム
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+    // リネーム開始直後にフォーカスを設定
+    if(m_RenameJustStarted)
+    {
+        ImGui::SetKeyboardFocusHere();
+        m_RenameJustStarted = false;
+    }
+
+    ImGuiInputTextFlags flags = ImGuiInputTextFlags_EnterReturnsTrue;
+    bool confirmed = ImGui::InputText("##rename", m_RenameBuffer, sizeof(m_RenameBuffer), flags);
+
+    // Enter で確定
+    if(confirmed)
+    {
+        FinishRename(true);
+    }
+    else if(ImGui::IsKeyPressed(ImGuiKey_Escape)) // Esc でキャンセル
+    {
+        FinishRename(false);
+    }
+    else if(ImGui::IsItemDeactivatedAfterEdit()) // フォーカスを失ったら確定
+    {
+        FinishRename(true);
+    }
+	else if(m_SelectedObject != In_Obj && !m_RenameJustStarted) // 変更されていない&選択解除されたらキャンセル
+    {
+        FinishRename(false);
+    }
+
+    ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
+
+    // 子ノードも表示(折りたたみはできない)
+    if(In_ChildCountBefore > 0)
+    {
+        ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+
+        std::vector<Transform *> childrenSnapshot = In_Obj->GetTransform()->GetChildren();
+        for(Transform *childTransform : childrenSnapshot)
+        {
+            GameObject *childObj = childTransform->GetGameObject();
+            DrawObjectNode(childObj);
         }
 
-        ImGui::Separator();
+        ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
     }
+}
 
-    if(ImGui::MenuItem("Rename"))
+void ItemHierarchy::FinishRename(_In_ bool In_IsConfirm)
+{
+    if(In_IsConfirm && m_RenamingObject)
     {
+        std::string newName = m_RenameBuffer;
 
+        // バリデーション
+        if(newName.empty())
+        {
+            DebugManager::GetInstance().DebugLogWarning("Name cannot be empty");
+        }
+        else if(newName != m_RenamingObject->GetName())
+        {
+            // 名前の変更
+			m_RenamingObject->Rename(newName);
+        }
     }
+
+    m_RenamingObject = nullptr;
+    m_RenameBuffer[0] = '\0';
 }
 
 void ItemHierarchy::ExecutePendingParentChanges()
@@ -236,11 +350,11 @@ void ItemHierarchy::ExecutePendingParentChanges()
     m_PendingParentChanges.clear();
 }
 
-void ItemHierarchy::SelectObject(_Inout_ GameObject *obj)
+void ItemHierarchy::SelectObject(_Inout_ GameObject *In_Obj)
 {
-    m_SelectedObject = obj;
+    m_SelectedObject = In_Obj;
     if(m_SelectCallback)
     {
-        m_SelectCallback(obj);
+        m_SelectCallback(In_Obj);
     }
 }
