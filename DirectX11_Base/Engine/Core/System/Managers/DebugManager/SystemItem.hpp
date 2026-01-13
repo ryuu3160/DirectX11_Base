@@ -16,6 +16,7 @@
 // ===============================
 class SceneBase;
 class GameObject;
+class Transform;
 
 // ==============================
 // ItemHierarchy クラス
@@ -72,8 +73,22 @@ private:
     void ShowContextMenu(_In_ GameObject *obj);
 
 private:
+
+    /// <summary>
+    /// 保留中の親の変更を実行します
+    /// </summary>
+    void ExecutePendingParentChanges();
+
+private:
+    struct PendingParentChange
+    {
+        GameObject *ChildObj;
+        Transform *NewParentTransform;
+    };
+
     SceneBase *m_pScene;                    // 対象シーン
     GameObject *m_SelectedObject;           // 選択中のオブジェクト
     GameObject *m_DraggedObject;            // ドラッグ中のオブジェクト
     SelectCallback m_SelectCallback;        // 選択時のコールバック
+	std::vector<PendingParentChange> m_PendingParentChanges; // 保留中の親子関係変更
 };

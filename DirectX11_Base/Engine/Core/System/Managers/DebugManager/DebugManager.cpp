@@ -193,8 +193,10 @@ void DebugManager::Draw() noexcept
 		if (window->IsOpen())
 		{
 			std::string name = window->GetGroupName() + "/" + window->GetName();
-			ImGui::Begin(name.c_str());
-			window->Draw();
+			if(ImGui::Begin(name.c_str()))
+			{
+				window->Draw();
+			}
 			ImGui::End();
 		}
 	}

@@ -259,73 +259,72 @@ void SpriteManager::DrawImGui() noexcept
 	for (int i = 0; i < m_vecWindow.size();++i)
 	{
 		// ウィンドウ内の描画開始
-		ImGui::Begin(m_vecWindow[i]->GetWindowName().c_str());
-
-		// ウィンドウにカーソルが被っているかどうか
-		// ※ドラッグ中は除外
-		if (!m_bIsLeftClickTrigger && !m_bIs3KeyTrigger)
+		if(ImGui::Begin(m_vecWindow[i]->GetWindowName().c_str()))
 		{
-			if (ImGui::IsWindowHovered())
-				m_bIsHoveredWindow = true;
-		}
-
-		// 表示
-		switch (m_vecWindow[i]->GetWindowType())
-		{
-		case Hierarchy:
-		{
-			SpriteManagerHierarchy *Hierarchy = static_cast<SpriteManagerHierarchy *>(m_vecWindow[i]);
-			Hierarchy->Draw(m_SpriteNames[_2D], m_SpriteNames[_3D],&m_2DIndex,&m_3DIndex);
-		}
-
-			break;
-
-		case Inspector:
-		{
-			SpriteManagerInspector *Inspector = static_cast<SpriteManagerInspector *>(m_vecWindow[i]);
-			auto itr2D = m_SpriteObjects[_2D].begin();
-			auto itr3D = m_SpriteObjects[_3D].begin();
-			GameObject *Sprite2D = nullptr;
-			GameObject *Sprite3D = nullptr;
-
-			if (!m_SpriteObjects[_2D].empty())
+			// ウィンドウにカーソルが被っているかどうか
+			// ※ドラッグ中は除外
+			if(!m_bIsLeftClickTrigger && !m_bIs3KeyTrigger)
 			{
-				std::advance(itr2D, m_2DIndex);
-				Sprite2D = *itr2D;
-			}
-			if (!m_SpriteObjects[_3D].empty())
-			{
-				std::advance(itr3D, m_3DIndex);
-				Sprite3D = *itr3D;
+				if(ImGui::IsWindowHovered())
+					m_bIsHoveredWindow = true;
 			}
 
-			// インスペクターの描画
-			Inspector->Draw(Sprite2D, Sprite3D);
+			// 表示
+			switch(m_vecWindow[i]->GetWindowType())
+			{
+			case Hierarchy:
+			{
+				SpriteManagerHierarchy *Hierarchy = static_cast<SpriteManagerHierarchy *>(m_vecWindow[i]);
+				Hierarchy->Draw(m_SpriteNames[_2D], m_SpriteNames[_3D], &m_2DIndex, &m_3DIndex);
+			}
 
 			break;
+
+			case Inspector:
+			{
+				SpriteManagerInspector *Inspector = static_cast<SpriteManagerInspector *>(m_vecWindow[i]);
+				auto itr2D = m_SpriteObjects[_2D].begin();
+				auto itr3D = m_SpriteObjects[_3D].begin();
+				GameObject *Sprite2D = nullptr;
+				GameObject *Sprite3D = nullptr;
+
+				if(!m_SpriteObjects[_2D].empty())
+				{
+					std::advance(itr2D, m_2DIndex);
+					Sprite2D = *itr2D;
+				}
+				if(!m_SpriteObjects[_3D].empty())
+				{
+					std::advance(itr3D, m_3DIndex);
+					Sprite3D = *itr3D;
+				}
+
+				// インスペクターの描画
+				Inspector->Draw(Sprite2D, Sprite3D);
+
+				break;
+			}
+
+			case Loader:
+			{
+				SpriteManagerLoader *Loader = static_cast<SpriteManagerLoader *>(m_vecWindow[i]);
+
+				// ローダーの描画
+				Loader->Draw();
+
+				break;
+			}
+
+			case SceneSelecter:
+			{
+				m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを保存
+				SpriteManagerSceneSelecter *SceneSelecter = static_cast<SpriteManagerSceneSelecter *>(m_vecWindow[i]);
+				SceneSelecter->Draw(m_SceneSaveData, &m_CurrentSceneIndex);
+
+				break;
+			}
+			}
 		}
-
-		case Loader:
-		{
-			SpriteManagerLoader *Loader = static_cast<SpriteManagerLoader *>(m_vecWindow[i]);
-
-			// ローダーの描画
-			Loader->Draw();
-
-			break;
-		}
-
-		case SceneSelecter:
-		{
-			m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを保存
-			SpriteManagerSceneSelecter *SceneSelecter = static_cast<SpriteManagerSceneSelecter *>(m_vecWindow[i]);
-			SceneSelecter->Draw(m_SceneSaveData, &m_CurrentSceneIndex);
-
-			break;
-		}
-		}
-
-		// ウィンドウ内の描画終了
 		ImGui::End();
 	}
 }

@@ -407,6 +407,9 @@
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp">
       <Filter>Engine\ThirdParty\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
@@ -696,6 +699,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Engine.hpp">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

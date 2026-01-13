@@ -50,6 +50,9 @@ void ItemHierarchy::DrawImGui()
                 m_SelectCallback(nullptr);
         }
     }
+
+    // 予約された親子関係の変更を実行
+    ExecutePendingParentChanges();
 }
 
 void ItemHierarchy::DrawRootObjects()
@@ -58,10 +61,10 @@ void ItemHierarchy::DrawRootObjects()
         return;
 
     // シーン内のすべてのオブジェクトを取得
-    const auto &allObjects = m_pScene->GetHierarchyObjects();
+    const auto &AllObjects = m_pScene->GetHierarchyObjects();
 
 	// オブジェクトをルートから描画
-    for(auto obj : allObjects)
+    for(auto obj : AllObjects)
     {
         if(obj && obj->GetTransform()->GetParent() == nullptr)
         {
@@ -86,21 +89,22 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *obj)
         flags |= ImGuiTreeNodeFlags_Selected;
     }
 
-    // 子がいない場合は葉ノード
     Transform *transform = obj->GetTransform();
+    // ドロップ前の子の数を保存
+    int ChildCountBefore = transform->GetChildCount();
+    // 子がいない場合は葉ノード
     if(transform->GetChildCount() == 0)
     {
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
     }
 
-    // アイコン
     std::string label = obj->GetName();
+
+    // ツリーノードを描画
+    bool NodeOpen = ImGui::TreeNodeEx(obj, flags, "%s", label.c_str());
 
     // ドラッグソースとして設定
     HandleDragSource(obj);
-
-    // ツリーノードを描画
-    bool nodeOpen = ImGui::TreeNodeEx(obj, flags, "%s", label.c_str());
 
     // ドロップターゲットとして設定
     HandleDropTarget(obj);
@@ -119,13 +123,14 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *obj)
     }
 
     // 子ノードを描画
-    if(nodeOpen && transform->GetChildCount() > 0)
+    if(NodeOpen && ChildCountBefore > 0)
     {
-        const auto &children = transform->GetChildren();
-        for(Transform *childTransform : children)
+        // 子リストのスナップショット
+        std::vector<Transform *> ChildrenSnapshot = transform->GetChildren();
+        for(Transform *ChildTransform : ChildrenSnapshot)
         {
-            GameObject *childObj = childTransform->GetGameObject();
-            DrawObjectNode(childObj);
+            GameObject *ChildObj = ChildTransform->GetGameObject();
+            DrawObjectNode(ChildObj);
         }
 
         ImGui::TreePop();
@@ -165,22 +170,22 @@ void ItemHierarchy::HandleDropTarget(_In_ GameObject *obj)
                 Transform *TargetTransform = obj->GetTransform();
 
                 // 循環参照チェック(objがdroppedObj の子孫でないか)
-                bool isCircular = false;
+                bool IsCircular = false;
                 Transform *ancestor = TargetTransform;
                 while(ancestor != nullptr)
                 {
                     if(ancestor == DroppedTransform)
                     {
-                        isCircular = true;
+                        IsCircular = true;
                         break;
                     }
                     ancestor = ancestor->GetParent();
                 }
 
-                if(!isCircular)
+                if(!IsCircular)
                 {
-                    // objを親に設定(ワールド座標を維持)
-                    DroppedTransform->SetParent(TargetTransform, true);
+                    // 親子関係の変更を予約
+                    m_PendingParentChanges.push_back({ DroppedObj,TargetTransform });
                 }
             }
         }
@@ -209,8 +214,8 @@ void ItemHierarchy::ShowContextMenu(_In_ GameObject *obj)
     {
         if(ImGui::MenuItem("Detach from Parent"))
         {
-            // 親から外す
-            obj->GetTransform()->SetParent(nullptr);
+            // 親から外す処理の予約
+			m_PendingParentChanges.push_back({ obj, nullptr });
         }
 
         ImGui::Separator();
@@ -220,6 +225,15 @@ void ItemHierarchy::ShowContextMenu(_In_ GameObject *obj)
     {
 
     }
+}
+
+void ItemHierarchy::ExecutePendingParentChanges()
+{
+    for(auto &itr : m_PendingParentChanges)
+    {
+		itr.ChildObj->GetTransform()->SetParent(itr.NewParentTransform);
+    }
+    m_PendingParentChanges.clear();
 }
 
 void ItemHierarchy::SelectObject(_Inout_ GameObject *obj)
