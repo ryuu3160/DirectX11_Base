@@ -120,13 +120,16 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *In_Obj)
     // ドロップターゲットとして設定
     HandleDropTarget(In_Obj);
 
-    // クリックで選択
+    // クリックで選択、ダブルクリックでリネーム
     if(ImGui::IsItemClicked())
     {
-        SelectObject(In_Obj);
+        if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && m_SelectedObject == In_Obj)
+            StartRename(In_Obj);
+        else
+            SelectObject(In_Obj);
     }
 
-    // F2 キーでリネーム開始
+    // F2キーでリネーム開始
     if(m_SelectedObject == In_Obj && ImGui::IsKeyPressed(ImGuiKey_F2))
     {
         StartRename(In_Obj);
