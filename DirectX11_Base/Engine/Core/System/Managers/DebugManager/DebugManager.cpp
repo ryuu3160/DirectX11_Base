@@ -283,6 +283,28 @@ DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName,
 	return *GetDebugWindow(In_GroupName, In_Name);
 }
 
+void DebugManager::HideAllWindows()
+{
+	for (const auto &window : m_DebugWindows)
+	{
+		if (window)
+		{
+			window->SetIsOpen(false);
+		}
+	}
+}
+
+void DebugManager::ShowAllWindows()
+{
+	for (const auto &window : m_DebugWindows)
+	{
+		if (window)
+		{
+			window->SetIsOpen(true);
+		}
+	}
+}
+
 DebugManager::DebugManager()
 	: m_ToolBarFlags(0), m_IsRequestLoadLayout(false), m_IsRequestSaveLayout(false)
 {
@@ -306,29 +328,6 @@ DebugManager::~DebugManager()
 	m_DebugWindows.clear();
 	m_ToolBarFuncs.clear();
 }
-
-void DebugManager::HideAllWindows()
-{
-	for (const auto &window : m_DebugWindows)
-	{
-		if (window)
-		{
-			window->SetIsOpen(false);
-		}
-	}
-}
-
-void DebugManager::ShowAllWindows()
-{
-	for (const auto &window : m_DebugWindows)
-	{
-		if (window)
-		{
-			window->SetIsOpen(true);
-		}
-	}
-}
-
 
 void DebugManager::SaveDebugData()
 {

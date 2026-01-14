@@ -144,12 +144,12 @@ public:
 
 	void DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item);
 
+	void HideAllWindows();
+	void ShowAllWindows();
+
 private:
 	DebugManager();
 	~DebugManager();
-
-	void HideAllWindows();
-	void ShowAllWindows();
 
 	void SaveDebugData();
 	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item);

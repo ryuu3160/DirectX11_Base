@@ -54,8 +54,15 @@ void SpriteManager::Init() noexcept
 void SpriteManager::Update() noexcept
 {
 #ifdef _DEBUG
-	if (MENU_OPEN_KEY)
+	if(MENU_OPEN_KEY)
+	{
 		m_bIsOpen = !m_bIsOpen;
+
+		if(m_bIsOpen)
+			DebugManager::GetInstance().HideAllWindows();
+		else
+			DebugManager::GetInstance().ShowAllWindows();
+	}
 #endif // _DEBUG
 
 	if (m_pCamera == nullptr || m_pCameraObj == nullptr)
