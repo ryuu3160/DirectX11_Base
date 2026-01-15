@@ -9,8 +9,10 @@
 //	include
 // ==============================
 #include "ParticleEffect.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/TextureManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/CameraManager.hpp"
 
 ParticleEffect::ParticleEffect()
     : RenderComponent("ParticleEffect")

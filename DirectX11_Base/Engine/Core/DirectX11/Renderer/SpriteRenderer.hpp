@@ -9,8 +9,8 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Renderer/RenderComponent.hpp"
-#include "Engine/Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
+#include "Core/DirectX11/Renderer/RenderComponent.hpp"
+#include "Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
 
 /// <summary>
 /// SpriteRendererƒNƒ‰ƒX

@@ -9,15 +9,15 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Object/Object.hpp"
-#include "Engine/Core/System/Scene/SceneBase.hpp"
-#include "Engine/Core/System/Component/Transform.hpp"
+#include "Core/System/Object/Object.hpp"
+#include "Core/System/Component/Transform.hpp"
 
 // ==============================
 //  前方宣言
 // ==============================
 class Component;
 class DebugWindow;
+class SceneBase;
 
 /// <summary>
 /// GameObjectクラス
@@ -25,9 +25,6 @@ class DebugWindow;
 class GameObject : public Object
 {
 	friend class SceneBase;
-private:
-	// 子オブジェクトリスト
-	using ChildObjects = std::vector<GameObject *>;
 public:
 	GameObject(_In_ std::string In_Name);
 	virtual ~GameObject();
@@ -88,34 +85,6 @@ public:
 
 	void RemoveComponent(_In_ std::string In_Name);
 
-	// 子オブジェクトを生成、追加する
-	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
-	T *AddChildObject(_In_ const std::string &In_Name);
-
-	template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
-	T *AddChildObject(_In_ const std::string &In_Name, Args&&... args);
-
-	template<>
-	GameObject *AddChildObject(_In_ const std::string &In_Name);
-
-	// 指定した名前の子オブジェクトを取得する
-	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type* = nullptr>
-	T *GetChildObject(_In_ const std::string &In_Name);
-
-	/// <summary>
-	/// 子オブジェクトのポインタのリストを取得します。
-	/// </summary>
-	/// <returns>子オブジェクトへのポインタを格納した std::map を返します。</returns>
-	ChildObjects GetChildObjects() const noexcept;
-
-	template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type * = nullptr>
-	void DestroyChildObject(_In_ const std::string &In_Name);
-
-	/// <summary>
-	/// すべての子オブジェクトを破棄します。
-	/// </summary>
-	void DestroyAllChildObjects() noexcept;
-
 	/// <summary>
 	/// 自身を所属しているシーンから破棄します。
 	/// </summary>
@@ -128,6 +97,7 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
+	void Rename(_In_ std::string In_Name) noexcept;
 
 	inline Transform *GetTransform() const noexcept { return m_pTransform; }
 
@@ -138,7 +108,6 @@ public:
 	inline DirectX::XMFLOAT3 GetPosition() const noexcept { return m_pTransform->GetPosition(); }
 	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_pTransform->GetQuat(); }
 	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_pTransform->GetScale(); }
-	inline const bool &IsChild() const noexcept { return m_bIsChild; }
 
 	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
 	DirectX::XMFLOAT3 GetRight() const noexcept;
@@ -216,19 +185,12 @@ private:
 	Components			m_Components;		// コンポーネントの一覧
 	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
 	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
-	ChildObjects		m_ChildObjects;		// 子オブジェクトの一覧
 	std::shared_ptr<cpon_object> 		m_Data;				// 保存データ
 	Datas				m_Datas;			// 保存データ
 	std::string			m_Name;				// オブジェクト名
-	std::string			m_ChildNameSaffix;	// 子オブジェクト名のサフィックス
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
-	GameObject			*m_pParent;			// 親オブジェクトへのポインタ
 protected:
 	Transform *m_pTransform;		// Transformコンポーネントへのポインタ
-	//DirectX::XMFLOAT3	m_Pos;		// 座標
-	//DirectX::XMFLOAT3	m_Scale;	// 拡縮
-	//DirectX::XMFLOAT4	m_Quat;		// 回転(クォータニオン)
-	bool				m_bIsChild; // 子オブジェクトかどうか
 };
 
 template<typename T>
@@ -295,94 +257,94 @@ inline void GameObject::RemoveComponent()
 	}
 }
 
-/// <summary>
-/// <para>指定した型の子オブジェクトを生成し、追加します。</para>
-/// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
-/// </summary>
-/// <param name="[In_Name]">オブジェクト名</param>
-/// <returns>生成、追加したオブジェクトへのポインタを返す</returns>
-template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
-inline T *GameObject::AddChildObject(_In_ const std::string &In_Name)
-{
-	std::string Name = In_Name + m_ChildNameSaffix;
-	auto Child = m_pScene->CreateObject<T>(Name);
-
-	if (!Child)
-		return nullptr;
-
-	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
-	m_ChildObjects.push_back(Child);
-	return Child;
-}
-
-template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
-inline T *GameObject::AddChildObject(_In_ const std::string &In_Name, Args && ...args)
-{
-	std::string Name = In_Name + m_ChildNameSaffix;
-	auto Child = m_pScene->CreateObject<T>(Name, args);
-
-	if (!Child)
-		return nullptr;
-
-	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
-	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
-	m_ChildObjects.push_back(Child);
-	return Child;
-}
-
-template<>
-inline GameObject *GameObject::AddChildObject(_In_ const std::string &In_Name)
-{
-	std::string Name = In_Name + m_ChildNameSaffix;
-	auto Child = m_pScene->CreateObject<GameObject>(Name);
-
-	if (!Child)
-		return nullptr;
-
-	Child->m_bIsChild = true;
-	Child->m_pParent = this;
-	m_ChildObjects.push_back(Child);
-	return Child;
-}
-
-/// <summary>
-/// <para>指定した名前の子オブジェクトを取得します。</para>
-/// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
-/// </summary>
-/// <typeparam name="T"></typeparam>
-/// <typeparam name="enable_if"></typeparam>
-/// <param name="In_Name"></param>
-/// <returns></returns>
-template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
-inline T *GameObject::GetChildObject(_In_ const std::string &In_Name)
-{
-	auto Name = In_Name + m_ChildNameSaffix;
-	for (auto &itr : m_ChildObjects)
-	{
-		if (itr->m_Name == Name)
-		{
-			// 型チェック
-			if (std::is_same_v<T,decltype(*itr)> == false)
-			{
-				std::string buf = "Failed to get object." + In_Name;
-				MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-				return nullptr;
-			}
-			return dynamic_cast<T *>(itr);
-		}
-	}
-	return nullptr;
-}
-
-template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
-inline void GameObject::DestroyChildObject(_In_ const std::string &In_Name)
-{
-	auto itr = GetChildObject<T>(In_Name);
-
-	if (!itr)
-		return;
-
-	dynamic_cast<GameObject *>(itr)->DestroySelf();
-	m_ChildObjects.erase(std::remove(m_ChildObjects.begin(), m_ChildObjects.end(), itr), m_ChildObjects.end());
-}
+///// <summary>
+///// <para>指定した型の子オブジェクトを生成し、追加します。</para>
+///// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
+///// </summary>
+///// <param name="[In_Name]">オブジェクト名</param>
+///// <returns>生成、追加したオブジェクトへのポインタを返す</returns>
+//template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
+//inline T *GameObject::AddChildObject(_In_ const std::string &In_Name)
+//{
+//	std::string Name = In_Name + m_ChildNameSaffix;
+//	auto Child = m_pScene->CreateObject<T>(Name);
+//
+//	if (!Child)
+//		return nullptr;
+//
+//	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+//	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
+//	m_ChildObjects.push_back(Child);
+//	return Child;
+//}
+//
+//template <typename T, typename ...Args, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+//inline T *GameObject::AddChildObject(_In_ const std::string &In_Name, Args && ...args)
+//{
+//	std::string Name = In_Name + m_ChildNameSaffix;
+//	auto Child = m_pScene->CreateObject<T>(Name, args);
+//
+//	if (!Child)
+//		return nullptr;
+//
+//	dynamic_cast<GameObject *>(Child)->m_bIsChild = true; // 子オブジェクトフラグを立てる
+//	dynamic_cast<GameObject *>(Child)->m_pParent = this; // 親オブジェクトを設定
+//	m_ChildObjects.push_back(Child);
+//	return Child;
+//}
+//
+//template<>
+//inline GameObject *GameObject::AddChildObject(_In_ const std::string &In_Name)
+//{
+//	std::string Name = In_Name + m_ChildNameSaffix;
+//	auto Child = m_pScene->CreateObject<GameObject>(Name);
+//
+//	if (!Child)
+//		return nullptr;
+//
+//	Child->m_bIsChild = true;
+//	Child->m_pParent = this;
+//	m_ChildObjects.push_back(Child);
+//	return Child;
+//}
+//
+///// <summary>
+///// <para>指定した名前の子オブジェクトを取得します。</para>
+///// <para>指定する型は、必ずGameObjectクラスを継承していなければなりません。</para>
+///// </summary>
+///// <typeparam name="T"></typeparam>
+///// <typeparam name="enable_if"></typeparam>
+///// <param name="In_Name"></param>
+///// <returns></returns>
+//template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type*>
+//inline T *GameObject::GetChildObject(_In_ const std::string &In_Name)
+//{
+//	auto Name = In_Name + m_ChildNameSaffix;
+//	for (auto &itr : m_ChildObjects)
+//	{
+//		if (itr->m_Name == Name)
+//		{
+//			// 型チェック
+//			if (std::is_same_v<T,decltype(*itr)> == false)
+//			{
+//				std::string buf = "Failed to get object." + In_Name;
+//				MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
+//				return nullptr;
+//			}
+//			return dynamic_cast<T *>(itr);
+//		}
+//	}
+//	return nullptr;
+//}
+//
+//template<typename T, typename std::enable_if<std::is_base_of<GameObject, T>::value>::type *>
+//inline void GameObject::DestroyChildObject(_In_ const std::string &In_Name)
+//{
+//	auto itr = GetChildObject<T>(In_Name);
+//
+//	if (!itr)
+//		return;
+//
+//	dynamic_cast<GameObject *>(itr)->DestroySelf();
+//	m_ChildObjects.erase(std::remove(m_ChildObjects.begin(), m_ChildObjects.end(), itr), m_ChildObjects.end());
+//}

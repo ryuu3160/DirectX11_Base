@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "ColliderBase.hpp"
-#include "Engine/Core/System/Managers/CollisionManager/CollisionManager.hpp"
-#include "Engine/Core/System/Managers/CollisionManager/TreeData.hpp"
-#include "Engine/Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
+#include "Core/System/Managers/CollisionManager/TreeData.hpp"
+#include "Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string In_Name)
 	: Component(In_Name)
@@ -27,6 +28,7 @@ ColliderBase::ColliderBase(_In_ std::string In_Name)
 ColliderBase::~ColliderBase()
 {
 	m_CollisionManager.RemoveColliderComponent(this);
+	m_pTreeData = nullptr;
 }
 
 void ColliderBase::SaveLoad(_In_ DataAccessor *In_Data)

@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "InstancedMesh.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 InstancedMesh::InstancedMesh()
 	: m_spMeshBuffer(nullptr), m_spMaterial(nullptr)

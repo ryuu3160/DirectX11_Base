@@ -16,6 +16,7 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
+#include "ryuu_lib/Singleton/Singleton.hpp"
 
 // COM
 #include <wrl/client.h>

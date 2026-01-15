@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "GameObject.hpp"
-#include "Engine/Core/DirectX11/Renderer/LineRenderer.hpp"
+#include "Core/DirectX11/Renderer/LineRenderer.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================

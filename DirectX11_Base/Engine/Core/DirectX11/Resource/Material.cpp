@@ -9,8 +9,9 @@
 //	include
 // ==============================
 #include "Material.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/TextureManager.hpp"
-#include "Engine/Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

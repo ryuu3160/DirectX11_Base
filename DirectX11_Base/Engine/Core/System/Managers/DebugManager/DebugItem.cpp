@@ -10,6 +10,7 @@
 // ==============================
 #include "DebugItem.hpp"
 #include "DebugManager.hpp"
+#include "ryuu_lib/FrameManager/FrameManager.hpp"
 
 // ==============================
 //	íËêîíËã`
@@ -175,12 +176,17 @@ DebugItem::Kind DebugItem::StrToKind(_In_ std::string In_Str)
 	if (In_Str == "Bool")		return DebugItem::Bool;
 	if (In_Str == "Int")		return DebugItem::Int;
 	if (In_Str == "Float")		return DebugItem::Float;
+	if (In_Str == "Float2")		return DebugItem::Float2;
 	if (In_Str == "Vector")		return DebugItem::Vector;
 	if (In_Str == "Color")		return DebugItem::Color;
 	if (In_Str == "Path")		return DebugItem::Path;
+	if (In_Str == "InputStr")	return DebugItem::InputStr;
+	if (In_Str == "Console")	return DebugItem::Console;
 	if (In_Str == "Command")	return DebugItem::Command;
 	if (In_Str == "Group")		return DebugItem::Group;
 	if (In_Str == "List")		return DebugItem::List;
+	if (In_Str == "LayoutFunc")	return DebugItem::LayoutFunc;
+	if (In_Str == "__Hierarchy")	return DebugItem::__Hierarchy;
 	return DebugItem::Label;
 }
 
@@ -193,12 +199,17 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 	case DebugItem::Bool:		return "Bool";
 	case DebugItem::Int:		return "Int";
 	case DebugItem::Float:		return "Float";
+	case DebugItem::Float2:		return "Float2";
 	case DebugItem::Vector:		return "Vector";
 	case DebugItem::Color:		return "Color";
 	case DebugItem::Path:		return "Path";
+	case DebugItem::InputStr:	return "InputStr";
+	case DebugItem::Console:	return "Console";
 	case DebugItem::Command:	return "Command";
 	case DebugItem::Group:		return "Group";
 	case DebugItem::List:		return "List";
+	case DebugItem::LayoutFunc:	return "LayoutFunc";
+	case DebugItem::__Hierarchy:	return "__Hierarchy";
 	}
 }
 

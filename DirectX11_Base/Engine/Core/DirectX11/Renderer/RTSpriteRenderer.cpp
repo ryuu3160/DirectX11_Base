@@ -9,6 +9,8 @@
 //	include
 // ==============================
 #include "RTSpriteRenderer.hpp"
+#include "Core/System/Utility/Utility.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //	’è”’è‹`

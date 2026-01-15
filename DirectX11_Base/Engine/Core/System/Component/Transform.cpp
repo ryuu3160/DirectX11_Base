@@ -9,6 +9,9 @@
 //	include
 // ==============================
 #include "Transform.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //	定数定義
@@ -21,11 +24,16 @@ Transform::Transform()
 	: Component("Transform")
 	, m_Pos{ 0.0f, 0.0f, 0.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Euler{ 0.0f, 0.0f, 0.0f }
 	, m_IsSyncEuler(false), m_AccumEuler{ 0.0f, 0.0f, 0.0f }
+	, m_pParent(nullptr)
 {
 }
 
 Transform::~Transform()
 {
+	DetachChildren();
+	if(m_pParent)
+		m_pParent->RemoveChild(this);
+	m_pParent = nullptr;
 }
 
 void Transform::Init() noexcept
@@ -38,6 +46,138 @@ void Transform::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<DirectX::XMFLOAT3>("Scale", &m_Scale);
 	In_Data->AccessValue<DirectX::XMFLOAT4>("Quat", &m_Quat);
 	In_Data->AccessValue<DirectX::XMFLOAT3>("Euler", &m_Euler);
+	In_Data->AccessValue<std::string>("ParentName", &m_ParentName);
+}
+
+void Transform::SetParent(_In_opt_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays)
+{
+	// 親が同じ場合は何もしない
+	if(m_pParent == In_Parent)
+		return;
+
+	// 自分自身を親にすることはできない
+	if(In_Parent == this)
+	{
+		DebugManager::GetInstance().DebugLogError("Cannot set self as parent!");
+		return;
+	}
+
+	// 循環参照チェック(In_Parentが自分の子孫でないか)
+	if(In_Parent)
+	{
+		Transform *ancestor = In_Parent;
+		while(ancestor != nullptr)
+		{
+			if(ancestor == this)
+			{
+				DebugManager::GetInstance().DebugLogError("Circular parent reference detected!");
+				return;
+			}
+			ancestor = ancestor->m_pParent;
+		}
+	}
+
+	// 保存されている親の名前と一致した場合はワールド座標を維持しない
+	bool MatchParentName = false;
+	if(In_Parent)
+	{
+		std::string ParentName = In_Parent->GetGameObject()->GetName();
+		if(ParentName == m_ParentName)
+		{
+			MatchParentName = true;
+		}
+	}
+
+	// ワールド座標を保存
+	DirectX::XMFLOAT3 worldPos;
+	DirectX::XMFLOAT4 worldRot;
+	DirectX::XMFLOAT3 worldScale;
+
+	if(In_IsWorldPositionStays && !MatchParentName)
+	{
+		worldPos = GetPosition();
+		worldRot = GetQuat();
+		worldScale = GetScale();
+	}
+
+	// 既存の親から削除
+	if(m_pParent)
+	{
+		m_pParent->RemoveChild(this);
+		m_ParentName.clear();
+	}
+
+	// 新しい親を設定
+	m_pParent = In_Parent;
+
+	if(m_pParent)
+	{
+		// 親の名前を保存
+		m_ParentName = m_pParent->GetGameObject()->GetName();
+
+		// 新しい親に追加
+		m_pParent->AddChild(this);
+	}
+
+	// ワールド座標を復元
+	if(In_IsWorldPositionStays && !MatchParentName)
+	{
+		SetPosition(worldPos);
+		SetQuat(worldRot);
+		SetScale(worldScale);
+	}
+}
+
+Transform *Transform::GetRoot()
+{
+	return GetRootRecursive(this);
+}
+
+Transform *Transform::GetChild(_In_ int In_Index) const
+{
+	if(In_Index < 0 || In_Index >= static_cast<int>(m_Children.size()))
+	{
+		DebugManager::GetInstance().DebugLogError("Child index out of range!");
+		return nullptr;
+	}
+
+	return m_Children[In_Index];
+}
+
+Transform *Transform::FindChild(_In_ std::string_view In_Name)
+{
+	return FindRecursive(this, In_Name);
+}
+
+const std::vector<Transform *> &Transform::GetChildren() const
+{
+	return m_Children;
+}
+
+bool Transform::IsChildOf(_In_ Transform *In_Transform) const noexcept
+{
+	if(!In_Transform)
+		return false;
+
+	Transform *current = m_pParent;
+	while(current != nullptr)
+	{
+		if(current == In_Transform)
+			return true;
+		current = current->m_pParent;
+	}
+
+	return false;
+}
+
+void Transform::DetachChildren() noexcept
+{
+	// すべての子の親を nullptr に設定
+	for(Transform *child : m_Children)
+	{
+		child->m_pParent = nullptr;
+	}
+	m_Children.clear();
 }
 
 void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept
@@ -97,14 +237,143 @@ void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float 
 	}
 }
 
-DirectX::XMFLOAT3 Transform::GetRotation(_In_ bool In_IsDegree) noexcept
+void Transform::RotateAround(_In_ const DirectX::XMFLOAT3 &In_Point, _In_ const DirectX::XMFLOAT3 &In_Axis, _In_ float In_Angle)
+{
+	DirectX::XMVECTOR PointVec = DirectX::XMLoadFloat3(&In_Point);
+	DirectX::XMVECTOR AxisVec = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&In_Axis));
+	float Radians = DirectX::XMConvertToRadians(In_Angle);
+
+	// 回転行列を作成
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationAxis(AxisVec, Radians);
+
+	// 現在位置をIn_Point基準に変換
+	auto CurrentPos = GetPosition();
+	DirectX::XMVECTOR VecCurrentPos = DirectX::XMLoadFloat3(&CurrentPos);
+	DirectX::XMVECTOR VecRelativePos = DirectX::XMVectorSubtract(VecCurrentPos, PointVec);
+
+	// 回転
+	DirectX::XMVECTOR NewRelativePos = DirectX::XMVector3TransformCoord(VecRelativePos, R);
+	DirectX::XMVECTOR NewPos = DirectX::XMVectorAdd(NewRelativePos, PointVec);
+
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMStoreFloat3(&Pos, NewPos);
+	SetPosition(Pos);
+
+	// 自分自身も回転
+	Rotate(In_Axis.x * In_Angle, In_Axis.y * In_Angle, In_Axis.z * In_Angle);
+}
+
+void Transform::LookAt(_In_ const DirectX::XMFLOAT3 &In_Target, _In_ const DirectX::XMFLOAT3 &In_Up)
+{
+	auto Pos = GetPosition();
+	DirectX::XMVECTOR VecPos = DirectX::XMLoadFloat3(&Pos);
+	DirectX::XMVECTOR VecTargetVec = DirectX::XMLoadFloat3(&In_Target);
+	DirectX::XMVECTOR VecUpVec = DirectX::XMLoadFloat3(&In_Up);
+
+	// LookAt 行列を作成
+	DirectX::XMMATRIX lookAtMatrix = DirectX::XMMatrixLookAtLH(VecPos, VecTargetVec, VecUpVec);
+
+	// 回転部分を抽出してクォータニオンに変換
+	DirectX::XMVECTOR S, R, T;
+	DirectX::XMMatrixDecompose(&S, &R, &T, lookAtMatrix);
+
+	// 逆回転（LookAtLH は視点行列なので）
+	R = DirectX::XMQuaternionInverse(R);
+
+	DirectX::XMFLOAT4 NewQuat;
+	DirectX::XMStoreFloat4(&NewQuat, R);
+
+	SetQuat(NewQuat);
+}
+
+DirectX::XMFLOAT4X4 Transform::GetLocalMatrix(_In_ bool In_IsTranspose) const noexcept
+{
+	using namespace DirectX;
+
+	// S * R * T
+	XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
+	XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+
+	XMMATRIX M = S * R * T;
+
+	if(In_IsTranspose)
+		M = DirectX::XMMatrixTranspose(M);
+
+	XMFLOAT4X4 fMat;
+	XMStoreFloat4x4(&fMat, M);
+	return fMat;
+}
+
+DirectX::XMFLOAT4X4 Transform::GetWorldMatrix(_In_ bool In_IsTranspose) const noexcept
+{
+	// 各要素の行列を取得
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+
+	// 行列の合算
+	DirectX::XMMATRIX M = S * R * T;
+
+	if(m_pParent)
+	{
+		auto fParentMat = m_pParent->GetWorldMatrix(false);
+		auto ParentM = DirectX::XMLoadFloat4x4(&fParentMat);
+		M = M * ParentM;
+	}
+
+	// 転置
+	if(In_IsTranspose)
+		M = DirectX::XMMatrixTranspose(M);
+	// XMMATRIXからXMFLOATへ変換
+	DirectX::XMFLOAT4X4 fMat;
+	DirectX::XMStoreFloat4x4(&fMat, M);
+
+	return fMat;
+}
+
+DirectX::XMFLOAT3 Transform::GetLocalRotation(_In_ bool In_IsDegree) noexcept
 {
 	// クォータニオンからオイラー角を取得
-	m_Euler = SyncEulerFromQuat();
+	m_Euler = SyncEulerFromQuat(m_Quat);
 
 	if(!In_IsDegree)
 		return ToRad(m_Euler);
 	return m_Euler;
+}
+
+DirectX::XMFLOAT3 Transform::GetRotation(_In_ bool In_IsDegree) noexcept
+{
+	// クォータニオンからオイラー角を取得
+	m_Euler = SyncEulerFromQuat(GetQuat());
+
+	if(!In_IsDegree)
+		return ToRad(m_Euler);
+	return m_Euler;
+}
+
+inline DirectX::XMFLOAT3 Transform::GetPosition() const noexcept
+{
+	if(!m_pParent)
+		return m_Pos;
+	else
+		return LocalToWorldPosition(m_Pos);
+}
+
+inline DirectX::XMFLOAT4 Transform::GetQuat() const noexcept
+{
+	if(!m_pParent)
+		return m_Quat;
+	else
+		return LocalToWorldRotation(m_Quat);
+}
+
+inline DirectX::XMFLOAT3 Transform::GetScale() const noexcept
+{
+	if(!m_pParent)
+		return m_Scale;
+	else
+		return m_Scale * m_pParent->GetScale();
 }
 
 DirectX::XMFLOAT3 Transform::GetFront(_In_ const bool &Is_Normalize) const noexcept
@@ -149,9 +418,39 @@ DirectX::XMFLOAT3 Transform::GetUp() const noexcept
 	return dir;
 }
 
-void Transform::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+void Transform::SetLocalPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
 	m_Pos = In_Pos;
+}
+
+void Transform::SetLocalRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
+{
+	// 回転を設定
+	auto Rot = ToRad(In_Rotation);
+	// クォータニオンに変換
+	DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(Rot.x, Rot.y, Rot.z));
+	m_IsSyncEuler = true;
+}
+
+void Transform::SetLocalScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
+{
+	// 拡縮を設定
+	m_Scale = In_Scale;
+}
+
+void Transform::SetLocalQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
+{
+	// クォータニオンを設定
+	m_Quat = In_Quat;
+	m_IsSyncEuler = true;
+}
+
+void Transform::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
+{
+	if(!m_pParent)
+		m_Pos = In_Pos;
+	else
+		m_Pos = WorldToLocalPosition(In_Pos);
 }
 
 void Transform::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
@@ -165,14 +464,19 @@ void Transform::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 
 void Transform::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 {
-	// 拡縮を設定
-	m_Scale = In_Scale;
+	if(!m_pParent)
+		m_Scale = In_Scale;
+	else
+		m_Scale = In_Scale / m_pParent->GetScale();
 }
 
 void Transform::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 {
-	// クォータニオンを設定
-	m_Quat = In_Quat;
+	if(!m_pParent)
+		m_Quat = In_Quat;
+	else
+		m_Quat = WorldToLocalRotation(In_Quat);
+
 	m_IsSyncEuler = true;
 }
 
@@ -202,7 +506,7 @@ void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 			{
 				if(m_IsSyncEuler)
 				{
-					m_Euler = SyncEulerFromQuat();
+					m_Euler = SyncEulerFromQuat(m_Quat);
 					m_IsSyncEuler = false;
 				}
 				pVec->x = m_Euler.x;
@@ -213,9 +517,9 @@ void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
 }
 
-DirectX::XMFLOAT3 Transform::SyncEulerFromQuat() noexcept
+DirectX::XMFLOAT3 Transform::SyncEulerFromQuat(_In_ DirectX::XMFLOAT4 In_Quat) noexcept
 {
-	std::vector<DirectX::XMFLOAT3> candidates = GetPracticalEulerCandidates();
+	std::vector<DirectX::XMFLOAT3> candidates = GetPracticalEulerCandidates(In_Quat);
 
 	// 現在のオイラー角を-180～180度の範囲に収める
 	m_Euler = NormalizeEulerDegAngles(m_Euler);
@@ -246,10 +550,10 @@ DirectX::XMFLOAT3 Transform::ChoiceBestEuler(_In_ const std::vector<DirectX::XMF
 	return ToDeg(Best);
 }
 
-std::vector<DirectX::XMFLOAT3> Transform::GetPracticalEulerCandidates() const noexcept
+std::vector<DirectX::XMFLOAT3> Transform::GetPracticalEulerCandidates(_In_ DirectX::XMFLOAT4 In_Quat) const noexcept
 {
 	std::vector<DirectX::XMFLOAT3> candidates;
-	auto BaseEuler = DX11Math::QuaternionToRollPitchYaw(m_Quat);
+	auto BaseEuler = DX11Math::QuaternionToRollPitchYaw(In_Quat);
 
 	float pitch = BaseEuler.x;
 	float yaw = BaseEuler.y;
@@ -389,4 +693,136 @@ std::vector<DirectX::XMFLOAT3> Transform::GenerateGimbalLockCandidates(_In_ floa
 	}
 
 	return Candidates;
+}
+
+void Transform::AddChild(_In_ Transform *In_Child)
+{
+	if(In_Child == nullptr)
+		return;
+
+	// 既に子リストにある場合は追加しない
+	auto itr = std::find(m_Children.begin(), m_Children.end(), In_Child);
+	if(itr == m_Children.end())
+	{
+		m_Children.push_back(In_Child);
+	}
+}
+
+void Transform::RemoveChild(_In_ Transform *In_Child)
+{
+	if(In_Child == nullptr)
+		return;
+
+	auto itr = std::find(m_Children.begin(), m_Children.end(), In_Child);
+	if(itr != m_Children.end())
+	{
+		m_Children.erase(itr);
+	}
+}
+
+Transform *Transform::FindRecursive(_In_ Transform *In_Current, _In_ std::string_view In_Name) const
+{
+	if(In_Current == nullptr)
+		return nullptr;
+
+	// 自分の名前をチェック
+	if(In_Current->GetGameObject()->GetName() == In_Name)
+	{
+		return In_Current;
+	}
+
+	// 子を再帰的に検索
+	for(Transform *child : In_Current->m_Children)
+	{
+		Transform *found = FindRecursive(child, In_Name);
+		if(found != nullptr)
+		{
+			return found;
+		}
+	}
+
+	return nullptr;
+}
+
+Transform *Transform::GetRootRecursive(_In_ Transform *In_Current) const
+{
+	if(In_Current->m_pParent == nullptr)
+		return In_Current;
+
+	return GetRootRecursive(In_Current->m_pParent);
+}
+
+DirectX::XMFLOAT3 Transform::WorldToLocalPosition(_In_ const DirectX::XMFLOAT3 &In_WorldPos) const
+{
+	if(!m_pParent)
+		return In_WorldPos;
+
+	// 親のワールド行列の逆行列を取得
+	DirectX::XMFLOAT4X4 fParentMat = m_pParent->GetWorldMatrix(false);
+	DirectX::XMMATRIX ParentMat = DirectX::XMLoadFloat4x4(&fParentMat);
+	DirectX::XMVECTOR det;
+	DirectX::XMMATRIX InvParentMat = DirectX::XMMatrixInverse(&det, ParentMat);
+
+	// ワールド座標を親の逆行列で変換
+	DirectX::XMVECTOR WorldPosVec = DirectX::XMLoadFloat3(&In_WorldPos);
+	DirectX::XMVECTOR LocalPosVec = DirectX::XMVector3TransformCoord(WorldPosVec, InvParentMat);
+
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMStoreFloat3(&Pos, LocalPosVec);
+	return Pos;
+}
+
+DirectX::XMFLOAT3 Transform::LocalToWorldPosition(_In_ const DirectX::XMFLOAT3 &In_LocalPos) const
+{
+	if(!m_pParent)
+		return In_LocalPos;
+
+	// 親のワールド行列を取得
+	DirectX::XMFLOAT4X4 fParentMat = m_pParent->GetWorldMatrix(false);
+	DirectX::XMMATRIX ParentMat = DirectX::XMLoadFloat4x4(&fParentMat);
+
+	// ローカル座標を親のワールド行列で変換
+	DirectX::XMVECTOR LocalPosVec = DirectX::XMLoadFloat3(&In_LocalPos);
+	DirectX::XMVECTOR WorldPosVec = DirectX::XMVector3TransformCoord(LocalPosVec, ParentMat);
+
+	DirectX::XMFLOAT3 Pos;
+	DirectX::XMStoreFloat3(&Pos, WorldPosVec);
+	return Pos;
+}
+
+DirectX::XMFLOAT4 Transform::WorldToLocalRotation(_In_ const DirectX::XMFLOAT4 &In_WorldQuat) const
+{
+	if(!m_pParent)
+		return In_WorldQuat;
+
+	// 親のワールド回転の逆クォータニオン
+	DirectX::XMFLOAT4 ParentQuat = m_pParent->GetQuat();
+	DirectX::XMVECTOR ParentWorldQuat = DirectX::XMLoadFloat4(&ParentQuat);
+	DirectX::XMVECTOR InvParentQuat= DirectX::XMQuaternionInverse(ParentWorldQuat);
+
+	// ワールド回転を親の逆回転で変換
+	DirectX::XMVECTOR WorldQuatVec = DirectX::XMLoadFloat4(&In_WorldQuat);
+	DirectX::XMVECTOR LocalQuatVec = DirectX::XMQuaternionMultiply(InvParentQuat, WorldQuatVec);
+
+	DirectX::XMFLOAT4 Quat;
+	DirectX::XMStoreFloat4(&Quat, LocalQuatVec);
+	return Quat;
+}
+
+DirectX::XMFLOAT4 Transform::LocalToWorldRotation(_In_ const DirectX::XMFLOAT4 &In_LocalQuat) const
+{
+	if(!m_pParent)
+		return In_LocalQuat;
+
+	// 親のワールド回転
+	DirectX::XMFLOAT4 ParentQuat = m_pParent->GetQuat();
+	DirectX::XMVECTOR ParentWorldQuat = DirectX::XMLoadFloat4(&ParentQuat);
+
+	// ローカル回転を親のワールド回転と合成
+	DirectX::XMVECTOR LocalQuatVec = DirectX::XMLoadFloat4(&In_LocalQuat);
+	DirectX::XMVECTOR WorldQuatVec = DirectX::XMQuaternionMultiply(ParentWorldQuat, LocalQuatVec);
+
+	DirectX::XMFLOAT4 Quat;
+	DirectX::XMStoreFloat4(&Quat, WorldQuatVec);
+	return Quat;
 }

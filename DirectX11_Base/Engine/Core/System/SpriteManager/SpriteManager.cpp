@@ -14,15 +14,18 @@
 #include "SpriteManagerLoader.hpp"
 #include "SpriteManagerSceneSelecter.hpp"
 
-#include "Engine/Core/System/Scene/SceneBase.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Component/Camera.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 // ==============================
 //  nlohmann/json
 // ==============================
-#include "nlohmann/json.hpp"
 using json = nlohmann::json;
 
-#include "Engine/Core/System/Component/Camera.hpp"
+
+
 
 // ==============================
 //  定数
@@ -51,8 +54,15 @@ void SpriteManager::Init() noexcept
 void SpriteManager::Update() noexcept
 {
 #ifdef _DEBUG
-	if (MENU_OPEN_KEY)
+	if(MENU_OPEN_KEY)
+	{
 		m_bIsOpen = !m_bIsOpen;
+
+		if(m_bIsOpen)
+			DebugManager::GetInstance().HideAllWindows();
+		else
+			DebugManager::GetInstance().ShowAllWindows();
+	}
 #endif // _DEBUG
 
 	if (m_pCamera == nullptr || m_pCameraObj == nullptr)
@@ -256,73 +266,72 @@ void SpriteManager::DrawImGui() noexcept
 	for (int i = 0; i < m_vecWindow.size();++i)
 	{
 		// ウィンドウ内の描画開始
-		ImGui::Begin(m_vecWindow[i]->GetWindowName().c_str());
-
-		// ウィンドウにカーソルが被っているかどうか
-		// ※ドラッグ中は除外
-		if (!m_bIsLeftClickTrigger && !m_bIs3KeyTrigger)
+		if(ImGui::Begin(m_vecWindow[i]->GetWindowName().c_str()))
 		{
-			if (ImGui::IsWindowHovered())
-				m_bIsHoveredWindow = true;
-		}
-
-		// 表示
-		switch (m_vecWindow[i]->GetWindowType())
-		{
-		case Hierarchy:
-		{
-			SpriteManagerHierarchy *Hierarchy = static_cast<SpriteManagerHierarchy *>(m_vecWindow[i]);
-			Hierarchy->Draw(m_SpriteNames[_2D], m_SpriteNames[_3D],&m_2DIndex,&m_3DIndex);
-		}
-
-			break;
-
-		case Inspector:
-		{
-			SpriteManagerInspector *Inspector = static_cast<SpriteManagerInspector *>(m_vecWindow[i]);
-			auto itr2D = m_SpriteObjects[_2D].begin();
-			auto itr3D = m_SpriteObjects[_3D].begin();
-			GameObject *Sprite2D = nullptr;
-			GameObject *Sprite3D = nullptr;
-
-			if (!m_SpriteObjects[_2D].empty())
+			// ウィンドウにカーソルが被っているかどうか
+			// ※ドラッグ中は除外
+			if(!m_bIsLeftClickTrigger && !m_bIs3KeyTrigger)
 			{
-				std::advance(itr2D, m_2DIndex);
-				Sprite2D = *itr2D;
-			}
-			if (!m_SpriteObjects[_3D].empty())
-			{
-				std::advance(itr3D, m_3DIndex);
-				Sprite3D = *itr3D;
+				if(ImGui::IsWindowHovered())
+					m_bIsHoveredWindow = true;
 			}
 
-			// インスペクターの描画
-			Inspector->Draw(Sprite2D, Sprite3D);
+			// 表示
+			switch(m_vecWindow[i]->GetWindowType())
+			{
+			case Hierarchy:
+			{
+				SpriteManagerHierarchy *Hierarchy = static_cast<SpriteManagerHierarchy *>(m_vecWindow[i]);
+				Hierarchy->Draw(m_SpriteNames[_2D], m_SpriteNames[_3D], &m_2DIndex, &m_3DIndex);
+			}
 
 			break;
+
+			case Inspector:
+			{
+				SpriteManagerInspector *Inspector = static_cast<SpriteManagerInspector *>(m_vecWindow[i]);
+				auto itr2D = m_SpriteObjects[_2D].begin();
+				auto itr3D = m_SpriteObjects[_3D].begin();
+				GameObject *Sprite2D = nullptr;
+				GameObject *Sprite3D = nullptr;
+
+				if(!m_SpriteObjects[_2D].empty())
+				{
+					std::advance(itr2D, m_2DIndex);
+					Sprite2D = *itr2D;
+				}
+				if(!m_SpriteObjects[_3D].empty())
+				{
+					std::advance(itr3D, m_3DIndex);
+					Sprite3D = *itr3D;
+				}
+
+				// インスペクターの描画
+				Inspector->Draw(Sprite2D, Sprite3D);
+
+				break;
+			}
+
+			case Loader:
+			{
+				SpriteManagerLoader *Loader = static_cast<SpriteManagerLoader *>(m_vecWindow[i]);
+
+				// ローダーの描画
+				Loader->Draw();
+
+				break;
+			}
+
+			case SceneSelecter:
+			{
+				m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを保存
+				SpriteManagerSceneSelecter *SceneSelecter = static_cast<SpriteManagerSceneSelecter *>(m_vecWindow[i]);
+				SceneSelecter->Draw(m_SceneSaveData, &m_CurrentSceneIndex);
+
+				break;
+			}
+			}
 		}
-
-		case Loader:
-		{
-			SpriteManagerLoader *Loader = static_cast<SpriteManagerLoader *>(m_vecWindow[i]);
-
-			// ローダーの描画
-			Loader->Draw();
-
-			break;
-		}
-
-		case SceneSelecter:
-		{
-			m_PrevSceneIndex = m_CurrentSceneIndex; // 前のシーンインデックスを保存
-			SpriteManagerSceneSelecter *SceneSelecter = static_cast<SpriteManagerSceneSelecter *>(m_vecWindow[i]);
-			SceneSelecter->Draw(m_SceneSaveData, &m_CurrentSceneIndex);
-
-			break;
-		}
-		}
-
-		// ウィンドウ内の描画終了
 		ImGui::End();
 	}
 }

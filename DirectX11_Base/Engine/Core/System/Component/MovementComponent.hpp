@@ -9,7 +9,12 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Component/Component.hpp"
+#include "Core/System/Component/Component.hpp"
+
+// ==============================
+//	‘O•ûéŒ¾
+// ==============================
+class Transform;
 
 /// <summary>
 /// MovementComponentƒNƒ‰ƒX

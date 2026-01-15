@@ -11,6 +11,8 @@
 #include "BoxCollider.hpp"
 #include "SphereCollider.hpp"
 #include "CapsuleCollider.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 BoxCollider::BoxCollider()
 	: ColliderBase("BoxCollider")
@@ -33,8 +35,8 @@ void BoxCollider::SaveLoad(_In_ DataAccessor *In_Data)
 
 void BoxCollider::Init() noexcept
 {
-	ColliderBase::Init();
 	UpdateWorldSegment();
+	ColliderBase::Init();
 }
 
 void BoxCollider::Update(_In_ float In_DeltaTime) noexcept

@@ -6,8 +6,8 @@
 ===================================================================+*/
 #pragma once
 
-#include "Engine/Core/DirectX11/Resource/ShaderResource/Shader.hpp"
-#include "Engine/Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
+#include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
+#include "Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

@@ -9,20 +9,22 @@
 //	include
 // ==============================
 #include "SceneBase.hpp"
-#include "Engine/Core/System/Object/CameraDCC.hpp"
-#include "Engine/Core/System/Object/GameObject.hpp"
-#include "Engine/Core/System/Managers/SceneManager.hpp"
-#include "Engine/Core/System/Object/GridObject.hpp"
+#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
+#include "Core/System/Object/GridObject.hpp"
+#include "Core/System/Managers/DebugManager/SystemItem.hpp"
 
 // ==============================
 //  前方宣言
 // ==============================
 SceneBase::Objects SceneBase::m_Objects;
 #ifdef _DEBUG
-ItemList *SceneBase::m_Hierarchy = nullptr;
+std::vector<GameObject *> SceneBase::m_ShowHierarchyObjects;
+ItemHierarchy *SceneBase::m_Hierarchy = nullptr;
 #endif // DEBUG
 
-SceneBase::SceneBase(_In_ const std::string &In_Name) noexcept
+SceneBase::SceneBase(_In_ std::string_view In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
 	, m_Data(nullptr)
@@ -54,15 +56,18 @@ void SceneBase::CommonProcessScene() noexcept
 #ifdef _DEBUG
 	auto &DebugM = DebugManager::GetInstance();
 	DebugWindow *window = DebugM.GetDebugWindow("System", "Hierarchy");
-	m_Hierarchy = window->CreateItem<ItemList>("Name", [](const void *arg)
+	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
+		[](GameObject *obj)
 		{
-			const char *name = reinterpret_cast<const char *>(arg);
-			auto itr = m_Objects.find(name);
-			if (itr == m_Objects.end()) return;
-			auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
-			window->ClearItems();
-			window->CreateItem<ItemValue>(itr->first, DebugItem::Label);
-			itr->second->RegisterDebugInspector(window);
+			// 選択時のコールバック
+			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+			inspectorWindow->ClearItems();
+
+			if(obj)
+			{
+				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
+				obj->RegisterDebugInspector(inspectorWindow);
+			}
 		});
 #endif
 
@@ -70,7 +75,7 @@ void SceneBase::CommonProcessScene() noexcept
 #ifdef _DEBUG
 	 auto pCamObj = CreateObject<CameraDCC>("EditorCamera");
 #else
-
+	// 本番環境ではメインカメラを作成
 #endif
 
 #ifdef _DEBUG
@@ -80,31 +85,61 @@ void SceneBase::CommonProcessScene() noexcept
 #endif
 }
 
-template<> GameObject
-*SceneBase::CreateObject(_In_ const std::string &In_Name) noexcept
+template<>
+GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name);
+	Objects::iterator itr = m_Objects.find(In_Name.data());
 	if (itr != m_Objects.end())
 	{
-		std::string buf = "Failed to create object." + In_Name;
+		std::string buf = "Failed to create object.";
+		buf += In_Name.data();
 		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
 		return nullptr;
 	}
-	// ヒエラルキーに追加
-	m_Hierarchy->AddListItem(In_Name.data());
-#endif // _DEBUG
+#endif
 
-	GameObject *ptr = new GameObject(In_Name);
+	GameObject *ptr = new GameObject(In_Name.data());
 	ptr->m_pScene = this; // 所属シーンを設定
-	ptr->DataRead(m_Data->GetObjectPtr(In_Name)); // CPONデータ読み込み
+	ptr->DataRead(m_Data->GetObjectPtr(In_Name.data())); // CPONデータ読み込み
 	ptr->ExecuteAwake(); // Awake呼び出し
-	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name, ptr));
-	m_Items.push_back(In_Name);
+
+	if(In_pParent)
+		ptr->GetTransform()->SetParent(In_pParent); // 親設定
+
+	m_Objects.insert(std::pair<std::string, GameObject *>(In_Name.data(), ptr));
+	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
+
+#ifdef _DEBUG
+	// ヒエラルキーに追加
+	m_ShowHierarchyObjects.push_back(ptr);
+#endif
+
 	return ptr;
+}
+
+void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName)
+{
+	if(m_Objects.find(In_NewName) != m_Objects.end())
+	{
+		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The name '{}' is already in use.", In_NewName);
+		return;
+	}
+
+	auto obj = m_Objects.find(In_OldName.data());
+	if(obj == m_Objects.end())
+	{
+		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The object '{}' was not found.", In_OldName);
+		return;
+	}
+
+	// キー名を変更するため、一度オブジェクトを削除してから再登録
+	GameObject *gameObj = obj->second;
+	m_Objects.erase(obj);
+	m_Objects.insert(std::pair<std::string, GameObject *>(In_NewName.data(), gameObj));
 }
 
 void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
@@ -226,7 +261,14 @@ void SceneBase::_DestroyObjects() noexcept
 		m_SceneObjects.erase(obj->second);
 		// オブジェクトの削除
 		delete obj->second;
-
+#ifdef _DEBUG
+		// ヒエラルキーから削除
+		auto itr = std::find(m_ShowHierarchyObjects.begin(), m_ShowHierarchyObjects.end(), obj->second);
+		if(itr != m_ShowHierarchyObjects.end())
+		{
+			m_ShowHierarchyObjects.erase(itr);
+		}
+#endif
 		// 各リストから削除
 		m_Objects.erase(obj);
 		m_Items.remove(name);

@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "CameraManager.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 void CameraManager::AddCameraObj(_In_ GameObject *In_pCameraObj) noexcept
 {

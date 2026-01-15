@@ -16,6 +16,8 @@
 #include <imm.h>
 #pragma comment(lib, "imm32.lib")
 
+#include "ryuu_lib/Singleton/Singleton.hpp"
+
 /// <summary>
 /// IMEƒNƒ‰ƒX
 /// </summary>

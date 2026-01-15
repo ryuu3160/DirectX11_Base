@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "InstancedMeshBuffer.hpp"
+#include "Core/DirectX11/DX11_Core.hpp"
 
 InstancedMeshBuffer::InstancedMeshBuffer(_In_ const InstancingDesc &In_Desc) noexcept
 	: m_pVtxBuffer(nullptr), m_pIdxBuffer(nullptr), m_Desc{}

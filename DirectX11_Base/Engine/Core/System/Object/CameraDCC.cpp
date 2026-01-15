@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "CameraDCC.hpp"
+#include "Core/System/Input/Input.hpp"
 
 enum CameraDCCKind
 {

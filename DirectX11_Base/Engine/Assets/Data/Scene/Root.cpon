@@ -1,11 +1,29 @@
 #ObjNum : 11
+ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]0, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+    ParentName:
+  ParticleEffect:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Texture/TestTexture.png
+    LayerGroup:0
+    Layer:1
+  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 0, 0
+    HalfExtents:[3]0.5, 0.5, 0.5
+
 EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1.948489, 2.7568624, -8.530543
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]4.9488635, 4.364386, -8.612948
     Scale:[3]1, 1, 1
-    Quat:[4]0.1783002, -0.0765142, 0.04924098, 0.9797286
+    Quat:[4]0.23184565, -0.1435002, 0.044903066, 0.961021
     Euler:[3]43.658302, -41.219685, -24.916674
+    ParentName:
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
     Fovy:60
@@ -16,95 +34,100 @@ EditorCamera[1]{IsActive:bool,Transform:object,Camera:object}:
     Focus:6.35099
     IsShow:false
 
+GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]0, 0, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+    ParentName:
+  LineRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:
+    LayerGroup:-1
+    Layer:0
+
+RootModel0Child[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]1, 0, 2.3841858e-07
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+    ParentName:RootModel0
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Model/spot/spot.fbx
+    LayerGroup:0
+    Layer:0
+
 RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,SphereCollider:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]3, 1, 0
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
+    ParentName:
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:Engine/Assets/Model/spot/spot.fbx
+    LayerGroup:0
+    Layer:0
   SphereCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,Radius:float}:
     IsTrigger:true
     LocalCenter:[3]0, 0, 0
     Radius:1
 
-ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ParticleEffect:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Texture/TestTexture.png
-  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-    HalfExtents:[3]0.5, 0.5, 0.5
-
-GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  LineRenderer:[1]{AssetPath:string}:
-    AssetPath:
-
 SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1.948489, 2.7568624, -8.530543
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]4.9488635, 4.364386, -8.612948
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  SkyBoxRenderer:[1]{AssetPath:string}:
+    ParentName:
+  SkyBoxRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:Engine/Assets/Model/SkyBox/sky.obj
+    LayerGroup:-2
+    Layer:0
 
 RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]-4.199998, 0, -2.1000006
     Scale:[3]1, 1, 1
     Quat:[4]-0.017452398, 0, 0, 0.9998477
     Euler:[3]-2, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
+    ParentName:
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:Engine/Assets/Model/F15E.fbx
+    LayerGroup:0
+    Layer:0
   CapsuleCollider:[1]{IsTrigger:bool,LocalCenter:array<float>}:
     IsTrigger:true
     LocalCenter:[3]0, 1, 0
   MovementComponent:[0]{}:
 
-RootModel0Child(RootModel0_Child)[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
-    Position:[3]1, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
-    AssetPath:Engine/Assets/Model/spot/spot.fbx
-
 PatternScale[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]0, -0.5, 0
     Scale:[3]1000, 1, 1000
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  ModelRenderer:[1]{AssetPath:string}:
+    ParentName:
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:Engine/Assets/Model/plane/plane.fbx
+    LayerGroup:0
+    Layer:0
 
 GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]0, 5, 0
     Scale:[3]1, 1, 1
     Quat:[4]-8.4293696e-08, 0.70710665, -0.7071067, -8.429369e-08
     Euler:[3]0, 0, 0
+    ParentName:
   Camera:[1]{Is3D:bool,Fovy:float,Width:float,Near:float,Far:float,Aspect:float,Focus:float,IsShow:bool}:
     Is3D:true
     Fovy:60
@@ -117,21 +140,27 @@ GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
 
 RTSprite[1]{IsActive:bool,Transform:object,RTSpriteRenderer:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]5, 2, 0
     Scale:[3]5, 5, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  RTSpriteRenderer:[1]{AssetPath:string}:
+    ParentName:
+  RTSpriteRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:
+    LayerGroup:3
+    Layer:0
 
 TestSprite[1]{IsActive:bool,Transform:object,SpriteRenderer:object}:
   IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>}:
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
     Position:[3]3.1875, -1.3377779, 0
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-  SpriteRenderer:[1]{AssetPath:string}:
+    ParentName:
+  SpriteRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
     AssetPath:Engine/Assets/Texture/TestTexture.png
+    LayerGroup:1
+    Layer:0
 

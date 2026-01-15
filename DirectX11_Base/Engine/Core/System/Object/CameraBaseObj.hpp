@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera.hpp"
 #include "GameObject.hpp"
 
 // ==============================

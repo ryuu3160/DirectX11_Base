@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "InstancedModelManager.hpp"
+#include "Core/System/Utility/Utility.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

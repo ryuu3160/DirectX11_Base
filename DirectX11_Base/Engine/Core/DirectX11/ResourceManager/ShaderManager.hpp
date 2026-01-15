@@ -9,7 +9,8 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Resource/ShaderResource/Shader.hpp"
+#include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
+#include "ryuu_lib/Singleton/Singleton.hpp"
 
 /// <summary>
 /// ShaderManagerƒNƒ‰ƒX

@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "CameraBaseObj.hpp"
+#include "Core/System/Managers/CameraManager.hpp"
 
 CameraBaseObj::CameraBaseObj()
 	: CameraBaseObj("CameraBaseObj")

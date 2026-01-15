@@ -9,7 +9,9 @@
 //	include
 // ==============================
 #include "DX11_Core.hpp"
-#include "Engine/Core/DirectX11/Resource/Texture.hpp"
+#include "Core/DirectX11/Resource/Texture.hpp"
+#include "ryuu_lib/WindowGenerator/Window.hpp"
+#include "Core/DirectX11/ResourceManager/RenderTargetManager.hpp"
 
 DX11_Core::DX11_Core() : m_WindowColor{0.8f, 0.9f, 1.0f, 1.0f }, m_BlendFactor{0.0f, 0.0f, 0.0f, 0.0f}
 {

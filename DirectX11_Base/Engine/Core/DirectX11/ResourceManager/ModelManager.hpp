@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/DirectX11/Resource/MesheResource/Mesh.hpp"
+#include "Core/DirectX11/Resource/MesheResource/Mesh.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾

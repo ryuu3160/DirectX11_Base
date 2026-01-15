@@ -16,6 +16,8 @@
 
 #pragma comment(lib, "msacm32.lib")
 #pragma comment(lib, "shlwapi.lib")
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/Defines.hpp"
 
 /// <summary>
 /// SoundManagerƒNƒ‰ƒX

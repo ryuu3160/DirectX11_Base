@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "LineRenderer.hpp"
+#include "Core/System/Object/GameObject.hpp"
 
 // ==============================
 //  ’è”

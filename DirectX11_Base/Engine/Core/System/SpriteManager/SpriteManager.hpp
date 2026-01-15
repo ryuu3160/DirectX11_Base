@@ -9,12 +9,15 @@
 // ==============================
 //	include
 // ==============================
-#include "Engine/Core/System/Managers/DebugManager/InitializeImGui.hpp"
+#include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
 #include "SpriteManagerWindow.hpp"
+#include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/System/Input/Input.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
 // ==============================
+class GameObject;
 class Camera;
 
 // ==============================

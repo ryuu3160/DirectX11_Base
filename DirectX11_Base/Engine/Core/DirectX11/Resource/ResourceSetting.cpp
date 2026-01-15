@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ResourceSetting.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: リソース設定に関するユーティリティ関数群
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/08/18 Mon PM 03:59:53 初回作成
 ===================================================================+*/
@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "ResourceSetting.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 namespace ResourceSetting
 {

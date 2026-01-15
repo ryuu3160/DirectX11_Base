@@ -13,7 +13,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "ryuu_lib/Singleton/Singleton.hpp"
 // メンバ関数にGetClassNameがあるため、マクロを無効化
 #undef GetClassName
 

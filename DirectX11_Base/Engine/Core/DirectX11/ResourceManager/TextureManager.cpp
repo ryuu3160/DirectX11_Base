@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "TextureManager.hpp"
-#include "Engine/Core/DirectX11/Resource/ResourceSetting.hpp"
+#include "Core/DirectX11/Resource/ResourceSetting.hpp"
 
 // assimp‚Ìƒ‰ƒCƒuƒ‰ƒŠƒŠƒ“ƒN
 #ifdef _DEBUG
