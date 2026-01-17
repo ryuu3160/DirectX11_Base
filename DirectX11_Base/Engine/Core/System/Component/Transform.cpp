@@ -180,6 +180,11 @@ void Transform::DetachChildren() noexcept
 	m_Children.clear();
 }
 
+void Transform::Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept
+{
+	m_Pos += In_Translate;
+}
+
 void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept
 {
 	// 増分をクォータニオンに変換

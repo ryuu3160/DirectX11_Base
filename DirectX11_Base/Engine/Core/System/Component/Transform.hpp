@@ -84,8 +84,14 @@ public:
 	void DetachChildren() noexcept;
 
 	// ------------------------------
-	//  回転操作
+	//  Transform操作
 	// ------------------------------
+
+	/// <summary>
+	/// 指定されたベクトルによる平行移動を適用します
+	/// </summary>
+	/// <param name="[In_Translate]">平行移動のオフセットを表す3Dベクトル</param>
+	void Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept;
 
 	/// <summary>
 	/// <para>指定された角度で回転を適用します</para>
