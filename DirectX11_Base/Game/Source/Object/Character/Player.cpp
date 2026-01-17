@@ -9,8 +9,7 @@
 //	include
 // ==============================
 #include "Player.hpp"
-#include "DirectX11/System/ModelRenderer.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
+#include "Engine.hpp"
 
 // ==============================
 //	定数定義
@@ -67,7 +66,7 @@ Player::Player()
 	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
 	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
 
-	SetPos(cx_PlayerStartPos);
+	SetPosition(cx_PlayerStartPos);
 	SetScale(cx_PlayerScale);
 	SetQuat(cx_PlayerStartQuat);
 	m_fSpeed = cx_PlayerStartSpeed;
@@ -95,7 +94,7 @@ void Player::Update()
 	UpdateChildMissile();
 	UpdateShoot();
 	
-	if (m_Pos.y < 0.0f && !m_IsDestroyed)
+	if (GetPosition().y < 0.0f && !m_IsDestroyed)
 	{
 		m_IsDestroyed = true;
 		SoundManager::GetInstance().Play("Explosion");
