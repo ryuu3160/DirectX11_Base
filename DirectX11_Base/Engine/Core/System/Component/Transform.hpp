@@ -166,6 +166,16 @@ public:
 	/// <returns>上方向を表す3次元ベクトル</returns>
 	DirectX::XMFLOAT3 GetUp() const noexcept;
 
+	/// <summary>
+	/// 方向ベクトルをまとめて取得します
+	/// </summary>
+	/// <param name="[Out_Front]">前方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[Out_Right]">右方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[Out_Up]">上方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[In_IsNormalize]">ベクトルを正規化するかどうかを指定します</param>
+	void GetDirectionVectors(_Out_opt_ DirectX::XMFLOAT3 *Out_Front, _Out_opt_ DirectX::XMFLOAT3 *Out_Right,
+		_Out_opt_ DirectX::XMFLOAT3 *Out_Up, _In_ bool In_IsNormalize = true) const noexcept;
+
 	// ------------------------------
 	//  Setter
 	// ------------------------------
@@ -233,6 +243,10 @@ private:
 	DirectX::XMFLOAT4 WorldToLocalRotation(_In_ const DirectX::XMFLOAT4 &In_WorldQuat) const;
 	DirectX::XMFLOAT4 LocalToWorldRotation(_In_ const DirectX::XMFLOAT4 &In_LocalQuat) const;
 
+	void UpdateWorldMatrix() const noexcept;
+	void MarkDirty() noexcept;
+	void PropagateTransformChanged() noexcept;
+
 private:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
@@ -241,6 +255,12 @@ private:
 	// Euler角用
 	DirectX::XMFLOAT3	m_Euler;		// 回転(オイラー角)
 	DirectX::XMFLOAT3	m_AccumEuler;	// オイラー角の累積
+
+	// ワールド行列キャッシュ
+	mutable DirectX::XMFLOAT4X4 m_WorldMatrix;
+
+	// フラグ
+	mutable bool m_WorldMatrixDirty;	// ワールド行列が最新でない場合true
 	bool m_IsSyncEuler;					// オイラー角とクォータニオンの同期が必要かどうか
 
 	std::string m_ParentName;

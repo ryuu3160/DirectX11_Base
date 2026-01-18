@@ -25,7 +25,9 @@ Transform::Transform()
 	, m_Pos{ 0.0f, 0.0f, 0.0f }, m_Scale{ 1.0f, 1.0f, 1.0f }, m_Quat{ 0.0f, 0.0f, 0.0f, 1.0f }, m_Euler{ 0.0f, 0.0f, 0.0f }
 	, m_IsSyncEuler(false), m_AccumEuler{ 0.0f, 0.0f, 0.0f }
 	, m_pParent(nullptr)
+	, m_WorldMatrixDirty(true)
 {
+	DirectX::XMStoreFloat4x4(&m_WorldMatrix, DirectX::XMMatrixIdentity());
 }
 
 Transform::~Transform()
@@ -47,6 +49,7 @@ void Transform::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<DirectX::XMFLOAT4>("Quat", &m_Quat);
 	In_Data->AccessValue<DirectX::XMFLOAT3>("Euler", &m_Euler);
 	In_Data->AccessValue<std::string>("ParentName", &m_ParentName);
+	MarkDirty();
 }
 
 void Transform::SetParent(_In_opt_ Transform *In_Parent, _In_ bool In_IsWorldPositionStays)
@@ -183,6 +186,7 @@ void Transform::DetachChildren() noexcept
 void Transform::Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept
 {
 	m_Pos += In_Translate;
+	MarkDirty();
 }
 
 void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept
@@ -240,6 +244,8 @@ void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float 
 		m_AccumEuler.z += 360.0f;
 		m_Euler.z += 360.0f;
 	}
+
+	MarkDirty();
 }
 
 void Transform::RotateAround(_In_ const DirectX::XMFLOAT3 &In_Point, _In_ const DirectX::XMFLOAT3 &In_Axis, _In_ float In_Angle)
@@ -312,6 +318,15 @@ DirectX::XMFLOAT4X4 Transform::GetLocalMatrix(_In_ bool In_IsTranspose) const no
 
 DirectX::XMFLOAT4X4 Transform::GetWorldMatrix(_In_ bool In_IsTranspose) const noexcept
 {
+	UpdateWorldMatrix();
+	if(In_IsTranspose)
+	{
+		DirectX::XMFLOAT4X4 TransposeMat;
+		DirectX::XMStoreFloat4x4(&TransposeMat, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_WorldMatrix)));
+		return TransposeMat;
+	}
+	return m_WorldMatrix;
+
 	// 各要素の行列を取得
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
@@ -423,9 +438,14 @@ DirectX::XMFLOAT3 Transform::GetUp() const noexcept
 	return dir;
 }
 
+void Transform::GetDirectionVectors(_Out_opt_ DirectX::XMFLOAT3 *Out_Front, _Out_opt_ DirectX::XMFLOAT3 *Out_Right, _Out_opt_ DirectX::XMFLOAT3 *Out_Up, _In_ bool In_IsNormalize) const noexcept
+{
+}
+
 void Transform::SetLocalPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 {
 	m_Pos = In_Pos;
+	MarkDirty();
 }
 
 void Transform::SetLocalRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
@@ -435,12 +455,14 @@ void Transform::SetLocalRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noex
 	// クォータニオンに変換
 	DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(Rot.x, Rot.y, Rot.z));
 	m_IsSyncEuler = true;
+	MarkDirty();
 }
 
 void Transform::SetLocalScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 {
 	// 拡縮を設定
 	m_Scale = In_Scale;
+	MarkDirty();
 }
 
 void Transform::SetLocalQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
@@ -448,6 +470,7 @@ void Transform::SetLocalQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 	// クォータニオンを設定
 	m_Quat = In_Quat;
 	m_IsSyncEuler = true;
+	MarkDirty();
 }
 
 void Transform::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
@@ -456,6 +479,8 @@ void Transform::SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
 		m_Pos = In_Pos;
 	else
 		m_Pos = WorldToLocalPosition(In_Pos);
+
+	MarkDirty();
 }
 
 void Transform::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
@@ -463,8 +488,15 @@ void Transform::SetRotation(_In_ const DirectX::XMFLOAT3 &In_Rotation) noexcept
 	// 回転を設定
 	auto Rot = ToRad(In_Rotation);
 	// クォータニオンに変換
-	DirectX::XMStoreFloat4(&m_Quat, DirectX::XMQuaternionRotationRollPitchYaw(Rot.x, Rot.y, Rot.z));
+	DirectX::XMFLOAT4 Quat;
+	DirectX::XMStoreFloat4(&Quat, DirectX::XMQuaternionRotationRollPitchYaw(Rot.x, Rot.y, Rot.z));
+	if(!m_pParent)
+		m_Quat = Quat;
+	else
+		m_Quat = WorldToLocalRotation(Quat);
+
 	m_IsSyncEuler = true;
+	MarkDirty();
 }
 
 void Transform::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
@@ -473,6 +505,8 @@ void Transform::SetScale(_In_ const DirectX::XMFLOAT3 &In_Scale) noexcept
 		m_Scale = In_Scale;
 	else
 		m_Scale = In_Scale / m_pParent->GetScale();
+
+	MarkDirty();
 }
 
 void Transform::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
@@ -483,6 +517,7 @@ void Transform::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 		m_Quat = WorldToLocalRotation(In_Quat);
 
 	m_IsSyncEuler = true;
+	MarkDirty();
 }
 
 void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
@@ -506,6 +541,7 @@ void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 				// オイラー角の累積はリセット
 				m_AccumEuler = { 0.0f, 0.0f, 0.0f };
 				m_IsSyncEuler = false;
+				MarkDirty();
 			}
 			else
 			{
@@ -830,4 +866,44 @@ DirectX::XMFLOAT4 Transform::LocalToWorldRotation(_In_ const DirectX::XMFLOAT4 &
 	DirectX::XMFLOAT4 Quat;
 	DirectX::XMStoreFloat4(&Quat, WorldQuatVec);
 	return Quat;
+}
+
+void Transform::UpdateWorldMatrix() const noexcept
+{
+	// 各要素の行列を取得
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+
+	// 行列の合算
+	DirectX::XMMATRIX M = S * R * T;
+
+	if(m_pParent)
+	{
+		auto fParentMat = m_pParent->GetWorldMatrix(false);
+		auto ParentM = DirectX::XMLoadFloat4x4(&fParentMat);
+		M = M * ParentM;
+	}
+
+	// XMMATRIXからXMFLOATへ変換
+	DirectX::XMStoreFloat4x4(&m_WorldMatrix, M);
+}
+
+void Transform::MarkDirty() noexcept
+{
+	if(m_WorldMatrixDirty)
+		return;
+
+	m_WorldMatrixDirty = true;
+
+	// 子にも伝播
+	PropagateTransformChanged();
+}
+
+void Transform::PropagateTransformChanged() noexcept
+{
+	for(Transform *child : m_Children)
+	{
+		child->MarkDirty();
+	}
 }
