@@ -141,9 +141,9 @@ public:
 
 	DirectX::XMFLOAT3 GetRotation(_In_ bool In_IsDegree = false) noexcept;
 
-	inline DirectX::XMFLOAT3 GetPosition() const noexcept;
-	inline DirectX::XMFLOAT4 GetQuat() const noexcept;
-	inline DirectX::XMFLOAT3 GetScale() const noexcept;
+	DirectX::XMFLOAT3 GetPosition() const noexcept;
+	DirectX::XMFLOAT4 GetQuat() const noexcept;
+	DirectX::XMFLOAT3 GetScale() const noexcept;
 
 	// ------------------------------
 	// 方向ベクトル取得
@@ -152,19 +152,21 @@ public:
 	/// <summary>
 	/// 前方ベクトルを取得します
 	/// </summary>
-	/// <param name="[Is_Normalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>オブジェクトの前方方向を表すXMFLOAT3ベクトル</returns>
-	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
+	DirectX::XMFLOAT3 GetFront(_In_ bool In_IsNormalize = true) const noexcept;
 	/// <summary>
 	/// 右方向ベクトルを取得します
 	/// </summary>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>右方向を表す3次元ベクトル</returns>
-	DirectX::XMFLOAT3 GetRight() const noexcept;
+	DirectX::XMFLOAT3 GetRight(_In_ bool In_IsNormalize = true) const noexcept;
 	/// <summary>
 	/// 上方向ベクトルを取得します
 	/// </summary>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>上方向を表す3次元ベクトル</returns>
-	DirectX::XMFLOAT3 GetUp() const noexcept;
+	DirectX::XMFLOAT3 GetUp(_In_ bool In_IsNormalize = true) const noexcept;
 
 	/// <summary>
 	/// 方向ベクトルをまとめて取得します
@@ -258,6 +260,7 @@ private:
 
 	// ワールド行列キャッシュ
 	mutable DirectX::XMFLOAT4X4 m_WorldMatrix;
+	mutable DirectX::XMFLOAT4X4 m_TransposeWorldMatrix;
 
 	// フラグ
 	mutable bool m_WorldMatrixDirty;	// ワールド行列が最新でない場合true

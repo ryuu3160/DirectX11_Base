@@ -28,6 +28,7 @@ Transform::Transform()
 	, m_WorldMatrixDirty(true)
 {
 	DirectX::XMStoreFloat4x4(&m_WorldMatrix, DirectX::XMMatrixIdentity());
+	DirectX::XMStoreFloat4x4(&m_TransposeWorldMatrix, DirectX::XMMatrixIdentity());
 }
 
 Transform::~Transform()
@@ -321,35 +322,9 @@ DirectX::XMFLOAT4X4 Transform::GetWorldMatrix(_In_ bool In_IsTranspose) const no
 	UpdateWorldMatrix();
 	if(In_IsTranspose)
 	{
-		DirectX::XMFLOAT4X4 TransposeMat;
-		DirectX::XMStoreFloat4x4(&TransposeMat, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&m_WorldMatrix)));
-		return TransposeMat;
+		return m_TransposeWorldMatrix;
 	}
 	return m_WorldMatrix;
-
-	// 各要素の行列を取得
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
-
-	// 行列の合算
-	DirectX::XMMATRIX M = S * R * T;
-
-	if(m_pParent)
-	{
-		auto fParentMat = m_pParent->GetWorldMatrix(false);
-		auto ParentM = DirectX::XMLoadFloat4x4(&fParentMat);
-		M = M * ParentM;
-	}
-
-	// 転置
-	if(In_IsTranspose)
-		M = DirectX::XMMatrixTranspose(M);
-	// XMMATRIXからXMFLOATへ変換
-	DirectX::XMFLOAT4X4 fMat;
-	DirectX::XMStoreFloat4x4(&fMat, M);
-
-	return fMat;
 }
 
 DirectX::XMFLOAT3 Transform::GetLocalRotation(_In_ bool In_IsDegree) noexcept
@@ -372,7 +347,7 @@ DirectX::XMFLOAT3 Transform::GetRotation(_In_ bool In_IsDegree) noexcept
 	return m_Euler;
 }
 
-inline DirectX::XMFLOAT3 Transform::GetPosition() const noexcept
+DirectX::XMFLOAT3 Transform::GetPosition() const noexcept
 {
 	if(!m_pParent)
 		return m_Pos;
@@ -380,7 +355,7 @@ inline DirectX::XMFLOAT3 Transform::GetPosition() const noexcept
 		return LocalToWorldPosition(m_Pos);
 }
 
-inline DirectX::XMFLOAT4 Transform::GetQuat() const noexcept
+DirectX::XMFLOAT4 Transform::GetQuat() const noexcept
 {
 	if(!m_pParent)
 		return m_Quat;
@@ -388,7 +363,7 @@ inline DirectX::XMFLOAT4 Transform::GetQuat() const noexcept
 		return LocalToWorldRotation(m_Quat);
 }
 
-inline DirectX::XMFLOAT3 Transform::GetScale() const noexcept
+DirectX::XMFLOAT3 Transform::GetScale() const noexcept
 {
 	if(!m_pParent)
 		return m_Scale;
@@ -396,50 +371,92 @@ inline DirectX::XMFLOAT3 Transform::GetScale() const noexcept
 		return m_Scale * m_pParent->GetScale();
 }
 
-DirectX::XMFLOAT3 Transform::GetFront(_In_ const bool &Is_Normalize) const noexcept
+DirectX::XMFLOAT3 Transform::GetFront(_In_ bool In_IsNormalize) const noexcept
 {
-	// 前方ベクトルを取得
-	DirectX::XMVECTOR vFront = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vFront = DirectX::XMVector3Rotate(vFront, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	if(Is_Normalize)
-		DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vFront));
-	else
-		DirectX::XMStoreFloat3(&dir, vFront);
-	return dir;
+	const DirectX::XMFLOAT4X4 &world = GetWorldMatrix(false);
+
+	// 行列のZ軸(3列目)が前方ベクトル
+	DirectX::XMFLOAT3 front(world._31, world._32, world._33);
+
+	if(In_IsNormalize)
+	{
+		// スケールの影響を除去
+		DirectX::XMVECTOR v = DirectX::XMLoadFloat3(&front);
+		v = DirectX::XMVector3Normalize(v);
+		DirectX::XMStoreFloat3(&front, v);
+	}
+
+	return front;
 }
 
-DirectX::XMFLOAT3 Transform::GetRight() const noexcept
+DirectX::XMFLOAT3 Transform::GetRight(_In_ bool In_IsNormalize) const noexcept
 {
-	// 右方向ベクトルを取得
-	DirectX::XMVECTOR vRight = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vRight = DirectX::XMVector3Rotate(vRight, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	DirectX::XMStoreFloat3(&dir, DirectX::XMVector3Normalize(vRight));
-	return dir;
+	const DirectX::XMFLOAT4X4 &world = GetWorldMatrix(false);
+	DirectX::XMFLOAT3 right(world._11, world._12, world._13);
+
+	if(In_IsNormalize)
+	{
+		// スケールの影響を除去
+		DirectX::XMVECTOR v = DirectX::XMLoadFloat3(&right);
+		v = DirectX::XMVector3Normalize(v);
+		DirectX::XMStoreFloat3(&right, v);
+	}
+
+	return right;
 }
 
-DirectX::XMFLOAT3 Transform::GetUp() const noexcept
+DirectX::XMFLOAT3 Transform::GetUp(_In_ bool In_IsNormalize) const noexcept
 {
-	// 上方向ベクトルを取得
-	DirectX::XMVECTOR vUp = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	// クォータニオンを使って回転
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
-	vUp = DirectX::XMVector3Rotate(vUp, qRotate);
-	DirectX::XMFLOAT3 dir;
-	// 正規化してXMFLOAT3に変換
-	DirectX::XMStoreFloat3(&dir, vUp);
-	return dir;
+	const DirectX::XMFLOAT4X4 &world = GetWorldMatrix(false);
+	DirectX::XMFLOAT3 up(world._21, world._22, world._23);
+
+	if(In_IsNormalize)
+	{
+		// スケールの影響を除去
+		DirectX::XMVECTOR v = DirectX::XMLoadFloat3(&up);
+		v = DirectX::XMVector3Normalize(v);
+		DirectX::XMStoreFloat3(&up, v);
+	}
+
+	return up;
 }
 
 void Transform::GetDirectionVectors(_Out_opt_ DirectX::XMFLOAT3 *Out_Front, _Out_opt_ DirectX::XMFLOAT3 *Out_Right, _Out_opt_ DirectX::XMFLOAT3 *Out_Up, _In_ bool In_IsNormalize) const noexcept
 {
+	const DirectX::XMFLOAT4X4 &world = GetWorldMatrix();
+
+	if(Out_Front)
+	{
+		*Out_Front = DirectX::XMFLOAT3(world._31, world._32, world._33);
+		if(In_IsNormalize)
+		{
+			DirectX::XMVECTOR v = DirectX::XMLoadFloat3(Out_Front);
+			v = DirectX::XMVector3Normalize(v);
+			DirectX::XMStoreFloat3(Out_Front, v);
+		}
+	}
+
+	if(Out_Right)
+	{
+		*Out_Right = DirectX::XMFLOAT3(world._11, world._12, world._13);
+		if(In_IsNormalize)
+		{
+			DirectX::XMVECTOR v = DirectX::XMLoadFloat3(Out_Right);
+			v = DirectX::XMVector3Normalize(v);
+			DirectX::XMStoreFloat3(Out_Right, v);
+		}
+	}
+
+	if(Out_Up)
+	{
+		*Out_Up = DirectX::XMFLOAT3(world._21, world._22, world._23);
+		if(In_IsNormalize)
+		{
+			DirectX::XMVECTOR v = DirectX::XMLoadFloat3(Out_Up);
+			v = DirectX::XMVector3Normalize(v);
+			DirectX::XMStoreFloat3(Out_Up, v);
+		}
+	}
 }
 
 void Transform::SetLocalPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept
@@ -695,7 +712,7 @@ std::vector<DirectX::XMFLOAT3> Transform::GenerateGimbalLockCandidates(_In_ floa
 
 	// 1.  主要な角度を追加
 	YawDegrees.push_back(0.0f);                                          // 0度
-	YawDegrees.push_back(DirectX::XMConvertToDegrees(In_Yaw));           // 元の Yaw
+	YawDegrees.push_back(DirectX::XMConvertToDegrees(In_Yaw));           // 元のYaw
 
 	// 2. 角度刻みで候補を生成
 	for(float deg = -180.0f; deg < 180.0f; deg += In_StepDeg)
@@ -887,6 +904,8 @@ void Transform::UpdateWorldMatrix() const noexcept
 
 	// XMMATRIXからXMFLOATへ変換
 	DirectX::XMStoreFloat4x4(&m_WorldMatrix, M);
+	// 転置したものも保存
+	DirectX::XMStoreFloat4x4(&m_TransposeWorldMatrix, DirectX::XMMatrixTranspose(M));
 }
 
 void Transform::MarkDirty() noexcept
