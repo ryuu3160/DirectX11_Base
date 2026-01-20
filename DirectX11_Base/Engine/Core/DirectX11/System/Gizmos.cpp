@@ -52,17 +52,19 @@ void Gizmos::AddLine(_In_ GameObject *In_Obj, _In_ DirectX::XMFLOAT3 In_Start, _
 	DirectX::XMFLOAT3 ObjPos = In_Obj->GetPosition();
 
 	Vertex start, end;
+	DirectX::XMFLOAT3 normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 	start.pos = In_Start;
 	start.color = In_StartColor;
-	start.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	start.normal = normal;
 	end.pos = In_End;
 	end.color = In_EndColor;
-	end.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	end.normal = normal;
 
 	// ワールド行列から位置を変換
 	start.pos += ObjPos;
 	end.pos += ObjPos;
 
+	std::lock_guard<std::mutex> lock(m_Mutex);
 	m_Data.lineVtxs.emplace_back(start);
 	m_Data.lineVtxs.emplace_back(end);
 	m_IsUpdate = true;
