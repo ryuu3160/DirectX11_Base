@@ -35,9 +35,9 @@ void SkyBoxObj::Awake() noexcept
 	// スカイボックス描画コンポーネントの生成
 	m_pRenderComponent = AddComponent<SkyBoxRenderer>();
 	m_pRenderComponent->SetAssetPath("Engine/Assets/Model/SkyBox/sky.obj");
-	m_pRenderComponent->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-	m_pRenderComponent->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-	m_pRenderComponent->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+	auto &ShaderManager = ShaderManager::GetInstance();
+	m_pRenderComponent->SetVertexShader(ShaderManager.GetShader("VS_Object"));
+	m_pRenderComponent->SetPixelShader(ShaderManager.GetShader("PS_TexColor"));
 }
 
 void SkyBoxObj::SetFilePath(_In_ const FilePath &In_Path) noexcept

@@ -32,7 +32,6 @@ SkyBoxRenderer::SkyBoxRenderer()
 	, m_pVS(nullptr)
 	, m_pPS(nullptr)
 	, m_fScale(1.0f)
-	, m_bUseMaterialShader(false)
 {
 	if (!m_defVS && !m_defPS) // どちらもnullptr
 	{
@@ -55,7 +54,8 @@ SkyBoxRenderer::~SkyBoxRenderer()
 void SkyBoxRenderer::Update(_In_ float In_DeltaTime) noexcept
 {
 	// 既にメッシュが読み込まれている場合は何もしない
-	if (!m_vecMeshes.empty()) return;
+	if (!m_vecMeshes.empty())
+		return;
 
 	this->Load(m_AssetPath, m_fScale);
 }
@@ -145,35 +145,15 @@ void SkyBoxRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 	// 単位行列でワールド行列を作成
 	mat[0] = m_pGameObject->GetWorld(false);
 
-	// マテリアルのシェーダーを使用しない場合は、デフォルトのシェーダーを使用
-	if (!m_bUseMaterialShader)
-	{
-		// メモリ上の行列をグラフィックスメモリへコピー
-		// 1つ目の引数はバッファの番号
-		m_pVS->WriteBuffer(0, mat);
+	// メモリ上の行列をグラフィックスメモリへコピー
+	// 1つ目の引数はバッファの番号
+	m_pVS->WriteBuffer(0, mat);
 
-		m_pVS->Bind();
-		m_pPS->Bind();
-	}
+	m_pVS->Bind();
+	m_pPS->Bind();
 
 	for (auto &itr : m_vecMeshes)
 	{
-		// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーをバインド
-		if (m_bUseMaterialShader)
-		{
-			VertexShader *pVS = itr->GetMaterial()->GetVertexShader();
-			PixelShader *pPS = itr->GetMaterial()->GetPixelShader();
-			if (pVS)
-			{
-				pVS->WriteBuffer(0, mat);
-				pVS->Bind();
-			}
-			if (pPS)
-			{
-				pPS->Bind();
-			}
-		}
-
 		// 設定されているテクスチャをシェーダーに設定
 		if (itr->GetMaterial()->GetTextureNum() > 0)
 		{
@@ -184,17 +164,8 @@ void SkyBoxRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 				if (!Textures[i])
 					continue;
 
-				// 使用するシェーダーがマテリアルのシェーダーかどうかを判定
-				if (m_bUseMaterialShader)
-				{
-					// マテリアルのシェーダーを使用する場合は、マテリアルのシェーダーにテクスチャを設定
-					itr->GetMaterial()->GetPixelShader()->SetTexture(i, Textures[i].get());
-				}
-				else
-				{
-					// モデル全体のシェーダーを使用する場合は、モデルのピクセルシェーダーにテクスチャを設定
-					m_pPS->SetTexture(i, Textures[i].get());
-				}
+				// モデル全体のシェーダーを使用する場合は、モデルのピクセルシェーダーにテクスチャを設定
+				m_pPS->SetTexture(i, Textures[i].get());
 			}
 		}
 		itr->GetMesh()->Draw();
@@ -239,7 +210,7 @@ void SkyBoxRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function
 void SkyBoxRenderer::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Binaries/Shader/VS_Model.cso");
+	m_defVS->Load("Binaries/Shader/VS_Object.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_Model.cso");
+	m_defPS->Load("Binaries/Shader/PS_TexColor.cso");
 }

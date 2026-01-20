@@ -48,12 +48,6 @@ public:
 	void SetPixelShader(_In_ Shader *In_Ps) noexcept;
 
 	/// <summary>
-	/// マテリアルシェーダーの使用状態を設定します。
-	/// </summary>
-	/// <param name="[In_IsUse]">マテリアルシェーダーを使用するかどうかを示す真偽値。</param>
-	inline void IsUseMaterialShader(_In_ const bool &In_IsUse) noexcept { m_bUseMaterialShader = In_IsUse; }
-
-	/// <summary>
 	/// ファイルを指定されたパスから読み込み、スケールと反転オプションを適用します。
 	/// </summary>
 	/// <param name="[In_File]">読み込むファイルのパス。</param>
@@ -86,5 +80,4 @@ private:
 	PixelShader *m_pPS;
 
 	float m_fScale;
-	bool m_bUseMaterialShader;	// マテリアルに付いているシェーダーを使用するかどうか
 };
