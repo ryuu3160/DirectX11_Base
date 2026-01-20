@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "sal.h"
-#include "System/Object/GameObject.hpp"
+#include "Engine.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================
@@ -35,7 +35,7 @@ public:
 	/// </summary>
 	~Missile();
 
-	void Update() override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	void SetSpeed(_In_ const float &In_Speed) noexcept;
 

@@ -9,8 +9,7 @@
 //	include
 // ==============================
 #include "Player.hpp"
-#include "Engine.hpp"
-
+#include "../Game/Source/Object/Missile.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -60,6 +59,14 @@ Player::Player()
 	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
 	, m_IsDestroyed(false)
 {
+}
+
+Player::~Player()
+{
+}
+
+void Player::Awake() noexcept
+{
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
 	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
@@ -76,18 +83,17 @@ Player::Player()
 	{
 		m_ReloadTimer.push_back({ i, 0.0f });
 	}
+}
 
+void Player::Init() noexcept
+{
 	// SE追加
 	auto &SoundM = SoundManager::GetInstance();
 	SoundM.Load("Missile", "Assets/Sound/SE/Missile.wav", true, false);
 	SoundM.Load("Explosion", "Assets/Sound/SE/small_explosion.wav", true, false);
 }
 
-Player::~Player()
-{
-}
-
-void Player::Update()
+void Player::Update(_In_ float In_DeltaTime) noexcept
 {
 	UpdateMovement();
 	UpdateReload();
@@ -99,22 +105,22 @@ void Player::Update()
 		m_IsDestroyed = true;
 		SoundManager::GetInstance().Play("Explosion");
 		m_fSpeed = 0.0f;
-		m_Pos.y = -2.0f; // 地面にめり込ませる
+		m_pTransform->Translate(0.0f, -2.0f, 0.0f); // 地面にめり込ませる
 	}
 
-	GameObject::Update();
+	GameObject::Update(In_DeltaTime);
 }
 
 void Player::SetCamera(_In_ GameObject *In_Camera) noexcept
 {
 	m_pCamera = In_Camera;
-	GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 }
 
 void Player::UpdateMovement()
 {
 	// ----- 旋回処理 -----
-	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&m_Quat);
+	DirectX::XMFLOAT4 Quat = GetQuat();
+	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	DirectX::XMVECTOR quat;
 
 	// ヨー
@@ -200,13 +206,13 @@ void Player::UpdateMovement()
 	}
 
 	// 回転の更新
-	DirectX::XMStoreFloat4(&m_Quat, qRotate);
+	DirectX::XMStoreFloat4(&Quat, qRotate);
 
 	// 前方ベクトル取得
 	DirectX::XMFLOAT3 front = GetFront();
 
 	// 移動
-	m_Pos += ((front * MOVE_SPEED_SCALE) * m_fSpeed);
+	m_pTransform->Translate((front * MOVE_SPEED_SCALE) * m_fSpeed);
 }
 
 void Player::UpdateShoot()
@@ -220,7 +226,7 @@ void Player::UpdateShoot()
 		// ミサイル発射SE
 		SoundManager::GetInstance().Play("Missile");
 		std::string name = "Missile" + std::to_string(m_ShotMissileNum);
-		auto obj = GetScene()->CreateObject<Missile>(name,name,true);
+		auto obj = GetScene()->CreateObject<Missile>(name,false);
 
 		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&m_Pos);
 		auto targetPos = m_pTarget->GetPos();
@@ -264,7 +270,7 @@ void Player::UpdateReload()
 			{
 				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				std::string name = "Missile" + std::to_string((*itr).first);
-				auto obj = AddChildObject<Missile>(name, name,false);
+				auto obj = GetScene()->CreateObject<Missile>(name, false);
 				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
 				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
@@ -297,13 +303,13 @@ void Player::UpdateReload()
 
 void Player::UpdateChildMissile()
 {
-	auto missiles = GetChildObjects();
+	auto missiles = m_pTransform->GetChildren();
 	for (auto &itr : missiles)
 	{
 		// 位置更新
 		DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
 		pos -= GetFront() * 0.5f; // 少し後方にオフセット
-		int num = std::stoi(itr.first.substr(7)); // "Missile"の7文字目以降を数値に変換
+		int num = FromString<int>(itr->GetGameObject()->GetName().substr(7)); // "Missile"の7文字目以降を数値に変換
 		switch (num)
 		{
 		case 0:
@@ -319,7 +325,7 @@ void Player::UpdateChildMissile()
 			pos -= GetRight() * 1.68f; // 左側
 			break;
 		}
-		itr.second->SetPos(pos);
+		itr->SetPosition(pos);
 	}
 }
 

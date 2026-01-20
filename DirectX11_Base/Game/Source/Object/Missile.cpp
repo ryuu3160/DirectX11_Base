@@ -9,10 +9,6 @@
 //	include
 // ==============================
 #include "Missile.hpp"
-#include "DirectX11/System/ModelRenderer.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
-#include "System/Component/Collider/SphereCollider.hpp"
-#include "App/GameObject/Character/Enemy.hpp"
 
 // ==============================
 //	’è”’è‹`
@@ -49,7 +45,7 @@ Missile::~Missile()
 {
 }
 
-void Missile::Update()
+void Missile::Update(_In_ float In_DeltaTime) noexcept
 {
 	if(IsAutoDestroy())
 	{

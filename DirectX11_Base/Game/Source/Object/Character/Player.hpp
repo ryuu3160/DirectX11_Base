@@ -9,8 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Object/GameObject.hpp"
-#include "App/GameObject/Missile.hpp"
+#include "Engine.hpp"
 // ==============================
 //	íËêîíËã`
 // ==============================
@@ -29,7 +28,10 @@ public:
 	Player();
 	~Player();
 
-	void Update() override;
+	void Awake() noexcept override;
+	void Init() noexcept override;
+
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	void SetCamera(_In_ GameObject *In_Camera) noexcept;
 
