@@ -270,8 +270,7 @@ void Player::UpdateReload()
 			{
 				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				std::string name = "Missile" + std::to_string((*itr).first);
-				auto obj = GetScene()->CreateObject<Missile>(name, false);
-				obj->GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
+				auto obj = GetScene()->CreateObject<Missile>(name, m_pTransform, false);
 				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
 				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
@@ -291,7 +290,7 @@ void Player::UpdateReload()
 					pos -= GetRight() * 1.68f; // 左側
 					break;
 				}
-				obj->SetPos(pos);
+				obj->SetPosition(pos);
 				itr = m_ReloadTimer.erase(itr);
 			}
 			else
