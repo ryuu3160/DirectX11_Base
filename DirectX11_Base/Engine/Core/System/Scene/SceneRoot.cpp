@@ -111,7 +111,7 @@ void SceneRoot::Init()
 	// エミッター設定
 	EmitterSettings settings;
 	settings.EmitRate = 100.0f;              // 1秒間に100個放出
-	settings.MaxParticles = 1000;             // 最大500個
+	settings.MaxParticles = 10000;             // 最大500個
 	settings.Duration = 2.0f;                // 2秒間だけ放出
 	settings.IsLooping = true;              // ループしない
 
@@ -129,7 +129,7 @@ void SceneRoot::Init()
 
 	// 寿命
 	settings.LifeTimeMin = 0.5f;
-	settings.LifeTimeMax = 1.5f;
+	settings.LifeTimeMax = 1.0f;
 
 	// 重力 (上に吹き上がる)
 	settings.GravityScale = -0.3f;
