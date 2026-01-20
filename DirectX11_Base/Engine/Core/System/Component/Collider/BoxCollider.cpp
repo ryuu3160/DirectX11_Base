@@ -95,23 +95,33 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 	DirectX::XMFLOAT3 v[8];
 	GetLocalVertices(v);
 
-	// 底面（4本）
-	In_Gizmos->AddLine(obj, v[0], v[1], EdgeColorX, EdgeColorX);
-	In_Gizmos->AddLine(obj, v[1], v[2], EdgeColorZ, EdgeColorZ);
-	In_Gizmos->AddLine(obj, v[2], v[3], EdgeColorX, EdgeColorX);
-	In_Gizmos->AddLine(obj, v[3], v[0], EdgeColorZ, EdgeColorZ);
-
-	// 上面（4本）
-	In_Gizmos->AddLine(obj, v[4], v[5], EdgeColorX, EdgeColorX);
-	In_Gizmos->AddLine(obj, v[5], v[6], EdgeColorZ, EdgeColorZ);
-	In_Gizmos->AddLine(obj, v[6], v[7], EdgeColorX, EdgeColorX);
-	In_Gizmos->AddLine(obj, v[7], v[4], EdgeColorZ, EdgeColorZ);
-
-	// 縦の辺（4本）
-	In_Gizmos->AddLine(obj, v[0], v[4], EdgeColorY, EdgeColorY);
-	In_Gizmos->AddLine(obj, v[1], v[5], EdgeColorY, EdgeColorY);
-	In_Gizmos->AddLine(obj, v[2], v[6], EdgeColorY, EdgeColorY);
-	In_Gizmos->AddLine(obj, v[3], v[7], EdgeColorY, EdgeColorY);
+	auto AddLineBottom = std::async(std::launch::async, [&]()
+		{
+			// 底面（4本）
+			In_Gizmos->AddLine(obj, v[0], v[1], EdgeColorX, EdgeColorX);
+			In_Gizmos->AddLine(obj, v[1], v[2], EdgeColorZ, EdgeColorZ);
+			In_Gizmos->AddLine(obj, v[2], v[3], EdgeColorX, EdgeColorX);
+			In_Gizmos->AddLine(obj, v[3], v[0], EdgeColorZ, EdgeColorZ);
+		});
+	auto AddLineTop = std::async(std::launch::async, [&]()
+		{
+			// 上面（4本）
+			In_Gizmos->AddLine(obj, v[4], v[5], EdgeColorX, EdgeColorX);
+			In_Gizmos->AddLine(obj, v[5], v[6], EdgeColorZ, EdgeColorZ);
+			In_Gizmos->AddLine(obj, v[6], v[7], EdgeColorX, EdgeColorX);
+			In_Gizmos->AddLine(obj, v[7], v[4], EdgeColorZ, EdgeColorZ);
+		});
+	auto AddLineVertical = std::async(std::launch::async, [&]()
+		{
+			// 縦の辺（4本）
+			In_Gizmos->AddLine(obj, v[0], v[4], EdgeColorY, EdgeColorY);
+			In_Gizmos->AddLine(obj, v[1], v[5], EdgeColorY, EdgeColorY);
+			In_Gizmos->AddLine(obj, v[2], v[6], EdgeColorY, EdgeColorY);
+			In_Gizmos->AddLine(obj, v[3], v[7], EdgeColorY, EdgeColorY);
+		});
+	AddLineBottom.get();
+	AddLineTop.get();
+	AddLineVertical.get();
 }
 
 void BoxCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)

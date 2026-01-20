@@ -175,21 +175,24 @@ void ParticleEffect::UpdateInstanceBuffer()
     // 全エミッターから全パーティクルを収集
     for(auto &emitter : m_Emitters)
     {
-        if(!emitter) continue;
+        if(!emitter)
+            continue;
 
         const auto &particles = emitter->GetParticles();
-        for(const auto &particle : particles)
+        std::mutex mtx;
+//#pragma omp parallel for
+        for(__int64 i = 0; i < particles.size();++i)
         {
-            if(!particle->m_IsActive) continue;
+            if(!particles[i]->m_IsActive) continue;
 
             InstanceData data;
 
             // ワールド行列作成 (ビルボード化)
-            DirectX::XMMATRIX S = DirectX::XMMatrixScaling(particle->m_Size.x, particle->m_Size.y, 1.0f);
+            DirectX::XMMATRIX S = DirectX::XMMatrixScaling(particles[i]->m_Size.x, particles[i]->m_Size.y, 1.0f);
             DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(
-                particle->m_Position.x,
-                particle->m_Position.y,
-                particle->m_Position.z
+                particles[i]->m_Position.x,
+                particles[i]->m_Position.y,
+                particles[i]->m_Position.z
             );
 
             // ビルボード (カメラ方向を向く)
@@ -197,8 +200,8 @@ void ParticleEffect::UpdateInstanceBuffer()
             DirectX::XMMATRIX World = S * T;
             DirectX::XMStoreFloat4x4(&data.World, DirectX::XMMatrixTranspose(World));
 
-            data.Color = particle->m_Color;
-
+            data.Color = particles[i]->m_Color;
+			//std::lock_guard<std::mutex> lock(mtx);
             m_InstanceDataArray.push_back(data);
         }
     }

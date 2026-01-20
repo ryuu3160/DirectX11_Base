@@ -76,6 +76,10 @@ private:
 	DirectX::XMFLOAT3 GetLocalPointA() const;
 	DirectX::XMFLOAT3 GetLocalPointB() const;
 
+	// 当たり判定のアウトラインで使う関数
+	void DrawCircle(_In_ Gizmos *In_Gizmos, _In_ GameObject* In_Obj, _In_ int In_Segments, _In_ float In_AngleStep, _In_ const DirectX::XMVECTOR &In_Right, _In_ const DirectX::XMVECTOR &In_Up, _In_ const DirectX::XMVECTOR &In_Center, _In_ const DirectX::XMFLOAT4 &In_Color) const noexcept;
+	void DrawHemisphere(_In_ Gizmos *In_Gizmos, _In_ GameObject *In_Obj, _In_ int In_Segments, _In_ float In_AngleStep, _In_ const DirectX::XMVECTOR In_Dir, _In_ const DirectX::XMVECTOR &In_Right, _In_ const DirectX::XMVECTOR &In_Up, _In_ int In_HemisphereRings, _In_ const DirectX::XMVECTOR &In_Center, _In_ float In_Direction, _In_ const DirectX::XMFLOAT4 &In_Color) const noexcept;
+
 protected:
 	// ローカル座標系のパラメータ
 	float m_Height;                  // 全体の高さ(線分の長さ + 半径*2)

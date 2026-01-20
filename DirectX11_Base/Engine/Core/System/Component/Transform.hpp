@@ -84,14 +84,36 @@ public:
 	void DetachChildren() noexcept;
 
 	// ------------------------------
-	//  回転操作
+	//  Transform操作
 	// ------------------------------
+
+	/// <summary>
+	/// 指定されたベクトルによる平行移動を適用します
+	/// </summary>
+	/// <param name="[In_Translate]">平行移動のオフセットを表す3Dベクトル</param>
+	void Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept;
+
+	/// <summary>
+	/// 指定された量だけ3D空間で平行移動を実行します
+	/// </summary>
+	/// <param name="[In_X]">X軸方向の平行移動量</param>
+	/// <param name="[In_Y]">Y軸方向の平行移動量</param>
+	/// <param name="[In_Z]">Z軸方向の平行移動量</param>
+	void Translate(_In_ float In_X, _In_ float In_Y, _In_ float In_Z) noexcept;
+
+	/// <summary>
+	/// 指定された角度で回転を実行します。
+	/// </summary>
+	/// <param name="[In_Angle]">回転角度を表す3次元ベクトル。</param>
+	void Rotate(_In_ const DirectX::XMFLOAT3 &In_Angle) noexcept;
 
 	/// <summary>
 	/// <para>指定された角度で回転を適用します</para>
 	/// <para>連続した回転を行う場合はこちらを使用してください</para>
 	/// </summary>
-	/// <param name="[In_Angle]">回転角度を表す3次元ベクトル(Degree)</param>
+	/// <param name="[In_PitchDeg]">ピッチ角度(度単位)</param>
+	/// <param name="[In_YawDeg]">ヨー角度(度単位)</param>
+	/// <param name="[In_RollDeg]">ロール角度(度単位)</param>
 	void Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept;
 
 	/// <summary>
@@ -135,9 +157,9 @@ public:
 
 	DirectX::XMFLOAT3 GetRotation(_In_ bool In_IsDegree = false) noexcept;
 
-	inline DirectX::XMFLOAT3 GetPosition() const noexcept;
-	inline DirectX::XMFLOAT4 GetQuat() const noexcept;
-	inline DirectX::XMFLOAT3 GetScale() const noexcept;
+	DirectX::XMFLOAT3 GetPosition() const noexcept;
+	DirectX::XMFLOAT4 GetQuat() const noexcept;
+	DirectX::XMFLOAT3 GetScale() const noexcept;
 
 	// ------------------------------
 	// 方向ベクトル取得
@@ -146,19 +168,31 @@ public:
 	/// <summary>
 	/// 前方ベクトルを取得します
 	/// </summary>
-	/// <param name="[Is_Normalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>オブジェクトの前方方向を表すXMFLOAT3ベクトル</returns>
-	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
+	DirectX::XMFLOAT3 GetFront(_In_ bool In_IsNormalize = true) const noexcept;
 	/// <summary>
 	/// 右方向ベクトルを取得します
 	/// </summary>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>右方向を表す3次元ベクトル</returns>
-	DirectX::XMFLOAT3 GetRight() const noexcept;
+	DirectX::XMFLOAT3 GetRight(_In_ bool In_IsNormalize = true) const noexcept;
 	/// <summary>
 	/// 上方向ベクトルを取得します
 	/// </summary>
+	/// <param name="[In_IsNormalize]">trueの場合、正規化されたベクトルを返します(デフォルトはtrue)</param>
 	/// <returns>上方向を表す3次元ベクトル</returns>
-	DirectX::XMFLOAT3 GetUp() const noexcept;
+	DirectX::XMFLOAT3 GetUp(_In_ bool In_IsNormalize = true) const noexcept;
+
+	/// <summary>
+	/// 方向ベクトルをまとめて取得します
+	/// </summary>
+	/// <param name="[Out_Front]">前方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[Out_Right]">右方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[Out_Up]">上方向ベクトルを受け取るオプションの出力パラメーター</param>
+	/// <param name="[In_IsNormalize]">ベクトルを正規化するかどうかを指定します</param>
+	void GetDirectionVectors(_Out_opt_ DirectX::XMFLOAT3 *Out_Front, _Out_opt_ DirectX::XMFLOAT3 *Out_Right,
+		_Out_opt_ DirectX::XMFLOAT3 *Out_Up, _In_ bool In_IsNormalize = true) const noexcept;
 
 	// ------------------------------
 	//  Setter
@@ -227,6 +261,10 @@ private:
 	DirectX::XMFLOAT4 WorldToLocalRotation(_In_ const DirectX::XMFLOAT4 &In_WorldQuat) const;
 	DirectX::XMFLOAT4 LocalToWorldRotation(_In_ const DirectX::XMFLOAT4 &In_LocalQuat) const;
 
+	void UpdateWorldMatrix() const noexcept;
+	void MarkDirty() noexcept;
+	void PropagateTransformChanged() noexcept;
+
 private:
 	DirectX::XMFLOAT3	m_Pos;		// 座標
 	DirectX::XMFLOAT3	m_Scale;	// 拡縮
@@ -235,6 +273,13 @@ private:
 	// Euler角用
 	DirectX::XMFLOAT3	m_Euler;		// 回転(オイラー角)
 	DirectX::XMFLOAT3	m_AccumEuler;	// オイラー角の累積
+
+	// ワールド行列キャッシュ
+	mutable DirectX::XMFLOAT4X4 m_WorldMatrix;
+	mutable DirectX::XMFLOAT4X4 m_TransposeWorldMatrix;
+
+	// フラグ
+	mutable bool m_WorldMatrixDirty;	// ワールド行列が最新でない場合true
 	bool m_IsSyncEuler;					// オイラー角とクォータニオンの同期が必要かどうか
 
 	std::string m_ParentName;
