@@ -117,7 +117,7 @@
       <PrecompiledHeaderFile>$(ProjectDir)Engine\Core\pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>$(ProjectDir)Engine\Core\pch.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
@@ -147,7 +147,7 @@
       <ForcedIncludeFiles>$(ProjectDir)Engine\Core\pch.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
