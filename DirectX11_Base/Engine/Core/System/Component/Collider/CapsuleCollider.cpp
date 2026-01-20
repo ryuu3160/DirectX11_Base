@@ -103,104 +103,40 @@ void CapsuleCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
     // ===========================
     // 1. 上端と下端の(円水平方向)
     // ===========================
-    auto drawCircle = [&](const DirectX::XMVECTOR &center, const DirectX::XMVECTOR &normal)
-        {
-            for(int i = 0; i < segments; ++i)
-            {
-                float angle1 = angleStep * i;
-                float angle2 = angleStep * ((i + 1) % segments);
-
-                DirectX::XMVECTOR offset1 = right * (m_Radius * cosf(angle1)) + up * (m_Radius * sinf(angle1));
-                DirectX::XMVECTOR offset2 = right * (m_Radius * cosf(angle2)) + up * (m_Radius * sinf(angle2));
-
-                DirectX::XMFLOAT3 p1, p2;
-                DirectX::XMStoreFloat3(&p1, center + offset1);
-                DirectX::XMStoreFloat3(&p2, center + offset2);
-
-                In_Gizmos->AddLine(Obj, p1, p2, ColorY, ColorY);
-            }
-        };
-
-    drawCircle(pointA, dir);  // 上端の円
-    drawCircle(pointB, -dir); // 下端の円
+	auto DrawUpperCircle = std::async(std::launch::async, std::bind(&CapsuleCollider::DrawCircle, this, In_Gizmos, Obj, segments, angleStep, right, up, pointA, ColorY));
+	auto DrawLowerCircle = std::async(std::launch::async, std::bind(&CapsuleCollider::DrawCircle, this, In_Gizmos, Obj, segments, angleStep, right, up, pointB, ColorY));
 
     // ===========================
     // 2. 側面の縦線(4本)
     // ===========================
-    for(int i = 0; i < 8; ++i)
-    {
-        float angle = angleStep * i * (segments / 8);
-        DirectX::XMVECTOR offset = right * (m_Radius * cosf(angle)) + up * (m_Radius * sinf(angle));
+    auto DrawSideLines = std::async(std::launch::async, [&]()
+        {
 
-        DirectX::XMFLOAT3 p1, p2;
-        DirectX::XMStoreFloat3(&p1, pointA + offset);
-        DirectX::XMStoreFloat3(&p2, pointB + offset);
+            for(int i = 0; i < 8; ++i)
+            {
+                float angle = angleStep * i * (segments / 8);
+                DirectX::XMVECTOR offset = right * (m_Radius * cosf(angle)) + up * (m_Radius * sinf(angle));
 
-        In_Gizmos->AddLine(Obj, p1, p2, ColorX, ColorX);
-    }
+                DirectX::XMFLOAT3 p1, p2;
+                DirectX::XMStoreFloat3(&p1, pointA + offset);
+                DirectX::XMStoreFloat3(&p2, pointB + offset);
+
+                In_Gizmos->AddLine(Obj, p1, p2, ColorX, ColorX);
+            }
+        });
 
     // ===========================
     // 3. 半球部分の弧(アーチ)
     // ===========================
-    auto drawHemisphere = [&](const DirectX::XMVECTOR &center, float direction)
-        {
-            // direction:  1.0f = 上向き, -1.0f = 下向き
+	auto DrawUpperHemisphere = std::async(std::launch::async, std::bind(&CapsuleCollider::DrawHemisphere, this, In_Gizmos, Obj, segments, angleStep, dir, right, up, hemisphereRings, pointA, -1.0f, ColorX));
+	auto DrawLowerHemisphere = std::async(std::launch::async, std::bind(&CapsuleCollider::DrawHemisphere, this, In_Gizmos, Obj, segments, angleStep, dir, right, up, hemisphereRings, pointB, 1.0f, ColorX));
 
-            // 複数方向から見た半円を描画
-            for(int axis = 0; axis < 8; ++axis)
-            {
-                float baseAngle = angleStep * axis * (segments / 8);
-                DirectX::XMVECTOR tangent = right * cosf(baseAngle) + up * sinf(baseAngle);
-
-                // 半球の弧を描画
-                for(int i = 0; i < hemisphereRings; ++i)
-                {
-                    float theta1 = (HALF_PI / hemisphereRings) * i;
-                    float theta2 = (HALF_PI / hemisphereRings) * (i + 1);
-
-                    float r1 = m_Radius * cosf(theta1);
-                    float h1 = m_Radius * sinf(theta1) * direction;
-
-                    float r2 = m_Radius * cosf(theta2);
-                    float h2 = m_Radius * sinf(theta2) * direction;
-
-                    DirectX::XMVECTOR p1 = center + dir * h1 + tangent * r1;
-                    DirectX::XMVECTOR p2 = center + dir * h2 + tangent * r2;
-
-                    DirectX::XMFLOAT3 point1, point2;
-                    DirectX::XMStoreFloat3(&point1, p1);
-                    DirectX::XMStoreFloat3(&point2, p2);
-
-                    In_Gizmos->AddLine(Obj, point1, point2, ColorX, ColorX);
-                }
-            }
-
-            // 追加：中間の緯度線(半球の輪郭を強調)
-            for(int ring = 1; ring < hemisphereRings; ++ring)
-            {
-                float theta = (HALF_PI / hemisphereRings) * ring;
-                float r = m_Radius * cosf(theta);
-                float h = m_Radius * sinf(theta) * direction;
-
-                for(int i = 0; i < segments; ++i)
-                {
-                    float angle1 = angleStep * i;
-                    float angle2 = angleStep * ((i + 1) % segments);
-
-                    DirectX::XMVECTOR offset1 = right * (r * cosf(angle1)) + up * (r * sinf(angle1));
-                    DirectX::XMVECTOR offset2 = right * (r * cosf(angle2)) + up * (r * sinf(angle2));
-
-                    DirectX::XMFLOAT3 p1, p2;
-                    DirectX::XMStoreFloat3(&p1, center + dir * h + offset1);
-                    DirectX::XMStoreFloat3(&p2, center + dir * h + offset2);
-
-                    In_Gizmos->AddLine(Obj, p1, p2, ColorLat, ColorLat);
-                }
-            }
-        };
-
-    drawHemisphere(pointA, -1.0f);  // 上の半球
-    drawHemisphere(pointB, 1.0f); // 下の半球
+    // 全ての非同期タスクの完了を待つ
+    DrawUpperCircle.get();
+    DrawLowerCircle.get();
+    DrawSideLines.get();
+    DrawUpperHemisphere.get();
+    DrawLowerHemisphere.get();
 }
 
 void CapsuleCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
@@ -463,4 +399,79 @@ DirectX::XMFLOAT3 CapsuleCollider::GetLocalPointB() const
         m_Center.y - dirNormalized.y * halfSegment,
         m_Center.z - dirNormalized.z * halfSegment
 	};
+}
+
+void CapsuleCollider::DrawCircle(_In_ Gizmos *In_Gizmos, _In_ GameObject *In_Obj, _In_ int In_Segments, _In_ float In_AngleStep, _In_ const DirectX::XMVECTOR &In_Right, _In_ const DirectX::XMVECTOR &In_Up, _In_ const DirectX::XMVECTOR &In_Center, _In_ const DirectX::XMFLOAT4 &In_Color) const noexcept
+{
+    for(int i = 0; i < In_Segments; ++i)
+    {
+        float angle1 = In_AngleStep * i;
+        float angle2 = In_AngleStep * ((i + 1) % In_Segments);
+
+        DirectX::XMVECTOR offset1 = In_Right * (m_Radius * cosf(angle1)) + In_Up * (m_Radius * sinf(angle1));
+        DirectX::XMVECTOR offset2 = In_Right * (m_Radius * cosf(angle2)) + In_Up * (m_Radius * sinf(angle2));
+
+        DirectX::XMFLOAT3 p1, p2;
+        DirectX::XMStoreFloat3(&p1, In_Center + offset1);
+        DirectX::XMStoreFloat3(&p2, In_Center + offset2);
+
+        In_Gizmos->AddLine(In_Obj, p1, p2, In_Color, In_Color);
+    }
+}
+
+void CapsuleCollider::DrawHemisphere(_In_ Gizmos *In_Gizmos, _In_ GameObject *In_Obj, _In_ int In_Segments, _In_ float In_AngleStep, _In_ const DirectX::XMVECTOR In_Dir, _In_ const DirectX::XMVECTOR &In_Right, _In_ const DirectX::XMVECTOR &In_Up, _In_ int In_HemisphereRings, _In_ const DirectX::XMVECTOR &In_Center, _In_ float In_Direction, _In_ const DirectX::XMFLOAT4 &In_Color) const noexcept
+{
+    // direction:  1.0f = 上向き, -1.0f = 下向き
+
+    // 複数方向から見た半円を描画
+    for(int axis = 0; axis < 8; ++axis)
+    {
+        float baseAngle = In_AngleStep * axis * (In_Segments / 8);
+        DirectX::XMVECTOR tangent = In_Right * cosf(baseAngle) + In_Up * sinf(baseAngle);
+
+        // 半球の弧を描画
+        for(int i = 0; i < In_HemisphereRings; ++i)
+        {
+            float theta1 = (HALF_PI / In_HemisphereRings) * i;
+            float theta2 = (HALF_PI / In_HemisphereRings) * (i + 1);
+
+            float r1 = m_Radius * cosf(theta1);
+            float h1 = m_Radius * sinf(theta1) * In_Direction;
+
+            float r2 = m_Radius * cosf(theta2);
+            float h2 = m_Radius * sinf(theta2) * In_Direction;
+
+            DirectX::XMVECTOR p1 = In_Center + In_Dir * h1 + tangent * r1;
+            DirectX::XMVECTOR p2 = In_Center + In_Dir * h2 + tangent * r2;
+
+            DirectX::XMFLOAT3 point1, point2;
+            DirectX::XMStoreFloat3(&point1, p1);
+            DirectX::XMStoreFloat3(&point2, p2);
+
+            In_Gizmos->AddLine(In_Obj, point1, point2, In_Color, In_Color);
+        }
+    }
+
+    // 追加：中間の緯度線(半球の輪郭を強調)
+    for(int ring = 1; ring < In_HemisphereRings; ++ring)
+    {
+        float theta = (HALF_PI / In_HemisphereRings) * ring;
+        float r = m_Radius * cosf(theta);
+        float h = m_Radius * sinf(theta) * In_Direction;
+
+        for(int i = 0; i < In_Segments; ++i)
+        {
+            float angle1 = In_AngleStep * i;
+            float angle2 = In_AngleStep * ((i + 1) % In_Segments);
+
+            DirectX::XMVECTOR offset1 = In_Right * (r * cosf(angle1)) + In_Up * (r * sinf(angle1));
+            DirectX::XMVECTOR offset2 = In_Right * (r * cosf(angle2)) + In_Up * (r * sinf(angle2));
+
+            DirectX::XMFLOAT3 p1, p2;
+            DirectX::XMStoreFloat3(&p1, In_Center + In_Dir * h + offset1);
+            DirectX::XMStoreFloat3(&p2, In_Center + In_Dir * h + offset2);
+
+            In_Gizmos->AddLine(In_Obj, p1, p2, In_Color, In_Color);
+        }
+    }
 }

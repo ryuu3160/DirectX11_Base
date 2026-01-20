@@ -59,120 +59,137 @@ void SphereCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 	int latitudeLines = 4; // 追加の緯度線の数
 
     // === XY平面の円（Z軸周りの円）===
-    auto ColorXY = DirectX::XMFLOAT4(0.7f, 1.0f, 0.0f, 0.7f);
-    for(int i = 0; i < segments; i++)
-    {
-        float angle1 = angleStep * i;
-        float angle2 = angleStep * (i + 1);
+    auto DrawXY = std::async([&]()
+        {
+            auto ColorXY = DirectX::XMFLOAT4(0.7f, 1.0f, 0.0f, 0.7f);
+            for(int i = 0; i < segments; i++)
+            {
+                float angle1 = angleStep * i;
+                float angle2 = angleStep * (i + 1);
 
-        DirectX::XMFLOAT3 start(
-            center.x + m_Radius * cosf(angle1),
-            center.y + m_Radius * sinf(angle1),
-            center.z
-        );
+                DirectX::XMFLOAT3 start(
+                    center.x + m_Radius * cosf(angle1),
+                    center.y + m_Radius * sinf(angle1),
+                    center.z
+                );
 
-		DirectX::XMFLOAT3 end(
-            center.x + m_Radius * cosf(angle2),
-            center.y + m_Radius * sinf(angle2),
-            center.z
-        );
+                DirectX::XMFLOAT3 end(
+                    center.x + m_Radius * cosf(angle2),
+                    center.y + m_Radius * sinf(angle2),
+                    center.z
+                );
 
-		In_Gizmos->AddLine(m_pGameObject,start, end, ColorXY, ColorXY);
-    }
+                In_Gizmos->AddLine(m_pGameObject, start, end, ColorXY, ColorXY);
+            }
+        });
 
     // === XZ平面の円（Y軸周りの円）===
-    auto ColorXZ = DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 0.7f);
-    for(int i = 0; i < segments; i++)
-    {
-        float angle1 = angleStep * i;
-        float angle2 = angleStep * (i + 1);
+    auto DrawXZ = std::async([&]()
+        {
+            auto ColorXZ = DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 0.7f);
+            for(int i = 0; i < segments; i++)
+            {
+                float angle1 = angleStep * i;
+                float angle2 = angleStep * (i + 1);
 
-		DirectX::XMFLOAT3 start(
-            center.x + m_Radius * cosf(angle1),
-            center.y,
-            center.z + m_Radius * sinf(angle1)
-        );
+                DirectX::XMFLOAT3 start(
+                    center.x + m_Radius * cosf(angle1),
+                    center.y,
+                    center.z + m_Radius * sinf(angle1)
+                );
 
-		DirectX::XMFLOAT3 end(
-            center.x + m_Radius * cosf(angle2),
-            center.y,
-            center.z + m_Radius * sinf(angle2)
-        );
+                DirectX::XMFLOAT3 end(
+                    center.x + m_Radius * cosf(angle2),
+                    center.y,
+                    center.z + m_Radius * sinf(angle2)
+                );
 
-		In_Gizmos->AddLine(m_pGameObject, start, end, ColorXZ, ColorXZ);
-    }
+                In_Gizmos->AddLine(m_pGameObject, start, end, ColorXZ, ColorXZ);
+            }
+        });
 
     // === YZ平面の円（X軸周りの円）===
-    auto ColorYZ = DirectX::XMFLOAT4(0.3f, 1.0f, 0.0f, 0.7f);
-    for(int i = 0; i < segments; i++)
-    {
-        float angle1 = angleStep * i;
-        float angle2 = angleStep * (i + 1);
+    auto DrawYZ = std::async([&]()
+        {
+            auto ColorYZ = DirectX::XMFLOAT4(0.3f, 1.0f, 0.0f, 0.7f);
+            for(int i = 0; i < segments; i++)
+            {
+                float angle1 = angleStep * i;
+                float angle2 = angleStep * (i + 1);
 
-		DirectX::XMFLOAT3 start(
-            center.x,
-            center.y + m_Radius * cosf(angle1),
-            center.z + m_Radius * sinf(angle1)
-        );
+                DirectX::XMFLOAT3 start(
+                    center.x,
+                    center.y + m_Radius * cosf(angle1),
+                    center.z + m_Radius * sinf(angle1)
+                );
 
-		DirectX::XMFLOAT3 end(
-            center.x,
-            center.y + m_Radius * cosf(angle2),
-            center.z + m_Radius * sinf(angle2)
-        );
+                DirectX::XMFLOAT3 end(
+                    center.x,
+                    center.y + m_Radius * cosf(angle2),
+                    center.z + m_Radius * sinf(angle2)
+                );
 
-		In_Gizmos->AddLine(m_pGameObject, start, end, ColorYZ, ColorYZ);
-    }
+                In_Gizmos->AddLine(m_pGameObject, start, end, ColorYZ, ColorYZ);
+            }
+        });
     // === 追加の緯度線（赤道から上下に）===
-    auto ColorLat = DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 0.4f);
-    for(int lat = 1; lat <= latitudeLines; lat++)
-    {
-        float latAngle = (PI / 2.0f / (latitudeLines + 1)) * lat;
-        float latRadius = m_Radius * cosf(latAngle);
-        float yOffset = m_Radius * sinf(latAngle);
-
-        // 上半球の緯度線
-        for(int i = 0; i < segments; i++)
+    auto DrawLatitudes = std::async([&]()
         {
-            float angle1 = angleStep * i;
-            float angle2 = angleStep * (i + 1);
+            auto ColorLat = DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 0.4f);
+            for(int lat = 1; lat <= latitudeLines; lat++)
+            {
+                float latAngle = (PI / 2.0f / (latitudeLines + 1)) * lat;
+                float latRadius = m_Radius * cosf(latAngle);
+                float yOffset = m_Radius * sinf(latAngle);
 
-            DirectX::XMFLOAT3 start(
-                center.x + latRadius * cosf(angle1),
-                center.y + yOffset,
-                center.z + latRadius * sinf(angle1)
-            );
+                // 上半球の緯度線
+                for(int i = 0; i < segments; i++)
+                {
+                    float angle1 = angleStep * i;
+                    float angle2 = angleStep * (i + 1);
 
-            DirectX::XMFLOAT3 end(
-                center.x + latRadius * cosf(angle2),
-                center.y + yOffset,
-                center.z + latRadius * sinf(angle2)
-            );
+                    DirectX::XMFLOAT3 start(
+                        center.x + latRadius * cosf(angle1),
+                        center.y + yOffset,
+                        center.z + latRadius * sinf(angle1)
+                    );
 
-            In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
-        }
+                    DirectX::XMFLOAT3 end(
+                        center.x + latRadius * cosf(angle2),
+                        center.y + yOffset,
+                        center.z + latRadius * sinf(angle2)
+                    );
 
-        // 下半球の緯度線
-        for(int i = 0; i < segments; i++)
-        {
-            float angle1 = angleStep * i;
-            float angle2 = angleStep * (i + 1);
+                    In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
+                }
 
-            DirectX::XMFLOAT3 start(
-                center.x + latRadius * cosf(angle1),
-                center.y - yOffset,
-                center.z + latRadius * sinf(angle1)
-            );
+                // 下半球の緯度線
+                for(int i = 0; i < segments; i++)
+                {
+                    float angle1 = angleStep * i;
+                    float angle2 = angleStep * (i + 1);
 
-            DirectX::XMFLOAT3 end(
-                center.x + latRadius * cosf(angle2),
-                center.y - yOffset,
-                center.z + latRadius * sinf(angle2)
-            );
+                    DirectX::XMFLOAT3 start(
+                        center.x + latRadius * cosf(angle1),
+                        center.y - yOffset,
+                        center.z + latRadius * sinf(angle1)
+                    );
 
-            In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
-        }
-    }
+                    DirectX::XMFLOAT3 end(
+                        center.x + latRadius * cosf(angle2),
+                        center.y - yOffset,
+                        center.z + latRadius * sinf(angle2)
+                    );
+
+                    In_Gizmos->AddLine(m_pGameObject, start, end, ColorLat, ColorLat);
+                }
+            }
+        });
+
+	DrawXY.get();
+	DrawXZ.get();
+    DrawYZ.get();
+	DrawLatitudes.get();
 }
 
 void SphereCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
