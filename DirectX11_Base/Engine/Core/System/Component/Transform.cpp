@@ -190,6 +190,19 @@ void Transform::Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept
 	MarkDirty();
 }
 
+void Transform::Translate(_In_ float In_X, _In_ float In_Y, _In_ float In_Z) noexcept
+{
+	m_Pos.x += In_X;
+	m_Pos.y += In_Y;
+	m_Pos.z += In_Z;
+	MarkDirty();
+}
+
+void Transform::Rotate(_In_ const DirectX::XMFLOAT3 &In_Angle) noexcept
+{
+	Rotate(In_Angle.x, In_Angle.y, In_Angle.z);
+}
+
 void Transform::Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept
 {
 	// 増分をクォータニオンに変換

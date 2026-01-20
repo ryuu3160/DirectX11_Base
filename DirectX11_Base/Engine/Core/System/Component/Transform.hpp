@@ -94,10 +94,26 @@ public:
 	void Translate(_In_ const DirectX::XMFLOAT3 &In_Translate) noexcept;
 
 	/// <summary>
+	/// 指定された量だけ3D空間で平行移動を実行します
+	/// </summary>
+	/// <param name="[In_X]">X軸方向の平行移動量</param>
+	/// <param name="[In_Y]">Y軸方向の平行移動量</param>
+	/// <param name="[In_Z]">Z軸方向の平行移動量</param>
+	void Translate(_In_ float In_X, _In_ float In_Y, _In_ float In_Z) noexcept;
+
+	/// <summary>
+	/// 指定された角度で回転を実行します。
+	/// </summary>
+	/// <param name="[In_Angle]">回転角度を表す3次元ベクトル。</param>
+	void Rotate(_In_ const DirectX::XMFLOAT3 &In_Angle) noexcept;
+
+	/// <summary>
 	/// <para>指定された角度で回転を適用します</para>
 	/// <para>連続した回転を行う場合はこちらを使用してください</para>
 	/// </summary>
-	/// <param name="[In_Angle]">回転角度を表す3次元ベクトル(Degree)</param>
+	/// <param name="[In_PitchDeg]">ピッチ角度(度単位)</param>
+	/// <param name="[In_YawDeg]">ヨー角度(度単位)</param>
+	/// <param name="[In_RollDeg]">ロール角度(度単位)</param>
 	void Rotate(_In_ float In_PitchDeg, _In_ float In_YawDeg, _In_ float In_RollDeg) noexcept;
 
 	/// <summary>
