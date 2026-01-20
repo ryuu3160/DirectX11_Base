@@ -55,7 +55,7 @@ public:
 
 	template<typename T, typename ...Args>
 	requires std::derived_from<T, GameObject>
-	T *CreageObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent = nullptr, Args&&... args) noexcept;
+	T *CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent = nullptr, Args&&... args) noexcept;
 
 	template <typename T, typename ...Args>
 	requires std::derived_from<T, GameObject>
@@ -224,7 +224,7 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 
 template<typename T, typename ...Args>
 requires std::derived_from<T, GameObject>
-inline T *SceneBase::CreageObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent, Args && ...args) noexcept
+inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent, Args && ...args) noexcept
 {
 #ifdef _DEBUG
 	// デバッグ中のみ、名称ダブりがないかチェック
