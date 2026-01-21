@@ -225,19 +225,19 @@ DirectX::XMFLOAT3 GameObject::GetRotation(_In_ bool In_IsDegree) const noexcept
 	return m_pTransform->GetRotation(In_IsDegree);
 }
 
-DirectX::XMFLOAT3 GameObject::GetFront(_In_ const bool &Is_Normalize) const noexcept
+DirectX::XMFLOAT3 GameObject::GetFront(_In_ bool Is_Normalize) const noexcept
 {
 	return m_pTransform->GetFront(Is_Normalize);
 }
 
-DirectX::XMFLOAT3 GameObject::GetRight() const noexcept
+DirectX::XMFLOAT3 GameObject::GetRight(_In_ bool Is_Normalize) const noexcept
 {
-	return m_pTransform->GetRight();
+	return m_pTransform->GetRight(Is_Normalize);
 }
 
-DirectX::XMFLOAT3 GameObject::GetUp() const noexcept
+DirectX::XMFLOAT3 GameObject::GetUp(_In_ bool Is_Normalize) const noexcept
 {
-	return m_pTransform->GetUp();
+	return m_pTransform->GetUp(Is_Normalize);
 }
 
 DirectX::XMFLOAT4X4 GameObject::GetWorld(_In_ bool In_IsTranspose) const noexcept

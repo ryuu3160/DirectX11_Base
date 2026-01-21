@@ -109,9 +109,9 @@ public:
 	inline DirectX::XMFLOAT4 GetQuat() const noexcept { return m_pTransform->GetQuat(); }
 	inline DirectX::XMFLOAT3 GetScale() const noexcept { return m_pTransform->GetScale(); }
 
-	DirectX::XMFLOAT3 GetFront(_In_ const bool &Is_Normalize = true) const noexcept;
-	DirectX::XMFLOAT3 GetRight() const noexcept;
-	DirectX::XMFLOAT3 GetUp() const noexcept;
+	DirectX::XMFLOAT3 GetFront(_In_ bool Is_Normalize = true) const noexcept;
+	DirectX::XMFLOAT3 GetRight(_In_ bool Is_Normalize = true) const noexcept;
+	DirectX::XMFLOAT3 GetUp(_In_ bool Is_Normalize = true) const noexcept;
 	DirectX::XMFLOAT4X4 GetWorld(_In_ bool In_IsTranspose = true) const noexcept;
 
 	void SetPosition(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
