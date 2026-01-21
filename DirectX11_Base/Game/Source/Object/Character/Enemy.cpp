@@ -48,7 +48,7 @@ void Enemy::Awake() noexcept
 	//collider->SetRadius(2.0f); // 半径を設定
 
 	auto icon = GetScene()->CreateObject<GameObject>(m_Name + "_Icon"); // アイコン用の子オブジェクトを追加
-	icon->SetPos(GetUp() * 4.0f); // アイコンの位置を設定
+	icon->SetPosition(GetUp() * 4.0f); // アイコンの位置を設定
 	icon->SetScale({ 200.0f, 200.0f, 200.0f }); // アイコンのスケールを設定)
 	auto sprite = icon->AddComponent<SpriteRenderer>();
 	sprite->SetAssetPath("Assets/Texture/EnemyIcon.png");
@@ -74,12 +74,10 @@ void Enemy::Update(_In_ float In_DeltaTime) noexcept
 	DirectX::XMFLOAT3 front = GetFront();
 
 	// 移動
-	m_Pos += ((front * MOVE_SPEED_SCALE) * cx_Speed);
+	m_pTransform->Translate((front * MOVE_SPEED_SCALE) * cx_Speed);
 }
 
 void Enemy::SetCamera(_In_ GameObject *In_Camera) noexcept
 {
 	m_pCamera = In_Camera;
-	GetComponent<ModelRenderer>()->SetCamera(m_pCamera);
-	GetChildObject<GameObject>(GetName() + "_Icon")->GetComponent<SpriteRenderer>()->SetCamera(m_pCamera);
 }

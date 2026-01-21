@@ -9,10 +9,6 @@
 //	include
 // ==============================
 #include "SeaLevel.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
-#include "DirectX11/Resource/TextureManager.hpp"
-#include "DirectX11/Resource/Mesh.hpp"
-#include "DirectX11/Resource/ShaderParam.hpp"
 
 SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	: GameObject("SeaLevelObject")
@@ -22,7 +18,7 @@ SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	, m_IsInstance(In_IsInstance)
 	, m_PatternScale({ 1.0f,1.0f })
 {
-	SetPos({ 0.0f,0.0f,0.0f });
+	SetPosition({ 0.0f,0.0f,0.0f });
 	SetScale({ 1.0f,1.0f,1.0f });
 	SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 
@@ -41,7 +37,7 @@ SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 		instanceData.CountX = 200;
 		instanceData.CountZ = 200;
 		instanceData.CountY = 1;
-		instanceData.StartPos = GetPos();
+		instanceData.StartPos = GetPosition();
 		instanceData.Scale = GetScale();
 		instanceData.Quaternion = GetQuat();
 		instanceData.IsWrite = true;
@@ -74,10 +70,6 @@ void SeaLevel::SetFilePath(_In_ const FilePath &In_Path) noexcept
 void SeaLevel::SetCamera(_In_ GameObject *In_Cam) noexcept
 {
 	m_pCameraObj = In_Cam;
-	if (m_pRenderComponent && m_pCameraObj)
-	{
-		m_pRenderComponent->SetCamera(m_pCameraObj);
-	}
 }
 
 void SeaLevel::SetPlayer(_In_ GameObject *In_Player) noexcept
@@ -85,7 +77,7 @@ void SeaLevel::SetPlayer(_In_ GameObject *In_Player) noexcept
 	m_pPlayer = In_Player;
 }
 
-void SeaLevel::Update()
+void SeaLevel::Update(_In_ float In_DeltaTime) noexcept
 {
 	if (m_pRenderComponent && !m_IsInstance)
 	{
@@ -98,17 +90,17 @@ void SeaLevel::Update()
 		param.scale = m_PatternScale;
 		param.dummy = { 0.0f,0.0f };
 		PaternScaleParam params[] = { param };
-		ShaderParam *PSParam = new ShaderParam("PatternScale", 0, params, std::size(params));
-		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParam(PSParam);
+		std::shared_ptr<ShaderParam> PSParam = std::make_shared<ShaderParam>("PatternScale", 0, params, std::size(params));
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetWriteParamForPS(std::move(PSParam));
 	}
 }
 
-void SeaLevel::LateUpdate()
+void SeaLevel::LateUpdate(_In_ float In_DeltaTime) noexcept
 {
 	if (m_pPlayer && m_IsInstance)
 	{
-		auto pos = m_pPlayer->GetPos();
-		pos.y = GetPos().y;
-		SetPos(pos);
+		auto pos = m_pPlayer->GetPosition();
+		pos.y = GetPosition().y;
+		SetPosition(pos);
 	}
 }

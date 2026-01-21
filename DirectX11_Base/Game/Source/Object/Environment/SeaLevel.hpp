@@ -9,9 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Object/GameObject.hpp"
-#include "DirectX11/System/InstancedModelRenderer.hpp"
-#include "DirectX11/System/ModelRenderer.hpp"
+#include "Engine.hpp"
 
 /// <summary>
 /// SeaLevelƒNƒ‰ƒX
@@ -27,8 +25,8 @@ public:
 	void SetPlayer(_In_ GameObject *In_Player) noexcept;
 	void SetPatternScale(_In_ const DirectX::XMFLOAT2 &In_Scale) noexcept { m_PatternScale = In_Scale; }
 
-	void Update() override;
-	void LateUpdate() override;
+	void Update(_In_ float In_DeltaTime) noexcept override;
+	void LateUpdate(_In_ float In_DeltaTime) noexcept override;
 
 private:
 	GameObject *m_pPlayer;

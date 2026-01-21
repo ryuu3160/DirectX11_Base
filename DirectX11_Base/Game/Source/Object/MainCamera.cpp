@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "MainCamera.hpp"
-#include "App/GameObject/Character/Player.hpp"
+#include "Game/Source/Object/Character/Player.hpp"
 
 MainCamera::MainCamera()
 	: GameObject("MainCamera")
@@ -24,7 +24,7 @@ MainCamera::~MainCamera()
 {
 }
 
-void MainCamera::Update()
+void MainCamera::Update(_In_ float In_DeltaTime) noexcept
 {
 	if (Input::IsKeyTrigger(cx_ChangeCameraKey))
 	{
@@ -32,7 +32,7 @@ void MainCamera::Update()
 	}
 }
 
-void MainCamera::LateUpdate()
+void MainCamera::LateUpdate(_In_ float In_DeltaTime) noexcept
 {
 	if (m_pPlayer)
 	{
@@ -59,25 +59,25 @@ void MainCamera::UpdateThirdPerson() noexcept
 	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
 	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
 
-	m_Quat = m_pPlayer->GetQuat(); // プレイヤーの回転と同期
+	SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
 
 	// 焦点距離を設定
 	m_pComponent->SetFocus(cx_ThirdPerson_Distance);
 
 	// カメラの位置調整
-	m_Pos = (PlayerPosition - PlayerForward * cx_ThirdPerson_Distance) + PlayerUp * cx_ThirdPerson_UpDistanceRate;
+	SetPosition((PlayerPosition - PlayerForward * cx_ThirdPerson_Distance) + PlayerUp * cx_ThirdPerson_UpDistanceRate);
 }
 
 void MainCamera::UpdateFirstPerson() noexcept
 {
-	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPos();		// プレイヤーオブジェクトの位置を取得
+	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPosition();		// プレイヤーオブジェクトの位置を取得
 	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
 	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
-	m_Quat = m_pPlayer->GetQuat(); // プレイヤーの回転と同期
+	SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
 
 	// 焦点距離を設定
 	m_pComponent->SetFocus(cx_FirstPerson_Distance);
 
 	// カメラの位置調整
-	m_Pos = (PlayerPosition + PlayerForward * cx_FirstPerson_Distance) + PlayerUp * cx_FirstPerson_UpDistance;
+	SetPosition((PlayerPosition + PlayerForward * cx_FirstPerson_Distance) + PlayerUp * cx_FirstPerson_UpDistance);
 }

@@ -35,6 +35,8 @@ public:
 	/// </summary>
 	~Missile();
 
+	void Awake() noexcept override;
+
 	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	void SetSpeed(_In_ const float &In_Speed) noexcept;

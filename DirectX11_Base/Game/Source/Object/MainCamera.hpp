@@ -9,8 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Component/Camera.hpp"
-#include "System/Object/GameObject.hpp"
+#include "Engine.hpp"
 
 // ==============================
 //  ëOï˚êÈåæ
@@ -41,9 +40,9 @@ public:
 	/// </summary>
 	~MainCamera();
 
-	void Update() override final;
+	void Update(_In_ float In_DeltaTime) noexcept override final;
 
-	void LateUpdate() override final;
+	void LateUpdate(_In_ float In_DeltaTime) noexcept override final;
 
 	void SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept;
 
