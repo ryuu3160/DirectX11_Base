@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "SceneGame.hpp"
+#include "SceneResult.hpp"
 #include "Game/Source/Object/Character/Player.hpp"
 #include "Game/Source/Object/Character/Enemy.hpp"
 #include "Game/Source/Object/Environment/SeaLevel.hpp"
@@ -18,7 +19,7 @@
 // ===============================
 namespace
 {
-	const inline constexpr float TIME_LIMIT = 60.0f; // 制限時間（秒）
+	const inline constexpr float TIME_LIMIT = 60.0f; // 制限時間(秒)
 }
 
 SceneGame::SceneGame()
@@ -51,9 +52,6 @@ void SceneGame::Init()
 
 	auto player = CreateObject<Player>("Player");
 	player->SetCamera(pCamera);
-
-	// カメラにプレイヤーを設定
-	pCamera->SetTargetPlayer(player);
 
 	// 敵の生成
 	std::string name = "Enemy1";
@@ -142,7 +140,6 @@ void SceneGame::Update(_In_ float In_DeltaTime)
 #else
 			auto cam = GetObject<MainCamera>("Camera");
 #endif
-			cam->SetTargetPlayer(nullptr);
 			auto pos = player->GetPosition();
 			auto playerFront = player->GetFront();
 			auto playerUp = player->GetUp();

@@ -277,6 +277,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Game\Source\Scene\SceneResult.cpp" />
+    <ClCompile Include="Game\Source\Scene\SceneTitle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\Defines.hpp" />
@@ -391,6 +393,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Game\Source\Scene\SceneResult.hpp" />
+    <ClInclude Include="Game\Source\Scene\SceneTitle.hpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader\PS_Geometory.hlsl">
