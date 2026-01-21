@@ -226,10 +226,10 @@ void Player::UpdateShoot()
 		// ミサイル発射SE
 		SoundManager::GetInstance().Play("Missile");
 		std::string name = "Missile" + std::to_string(m_ShotMissileNum);
-		auto obj = GetScene()->CreateObject<Missile>(name,false);
-
-		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&m_Pos);
-		auto targetPos = m_pTarget->GetPos();
+		auto obj = GetScene()->CreateObject<Missile>(name,nullptr,false);
+		DirectX::XMFLOAT3 Pos = GetPosition();
+		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&Pos);
+		auto targetPos = m_pTarget->GetPosition();
 		DirectX::XMVECTOR pos2 = DirectX::XMLoadFloat3(&targetPos);
 		DirectX::XMVECTOR sub = DirectX::XMVectorSubtract(pos1, pos2);
 		float length = DirectX::XMVectorGetX(DirectX::XMVector3Length(sub));
@@ -237,19 +237,18 @@ void Player::UpdateShoot()
 		if(length < 20000.0f)
 			obj->SetTarget(m_pTarget);
 		auto cmp = obj->GetComponent<ModelRenderer>();
-		cmp->SetCamera(m_pCamera);
 		cmp->SetLayer(-1); // キャノピー越しに見えるようにする
 		++m_ShotMissileNum; // 発射したミサイルの番号をインクリメント
 
 		// ミサイルの初期位置を設定
-		DirectX::XMFLOAT3 pos = GetChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]))->GetPos();
-		obj->SetPos(pos);
+		DirectX::XMFLOAT3 pos = m_pTransform->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->GetPosition();
+		obj->SetPosition(pos);
 		obj->SetStartPosition(pos);
 		obj->SetQuat(GetQuat());
 		obj->SetSpeed(cx_MissileSpeed); // 自機の速度に+2.0fした速度で発射
 
 		// 子オブジェクトを削除
-		DestroyChildObject<Missile>("Missile" + std::to_string(m_MissileIndices[0]));
+		m_pTransform->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->DestroySelf();
 		
 		// リロードタイマーをセット
 		m_ReloadTimer.push_back({ m_MissileIndices[0], cx_MissileReloadTime });

@@ -9,10 +9,6 @@
 //	include
 // ==============================
 #include "Enemy.hpp"
-#include "DirectX11/System/ModelRenderer.hpp"
-#include "DirectX11/System/SpriteRenderer.hpp"
-#include "DirectX11/Resource/ShaderManager.hpp"
-#include "System/Component/Collider/SphereCollider.hpp"
 
 // ==============================
 //	定数定義
@@ -33,6 +29,14 @@ Enemy::Enemy(_In_ std::string In_Name)
 	, m_pCamera(nullptr)
 	, m_IsDestroyed(false)
 {
+}
+
+Enemy::~Enemy()
+{
+}
+
+void Enemy::Awake() noexcept
+{
 	auto Model = AddComponent<ModelRenderer>();
 	Model->SetAssetPath("Assets/Model/Character/Su25/SU25.fbx");
 	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
@@ -43,7 +47,7 @@ Enemy::Enemy(_In_ std::string In_Name)
 	//auto collider = AddComponent<SphereCollider>();
 	//collider->SetRadius(2.0f); // 半径を設定
 
-	auto icon = AddChildObject<GameObject>(In_Name + "_Icon"); // アイコン用の子オブジェクトを追加
+	auto icon = GetScene()->CreateObject<GameObject>(m_Name + "_Icon"); // アイコン用の子オブジェクトを追加
 	icon->SetPos(GetUp() * 4.0f); // アイコンの位置を設定
 	icon->SetScale({ 200.0f, 200.0f, 200.0f }); // アイコンのスケールを設定)
 	auto sprite = icon->AddComponent<SpriteRenderer>();
@@ -57,11 +61,7 @@ Enemy::Enemy(_In_ std::string In_Name)
 	SetQuat(cx_EnemyStartQuat);
 }
 
-Enemy::~Enemy()
-{
-}
-
-void Enemy::Update()
+void Enemy::Update(_In_ float In_DeltaTime) noexcept
 {
 	//if(GetComponent<SphereCollider>()->IsCollision())
 	//{

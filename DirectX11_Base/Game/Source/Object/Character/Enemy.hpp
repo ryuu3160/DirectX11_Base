@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "System/Object/GameObject.hpp"
+#include "Engine.hpp"
 // ==============================
 //	íËêîíËã`
 // ==============================
@@ -27,7 +27,9 @@ public:
 	Enemy(_In_ std::string In_Name);
 	~Enemy();
 
-	void Update() override;
+	void Awake() noexcept override;
+
+	void Update(_In_ float In_DeltaTime) noexcept override;
 
 	void SetCamera(_In_ GameObject *In_Camera) noexcept;
 
