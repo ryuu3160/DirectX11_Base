@@ -187,10 +187,10 @@ private:
 	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
 	std::shared_ptr<cpon_object> 		m_Data;				// 保存データ
 	Datas				m_Datas;			// 保存データ
-	std::string			m_Name;				// オブジェクト名
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
 protected:
-	Transform *m_pTransform;		// Transformコンポーネントへのポインタ
+	std::string			m_Name;				// オブジェクト名
+	Transform *m_pTransform;				// Transformコンポーネントへのポインタ
 };
 
 template<typename T>
