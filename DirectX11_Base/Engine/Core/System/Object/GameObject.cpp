@@ -218,6 +218,7 @@ void GameObject::Rename(_In_ std::string In_Name) noexcept
 {
 	m_pScene->RenameObj(m_Name, In_Name);
 	m_Name = In_Name;
+	m_Data->SetObjectName(m_Name);
 }
 
 DirectX::XMFLOAT3 GameObject::GetRotation(_In_ bool In_IsDegree) const noexcept
