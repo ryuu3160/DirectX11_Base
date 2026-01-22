@@ -60,8 +60,16 @@ void ShaderManager::SetupShader(_In_ std::string_view In_FileName) noexcept
 	}
 	else
 	{
-		DebugManager::GetInstance().DebugLogError("Shader name [VS_ / PS_] : {}", In_FileName);
+		DebugManager::GetInstance().DebugLogError("Shader Name Is Invalid : {}", In_FileName);
+		return;
 	}
+
+	if(!shader)
+	{
+		DebugManager::GetInstance().DebugLogError("Create Shader Failed : {}", In_FileName);
+		return;
+	}
+
 	// csoファイルのパスを設定
 	std::string path = "Binaries/Shader/";
 	path += In_FileName;
