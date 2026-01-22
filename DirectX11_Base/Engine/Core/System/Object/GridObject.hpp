@@ -12,12 +12,9 @@
 #include "GameObject.hpp"
 #include "Core/DirectX11/Renderer/LineRenderer.hpp"
 // ==============================
-//	定数定義
+//	前方宣言
 // ==============================
-namespace
-{
-
-}
+class ItemGroup;
 
 /// <summary>
 /// GridObjectクラス

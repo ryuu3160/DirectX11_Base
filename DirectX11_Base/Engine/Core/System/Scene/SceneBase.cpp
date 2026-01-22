@@ -14,6 +14,7 @@
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GridObject.hpp"
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

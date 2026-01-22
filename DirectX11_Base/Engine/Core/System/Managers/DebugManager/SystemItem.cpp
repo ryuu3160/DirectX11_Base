@@ -11,6 +11,7 @@
 #include "SystemItem.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================

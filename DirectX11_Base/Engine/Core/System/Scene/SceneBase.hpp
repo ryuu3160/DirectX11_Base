@@ -14,10 +14,10 @@
 #include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
 #include "Core/DirectX11/Renderer/ModelRenderer.hpp"
 #include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
 #include "ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
 #include "Core/System/CPON/cpon.hpp"
 #include "Core/System/Utility/Utility.hpp"
+#include "Core/System/Utility/EngineUtility.hpp"
 // ==============================
 //  undefine
 // ==============================
@@ -217,7 +217,7 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				DebugManager::GetInstance().DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -277,7 +277,7 @@ inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transf
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				DebugManager::GetInstance().DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -336,7 +336,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				DebugManager::GetInstance().DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -378,14 +378,14 @@ T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
 
 	if(!ptr)
 	{
-		DebugManager::GetInstance().DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
+		Debug::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
 		return nullptr;
 	}
 
 	// 破棄予約されていた場合は取得不可
 	if(static_cast<GameObject *>(ptr)->IsDestroySelf())
 	{
-		DebugManager::GetInstance().DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
+		Debug::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
 		return nullptr;
 	}
 

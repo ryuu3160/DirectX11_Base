@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "Core/DirectX11/System/Gizmos.hpp"
 #include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 Camera::Camera()
 	: Component("Camera")

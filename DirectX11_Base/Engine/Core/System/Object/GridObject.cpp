@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "GridObject.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 GridObject::GridObject()
 	: GridObject("GridObject")

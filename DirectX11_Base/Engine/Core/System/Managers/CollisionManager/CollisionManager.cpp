@@ -11,6 +11,7 @@
 #include "CollisionManager.hpp"
 #include "Core/System/Managers/CollisionManager/OctreeCell.hpp"
 #include "Core/System/Managers/CollisionManager/TreeData.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================
 //	’è”’è‹`

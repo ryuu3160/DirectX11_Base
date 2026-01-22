@@ -82,64 +82,46 @@ public:
 	/// <returns></returns>
 	DebugWindow &GetDebugWindowRef(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name);
 
+	/// <summary>
+	/// デバッグメッセージをログに出力します
+	/// </summary>
+	/// <param name="In_Msg">ログに出力するメッセージ</param>
+	void DebugLog(_In_ std::string_view In_Msg);
+
+	/// <summary>
+	/// デバッグ用の警告メッセージをログに記録します
+	/// </summary>
+	/// <param name="In_Msg">ログに記録する警告メッセージ</param>
+	void DebugLogWarning(_In_ std::string_view In_Msg);
+
+	/// <summary>
+	/// デバッグ用のエラーメッセージをログに記録します
+	/// </summary>
+	/// <param name="In_Msg">ログに記録するエラーメッセージ</param>
+	void DebugLogError(_In_ std::string_view In_Msg);
+
 	template<typename ...Args>
-	inline void DebugLog(_In_ const char* In_Format, Args&& ...args)
+	inline void DebugLog(_In_ const char* In_Format, Args&& ...In_Args)
 	{
-		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);
-		auto window = GetDebugWindow("System", "Log");
-		if(window->NotDummy())
-		{
-			auto &item = (*window)["ConsoleLog"];
-			if (item.GetKind() == DebugItem::Kind::Console)
-			{
-				auto TextItem = dynamic_cast<ItemConsole *>(&item);
-				if (TextItem)
-				{
-					TextItem->AddOutput(msg);
-				}
-			}
-		}
+		DebugLog(msg);
 	}
 
 	template<typename ...Args>
-	inline void DebugLogWarning(_In_ const char *In_Format, Args&& ...args)
+	inline void DebugLogWarning(_In_ const char *In_Format, Args&& ...In_Args)
 	{
-		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);
-		auto window = GetDebugWindow("System", "Log");
-		if (window->NotDummy())
-		{
-			auto &item = (*window)["ConsoleLog"];
-			if (item.GetKind() == DebugItem::Kind::Console)
-			{
-				auto TextItem = dynamic_cast<ItemConsole *>(&item);
-				if (TextItem)
-				{
-					TextItem->AddOutput(msg, ImVec4(1.0f, 1.0f, 0.3f, 1.0f), "Warning");
-				}
-			}
-		}
+		DebugLogWarning(msg);
 	}
 
 	template<typename ...Args>
-	inline void DebugLogError(_In_ const char *In_Format, Args&& ...args)
+	inline void DebugLogError(_In_ const char *In_Format, Args&& ...In_Args)
 	{
-		std::string msg = std::vformat(In_Format, std::make_format_args(args...));
+		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);
-		auto window = GetDebugWindow("System", "Log");
-		if (window->NotDummy())
-		{
-			auto &item = (*window)["ConsoleLog"];
-			if (item.GetKind() == DebugItem::Kind::Console)
-			{
-				auto TextItem = dynamic_cast<ItemConsole *>(&item);
-				if (TextItem)
-				{
-					TextItem->AddOutput(msg, ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Error");
-				}
-			}
-		}
+		DebugLogError(msg);
 	}
 
 	void DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item);

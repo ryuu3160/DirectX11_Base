@@ -12,6 +12,7 @@
 #include "Core/System/Component/Transform.hpp"
 #include "Core/System/Component/Collider/ColliderBase.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name)

@@ -195,6 +195,8 @@ void SceneRoot::Init()
 
 	FadeManager::GetInstance().AddFade("TestFade", 5.0f, Ease::EasingType::MAX, true);
 	FadeManager::GetInstance().StartFadeIn("TestFade");
+
+	
 }
 
 void SceneRoot::Uninit()

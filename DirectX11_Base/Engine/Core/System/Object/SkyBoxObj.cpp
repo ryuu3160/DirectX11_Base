@@ -11,6 +11,7 @@
 // ==============================
 #include "SkyBoxObj.hpp"
 #include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 SkyBoxObj::SkyBoxObj()
 	: SkyBoxObj("SkyBoxObj")

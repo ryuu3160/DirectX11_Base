@@ -10,6 +10,8 @@
 // ==============================
 #include "Main.hpp"
 #include "Engine.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Game/Settings.hpp"
 
 // ==============================
 //  プロトタイプ宣言

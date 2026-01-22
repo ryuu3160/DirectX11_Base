@@ -283,6 +283,57 @@ DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName,
 	return *GetDebugWindow(In_GroupName, In_Name);
 }
 
+void DebugManager::DebugLog(_In_ std::string_view In_Msg)
+{
+	auto window = GetDebugWindow("System", "Log");
+	if(window->NotDummy())
+	{
+		auto &item = (*window)["ConsoleLog"];
+		if(item.GetKind() == DebugItem::Kind::Console)
+		{
+			auto TextItem = dynamic_cast<ItemConsole *>(&item);
+			if(TextItem)
+			{
+				TextItem->AddOutput(In_Msg);
+			}
+		}
+	}
+}
+
+void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
+{
+	auto window = GetDebugWindow("System", "Log");
+	if(window->NotDummy())
+	{
+		auto &item = (*window)["ConsoleLog"];
+		if(item.GetKind() == DebugItem::Kind::Console)
+		{
+			auto TextItem = dynamic_cast<ItemConsole *>(&item);
+			if(TextItem)
+			{
+				TextItem->AddOutput(In_Msg, ImVec4(1.0f, 1.0f, 0.3f, 1.0f), "Warning");
+			}
+		}
+	}
+}
+
+void DebugManager::DebugLogError(_In_ std::string_view In_Msg)
+{
+	auto window = GetDebugWindow("System", "Log");
+	if(window->NotDummy())
+	{
+		auto &item = (*window)["ConsoleLog"];
+		if(item.GetKind() == DebugItem::Kind::Console)
+		{
+			auto TextItem = dynamic_cast<ItemConsole *>(&item);
+			if(TextItem)
+			{
+				TextItem->AddOutput(In_Msg, ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Error");
+			}
+		}
+	}
+}
+
 void DebugManager::HideAllWindows()
 {
 	for (const auto &window : m_DebugWindows)
