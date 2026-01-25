@@ -410,6 +410,9 @@
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
@@ -702,6 +705,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DebugEditor.hpp">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

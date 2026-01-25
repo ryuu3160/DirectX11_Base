@@ -249,6 +249,10 @@
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.cpp" />
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.cpp" />
+    <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\Utility.cpp" />
     <ClCompile Include="Engine\EntryPoint\EntryPoint.cpp" />
     <ClCompile Include="Engine\EntryPoint\Main.cpp" />
@@ -347,7 +351,15 @@
     <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
     <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.hpp" />
     <ClInclude Include="Engine\Core\System\Utility\Concept.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\Utility.hpp" />
+    <ClInclude Include="Engine\DebugEditor.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Engine.hpp">
       <SubType>
       </SubType>
