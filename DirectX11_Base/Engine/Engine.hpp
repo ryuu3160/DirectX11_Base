@@ -22,6 +22,7 @@ namespace RyuuEngine
 #include "Core/Defines.hpp"                              // エンジン全体の定義
 #include "Core/System/Utility/Concept.hpp"               // C++20 コンセプト
 #include "Core/System/Utility/Utility.hpp"               // ユーティリティ関数
+#include "Core/System/Utility/EngineUtility.hpp"         // エンジン用ユーティリティ関数
 
 // ==============================
 // Math
@@ -93,12 +94,6 @@ namespace RyuuEngine
 #include "Core/System/Managers/CollisionManager/TreeData.hpp"
 #include "Core/System/Managers/CollisionManager/OctreeCell.hpp"
 #include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
-
-// DebugManager
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
-#include "Core/System/Managers/DebugManager/DebugWindow.hpp"
-#include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
-#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================
 // Rendering System

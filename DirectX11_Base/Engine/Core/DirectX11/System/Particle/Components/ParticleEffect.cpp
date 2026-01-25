@@ -13,6 +13,7 @@
 #include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/CameraManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 ParticleEffect::ParticleEffect()
     : RenderComponent("ParticleEffect")
@@ -181,7 +182,7 @@ void ParticleEffect::UpdateInstanceBuffer()
         const auto &particles = emitter->GetParticles();
         std::mutex mtx;
 //#pragma omp parallel for
-        for(__int64 i = 0; i < particles.size();++i)
+        for(__int64 i = 0; i < static_cast<__int64>(particles.size());++i)
         {
             if(!particles[i]->m_IsActive) continue;
 

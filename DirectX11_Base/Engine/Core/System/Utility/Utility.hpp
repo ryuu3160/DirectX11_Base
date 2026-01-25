@@ -178,6 +178,12 @@ namespace Util
 	/// <param name="[In_ShiftJISStr]">変換するShift-JIS文字列</param>
 	/// <returns>>UTF8に変換したstd::string型の文字列</returns>
 	std::string ShiftJISToUTF8(_In_ std::string_view In_ShiftJISStr);
+
+    template<typename ...Args>
+	std::string FormatString(_In_ std::string_view In_Format, Args&& ...In_Args)
+    {
+        return std::vformat(In_Format, std::make_format_args(In_Args...));
+    }
 }
 
 using namespace Util; // Util名前空間をグローバルに展開

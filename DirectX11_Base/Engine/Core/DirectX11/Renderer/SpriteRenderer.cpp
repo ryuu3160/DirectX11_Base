@@ -11,7 +11,9 @@
 #include "SpriteRenderer.hpp"
 #include "Core/System/Component/Camera.hpp"
 #include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Utility/EngineUtility.hpp"
 
 // ==============================
 //	íËêîíËã`
@@ -66,14 +68,15 @@ void SpriteRenderer::Update(_In_ float In_DeltaTime) noexcept
 
 void SpriteRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
-	if (NullCheck(In_Vs, NCMode::OUTPUT, "VertexShader is null in SpriteRenderer::SetVertexShader."))
+	if(!IsValid(In_Vs, "VertexShader is null in SpriteRenderer::SetVertexShader."))
 		return;
+
 	m_SpriteData.vs = In_Vs;
 }
 
 void SpriteRenderer::SetPixelShader(_In_ Shader *In_Ps) noexcept
 {
-	if (NullCheck(In_Ps, NCMode::OUTPUT, "PixelShader is null in SpriteRenderer::SetPixelShader."))
+	if(!IsValid(In_Ps, "PixelShader is null in SpriteRenderer::SetPixelShader."))
 		return;
 	m_SpriteData.ps = In_Ps;
 }

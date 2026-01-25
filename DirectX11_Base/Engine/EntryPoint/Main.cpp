@@ -10,6 +10,7 @@
 // ==============================
 #include "Main.hpp"
 #include "Engine.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================
 //  プロトタイプ宣言

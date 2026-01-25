@@ -12,6 +12,7 @@
 #include "SphereCollider.hpp"
 #include "BoxCollider.hpp"
 #include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================
 //	’è”’è‹`

@@ -11,7 +11,7 @@
 // ==============================
 #include "Core/System/Object/Object.hpp"
 #include "Core/System/CPON/cpon.hpp"
-#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+
 // ==============================
 // ‘O•ûéŒ¾
 // ==============================

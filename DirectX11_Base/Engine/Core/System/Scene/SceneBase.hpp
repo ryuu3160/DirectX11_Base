@@ -14,10 +14,10 @@
 #include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
 #include "Core/DirectX11/Renderer/ModelRenderer.hpp"
 #include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
 #include "ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
 #include "Core/System/CPON/cpon.hpp"
 #include "Core/System/Utility/Utility.hpp"
+#include "Core/System/Utility/EngineUtility.hpp"
 // ==============================
 //  undefine
 // ==============================
@@ -188,20 +188,42 @@ template <typename T>
 requires std::derived_from<T, GameObject>
 T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name.data());
-	if (itr != m_Objects.end())
-	{
-		std::string buf = "Failed to create object.";
-		buf += In_Name.data();
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-#endif
-
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data());
+
+	// 所属シーン名を頭に付ける
+	std::string SceneSpecificName = m_Name + "_";
+	SceneSpecificName += In_Name.data();
+
+	auto res = m_Objects.try_emplace(SceneSpecificName, ptr);
+
+	// 名前が被っていた場合
+	if(res.second == false)
+	{
+		// 名前の後ろに連番を付けて再度登録を試みる
+		int suffix = 1;
+		while(true)
+		{
+			std::string NewName = SceneSpecificName + "(" + ToString(suffix) + ")";
+			res = m_Objects.try_emplace(NewName, ptr);
+			if(res.second == true)
+			{
+				NewName = In_Name.data();
+				NewName += "(" + ToString(suffix) + ")";
+				ptr->m_Name = NewName; // オブジェクト名も変更
+				ptr->m_Data->SetObjectName(NewName); // CPON上の名前も変更
+				break;
+			}
+			++suffix;
+			if(suffix > 1000) // 1000回試みてもダメなら諦める
+			{
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				delete ptr;
+				return nullptr;
+			}
+		}
+	}
+
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name.data())); // CPONデータ読み込み
 	ptr->ExecuteAwake(); // Awake呼び出し
@@ -209,7 +231,7 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 	if(In_pParent)
 		ptr->GetTransform()->SetParent(In_pParent); // 親設定
 
-	m_Objects.insert(std::pair<std::string, T*>(In_Name.data(), ptr));
+	m_Objects.try_emplace(In_Name.data(), ptr);
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
@@ -226,27 +248,49 @@ template<typename T, typename ...Args>
 requires std::derived_from<T, GameObject>
 inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent, Args && ...args) noexcept
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name.data());
-	if(itr != m_Objects.end())
-	{
-		std::string buf = "Failed to create object.";
-		buf += In_Name.data();
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-#endif
-
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data(), args...);
+
+	// 所属シーン名を頭に付ける
+	std::string SceneSpecificName = m_Name + "_";
+	SceneSpecificName += In_Name.data();
+
+	auto res = m_Objects.try_emplace(SceneSpecificName, ptr);
+
+	// 名前が被っていた場合
+	if(res.second == false)
+	{
+		// 名前の後ろに連番を付けて再度登録を試みる
+		int suffix = 1;
+		while(true)
+		{
+			std::string NewName = SceneSpecificName + "(" + ToString(suffix) + ")";
+			res = m_Objects.try_emplace(NewName, ptr);
+			if(res.second == true)
+			{
+				NewName = In_Name.data();
+				NewName += "(" + ToString(suffix) + ")";
+				ptr->m_Name = NewName; // オブジェクト名も変更
+				ptr->m_Data->SetObjectName(NewName); // CPON上の名前も変更
+				break;
+			}
+			++suffix;
+			if(suffix > 1000) // 1000回試みてもダメなら諦める
+			{
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				delete ptr;
+				return nullptr;
+			}
+		}
+	}
+
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name.data())); // CPONデータ読み込み
 	ptr->ExecuteAwake(); // Awake呼び出し
 
 	if(In_pParent)
 		ptr->GetTransform()->SetParent(In_pParent); // 親設定
-	m_Objects.insert(std::pair<std::string, T *>(In_Name.data(), ptr));
+	
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
@@ -263,21 +307,42 @@ template<typename T, typename ...Args>
 requires std::derived_from<T, GameObject>
 inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent, Args && ...args) noexcept
 {
-#ifdef _DEBUG
-	// デバッグ中のみ、名称ダブりがないかチェック
-	Objects::iterator itr = m_Objects.find(In_Name.data());
-	if(itr != m_Objects.end())
-	{
-		std::string buf = "Failed to create object.";
-		buf += In_Name.data();
-		MessageBoxA(NULL, buf.c_str(), "Error", MB_OK);
-		return nullptr;
-	}
-
-#endif // _DEBUG
-
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data(), args...);
+
+	// 所属シーン名を頭に付ける
+	std::string SceneSpecificName = m_Name + "_";
+	SceneSpecificName += In_Name.data();
+
+	auto res = m_Objects.try_emplace(SceneSpecificName, ptr);
+
+	// 名前が被っていた場合
+	if(res.second == false)
+	{
+		// 名前の後ろに連番を付けて再度登録を試みる
+		int suffix = 1;
+		while(true)
+		{
+			std::string NewName = SceneSpecificName + "(" + ToString(suffix) + ")";
+			res = m_Objects.try_emplace(NewName, ptr);
+			if(res.second == true)
+			{
+				NewName = In_Name.data();
+				NewName += "(" + ToString(suffix) + ")";
+				ptr->m_Name = NewName; // オブジェクト名も変更
+				ptr->m_Data->SetObjectName(NewName); // CPON上の名前も変更
+				break;
+			}
+			++suffix;
+			if(suffix > 1000) // 1000回試みてもダメなら諦める
+			{
+				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				delete ptr;
+				return nullptr;
+			}
+		}
+	}
+
 	ptr->m_pScene = this; // 所属シーンを設定
 	ptr->DataRead(m_Data->GetObjectPtr(In_Name.data())); // CPONデータ読み込み
 	ptr->ExecuteAwake(); // Awake呼び出し
@@ -302,19 +367,27 @@ template<class T>
 T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
 {
 	// オブジェクトの探索
-	Objects::iterator itr = m_Objects.find(In_Name.data());
+	std::string ObjName = m_Name + "_";
+	ObjName += In_Name.data();
+	Objects::iterator itr = m_Objects.find(ObjName);
 	if (itr == m_Objects.end())
 		return nullptr;
 
 	// 型変換
 	T *ptr = dynamic_cast<T *>(itr->second);
 
-	if(NullCheck(ptr, NullpCheckMode::OUTPUT, "Failed to get object." + std::string(In_Name)))
+	if(!ptr)
+	{
+		Debug::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
 		return nullptr;
+	}
 
 	// 破棄予約されていた場合は取得不可
 	if(static_cast<GameObject *>(ptr)->IsDestroySelf())
+	{
+		Debug::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
 		return nullptr;
+	}
 
 	return ptr;
 }

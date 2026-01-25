@@ -22,10 +22,10 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	// ------------------------------
 	// ウィンドウの初期化
 	// ------------------------------
-	Window &window = Window::GetInstance();													// インスタンス生成
-	window.SetClassName(lpClassName);														// ウィンドウクラス名の設定
-	window.Create(TITLE_NAME, cx_nWINDOW_WIDTH, cx_nWINDOW_HEIGHT, hInstance, nCmdShow);	// ウィンドウの生成
-	window.SetWindowPosCenter();															// ウィンドウを中央に表示
+	Window &window = Window::GetInstance();														// インスタンス生成
+	window.SetClassName(lpClassName);															// ウィンドウクラス名の設定
+	window.Create(AppTitle.c_str(), cx_nWINDOW_WIDTH, cx_nWINDOW_HEIGHT, hInstance, nCmdShow);	// ウィンドウの生成
+	window.SetWindowPosCenter();																// ウィンドウを中央に表示
 
 	// ------------------------------
 	// FrameManagerの初期化

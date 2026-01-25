@@ -422,6 +422,9 @@
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
     <ClCompile Include="Game\Source\Scene\SceneGame.cpp">
       <Filter>Game\Source\Scene</Filter>
     </ClCompile>
@@ -732,6 +735,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DebugEditor.hpp">
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Game\Source\Scene\SceneGame.hpp">
       <Filter>Game\Source\Scene</Filter>
