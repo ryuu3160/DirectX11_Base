@@ -39,7 +39,7 @@ void SceneGame::Init()
 {
 	// カメラをメインシーンから取得
 #ifdef _DEBUG
-	CameraDCC *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraDCC>("Camera");
+	CameraDCC *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraDCC>("EditorCamera");
 #else
 	MainCamera *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<MainCamera>("Camera");
 #endif
@@ -66,7 +66,7 @@ void SceneGame::Init()
 	player->SetTarget(enemy1);
 
 	// 海面オブジェクトの生成
-	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",false);
+	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",nullptr,false);
 	pSeaLevel->SetCamera(pCamera);
 	pSeaLevel->SetPlayer(player);
 	pSeaLevel->SetScale({ 100000.0f,1.0f,100000.0f });
@@ -143,7 +143,7 @@ void SceneGame::Update(_In_ float In_DeltaTime)
 			auto pos = player->GetPosition();
 			auto playerFront = player->GetFront();
 			auto playerUp = player->GetUp();
-			pos = (pos - playerFront * (cx_ThirdPerson_Distance * 2.0f)) + playerUp * (cx_ThirdPerson_UpDistanceRate * 2.0f);
+			pos = (pos - playerFront * (10.0f * 2.0f)) + playerUp * (1.0f * 2.0f);
 			cam->SetPosition(pos);
 			cam->SetQuat(player->GetQuat());
 			m_ChangeResultTIme = 3.0f; // 3秒後にリザルトへ

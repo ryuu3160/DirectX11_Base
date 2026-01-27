@@ -11,6 +11,7 @@
 #include "Main.hpp"
 #include "Engine.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Game/Source/Scene/SceneGame.hpp"
 
 // ==============================
 //  プロトタイプ宣言
@@ -87,7 +88,7 @@ HRESULT Main::Init()
 
 	// シーンの初期化
 	auto &SceneM = SceneManager::GetInstance();
-	auto pScene = SceneM.Init<SceneRoot>();
+	auto pScene = SceneM.Init<SceneGame>();
 	SceneM.SceneObjectsInit();
 
 	// メインのレンダーコンテキスト作成

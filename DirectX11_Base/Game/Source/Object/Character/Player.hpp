@@ -25,7 +25,7 @@ namespace
 class Player : public GameObject
 {
 public:
-	Player();
+	Player(_In_ std::string_view In_Name);
 	~Player();
 
 	void Awake() noexcept override;

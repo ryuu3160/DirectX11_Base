@@ -10,27 +10,36 @@
 // ==============================
 #include "SeaLevel.hpp"
 
-SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
-	: GameObject("SeaLevelObject")
+SeaLevel::SeaLevel(_In_ std::string_view In_Name, _In_ bool In_IsInstance)
+	: GameObject(In_Name.data())
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)
 	, m_pPlayer(nullptr)
 	, m_IsInstance(In_IsInstance)
 	, m_PatternScale({ 1.0f,1.0f })
 {
+}
+
+SeaLevel::~SeaLevel()
+{
+	m_pRenderComponent = nullptr;
+}
+
+void SeaLevel::Awake() noexcept
+{
 	SetPosition({ 0.0f,0.0f,0.0f });
 	SetScale({ 1.0f,1.0f,1.0f });
 	SetQuat({ 0.0f,0.0f,0.0f,0.0f });
 
 	// レンダーコンポーネントの設定
-	if (m_IsInstance)
+	if(m_IsInstance)
 	{
 		// インスタンシング
 		m_pRenderComponent = AddComponent<InstancedModelRenderer>();
-		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("IVS_InstancedObject"));
-		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-		reinterpret_cast<InstancedModelRenderer*>(m_pRenderComponent)->SetLayer(RenderLayer_Ground); // レイヤーの設定
+		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
+		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("IVS_InstancedObject"));
+		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
+		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetLayer(-1); // レイヤーの設定
 
 		// インスタンシングの設定
 		InstancedMesh::AlignInstanceData instanceData;
@@ -49,16 +58,11 @@ SeaLevel::SeaLevel(_In_ const bool &In_IsInstance)
 	else
 	{
 		m_pRenderComponent = AddComponent<ModelRenderer>();
-		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_PatternScale"));
-		reinterpret_cast<ModelRenderer*>(m_pRenderComponent)->SetLayer(RenderLayer_Ground); // レイヤーの設定
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_PatternScale"));
+		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetLayer(-1); // レイヤーの設定
 	}
-}
-
-SeaLevel::~SeaLevel()
-{
-	m_pRenderComponent = nullptr;
 }
 
 void SeaLevel::SetFilePath(_In_ const FilePath &In_Path) noexcept

@@ -17,8 +17,10 @@
 class SeaLevel : public GameObject
 {
 public:
-	SeaLevel(_In_ const bool &In_IsInstance);
+	SeaLevel(_In_ std::string_view In_Name, _In_ bool In_IsInstance);
 	~SeaLevel();
+
+	void Awake() noexcept override;
 
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;

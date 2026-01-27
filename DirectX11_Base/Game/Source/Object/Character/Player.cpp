@@ -54,8 +54,8 @@ namespace
 	const inline constexpr float cx_MissileSpeed = 1180.4f; // ミサイルの速度
 }
 
-Player::Player()
-	: GameObject("Player")
+Player::Player(_In_ std::string_view In_Name)
+	: GameObject(In_Name.data())
 	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
 	, m_IsDestroyed(false)
 {
