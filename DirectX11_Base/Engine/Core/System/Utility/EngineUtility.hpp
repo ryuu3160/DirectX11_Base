@@ -38,21 +38,21 @@ namespace Engine
 		void DebugLogError(_In_ std::string_view In_Message);
 
         template<typename... Args>
-		void DebugLog(_In_ const char *In_Format, Args&&... In_Args)
+		void DebugLog(_In_ std::string_view In_Format, Args&&... In_Args)
 		{
 			auto Msg = FormatString(In_Format, In_Args...);
 			DebugLog(Msg);
 		}
 
         template<typename... Args>
-		void DebugLogWarning(_In_ const char *In_Format, Args&&... In_Args)
+		void DebugLogWarning(_In_ std::string_view In_Format, Args&&... In_Args)
 		{
 			auto Msg = FormatString(In_Format, In_Args...);
 			DebugLogWarning(Msg);
 		}
 
         template<typename... Args>
-		void DebugLogError(_In_ const char *In_Format, Args&&... In_Args)
+		void DebugLogError(_In_ std::string_view In_Format, Args&&... In_Args)
 		{
 			auto Msg = FormatString(In_Format, In_Args...);
 			DebugLogError(Msg);
