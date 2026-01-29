@@ -27,10 +27,12 @@ public:
 	float GetHeight() const { return m_Height; }
 	float GetRadius() const { return m_Radius; }
 	DirectX::XMFLOAT3 GetDirection() const { return m_Direction; }
+	DirectX::XMFLOAT3 GetRotation() const { return m_Rotation; }
 
-	void SetHeight(_In_ float height) { m_Height = height; }
-	void SetRadius(_In_ float radius) { m_Radius = radius; }
-	void SetDirection(_In_ DirectX::XMFLOAT3 &direction) { m_Direction = direction; }
+	void SetHeight(_In_ float In_Height) { m_Height = In_Height; }
+	void SetRadius(_In_ float In_Radius) { m_Radius = In_Radius; }
+	void SetDirection(_In_ DirectX::XMFLOAT3 &In_Direction) { m_Direction = In_Direction; }
+	void SetRotation(_In_ DirectX::XMFLOAT3 &In_EulerAnglesDegrees) { m_Rotation = In_EulerAnglesDegrees; }
 
 	// ワールド座標での線分の端点を取得
 	void GetWorldSegment(_Out_ DirectX::XMFLOAT3 &Out_PointA, _Out_ DirectX::XMFLOAT3 &Out_PointB) const noexcept;
@@ -84,6 +86,7 @@ protected:
 	// ローカル座標系のパラメータ
 	float m_Height;                  // 全体の高さ(線分の長さ + 半径*2)
 	float m_Radius;                  // 半径
+	DirectX::XMFLOAT3 m_Rotation;   // 回転(オイラー角、度数法)
 	DirectX::XMFLOAT3 m_Direction;  // 向き(ローカル、通常は(0,1,0))
 
 

@@ -20,6 +20,7 @@ BoxCollider::BoxCollider()
 	, m_HalfExtents(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f))
 	, m_WorldCenter(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f))
 	, m_AxisX(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)), m_AxisY(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)), m_AxisZ(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f))
+	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 {
 	m_Type = COLLIDER_BOX;
 }
@@ -98,7 +99,7 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 
 	auto AddLineBottom = std::async(std::launch::async, [&]()
 		{
-			// 底面（4本）
+			// 底面(4本)
 			In_Gizmos->AddLine(obj, v[0], v[1], EdgeColorX, EdgeColorX);
 			In_Gizmos->AddLine(obj, v[1], v[2], EdgeColorZ, EdgeColorZ);
 			In_Gizmos->AddLine(obj, v[2], v[3], EdgeColorX, EdgeColorX);
@@ -106,7 +107,7 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 		});
 	auto AddLineTop = std::async(std::launch::async, [&]()
 		{
-			// 上面（4本）
+			// 上面(4本)
 			In_Gizmos->AddLine(obj, v[4], v[5], EdgeColorX, EdgeColorX);
 			In_Gizmos->AddLine(obj, v[5], v[6], EdgeColorZ, EdgeColorZ);
 			In_Gizmos->AddLine(obj, v[6], v[7], EdgeColorX, EdgeColorX);
@@ -114,7 +115,7 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 		});
 	auto AddLineVertical = std::async(std::launch::async, [&]()
 		{
-			// 縦の辺（4本）
+			// 縦の辺(4本(）)
 			In_Gizmos->AddLine(obj, v[0], v[4], EdgeColorY, EdgeColorY);
 			In_Gizmos->AddLine(obj, v[1], v[5], EdgeColorY, EdgeColorY);
 			In_Gizmos->AddLine(obj, v[2], v[6], EdgeColorY, EdgeColorY);
@@ -130,13 +131,14 @@ void BoxCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	ColliderBase::RegisterDebugInspector(In_pWindow);
 	ItemGroup &Group = In_pWindow->GetGroupItem("BoxCollider");
 	Group.CreateGroupItem<ItemBind>("HalfExtents", ItemBind::Kind::Vector, &m_HalfExtents);
+	Group.CreateGroupItem<ItemBind>("Rotation##BoxCollider", ItemBind::Kind::Vector, &m_Rotation);
 }
 
 void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept
 {
 	// ローカル座標での8頂点
 	DirectX::XMFLOAT3 localVertices[8] = {
-		{-m_HalfExtents.x, -m_HalfExtents.y, -m_HalfExtents.z}, // 0:  左下奥
+		{-m_HalfExtents.x, -m_HalfExtents.y, -m_HalfExtents.z}, // 0: 左下奥
 		{ m_HalfExtents.x, -m_HalfExtents.y, -m_HalfExtents.z}, // 1: 右下奥
 		{ m_HalfExtents.x, -m_HalfExtents.y,  m_HalfExtents.z}, // 2: 右下手前
 		{-m_HalfExtents.x, -m_HalfExtents.y,  m_HalfExtents.z}, // 3: 左下手前
@@ -201,21 +203,19 @@ float BoxCollider::SegmentToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_
 		segDir.z / segLength
 	};
 
-	// 線分の各端点と OBB の距離
+	// 線分の各端点とOBBの距離
 	float distSqA = PointToOBBDistanceSquared(In_SegA);
 	float distSqB = PointToOBBDistanceSquared(In_SegB);
 
 	// 最小値を初期値とする
 	float minDistSq = std::min(distSqA, distSqB);
 
-	// OBB の各面との交差をチェック
-	// （詳細な実装は複雑なので、サンプリングで十分実用的）
-
+	// OBBの各面との交差をチェック
 	// 線分上の複数点でサンプリング
 	const int samples = 10;
 	for(int i = 1; i < samples; ++i)
 	{
-		float t = (float)i / (float)samples;
+		float t = static_cast<float>(i) / static_cast<float>(samples);
 		DirectX::XMFLOAT3 samplePoint = {
 			In_SegA.x + segDir.x * t,
 			In_SegA.y + segDir.y * t,
@@ -231,7 +231,7 @@ float BoxCollider::SegmentToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_
 
 float BoxCollider::PointToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_Point) const noexcept
 {
-	// 点を OBB のローカル座標系に変換
+	// 点をOBBのローカル座標系に変換
 	DirectX::XMFLOAT3 diff = {
 		In_Point.x - m_WorldCenter.x,
 		In_Point.y - m_WorldCenter.y,
@@ -243,7 +243,7 @@ float BoxCollider::PointToOBBDistanceSquared(_In_ const DirectX::XMFLOAT3 &In_Po
 	float projY = Dot(diff, m_AxisY);
 	float projZ = Dot(diff, m_AxisZ);
 
-	// OBB の範囲内にクランプ（最近接点を求める）
+	// OBBの範囲内にクランプ(最近接点を求める)
 	float closestX = std::max(-m_HalfExtents.x, std::min(projX, m_HalfExtents.x));
 	float closestY = std::max(-m_HalfExtents.y, std::min(projY, m_HalfExtents.y));
 	float closestZ = std::max(-m_HalfExtents.z, std::min(projZ, m_HalfExtents.z));
@@ -271,6 +271,14 @@ void BoxCollider::UpdateWorldSegment() noexcept
 	DirectX::XMVECTOR axisX = DirectX::XMVector3Normalize(matWorld.r[0]); // X軸
 	DirectX::XMVECTOR axisY = DirectX::XMVector3Normalize(matWorld.r[1]); // Y軸
 	DirectX::XMVECTOR axisZ = DirectX::XMVector3Normalize(matWorld.r[2]); // Z軸
+
+	// RotationをQuatに変換
+	auto Rad = ToRad(m_Rotation);
+	auto VecQuat = DirectX::XMQuaternionRotationRollPitchYaw(Rad.x, Rad.y, Rad.z);
+	// 回転を各軸に適用
+	axisX = DirectX::XMVector3Rotate(axisX, VecQuat);
+	axisY = DirectX::XMVector3Rotate(axisY, VecQuat);
+	axisZ = DirectX::XMVector3Rotate(axisZ, VecQuat);
 
 	DirectX::XMStoreFloat3(&m_AxisX, axisX);
 	DirectX::XMStoreFloat3(&m_AxisY, axisY);
