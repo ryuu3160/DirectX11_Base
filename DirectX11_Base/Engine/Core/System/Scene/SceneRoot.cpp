@@ -39,19 +39,21 @@ void SceneRoot::Init()
 	// オブジェクトの設定
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
-	Component1->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
+	Component1->SetAssetPath("Engine/Assets/Model/Weapon/AIM-120.fbx");
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	Component1->SetScale(0.005f);
 
 	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
-	pModel->AddComponent<SphereCollider>();
+	pModel->AddComponent<BoxCollider>();
 
 	auto child = CreateObject<GameObject>("RootModel0Child");
 	child->GetTransform()->SetParent(pModel->GetTransform());
 	auto comp = child->AddComponent<ModelRenderer>();
-	comp->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
+	comp->SetAssetPath("Engine/Assets/Model/Weapon/AIM-120.fbx");
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	comp->SetScale(0.005f);
 	//child->SetPosition({ 1.0f, 0.0f, 0.0f });
 
 	// F15Eのモデルを読み込む
