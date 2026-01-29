@@ -108,7 +108,7 @@ void SceneRoot::Init()
 	auto ParticleObj = CreateObject<GameObject>("ParticleTest");
 	auto ParticleCmp = ParticleObj->AddComponent<ParticleEffect>();
 	ParticleObj->AddComponent<BoxCollider>();
-	ParticleCmp->SetTexture("Engine/Assets/Texture/TestTexture.png");
+	ParticleCmp->SetTexture("Engine/Assets/Texture/TestTextureWhite.png");
 
 	// エミッター設定
 	EmitterSettings settings;
