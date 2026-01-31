@@ -529,6 +529,48 @@ namespace DX11Math
 	}
 
 	/// <summary>
+	/// 2Dベクトルを正規化します
+	/// </summary>
+	/// <param name="[In_Vec]">正規化する入力ベクトル</param>
+	/// <returns>正規化されたベクトル</returns>
+	inline DirectX::XMFLOAT2 Normalize(_In_ const DirectX::XMFLOAT2 &In_Vec)
+	{
+		DirectX::XMVECTOR vec = DirectX::XMLoadFloat2(&In_Vec);
+		vec = DirectX::XMVector2Normalize(vec);
+		DirectX::XMFLOAT2 result;
+		DirectX::XMStoreFloat2(&result, vec);
+		return result;
+	}
+
+	/// <summary>
+	/// 3Dベクトルを正規化します
+	/// </summary>
+	/// <param name="[In_Vec]">正規化する入力ベクトル</param>
+	/// <returns>正規化されたベクトル</returns>
+	inline DirectX::XMFLOAT3 Normalize(_In_ const DirectX::XMFLOAT3 &In_Vec)
+	{
+		DirectX::XMVECTOR vec = DirectX::XMLoadFloat3(&In_Vec);
+		vec = DirectX::XMVector3Normalize(vec);
+		DirectX::XMFLOAT3 result;
+		DirectX::XMStoreFloat3(&result, vec);
+		return result;
+	}
+
+	/// <summary>
+	/// 4次元ベクトルを正規化します
+	/// </summary>
+	/// <param name="[In_Vec]">正規化する入力ベクトル</param>
+	/// <returns>正規化されたベクトル</returns>
+	inline DirectX::XMFLOAT4 Normalize(_In_ const DirectX::XMFLOAT4 &In_Vec)
+	{
+		DirectX::XMVECTOR vec = DirectX::XMLoadFloat4(&In_Vec);
+		vec = DirectX::XMVector4Normalize(vec);
+		DirectX::XMFLOAT4 result;
+		DirectX::XMStoreFloat4(&result, vec);
+		return result;
+	}
+
+	/// <summary>
 	/// クォータニオンをロール・ピッチ・ヨー(オイラー角)に変換します
 	/// </summary>
 	/// <param name="[In_Quat]">変換対象のDirectX::XMFLOAT4型クォータニオン</param>

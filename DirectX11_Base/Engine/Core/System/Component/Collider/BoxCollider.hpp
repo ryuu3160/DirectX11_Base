@@ -26,10 +26,13 @@ public:
 	void Init() noexcept override;
 	void Update(_In_ float In_DeltaTime) noexcept override;
 
+	inline DirectX::XMFLOAT3 GetSize() const { return m_HalfExtents * 2.0f; }
 	inline DirectX::XMFLOAT3 GetHalfExtents() const { return m_HalfExtents; }
+	inline DirectX::XMFLOAT3 GetRotation() const { return m_Rotation; }
 	
-	inline void SetSize(_In_ const DirectX::XMFLOAT3 &size) { m_HalfExtents = size * 0.5f; }
-	inline void SetHalfExtents(_In_ const DirectX::XMFLOAT3 &halfExtents) { m_HalfExtents = halfExtents; }
+	inline void SetSize(_In_ const DirectX::XMFLOAT3 &In_Size) { m_HalfExtents = In_Size * 0.5f; }
+	inline void SetHalfExtents(_In_ const DirectX::XMFLOAT3 &In_HalfExtents) { m_HalfExtents = In_HalfExtents; }
+	inline void SetRotation(_In_ const DirectX::XMFLOAT3 &In_EulerAnglesDegrees) { m_Rotation = In_EulerAnglesDegrees; }
 	
 	// ワールド座標系での情報を取得
 	inline DirectX::XMFLOAT3 GetWorldCenter() const { return m_WorldCenter; }
@@ -108,6 +111,8 @@ private:
 protected:
 	// サイズ
 	DirectX::XMFLOAT3 m_HalfExtents;
+	// コライダー自体の回転
+	DirectX::XMFLOAT3 m_Rotation; // (オイラー角、度数法)
 
 	// ワールド空間での軸方向
 	DirectX::XMFLOAT3 m_WorldCenter;  // 中心位置（ワールド）
