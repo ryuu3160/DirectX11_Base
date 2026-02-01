@@ -10,8 +10,8 @@
 // ==============================
 #include "RenderComponent.hpp"
 #include "Core/DirectX11/System/RenderManager.hpp"
-#include "Core/System/Component/Camera.hpp"
-#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
+#include "Core/System/Component/Camera/CameraDCC.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 RenderComponent::RenderComponent(_In_ std::string In_Name)

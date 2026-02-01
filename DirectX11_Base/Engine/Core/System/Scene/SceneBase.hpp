@@ -9,8 +9,11 @@
 // ==============================
 //	include
 // ==============================
+//#include "Engine.hpp"
+
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Component/Transform.hpp"
+#include "Core/System/Object/CameraObj.hpp"
 #include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
 #include "Core/DirectX11/Renderer/ModelRenderer.hpp"
 #include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
@@ -75,7 +78,8 @@ public:
 	/// <typeparam name="[T]">取得するオブジェクトの型</typeparam>
 	/// <param name="[In_Name]">検索するオブジェクトの名前を表す文字列ビュー</param>
 	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します</returns>
-	template <class T>
+	template <typename T>
+	requires std::derived_from<T, GameObject>
 	T *GetObject(_In_ std::string_view In_Name) noexcept;
 
 	/// <summary>
@@ -363,7 +367,8 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 /// <typeparam name="[T]">取得するオブジェクトの型</typeparam>
 /// <param name="[In_Name]">検索するオブジェクトの名前</param>
 /// <returns>見つかった場合は指定した型Tのポインタ、見つからなかった場合はnullptrを返します</returns>
-template<class T>
+template <typename T>
+requires std::derived_from<T, GameObject>
 T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
 {
 	// オブジェクトの探索

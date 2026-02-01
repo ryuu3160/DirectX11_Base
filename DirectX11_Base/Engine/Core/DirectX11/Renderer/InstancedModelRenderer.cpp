@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "InstancedModelRenderer.hpp"
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "Core/DirectX11/ResourceManager/MaterialManager.hpp"
 #include "Core/DirectX11/ResourceManager/TextureManager.hpp"
 #include "Core/DirectX11/ResourceManager/InstancedModelManager.hpp"

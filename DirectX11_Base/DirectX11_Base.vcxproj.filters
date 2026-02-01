@@ -138,6 +138,9 @@
     <Filter Include="Game\Source">
       <UniqueIdentifier>{f0d793d5-dec2-49c8-9ccf-2752fab45bd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\System\Component\Camera">
+      <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
@@ -248,9 +251,6 @@
     <ClCompile Include="Engine\Core\System\Component\Collider\SphereCollider.cpp">
       <Filter>Engine\Core\System\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Component\Camera.cpp">
-      <Filter>Engine\Core\System\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\Component.cpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClCompile>
@@ -308,10 +308,7 @@
     <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp">
       <Filter>Engine\Core\System\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Object\CameraBaseObj.cpp">
-      <Filter>Engine\Core\System\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\System\Object\CameraDCC.cpp">
+    <ClCompile Include="Engine\Core\System\Object\CameraObj.cpp">
       <Filter>Engine\Core\System\Object</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Object\GameObject.cpp">
@@ -412,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
       <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Camera\Camera.cpp">
+      <Filter>Engine\Core\System\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\Camera\CameraDCC.cpp">
+      <Filter>Engine\Core\System\Component\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -529,9 +532,6 @@
     <ClInclude Include="Engine\Core\System\Component\Collider\SphereCollider.hpp">
       <Filter>Engine\Core\System\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System\Component\Camera.hpp">
-      <Filter>Engine\Core\System\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\Component.hpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClInclude>
@@ -589,10 +589,7 @@
     <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp">
       <Filter>Engine\Core\System\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System\Object\CameraBaseObj.hpp">
-      <Filter>Engine\Core\System\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\System\Object\CameraDCC.hpp">
+    <ClInclude Include="Engine\Core\System\Object\CameraObj.hpp">
       <Filter>Engine\Core\System\Object</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Object\GameObject.hpp">
@@ -711,6 +708,12 @@
     </ClInclude>
     <ClInclude Include="Engine\DebugEditor.hpp">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Camera\Camera.hpp">
+      <Filter>Engine\Core\System\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp">
+      <Filter>Engine\Core\System\Component\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

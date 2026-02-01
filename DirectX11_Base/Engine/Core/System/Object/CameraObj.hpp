@@ -1,5 +1,5 @@
 /*+===================================================================
-	File: CameraBaseObj.hpp
+	File: CameraObj.hpp
 	Summary: カメラオブジェクトのベース
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/11/8 Sat PM 11:36:51 初回作成
@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "GameObject.hpp"
 
 // ==============================
@@ -23,12 +23,12 @@ namespace
 /// <summary>
 /// CameraBaseObjクラス
 /// </summary>
-class CameraBaseObj : public GameObject
+class CameraObj : public GameObject
 {
 public:
-	CameraBaseObj();
-	CameraBaseObj(_In_ std::string In_Name);
-	~CameraBaseObj();
+	CameraObj();
+	CameraObj(_In_ std::string In_Name);
+	~CameraObj();
 
 	virtual void Awake() noexcept override;
 

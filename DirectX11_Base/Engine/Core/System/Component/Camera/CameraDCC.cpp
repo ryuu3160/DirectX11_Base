@@ -9,6 +9,7 @@
 //	include
 // ==============================
 #include "CameraDCC.hpp"
+#include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Input/Input.hpp"
 
 enum CameraDCCKind
@@ -26,8 +27,9 @@ CameraDCC::CameraDCC()
 }
 
 CameraDCC::CameraDCC(_In_ std::string In_Name)
-	: CameraBaseObj(In_Name)
+	: Component(In_Name)
 	, m_nState(CAM_DCC_NONE)
+	, m_pCamera(nullptr)
 	, m_OldPos{ 0, 0 }
 {
 #ifdef _DEBUG
@@ -37,6 +39,11 @@ CameraDCC::CameraDCC(_In_ std::string In_Name)
 
 CameraDCC::~CameraDCC()
 {
+}
+
+void CameraDCC::Init() noexcept
+{
+	m_pCamera = m_pGameObject->GetComponent<Camera>();
 }
 
 void CameraDCC::Update(_In_ float In_DeltaTime) noexcept
@@ -69,11 +76,11 @@ void CameraDCC::Update(_In_ float In_DeltaTime) noexcept
 
 	m_OldPos = cursorPos;
 	// カメラ情報
-	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
-	DirectX::XMFLOAT3 side = m_pTransform->GetRight();
+	DirectX::XMFLOAT3 front = m_pGameObject->GetTransform()->GetFront();
+	DirectX::XMFLOAT3 side = m_pGameObject->GetTransform()->GetRight();
 	DirectX::XMFLOAT3 up(0.0f, 1.0f, 0.0f);
-	DirectX::XMFLOAT3 look = m_pComponent->GetLook();
-	DirectX::XMFLOAT3 Pos = m_pTransform->GetPosition();
+	DirectX::XMFLOAT3 look = m_pCamera->GetLook();
+	DirectX::XMFLOAT3 Pos = m_pGameObject->GetTransform()->GetPosition();
 	arg.vCamFront = DirectX::XMLoadFloat3(&front);
 	arg.vCamSide = DirectX::XMLoadFloat3(&side);
 	arg.vCamPos = DirectX::XMLoadFloat3(&Pos);
@@ -122,7 +129,7 @@ void CameraDCC::UpdateOrbit(Argument &In_arg) noexcept
 	DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationAxis(
 		DirectX::XMVectorSet(0, 1, 0, 0), DirectX::XMConvertToRadians(angleX)
 	);
-	auto Quat = m_pTransform->GetQuat();
+	auto Quat = m_pGameObject->GetTransform()->GetQuat();
 	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 
@@ -132,47 +139,47 @@ void CameraDCC::UpdateOrbit(Argument &In_arg) noexcept
 	qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 
 	DirectX::XMStoreFloat4(&Quat, qRotate);
-	m_pTransform->SetQuat(Quat);
+	m_pGameObject->GetTransform()->SetQuat(Quat);
 
 	// 注視点からカメラの後方へフォーカス距離だけ移動させる
-	DirectX::XMFLOAT3 dir = m_pTransform->GetFront();
+	DirectX::XMFLOAT3 dir = m_pGameObject->GetTransform()->GetFront();
 	DirectX::XMVECTOR vDir = DirectX::XMLoadFloat3(&dir);
-	vDir = DirectX::XMVectorScale(vDir, -m_pComponent->GetFocus());
+	vDir = DirectX::XMVectorScale(vDir, -m_pCamera->GetFocus());
 	DirectX::XMVECTOR vPos = DirectX::XMVectorAdd(In_arg.vCamLook, vDir);
-	auto Pos = m_pTransform->GetPosition();
+	auto Pos = m_pGameObject->GetTransform()->GetPosition();
 	DirectX::XMStoreFloat3(&Pos, vPos);
-	m_pTransform->SetPosition(Pos);
+	m_pGameObject->GetTransform()->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateTrack(Argument &In_arg) noexcept
 {
-	float fClip = m_pComponent->GetFar();
+	float fClip = m_pCamera->GetFar();
 
 	// 高さA、底辺Bとする三角形について tanΘ = A / Bが成り立つ
 	// 上記式をもとに割り出した遠景の高さを、移動量 / 画面サイズ の比率から、移動量として求める
-	float width = m_pComponent->GetFovy();
+	float width = m_pCamera->GetFovy();
 	float farScreenHeight = tanf(width * 0.5f) * fClip;
 	float screenRateW = In_arg.mouseMove.x / 640.0f;
 	float screenRateH = In_arg.mouseMove.y / 360.0f;
-	float farMoveX = -farScreenHeight * screenRateW * m_pComponent->GetAspect();
+	float farMoveX = -farScreenHeight * screenRateW * m_pCamera->GetAspect();
 	float farMoveY = farScreenHeight * screenRateH;
 
 	// カメラの姿勢をもとに移動
-	float rate = m_pComponent->GetFocus() / fClip;
+	float rate = m_pCamera->GetFocus() / fClip;
 	DirectX::XMVECTOR vCamMove = DirectX::XMVectorZero();
 	vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorScale(In_arg.vCamSide, farMoveX * rate));
 	vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorScale(In_arg.vCamUp, farMoveY * rate));
 	vCamMove = DirectX::XMVectorScale(vCamMove, In_arg.speed);
-	auto Pos = m_pTransform->GetPosition();
+	auto Pos = m_pGameObject->GetTransform()->GetPosition();
 	DirectX::XMStoreFloat3(&Pos, DirectX::XMVectorAdd(In_arg.vCamPos, vCamMove));
-	m_pTransform->SetPosition(Pos);
+	m_pGameObject->GetTransform()->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateDolly(Argument &In_arg) noexcept
 {
-	float focus = m_pComponent->GetFocus();
-	float fClip = m_pComponent->GetFar();
-	float nClip = m_pComponent->GetNear();
+	float focus = m_pCamera->GetFocus();
+	float fClip = m_pCamera->GetFar();
+	float nClip = m_pCamera->GetNear();
 
 	// フォーカス位置とクリップ面の位置に応じて補正移動量を計算
 	float clipDistance = fClip - nClip;
@@ -185,10 +192,10 @@ void CameraDCC::UpdateDolly(Argument &In_arg) noexcept
 
 	// カメラ位置更新
 	DirectX::XMVECTOR vMove = DirectX::XMVectorScale(In_arg.vCamFront, -focus);
-	auto Pos = m_pTransform->GetPosition();
+	auto Pos = m_pGameObject->GetTransform()->GetPosition();
 	DirectX::XMStoreFloat3(&Pos, DirectX::XMVectorAdd(In_arg.vCamLook, vMove));
-	m_pComponent->SetFocus(focus);
-	m_pTransform->SetPosition(Pos);
+	m_pCamera->SetFocus(focus);
+	m_pGameObject->GetTransform()->SetPosition(Pos);
 }
 
 void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
@@ -198,7 +205,7 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 	float angleY = 180.0f * In_arg.mouseMove.y / 720.0f;
 
 	// 横回転
-	auto Quat = m_pTransform->GetQuat();
+	auto Quat = m_pGameObject->GetTransform()->GetQuat();
 	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationAxis(
 		In_arg.vCamUp, DirectX::XMConvertToRadians(angleX)
@@ -213,11 +220,11 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 
 	// 回転の更新
 	DirectX::XMStoreFloat4(&Quat, qRotate);
-	m_pTransform->SetQuat(Quat);
+	m_pGameObject->GetTransform()->SetQuat(Quat);
 
 	// 軸の取得
-	DirectX::XMFLOAT3 front = m_pTransform->GetFront();
-	DirectX::XMFLOAT3 side = m_pTransform->GetRight();
+	DirectX::XMFLOAT3 front = m_pGameObject->GetTransform()->GetFront();
+	DirectX::XMFLOAT3 side = m_pGameObject->GetTransform()->GetRight();
 	In_arg.vCamFront = DirectX::XMLoadFloat3(&front);
 	In_arg.vCamSide = DirectX::XMLoadFloat3(&side);
 
@@ -229,12 +236,12 @@ void CameraDCC::UpdateFlight(Argument &In_arg) noexcept
 	if (Input::IsKeyPress('D')) vCamMove = DirectX::XMVectorAdd(vCamMove, In_arg.vCamSide);
 	if (Input::IsKeyPress('Q')) vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	if (Input::IsKeyPress('E')) vCamMove = DirectX::XMVectorAdd(vCamMove, DirectX::XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f));
-	vCamMove = DirectX::XMVectorScale(vCamMove, m_pComponent->GetFar() * 0.0001f);
+	vCamMove = DirectX::XMVectorScale(vCamMove, m_pCamera->GetFar() * 0.0001f);
 	vCamMove = DirectX::XMVectorScale(vCamMove, In_arg.speed);
 
 	// 更新
 	DirectX::XMVECTOR vCamPos = DirectX::XMVectorAdd(In_arg.vCamPos, vCamMove);
-	auto Pos = m_pTransform->GetPosition();
+	auto Pos = m_pGameObject->GetTransform()->GetPosition();
 	DirectX::XMStoreFloat3(&Pos, vCamPos);
-	m_pTransform->SetPosition(Pos);
+	m_pGameObject->GetTransform()->SetPosition(Pos);
 }

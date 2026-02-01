@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "SpriteRenderer.hpp"
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "Core/DirectX11/ResourceManager/TextureManager.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Object/GameObject.hpp"

@@ -25,7 +25,7 @@ namespace
 void SceneRoot::Init()
 {
 	// オブジェクトの作成
-	CameraDCC *pCamera = GetObject<CameraDCC>("EditorCamera");
+	CameraObj *pCamera = GetObject<CameraObj>("EditorCamera");
 	auto pCameraComp = pCamera->GetComponent<Camera>();
 
 	// スプライトマネージャーにカメラを設定
@@ -183,7 +183,7 @@ void SceneRoot::Init()
 	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1280, 720);
 	auto DSV = RenderTargetManager::GetInstance().CreateDepthStencil("GameDSV", 1280, 720,false);
 
-	CameraBaseObj *pGameCam = CreateObject<CameraBaseObj>("GameCamera");
+	CameraObj *pGameCam = GetObject<CameraObj>("GameCamera");
 	auto GameCamCmp = pGameCam->GetComponent<Camera>();
 	pGameCam->SetPosition({ 0.0f,5.0f,0.0f });
 	pGameCam->SetRotation({ 90.0f,180.0f,0.0f});

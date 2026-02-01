@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "DebugManager.hpp"
-#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Component/Camera/CameraDCC.hpp"
 #include "Core/DirectX11/System/RenderManager.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
@@ -71,7 +71,7 @@ void DebugManager::Init()
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
 			{
-				auto CamObj = scene->GetObject<CameraDCC>("EditorCamera");
+				auto CamObj = scene->GetObject<CameraObj>("EditorCamera");
 				if (!CamObj)
 				{
 					DebugLogError("EditorCamera‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
@@ -92,7 +92,7 @@ void DebugManager::Init()
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
 			{
-				auto CamObj = scene->GetObject<CameraBaseObj>("GameCamera");
+				auto CamObj = scene->GetObject<CameraObj>("GameCamera");
 				if (!CamObj)
 				{
 					DebugLogError("GameCamera‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");

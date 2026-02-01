@@ -16,7 +16,7 @@
 
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GameObject.hpp"
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "Core/DirectX11/System/DX11_Math.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 

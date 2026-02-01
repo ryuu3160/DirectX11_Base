@@ -9,7 +9,8 @@
 //	include
 // ==============================
 #include "SceneBase.hpp"
-#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Object/CameraObj.hpp"
+#include "Core/System/Component/Camera/CameraDCC.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GridObject.hpp"
@@ -74,10 +75,11 @@ void SceneBase::CommonProcessScene() noexcept
 
 	// メインカメラの作成
 #ifdef _DEBUG
-	 auto pCamObj = CreateObject<CameraDCC>("EditorCamera");
-#else
-	// 本番環境ではメインカメラを作成
+	 auto pCamObj = CreateObject_NotAddHierarchy<CameraObj>("EditorCamera");
+	 pCamObj->AddComponent<CameraDCC>();
 #endif
+	 // ゲーム用のカメラ作成
+	 auto pGameCamObj = CreateObject<CameraObj>("GameCamera");
 
 #ifdef _DEBUG
 	// グリッドオブジェクトの作成
