@@ -207,7 +207,8 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Component\Camera.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\Camera\CameraDCC.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Collider\BoxCollider.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Collider\CapsuleCollider.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Collider\ColliderBase.cpp" />
@@ -235,8 +236,7 @@
     <ClCompile Include="Engine\Core\System\Managers\FadeManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SceneManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp" />
-    <ClCompile Include="Engine\Core\System\Object\CameraBaseObj.cpp" />
-    <ClCompile Include="Engine\Core\System\Object\CameraDCC.cpp" />
+    <ClCompile Include="Engine\Core\System\Object\CameraObj.cpp" />
     <ClCompile Include="Engine\Core\System\Object\GameObject.cpp" />
     <ClCompile Include="Engine\Core\System\Object\GridObject.cpp" />
     <ClCompile Include="Engine\Core\System\Object\Object.cpp" />
@@ -319,7 +319,8 @@
     <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp" />
     <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp" />
     <ClInclude Include="Engine\Core\pch.h" />
-    <ClInclude Include="Engine\Core\System\Component\Camera.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Camera\Camera.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Collider\BoxCollider.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Collider\CapsuleCollider.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Collider\ColliderBase.hpp" />
@@ -347,8 +348,7 @@
     <ClInclude Include="Engine\Core\System\Managers\FadeManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SceneManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp" />
-    <ClInclude Include="Engine\Core\System\Object\CameraBaseObj.hpp" />
-    <ClInclude Include="Engine\Core\System\Object\CameraDCC.hpp" />
+    <ClInclude Include="Engine\Core\System\Object\CameraObj.hpp" />
     <ClInclude Include="Engine\Core\System\Object\GameObject.hpp" />
     <ClInclude Include="Engine\Core\System\Object\GridObject.hpp" />
     <ClInclude Include="Engine\Core\System\Object\Object.hpp" />

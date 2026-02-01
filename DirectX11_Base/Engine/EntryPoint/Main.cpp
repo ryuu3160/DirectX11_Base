@@ -94,9 +94,9 @@ HRESULT Main::Init()
 	// メインのレンダーコンテキスト作成
 	Camera *CameraCmp = nullptr;
 #ifdef _DEBUG
-	CameraCmp = pScene->GetObject<CameraDCC>("EditorCamera")->GetComponent<Camera>();
+	CameraCmp = pScene->GetObject<CameraObj>("EditorCamera")->GetComponent<Camera>();
 #else
-
+	CameraCmp = pScene->GetObject<CameraObj>("GameCamera")->GetComponent<Camera>();
 #endif
 	if(CameraCmp == nullptr)
 	{

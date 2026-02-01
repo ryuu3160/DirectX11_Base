@@ -9,12 +9,13 @@
 // ==============================
 //	include
 // ==============================
-#include "CameraBaseObj.hpp"
+#include "Core/System/Component/Component.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 
 /// <summary>
 /// CameraDCCクラス
 /// </summary>
-class CameraDCC : public CameraBaseObj
+class CameraDCC : public Component
 {
 private:
 	struct Argument
@@ -32,6 +33,8 @@ public:
 	CameraDCC(_In_ std::string In_Name);
 	~CameraDCC();
 
+	void Init() noexcept override;
+
 	/// <summary>
 	/// オブジェクトの状態を更新します。
 	/// </summary>
@@ -46,6 +49,7 @@ private:
 
 private:
 	int m_nState;
+	Camera *m_pCamera;
 	POINT m_OldPos;
 #ifdef _DEBUG
 	char m_cMode[256];

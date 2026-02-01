@@ -70,7 +70,7 @@ namespace RyuuEngine
 // ==============================
 
 // Camera
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 
 // Movement
 #include "Core/System/Component/MovementComponent.hpp"
@@ -170,8 +170,7 @@ namespace RyuuEngine
 // ==============================
 // Engine Objects(プリセット)
 // ==============================
-#include "Core/System/Object/CameraBaseObj.hpp"
-#include "Core/System/Object/CameraDCC.hpp"
+#include "Core/System/Object/CameraObj.hpp"
 #include "Core/System/Object/SkyBoxObj.hpp"
 #include "Core/System/Object/GridObject.hpp"
 

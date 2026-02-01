@@ -26,6 +26,7 @@ CapsuleCollider::CapsuleCollider()
 	, m_Height(2.0f), m_Radius(0.5f), m_Direction{ 0.0f, 1.0f, 0.0f }
 	, m_WorldCenter{ 0.0f, 0.0f, 0.0f }, m_WorldPointA{ 0.0f, 0.0f, 0.0f }, m_WorldPointB{ 0.0f, 0.0f, 0.0f }
 	, m_WorldDirection{ 0.0f, 1.0f, 0.0f }
+	, m_Rotation{ 0.0f, 0.0f, 0.0f }
 {
 	m_Type = COLLIDER_CAPSULE;
 }
@@ -146,6 +147,7 @@ void CapsuleCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	ItemGroup &Group = In_pWindow->GetGroupItem("CapsuleCollider");
 	Group.CreateGroupItem<ItemBind>("Height", ItemBind::Kind::Float, &m_Height);
 	Group.CreateGroupItem<ItemBind>("Radius", ItemBind::Kind::Float, &m_Radius);
+	Group.CreateGroupItem<ItemBind>("Rotation##CapsuleCollider", ItemBind::Kind::Vector, &m_Rotation);
 }
 
 bool CapsuleCollider::IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept
@@ -208,8 +210,16 @@ void CapsuleCollider::UpdateWorldSegment() noexcept
     DirectX::XMVECTOR worldCenter = DirectX::XMVector3TransformCoord(localCenter, matWorld);
     DirectX::XMStoreFloat3(&m_WorldCenter, worldCenter);
 
-    // ローカルの方向をオブジェクトの回転に合わせる
+    // 方向を計算
     m_Direction = m_pGameObject->GetUp();
+
+    // RotationをQuatに変換
+    auto Rad = ToRad(m_Rotation);
+    auto VecQuat = DirectX::XMQuaternionRotationRollPitchYaw(Rad.x, Rad.y, Rad.z);
+
+	// 回転を反映した方向ベクトルを計算
+	DirectX::XMVECTOR rotatedDir = DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&m_Direction), VecQuat);
+	DirectX::XMStoreFloat3(&m_Direction, rotatedDir);
 
     // 方向ベクトルを回転(スケールは無視)
     DirectX::XMVECTOR localDir = DirectX::XMLoadFloat3(&m_Direction);

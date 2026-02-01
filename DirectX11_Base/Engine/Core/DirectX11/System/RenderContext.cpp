@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "RenderContext.hpp"
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "Core/DirectX11/Resource/Texture.hpp"
 
 // ==============================

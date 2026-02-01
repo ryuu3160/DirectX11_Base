@@ -25,7 +25,7 @@ namespace
 void SceneRoot::Init()
 {
 	// オブジェクトの作成
-	CameraDCC *pCamera = GetObject<CameraDCC>("EditorCamera");
+	CameraObj *pCamera = GetObject<CameraObj>("EditorCamera");
 	auto pCameraComp = pCamera->GetComponent<Camera>();
 
 	// スプライトマネージャーにカメラを設定
@@ -39,19 +39,21 @@ void SceneRoot::Init()
 	// オブジェクトの設定
 	GameObject *pModel = GetObject<GameObject>("RootModel0");
 	auto Component1 = pModel->GetComponent<ModelRenderer>();
-	Component1->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
+	Component1->SetAssetPath("Engine/Assets/Model/Weapon/AIM-120.fbx");
 	Component1->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	Component1->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	Component1->SetScale(0.005f);
 
 	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
-	pModel->AddComponent<SphereCollider>();
+	pModel->AddComponent<BoxCollider>();
 
 	auto child = CreateObject<GameObject>("RootModel0Child");
 	child->GetTransform()->SetParent(pModel->GetTransform());
 	auto comp = child->AddComponent<ModelRenderer>();
-	comp->SetAssetPath("Engine/Assets/Model/spot/spot.fbx");
+	comp->SetAssetPath("Engine/Assets/Model/Weapon/AIM-120.fbx");
 	comp->SetVertexShader(ShaderM.GetShader("VS_Object"));
 	comp->SetPixelShader(ShaderM.GetShader("PS_TexColor"));
+	comp->SetScale(0.005f);
 	//child->SetPosition({ 1.0f, 0.0f, 0.0f });
 
 	// F15Eのモデルを読み込む
@@ -106,7 +108,7 @@ void SceneRoot::Init()
 	auto ParticleObj = CreateObject<GameObject>("ParticleTest");
 	auto ParticleCmp = ParticleObj->AddComponent<ParticleEffect>();
 	ParticleObj->AddComponent<BoxCollider>();
-	ParticleCmp->SetTexture("Engine/Assets/Texture/TestTexture.png");
+	ParticleCmp->SetTexture("Engine/Assets/Texture/TestTextureWhite.png");
 
 	// エミッター設定
 	EmitterSettings settings;
@@ -181,7 +183,7 @@ void SceneRoot::Init()
 	auto RTV = RenderTargetManager::GetInstance().CreateRenderTarget("GameRTV", DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1280, 720);
 	auto DSV = RenderTargetManager::GetInstance().CreateDepthStencil("GameDSV", 1280, 720,false);
 
-	CameraBaseObj *pGameCam = CreateObject<CameraBaseObj>("GameCamera");
+	CameraObj *pGameCam = GetObject<CameraObj>("GameCamera");
 	auto GameCamCmp = pGameCam->GetComponent<Camera>();
 	pGameCam->SetPosition({ 0.0f,5.0f,0.0f });
 	pGameCam->SetRotation({ 90.0f,180.0f,0.0f});

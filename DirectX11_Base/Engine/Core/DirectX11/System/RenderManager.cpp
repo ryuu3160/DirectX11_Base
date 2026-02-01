@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "RenderManager.hpp"
-#include "Core/System/Component/Camera.hpp"
+#include "Core/System/Component/Camera/Camera.hpp"
 #include "Core/DirectX11/System/Gizmos.hpp"
 #include "Core/System/Utility/Utility.hpp"
 #include "Core/System/Object/GameObject.hpp"

@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Component.hpp"
+#include "Core/System/Component/Component.hpp"
 
 /// <summary>
 /// CameraƒNƒ‰ƒX
