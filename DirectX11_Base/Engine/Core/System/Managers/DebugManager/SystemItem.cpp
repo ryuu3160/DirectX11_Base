@@ -512,8 +512,6 @@ void ItemComponentSelector::DrawComponentList(const std::string &category)
 
                 if(newComponent)
                 {
-                    DebugManager::GetInstance().DebugLog("Successfully added component: %s", info.Name.c_str());
-
                     // インスペクターを更新
                     if(m_UpdateCallback)
 					    m_UpdateCallback(m_pGameObject);

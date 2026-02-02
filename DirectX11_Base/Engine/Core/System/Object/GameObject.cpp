@@ -196,11 +196,7 @@ Component *GameObject::AddComponentByName(_In_ std::string_view In_Name)
 	// ComponentRegistry Ç©ÇÁê∂ê¨
 	Component *component = ComponentRegistry::GetInstance().CreateComponent(In_Name, this);
 
-	if(component)
-	{
-		DebugManager::GetInstance().DebugLog("Added component: {} to {}", In_Name.data(), GetName().c_str());
-	}
-	else
+	if(!component)
 	{
 		DebugManager::GetInstance().DebugLogError("Failed to add component: {} (not registered)", In_Name.data());
 	}
