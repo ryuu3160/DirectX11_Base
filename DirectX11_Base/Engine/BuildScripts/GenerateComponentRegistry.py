@@ -10,7 +10,7 @@ def extract_comment(lines, class_line_index, class_name):
     description_lines = []
     
     # クラス定義の前の行から上に向かって探す
-    for i in range(class_line_index - 1, max(0, class_line_index - 20), -1):
+    for i in range(class_line_index - 1, max(0, class_line_index - 30), -1):
         line = lines[i].strip()
         
         # 終了マーカーを検出
@@ -24,23 +24,29 @@ def extract_comment(lines, class_line_index, class_name):
             if description_lines:
                 # 逆順になっているので反転
                 description_lines.reverse()
-                description = " ".join(description_lines)
+                # 空行を除去して結合
+                description = " ".join(line for line in description_lines if line)
             break
         
         # ブロック内のコメントを収集
-        if in_description_block and line.startswith("//"):
-            comment = line[2:].strip()
-            if comment:  # 空行を除外
+        if in_description_block:
+            if line.startswith("//"):
+                comment = line[2:].strip()
                 description_lines.append(comment)
+            elif not line:
+                # 空行は無視
+                continue
+            else:
+                # コメント以外が出てきたらブロック外
+                break
         
-        # コメント以外が出てきたらブロック外
+        # ブロック探索中にコメント以外が出てきたら終了
         elif line and not line.startswith("//") and not line.startswith("*") and not line.startswith("/*"):
-            # ブロックが見つからなかった
             break
     
     # 説明が見つからなかった場合はコンポーネント名を返す
     if not description:
-        description = class_name
+        description = class_name + " component"
     
     return description.strip()
 
