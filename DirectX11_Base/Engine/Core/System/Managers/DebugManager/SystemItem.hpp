@@ -132,7 +132,6 @@ public:
 
 private:
     void DrawComponentPopup();
-    void DrawSearchBox();
     void DrawCategoryTabs();
     void DrawComponentList(const std::string &category);
 

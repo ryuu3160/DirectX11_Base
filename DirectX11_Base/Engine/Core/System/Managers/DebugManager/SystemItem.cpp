@@ -429,7 +429,10 @@ void ItemComponentSelector::DrawComponentPopup()
 
         ImGui::Separator();
 
-        DrawSearchBox();
+		// 検索ボックス
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputTextWithHint("##ComponentSearch", "Search...", m_SearchBuffer, sizeof(m_SearchBuffer));
+
         ImGui::Spacing();
         DrawCategoryTabs();
 
@@ -442,12 +445,6 @@ void ItemComponentSelector::DrawComponentPopup()
 
         ImGui::EndPopup();
     }
-}
-
-void ItemComponentSelector::DrawSearchBox()
-{
-    ImGui::SetNextItemWidth(-1);
-    ImGui::InputTextWithHint("##ComponentSearch", "Search...", m_SearchBuffer, sizeof(m_SearchBuffer));
 }
 
 void ItemComponentSelector::DrawCategoryTabs()
