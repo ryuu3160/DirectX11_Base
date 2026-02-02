@@ -38,6 +38,10 @@ public:
 	requires std::derived_from<T, DebugItem>
 	T *CreateItem(std::string_view In_Name, Args&& ...args);
 
+	template<typename T, typename ...Args>
+	requires std::derived_from<T, ItemLayoutFunc>
+	T *CreateItem();
+
 	void RemoveItem(_In_ std::string_view In_Name);
 
 	void ClearItems();
@@ -78,6 +82,20 @@ requires std::derived_from<T, DebugItem>
 inline T *DebugWindow::CreateItem(std::string_view In_Name, Args && ...args)
 {
 	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
+	item->m_GroupName = m_GroupName;
+	item->m_WindowName = m_Name;
+
+	DebugManager::GetInstance().DataRead(m_GroupName + "/" + m_Name + "/", item);
+
+	m_Items.push_back(item);
+	return item;
+}
+
+template<typename T, typename ...Args>
+requires std::derived_from<T, ItemLayoutFunc>
+inline T *DebugWindow::CreateItem()
+{
+	T *item = new T();
 	item->m_GroupName = m_GroupName;
 	item->m_WindowName = m_Name;
 

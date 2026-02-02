@@ -53,7 +53,8 @@ public:
 		LayoutFunc,	// レイアウト用関数
 
 		// システム専用
-		__Hierarchy // ヒエラルキーウィンドウ
+		__Hierarchy, // ヒエラルキーウィンドウ
+		__ComponentSelector, // コンポーネントセレクター
 	};
 
 protected:

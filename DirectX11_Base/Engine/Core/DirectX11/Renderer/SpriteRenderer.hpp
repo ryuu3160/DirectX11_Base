@@ -12,9 +12,9 @@
 #include "Core/DirectX11/Renderer/RenderComponent.hpp"
 #include "Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
 
-/// <summary>
-/// SpriteRendererクラス
-/// </summary>
+// ---ComponentDescription---
+// スプライトを描画するコンポーネント
+// --------------------------
 class SpriteRenderer : public RenderComponent
 {
 public:

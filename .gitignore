@@ -34,8 +34,8 @@ bld/
 [Ll]ogs/
 
 # 自動生成ファイル
-DirectX11_Base/Engine/Assets/Generated/*
-!DirectX11_Base/Engine/Assets/Generated/.gitkeep
+DirectX11_Base/Engine/Core/System/Generated/*
+!DirectX11_Base/Engine/Core/System/Generated/.gitkeep
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

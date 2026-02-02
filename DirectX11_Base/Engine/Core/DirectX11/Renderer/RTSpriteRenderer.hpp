@@ -20,9 +20,9 @@ namespace
 
 }
 
-/// <summary>
-/// RTSpriteRendererクラス
-/// </summary>
+// ---ComponentDescription---
+// レンダーターテクスチャを描画するコンポーネント
+// --------------------------
 class RTSpriteRenderer : public RenderComponent
 {
 public:

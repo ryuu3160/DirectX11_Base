@@ -11,9 +11,9 @@
 // ==============================
 #include "ColliderBase.hpp"
 
-/// <summary>
-/// CapsuleColliderクラス
-/// </summary>
+// ---ComponentDescription---
+// カプセル型コライダー
+// --------------------------
 class CapsuleCollider : public ColliderBase
 {
 	friend class SphereCollider;

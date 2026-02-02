@@ -18,9 +18,9 @@
 class Material;
 class Mesh;
 
-/// <summary>
-/// SkyBoxRendererクラス
-/// </summary>
+// ---ComponentDescription---
+// スカイボックスを描画するコンポーネント
+// --------------------------
 class SkyBoxRenderer : public RenderComponent
 {
 public:

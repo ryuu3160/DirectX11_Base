@@ -141,6 +141,9 @@
     <Filter Include="Engine\Core\System\Component\Camera">
       <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\System\Generated">
+      <UniqueIdentifier>{b36b91f6-4cfc-4ce5-ad4d-d262cd32b53a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
@@ -415,6 +418,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\Camera\CameraDCC.cpp">
       <Filter>Engine\Core\System\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\ComponentRegistry.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Generated\ComponentRegistry_Generated.cpp">
+      <Filter>Engine\Core\System\Generated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -714,6 +723,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp">
       <Filter>Engine\Core\System\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\ComponentRegistry.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

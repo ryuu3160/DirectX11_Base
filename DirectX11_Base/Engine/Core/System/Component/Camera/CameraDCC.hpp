@@ -12,9 +12,9 @@
 #include "Core/System/Component/Component.hpp"
 #include "Core/System/Component/Camera/Camera.hpp"
 
-/// <summary>
-/// CameraDCCクラス
-/// </summary>
+// ---ComponentDescription---
+// エディター用のカメラコントロールコンポーネント
+// --------------------------
 class CameraDCC : public Component
 {
 private:

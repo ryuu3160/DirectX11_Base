@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ModelRenderer.hpp
-	Summary: モデルレンダラー 佐々木先生のコードを参考に実装
+	Summary: モデルレンダラー
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/07/01 Tue AM 10:45:12 初回作成
 ===================================================================+*/
@@ -18,6 +18,9 @@
 class Material;
 class Mesh;
 
+// ---ComponentDescription---
+// 3Dモデルを描画するコンポーネント
+// --------------------------
 class ModelRenderer : public RenderComponent
 {
 public:

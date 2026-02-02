@@ -19,9 +19,9 @@
 // ==============================
 class Material;
 
-/// <summary>
-/// InstancedModelRendererクラス
-/// </summary>
+// ---ComponentDescription---
+// インスタンシングモデルを描画するコンポーネント
+// --------------------------
 class InstancedModelRenderer : public RenderComponent
 {
 public:

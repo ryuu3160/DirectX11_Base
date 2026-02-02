@@ -74,6 +74,13 @@ public:
 	requires std::derived_from<T, Component>
 	T *AddComponent(_In_ Args&&... args);
 
+	/// <summary>
+	/// 名前を指定してコンポーネントを追加します
+	/// </summary>
+	/// <param name="[In_Name]">追加するコンポーネントの名前</param>
+	/// <returns>追加されたコンポーネントへのポインター</returns>
+	Component *AddComponentByName(_In_ std::string_view In_Name);
+
 	// コンポーネントの取得
 	template<typename T>
 	requires std::derived_from<T, Component>

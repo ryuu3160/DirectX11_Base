@@ -111,3 +111,34 @@ private:
     char m_RenameBuffer[256];               // リネーム用バッファ
     bool m_RenameJustStarted;               // リネーム開始フラグ
 };
+
+/// <summary>
+/// Unity 風の Add Component セレクター
+/// </summary>
+class ItemComponentSelector : public DebugItem
+{
+public:
+    using UpdateCallback = std::function<void(GameObject *)>;
+
+    ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject, _In_ UpdateCallback In_Func = nullptr);
+    ~ItemComponentSelector();
+
+    void DrawImGui() override;
+
+    /// <summary>
+    /// 対象 GameObject を設定
+    /// </summary>
+    void SetGameObject(_In_ GameObject *In_pGameObject);
+
+private:
+    void DrawComponentPopup();
+    void DrawSearchBox();
+    void DrawCategoryTabs();
+    void DrawComponentList(const std::string &category);
+
+private:
+    GameObject *m_pGameObject;
+    char m_SearchBuffer[256];
+    std::string m_SelectedCategory;
+	UpdateCallback m_UpdateCallback;
+};

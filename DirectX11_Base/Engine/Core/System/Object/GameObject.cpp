@@ -13,6 +13,8 @@
 #include "Core/System/Component/Collider/ColliderBase.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Engine/Core/System/Component/ComponentRegistry.hpp"
 
 GameObject::GameObject(_In_ std::string In_Name)
 	: m_Name(In_Name)
@@ -187,6 +189,23 @@ void GameObject::CallOnTriggerExit(_In_ ColliderBase *In_Other) noexcept
 	{
 		itr->OnTriggerExit(In_Other);
 	}
+}
+
+Component *GameObject::AddComponentByName(_In_ std::string_view In_Name)
+{
+	// ComponentRegistry から生成
+	Component *component = ComponentRegistry::GetInstance().CreateComponent(In_Name, this);
+
+	if(component)
+	{
+		DebugManager::GetInstance().DebugLog("Added component: {} to {}", In_Name.data(), GetName().c_str());
+	}
+	else
+	{
+		DebugManager::GetInstance().DebugLogError("Failed to add component: {} (not registered)", In_Name.data());
+	}
+
+	return component;
 }
 
 void GameObject::RemoveComponent(_In_ std::string In_Name)
@@ -400,5 +419,20 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	{
 		itr->RegisterDebugInspector(In_pWindow);
 	}
+
+	In_pWindow->CreateItem<ItemSeparator>();
+	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this,
+		[](GameObject *obj)
+		{
+			// 選択時のコールバック
+			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+			inspectorWindow->ClearItems();
+
+			if(obj)
+			{
+				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
+				obj->RegisterDebugInspector(inspectorWindow);
+			}
+		});
 }
 #endif
