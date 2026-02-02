@@ -87,7 +87,7 @@ public:
 	/// </summary>
 	/// <param name="[In_OldName]">古い名前</param>
 	/// <param name="[In_NewName]">新しい名前</param>
-	void RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName);
+	void RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName) const;
 
 	/// <summary>
 	/// 指定された名前のオブジェクトを破棄します

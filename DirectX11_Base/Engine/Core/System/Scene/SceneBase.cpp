@@ -145,7 +145,7 @@ GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Tran
 	return ptr;
 }
 
-void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName)
+void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName) const
 {
 	std::string NewObjName = m_Name + "_";
 	std::string OldObjName = m_Name + "_";
