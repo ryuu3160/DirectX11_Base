@@ -235,7 +235,6 @@ T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In
 	if(In_pParent)
 		ptr->GetTransform()->SetParent(In_pParent); // eİ’è
 
-	m_Objects.try_emplace(In_Name.data(), ptr);
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);
@@ -354,7 +353,6 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 	if(In_pParent)
 		ptr->GetTransform()->SetParent(In_pParent); // eİ’è
 
-	m_Objects.insert(std::pair<std::string, T *>(In_Name.data(), ptr));
 	m_Items.push_back(In_Name.data());
 	m_SceneObjects.emplace(ptr);
 	m_InitObjects.push_back(ptr);

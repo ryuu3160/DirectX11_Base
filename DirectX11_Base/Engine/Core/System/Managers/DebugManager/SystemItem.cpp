@@ -343,6 +343,7 @@ void ItemHierarchy::FinishRename(_In_ bool In_IsConfirm)
         {
             // –¼‘O‚Ì•ÏX
 			m_RenamingObject->Rename(newName);
+			SelectObject(m_RenamingObject);
         }
     }
 
