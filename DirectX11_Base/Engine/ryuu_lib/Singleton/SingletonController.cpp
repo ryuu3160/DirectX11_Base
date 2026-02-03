@@ -17,7 +17,12 @@
 // ==============================
 namespace
 {
-	std::mutex g_mutex;			// 排他制御用のミューテックス
+	// 排他制御用のミューテックス
+	std::mutex &GetMutex()
+	{
+		static std::mutex g_mutex;  // 初回アクセス時に初期化
+		return g_mutex;
+	}
 	int g_nControllerCount = 0;	// 管理下にあるシングルトンクラスの数
 
 	std::vector<SingletonController::ControllerFunc> g_ControllerList; // オブジェクト破棄関数を格納するVector
@@ -25,7 +30,7 @@ namespace
 
 void SingletonController::AddController(ControllerFunc func)
 {
-	std::lock_guard<std::mutex> lock(g_mutex); // 同時にアクセスされないようにロック
+	std::lock_guard<std::mutex> lock(GetMutex()); // 同時にアクセスされないようにロック
 	if (g_nControllerCount < g_ControllerList.max_size())
 	{
 		g_ControllerList.push_back(func);
@@ -34,7 +39,7 @@ void SingletonController::AddController(ControllerFunc func)
 
 void SingletonController::Release()
 {
-	std::lock_guard<std::mutex> lock(g_mutex); // 同時にアクセスされないようにロック
+	std::lock_guard<std::mutex> lock(GetMutex()); // 同時にアクセスされないようにロック
 
 	for (auto func = g_ControllerList.crbegin(); func != g_ControllerList.crend(); func++)
 	{
