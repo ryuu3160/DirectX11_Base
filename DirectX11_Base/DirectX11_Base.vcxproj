@@ -130,7 +130,7 @@
       <ObjectFileOutput>$(ProjectDir)Binaries\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PreBuildEvent>
-      <Command>python "$(ProjectDir)Engine\BuildScripts\GenerateComponentRegistry.py" --source-dir "$(ProjectDir)Engine" --output "$(ProjectDir)Engine\Core\System\Generated\ComponentRegistry_Generated.cpp"</Command>
+      <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
       <Message>コンポーネント自動登録の生成</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -162,7 +162,7 @@
       <ObjectFileOutput>$(ProjectDir)Engine\Assets\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PreBuildEvent>
-      <Command>python "$(ProjectDir)Engine\BuildScripts\GenerateComponentRegistry.py" --source-dir "$(ProjectDir)Engine" --output "$(ProjectDir)Engine\Core\System\Generated\ComponentRegistry_Generated.cpp"</Command>
+      <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
       <Message>コンポーネント自動登録の生成</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>

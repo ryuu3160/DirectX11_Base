@@ -1,27 +1,35 @@
 @echo off
+chcp 932 >nul
 setlocal
 
 echo ========================================
-echo Component Registry Generation
+echo Component Registry Generator
 echo ========================================
 
 set SCRIPT_DIR=%~dp0
-set PROJECT_DIR=%SCRIPT_DIR%..\
-set PYTHON_SCRIPT=%SCRIPT_DIR%GenerateComponentRegistry.py
-set SOURCE_DIR=%PROJECT_DIR%Engine
-set OUTPUT_FILE=%PROJECT_DIR%Engine%Assets%Generated\ComponentRegistry_Generated.cpp
+set PROJECT_DIR=%SCRIPT_DIR%..\..\
+set PYTHON_EMBEDDED=%PROJECT_DIR%Engine\ThirdParty\Python\python.exe
 
-echo.
-echo Python Script: %PYTHON_SCRIPT%
-echo Source Dir:    %SOURCE_DIR%
-echo Output File:   %OUTPUT_FILE%
+REM 組み込み Python が存在するかチェック
+if not exist "%PYTHON_EMBEDDED%" (
+    echo.
+    echo ERROR: Python が見つかりません
+    echo Tools\Python\python.exe を配置してください
+    pause
+    exit /b 1
+)
+
+echo Python: %PYTHON_EMBEDDED%
 echo.
 
-python "%PYTHON_SCRIPT%" --source-dir "%SOURCE_DIR%" --output "%OUTPUT_FILE%"
+REM 組み込み Python を使用
+set PYTHONIOENCODING=shift-jis
+"%PYTHON_EMBEDDED%" "%SCRIPT_DIR%GenerateComponentRegistry.py" --source-dir "%PROJECT_DIR%Engine" --output "%PROJECT_DIR%Engine\Core\System\Generated\ComponentRegistry_Generated.cpp"
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
     echo ERROR: Failed to generate component registry
+    pause
     exit /b 1
 )
 
@@ -29,5 +37,5 @@ echo.
 echo ========================================
 echo Generation Complete!
 echo ========================================
-
+pause
 exit /b 0
