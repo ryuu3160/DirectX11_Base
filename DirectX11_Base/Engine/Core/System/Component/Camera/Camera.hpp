@@ -11,9 +11,9 @@
 // ==============================
 #include "Core/System/Component/Component.hpp"
 
-/// <summary>
-/// Cameraクラス
-/// </summary>
+// ---ComponentDescription---
+// カメラのコンポーネント
+// --------------------------
 class Camera : public Component
 {
 public:

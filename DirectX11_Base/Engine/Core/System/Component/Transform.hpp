@@ -11,9 +11,9 @@
 // ==============================
 #include "Core/System/Component/Component.hpp"
 
-/// <summary>
-/// Transformクラス
-/// </summary>
+// ---ComponentDescription---
+// Transformコンポーネント
+// --------------------------
 class Transform : public Component
 {
 public:

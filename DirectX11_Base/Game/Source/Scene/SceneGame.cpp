@@ -39,9 +39,9 @@ void SceneGame::Init()
 {
 	// カメラをメインシーンから取得
 #ifdef _DEBUG
-	CameraDCC *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraDCC>("EditorCamera");
+	CameraObj *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraObj>("EditorCamera");
 #else
-	MainCamera *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<MainCamera>("Camera");
+	CameraObj *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraObj>("GameCamera");
 #endif
 
 	Camera *pCameraComp = pCamera->GetComponent<Camera>();
@@ -136,9 +136,9 @@ void SceneGame::Update(_In_ float In_DeltaTime)
 		if (IsPlayerDead && m_ChangeResultTIme <= 0.0f)
 		{
 #ifdef _DEBUG
-			auto cam = GetObject<CameraDCC>("Camera");
+			auto cam = GetObject<CameraObj>("GameCamera");
 #else
-			auto cam = GetObject<MainCamera>("Camera");
+			auto cam = GetObject<CameraObj>("GameCamera");
 #endif
 			auto pos = player->GetPosition();
 			auto playerFront = player->GetFront();

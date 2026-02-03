@@ -12,12 +12,17 @@
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Engine/Core/System/Component/ComponentRegistry.hpp"
 // ==============================
 //	定数定義
 // ==============================
 namespace
 {
 }
+
+// ==============================
+//  ItemHierarchy
+// ==============================
 
 ItemHierarchy::ItemHierarchy(_In_ std::string In_Name, _In_ SceneBase *In_pScene, _In_ SelectCallback In_Func)
     : m_pScene(In_pScene)
@@ -338,6 +343,7 @@ void ItemHierarchy::FinishRename(_In_ bool In_IsConfirm)
         {
             // 名前の変更
 			m_RenamingObject->Rename(newName);
+			SelectObject(m_RenamingObject);
         }
     }
 
@@ -361,4 +367,185 @@ void ItemHierarchy::SelectObject(_Inout_ GameObject *In_Obj)
     {
         m_SelectCallback(In_Obj);
     }
+}
+
+// ==============================
+//  ItemComponentSelector
+// ==============================
+
+ItemComponentSelector::ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject, _In_ UpdateCallback In_Func)
+    : m_pGameObject(In_pGameObject)
+    , m_SelectedCategory("All")
+	, m_UpdateCallback(In_Func)
+{
+    m_Name = In_Name;
+    m_Kind = Kind::Command;
+    m_SearchBuffer[0] = '\0';
+}
+
+ItemComponentSelector::~ItemComponentSelector()
+{
+}
+
+void ItemComponentSelector::DrawImGui()
+{
+    if(!m_pGameObject)
+        return;
+
+    //"Add Component" ボタン
+    float buttonWidth = ImGui::GetContentRegionAvail().x;
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.7f, 0.3f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15f, 0.5f, 0.15f, 1.0f));
+
+    if(ImGui::Button("+ Add Component", ImVec2(buttonWidth, 35)))
+    {
+        ImGui::OpenPopup("AddComponentPopup");
+        m_SearchBuffer[0] = '\0';
+    }
+
+    ImGui::PopStyleColor(3);
+
+    // ポップアップ
+    DrawComponentPopup();
+}
+
+void ItemComponentSelector::SetGameObject(_In_ GameObject *In_pGameObject)
+{
+    m_pGameObject = In_pGameObject;
+}
+
+void ItemComponentSelector::DrawComponentPopup()
+{
+    ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+
+    if(ImGui::BeginPopup("AddComponentPopup"))
+    {
+        ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "Add Component");
+        ImGui::SameLine();
+
+        auto &registry = ComponentRegistry::GetInstance();
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "(%zu available)", registry.GetComponentCount());
+
+        ImGui::Separator();
+
+		// 検索ボックス
+        ImGui::SetNextItemWidth(-1);
+        ImGui::InputTextWithHint("##ComponentSearch", "Search...", m_SearchBuffer, sizeof(m_SearchBuffer));
+
+        ImGui::Spacing();
+        DrawCategoryTabs();
+
+        ImGui::Spacing();
+
+        if(ImGui::Button("Close", ImVec2(120, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void ItemComponentSelector::DrawCategoryTabs()
+{
+    auto &registry = ComponentRegistry::GetInstance();
+    auto categories = registry.GetAllCategories();
+
+    // "All" カテゴリを先頭に追加
+    categories.insert(categories.begin(), "All");
+
+    if(ImGui::BeginTabBar("ComponentCategories"))
+    {
+        for(const auto &category : categories)
+        {
+            if(ImGui::BeginTabItem(category.c_str()))
+            {
+                m_SelectedCategory = category;
+                DrawComponentList(category);
+                ImGui::EndTabItem();
+            }
+        }
+        ImGui::EndTabBar();
+    }
+}
+
+void ItemComponentSelector::DrawComponentList(const std::string &category)
+{
+    auto &registry = ComponentRegistry::GetInstance();
+
+    // 検索文字列を小文字に変換
+    std::string searchStr = m_SearchBuffer;
+    std::transform(searchStr.begin(), searchStr.end(), searchStr.begin(), ::tolower);
+
+    ImGui::BeginChild("ComponentListChild", ImVec2(0, 250), true);
+
+    for(const auto &[name, info] : registry.GetAllComponents())
+    {
+        // カテゴリフィルター
+        if(category != "All" && info.Category != category)
+            continue;
+
+        // 検索フィルター
+        if(!searchStr.empty())
+        {
+            std::string lowerName = info.Name;
+            std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+
+            std::string lowerDesc = info.Description;
+            std::transform(lowerDesc.begin(), lowerDesc.end(), lowerDesc.begin(), ::tolower);
+
+            if(lowerName.find(searchStr) == std::string::npos &&
+                lowerDesc.find(searchStr) == std::string::npos)
+                continue;
+        }
+
+        // コンポーネント項目
+        ImGui::PushID(info.Name.c_str());
+
+        if(ImGui::Selectable(info.Name.c_str(), false, ImGuiSelectableFlags_None, ImVec2(0, 30)))
+        {
+            // コンポーネントを追加
+            if(m_pGameObject)
+            {
+                Component *newComponent = m_pGameObject->AddComponentByName(info.Name);
+
+                if(newComponent)
+                {
+                    // インスペクターを更新
+                    if(m_UpdateCallback)
+					    m_UpdateCallback(m_pGameObject);
+                }
+            }
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        // ツールチップ（ホバー時に説明を表示）
+        if(ImGui::IsItemHovered())
+        {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(300.0f);
+
+            // コンポーネント名
+            ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "%s", info.Name.c_str());
+            ImGui::Separator();
+
+            // 説明
+			std::string Description = Util::ShiftJISToUTF8(info.Description);
+            ImGui::TextWrapped("%s", Description.c_str());
+
+            ImGui::Spacing();
+
+            // カテゴリ
+            ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "Category: %s", info.Category.c_str());
+
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+
+        ImGui::PopID();
+    }
+
+    ImGui::EndChild();
 }

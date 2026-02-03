@@ -12,9 +12,9 @@
 #include "Core/System/Component/Component.hpp"
 #include "Core/System/Component/MovementComponent.hpp"
 
-/// <summary>
-/// PlayerControllerクラス
-/// </summary>
+// ---ComponentDescription---
+// デフォルトのプレイヤーコントローラーコンポーネント
+// --------------------------
 class PlayerController : public Component
 {
 public:

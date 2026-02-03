@@ -11,9 +11,9 @@
 // ==============================
 #include "Core/System/Component/Collider/ColliderBase.hpp"
 
-/// <summary>
-/// SphereColliderクラス
-/// </summary>
+// ---ComponentDescription---
+// スフィア型コライダー
+// --------------------------
 class SphereCollider : public ColliderBase
 {
 public:

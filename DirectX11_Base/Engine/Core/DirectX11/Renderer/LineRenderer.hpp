@@ -19,9 +19,9 @@ namespace
 	inline constexpr DirectX::XMFLOAT4 cx_DefaultLineColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-/// <summary>
-/// LineRendererクラス
-/// </summary>
+// ---ComponentDescription---
+// ラインを描画するコンポーネント
+// --------------------------
 class LineRenderer : public RenderComponent
 {
 public:

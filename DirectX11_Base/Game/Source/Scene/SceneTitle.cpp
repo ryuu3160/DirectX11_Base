@@ -24,7 +24,7 @@ void SceneTitle::Init()
 {
 	// カメラをメインシーンから取得
 #ifdef _DEBUG
-	CameraDCC *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraDCC>("Camera");
+	CameraObj *pCamera = SceneManager::GetInstance().GetCurrentScene()->GetObject<CameraObj>("Camera");
 #else
 	MainCamera *pCamera = Main::GetScene().GetObject<MainCamera>("Camera");
 #endif

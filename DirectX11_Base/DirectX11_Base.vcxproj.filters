@@ -141,6 +141,9 @@
     <Filter Include="Engine\Core\System\Component\Camera">
       <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\System\Generated">
+      <UniqueIdentifier>{b36b91f6-4cfc-4ce5-ad4d-d262cd32b53a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game\Source\Scene">
       <UniqueIdentifier>{74f19f34-c48e-4cd8-aa14-a141028be834}</UniqueIdentifier>
     </Filter>
@@ -428,6 +431,12 @@
     <ClCompile Include="Engine\Core\System\Component\Camera\CameraDCC.cpp">
       <Filter>Engine\Core\System\Component\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\ComponentRegistry.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Generated\ComponentRegistry_Generated.cpp">
+      <Filter>Engine\Core\System\Generated</Filter>
+    </ClCompile>
     <ClCompile Include="Game\Source\Scene\SceneGame.cpp">
       <Filter>Game\Source\Scene</Filter>
     </ClCompile>
@@ -445,6 +454,12 @@
     </ClCompile>
     <ClCompile Include="Game\Source\Object\Missile.cpp">
       <Filter>Game\Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Scene\SceneResult.cpp">
+      <Filter>Game\Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Source\Scene\SceneTitle.cpp">
+      <Filter>Game\Source\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -745,6 +760,9 @@
     <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp">
       <Filter>Engine\Core\System\Component\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\ComponentRegistry.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
     <ClInclude Include="Game\Source\Scene\SceneGame.hpp">
       <Filter>Game\Source\Scene</Filter>
     </ClInclude>
@@ -762,6 +780,12 @@
     </ClInclude>
     <ClInclude Include="Game\Source\Object\Missile.hpp">
       <Filter>Game\Source\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Scene\SceneResult.hpp">
+      <Filter>Game\Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Source\Scene\SceneTitle.hpp">
+      <Filter>Game\Source\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

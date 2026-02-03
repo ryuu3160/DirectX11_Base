@@ -130,8 +130,8 @@
       <ObjectFileOutput>$(ProjectDir)Binaries\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
+      <Message>コンポーネント自動登録の生成</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,6 +161,10 @@
       <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(ProjectDir)Engine\Assets\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
+      <Message>コンポーネント自動登録の生成</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -214,11 +218,16 @@
     <ClCompile Include="Engine\Core\System\Component\Collider\ColliderBase.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Collider\SphereCollider.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Component.cpp" />
+    <ClCompile Include="Engine\Core\System\Component\ComponentRegistry.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\MovementComponent.cpp" />
     <ClCompile Include="Engine\Core\System\Component\PlayerController.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Transform.cpp" />
     <ClCompile Include="Engine\Core\System\CPON\cpon.cpp" />
     <ClCompile Include="Engine\Core\System\CPON\cpon_object.cpp" />
+    <ClCompile Include="Engine\Core\System\Generated\ComponentRegistry_Generated.cpp" />
     <ClCompile Include="Engine\Core\System\Input\Input.cpp" />
     <ClCompile Include="Engine\Core\System\Input\InputSystem.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\CameraManager.cpp" />
@@ -326,6 +335,10 @@
     <ClInclude Include="Engine\Core\System\Component\Collider\ColliderBase.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Collider\SphereCollider.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Component.hpp" />
+    <ClInclude Include="Engine\Core\System\Component\ComponentRegistry.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\MovementComponent.hpp" />
     <ClInclude Include="Engine\Core\System\Component\PlayerController.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Transform.hpp" />

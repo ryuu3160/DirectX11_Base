@@ -145,15 +145,19 @@ GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Tran
 	return ptr;
 }
 
-void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName)
+void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_view In_NewName) const
 {
-	if(m_Objects.find(In_NewName) != m_Objects.end())
+	std::string NewObjName = m_Name + "_";
+	std::string OldObjName = m_Name + "_";
+	NewObjName += In_NewName.data();
+	OldObjName += In_OldName.data();
+	if(m_Objects.find(NewObjName) != m_Objects.end())
 	{
 		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The name '{}' is already in use.", In_NewName);
 		return;
 	}
 
-	auto obj = m_Objects.find(In_OldName.data());
+	auto obj = m_Objects.find(OldObjName);
 	if(obj == m_Objects.end())
 	{
 		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The object '{}' was not found.", In_OldName);
@@ -163,7 +167,7 @@ void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_vie
 	// キー名を変更するため、一度オブジェクトを削除してから再登録
 	GameObject *gameObj = obj->second;
 	m_Objects.erase(obj);
-	m_Objects.insert(std::pair<std::string, GameObject *>(In_NewName.data(), gameObj));
+	m_Objects.insert(std::pair<std::string, GameObject *>(NewObjName, gameObj));
 }
 
 void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
@@ -278,8 +282,11 @@ void SceneBase::_DestroyObjects() noexcept
 	// 破棄予定のオブジェクトを削除
 	for (auto &name : m_DeadItems)
 	{
-		auto obj = m_Objects.find(name);
-		if (obj == m_Objects.end()) continue;
+		std::string ObjName = m_Name + "_";
+		ObjName += name;
+		auto obj = m_Objects.find(ObjName);
+		if (obj == m_Objects.end())
+			continue;
 
 		// シーンのオブジェクト保持リストから削除
 		m_SceneObjects.erase(obj->second);

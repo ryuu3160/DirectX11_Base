@@ -16,9 +16,9 @@
 // ==============================
 class Transform;
 
-/// <summary>
-/// MovementComponentクラス
-/// </summary>
+// ---ComponentDescription---
+// 動きを制御するコンポーネント
+// --------------------------
 class MovementComponent : public Component
 {
 public:
