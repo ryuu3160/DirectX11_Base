@@ -16,7 +16,6 @@
 // ==============================
 class LineRenderer;
 class GridComponent;
-class ItemGroup;
 
 /// <summary>
 /// GridObjectクラス
@@ -35,5 +34,4 @@ public:
 private:
 	LineRenderer *m_pRenderComponent; // スカイボックス描画コンポーネント
 	GridComponent *m_pGridComponent; // グリッドコンポーネント
-	ItemGroup *m_pDebugGroup;
 };

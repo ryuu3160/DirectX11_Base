@@ -11,7 +11,6 @@
 #include "GridObject.hpp"
 #include "Core/DirectX11/Renderer/LineRenderer.hpp"
 #include "Core/System/Component/GridComponent.hpp"
-#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 GridObject::GridObject()
 	: GridObject("GridObject")
@@ -21,6 +20,7 @@ GridObject::GridObject()
 GridObject::GridObject(_In_ std::string In_Name)
 	: GameObject(In_Name)
 	, m_pRenderComponent(nullptr)
+	, m_pGridComponent(nullptr)
 {
 }
 
