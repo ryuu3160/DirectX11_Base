@@ -78,34 +78,6 @@ void GridComponent::Update(_In_ float In_DeltaTime) noexcept
 
 void GridComponent::CreateGrid() noexcept
 {
-	//// グリッドの作成
-	//m_pRenderComponent->SetColor(m_GridColor);
-	//float d = m_GridMargin;
-	//float s = m_GridSize;
-	//for(; s >= m_GridMargin && m_GridMargin > 0.0f; d += m_GridMargin, s -= m_GridMargin)
-	//{
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(d, 0.0f, -m_GridSize), DirectX::XMFLOAT3(d, 0.0f, m_GridSize), m_GridColor, m_GridColor);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(-d, 0.0f, -m_GridSize), DirectX::XMFLOAT3(-d, 0.0f, m_GridSize), m_GridColor, m_GridColor);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(-m_GridSize, 0.0f, d), DirectX::XMFLOAT3(m_GridSize, 0.0f, d), m_GridColor, m_GridColor);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(-m_GridSize, 0.0f, -d), DirectX::XMFLOAT3(m_GridSize, 0.0f, -d), m_GridColor, m_GridColor);
-	//}
-	//// 軸描画
-	//if(m_GridAxis)
-	//{
-	//	DirectX::XMFLOAT4 red = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	//	DirectX::XMFLOAT4 green = DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	//	DirectX::XMFLOAT4 blue = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(-m_GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(m_GridSize, 0.0f, 0.0f), red, red);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(0.0f, -m_GridSize, 0.0f), DirectX::XMFLOAT3(0.0f, m_GridSize, 0.0f), green, green);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -m_GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, m_GridSize), blue, blue);
-	//}
-	//else
-	//{
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(-m_GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(m_GridSize, 0.0f, 0.0f), m_GridColor, m_GridColor);
-	//	m_pRenderComponent->AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -m_GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, m_GridSize), m_GridColor, m_GridColor);
-	//}
-
-
 	// グリッドの作成
 	m_pRenderComponent->SetColor(m_GridColor);
 
