@@ -142,11 +142,6 @@ void SceneRoot::Init()
 
 	ParticleCmp->AddEmitter(settings);
 	ParticleCmp->Play();
-	
-
-	// スカイボックスを作成
-	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	pSkyBox->SetCamera(pCamera);
 
 	// インスタンシングテスト
 	/*GameObject *pInstanced = CreateObject<GameObject>("Instanced");

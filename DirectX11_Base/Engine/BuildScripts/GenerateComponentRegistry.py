@@ -110,6 +110,9 @@ def find_component_classes(source_dir, exclude_dirs=None):
                     # ColliderBase もスキップ
                     if class_name == 'ColliderBase':
                         continue
+                    # GridComponent もスキップ
+                    if class_name == 'GridComponent':
+                        continue
                     
                     # クラス定義の行番号を取得
                     class_line_index = content[:match.start()].count('\n')

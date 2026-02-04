@@ -1,4 +1,3 @@
-#include "SkyBoxObj.hpp"
 /*+===================================================================
 	File: SkyBoxObj.cpp
 	Summary: （このファイルで何をするか記載する）
@@ -40,23 +39,3 @@ void SkyBoxObj::Awake() noexcept
 	m_pRenderComponent->SetVertexShader(ShaderManager.GetShader("VS_Object"));
 	m_pRenderComponent->SetPixelShader(ShaderManager.GetShader("PS_TexColor"));
 }
-
-void SkyBoxObj::SetFilePath(_In_ const FilePath &In_Path) noexcept
-{
-	if (m_pRenderComponent)
-		m_pRenderComponent->SetAssetPath(In_Path.data());
-}
-
-void SkyBoxObj::SetCamera(_In_ GameObject * In_Cam) noexcept
-{
-	m_pCameraObj = In_Cam;
-}
-
-void SkyBoxObj::LateUpdate(_In_ float In_DeltaTime) noexcept
-{
-	if (NullCheck(m_pCameraObj, NCMode::OUTPUT, "error: SkyBoxObj Error, CameraObj is nullptr"))
-		return;
-	// カメラの位置にスカイボックスを移動させる
-	m_pTransform->SetPosition(m_pCameraObj->GetPosition());
-}
-

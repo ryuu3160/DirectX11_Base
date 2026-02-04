@@ -222,6 +222,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\GridComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\MovementComponent.cpp" />
     <ClCompile Include="Engine\Core\System\Component\PlayerController.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Transform.cpp" />
@@ -325,6 +329,10 @@
     <ClInclude Include="Engine\Core\System\Component\Collider\SphereCollider.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Component.hpp" />
     <ClInclude Include="Engine\Core\System\Component\ComponentRegistry.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\GridComponent.hpp">
       <SubType>
       </SubType>
     </ClInclude>

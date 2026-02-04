@@ -143,12 +143,13 @@ public:
 	DirectX::XMFLOAT3 GetRightBottomBackPosition() const noexcept;
 
 protected:
+	// 継承先では使用しない関数
+	void Update(_In_ float In_DeltaTime) noexcept override final {}
+	void LateUpdate(_In_ float In_DeltaTime) noexcept override final {}
+	void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override final {}
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}
 	virtual void Awake() noexcept override {}
-	virtual void Update(_In_ float In_DeltaTime) noexcept override {}
-	virtual void LateUpdate(_In_ float In_DeltaTime) noexcept override {}
-	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override {}
 
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept override {}
 	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept override {}
@@ -159,7 +160,6 @@ protected:
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
-	virtual void RegisterObjectDebugInspector(_In_ DebugWindow *In_pWindow) {}
 #endif // _DEBUG
 
 private:

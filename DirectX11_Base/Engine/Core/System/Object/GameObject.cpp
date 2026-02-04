@@ -103,8 +103,6 @@ void GameObject::ExecuteUpdate(_In_ float In_DeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->Update(In_DeltaTime);
 	}
-	// 継承先オブジェクトの処理
-	Update(In_DeltaTime);
 }
 
 void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
@@ -115,8 +113,6 @@ void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->LateUpdate(In_DeltaTime);
 	}
-	// 継承先オブジェクトの遅延処理
-	LateUpdate(In_DeltaTime);
 }
 
 void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
@@ -127,8 +123,6 @@ void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->FixedUpdate(In_FixedDeltaTime);
 	}
-	// 継承先オブジェクトの固定間隔更新処理
-	FixedUpdate(In_FixedDeltaTime);
 }
 
 void GameObject::OnDrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
@@ -406,9 +400,6 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 		else
 			OnDisable();
 		});
-
-	// 継承先オブジェクトのインスペクター登録
-	RegisterObjectDebugInspector(In_pWindow);
 
 	// コンポーネントのインスペクター登録
 	for (auto &itr : m_Components)

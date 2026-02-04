@@ -14,6 +14,7 @@
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GridObject.hpp"
+#include "Core/System/Object/SkyBoxObj.hpp"
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
@@ -81,10 +82,12 @@ void SceneBase::CommonProcessScene() noexcept
 	 // ゲーム用のカメラ作成
 	 auto pGameCamObj = CreateObject<CameraObj>("GameCamera");
 
+	 // デフォルトのスカイボックスを作成
+	 auto Skybox = CreateObject_NotAddHierarchy<SkyBoxObj>("SkyBox",pCamObj->GetTransform());
+
 #ifdef _DEBUG
 	// グリッドオブジェクトの作成
 	auto grid = CreateObject_NotAddHierarchy<GridObject>("GridObject");
-	grid->SetCamera(pCamObj);
 #endif
 }
 
