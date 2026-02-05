@@ -48,3 +48,12 @@ int ComponentRegistry::GetComponentCount() const
 {
 	return static_cast<int>(m_Components.size());
 }
+
+ComponentRegistry::ComponentRegistry()
+{
+}
+
+ComponentRegistry::~ComponentRegistry()
+{
+	m_Components.clear();
+}

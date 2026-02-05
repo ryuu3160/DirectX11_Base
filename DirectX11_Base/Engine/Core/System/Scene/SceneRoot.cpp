@@ -215,7 +215,8 @@ void SceneRoot::Update(_In_ float In_DeltaTime)
 	if(pPatternScale)
 	{
 		auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
-		PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
+		if(IsValid(PatternScaleComp))
+			PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
 	}
 
 	//GetObject<GameObject>("ParticleTest")->GetComponent<ParticleEffect>()->Play();

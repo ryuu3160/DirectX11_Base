@@ -43,9 +43,14 @@ public:
 	int GetComponentCount() const;
 
 private:
-	ComponentRegistry() = default;
-	~ComponentRegistry() = default;
+	ComponentRegistry();
+	~ComponentRegistry();
 
 private:
     std::unordered_map<std::string, ComponentInfo> m_Components;
 };
+
+/// <summary>
+/// すべてのコンポーネントを登録（自動生成関数）
+/// </summary>
+void RegisterAllComponents();
