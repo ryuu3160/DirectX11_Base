@@ -23,7 +23,7 @@ namespace
 GridComponent::GridComponent()
 	: Component("GridComponent")
 	, m_pRenderComponent(nullptr)
-	, m_pCameraObj(nullptr), m_pDebugGroup(nullptr)
+	, m_pDebugGroup(nullptr)
 	, m_GridSize(20.0f), m_GridMargin(1.0f), m_GridColor{ 0.5f, 0.5f, 0.5f, 1.0f }
 	, m_GridAxis(true)
 {
@@ -31,6 +31,8 @@ GridComponent::GridComponent()
 
 GridComponent::~GridComponent()
 {
+	m_pRenderComponent = nullptr;
+	m_pDebugGroup = nullptr;
 }
 
 void GridComponent::Init() noexcept

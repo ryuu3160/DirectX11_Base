@@ -9,8 +9,6 @@
 // ==============================
 //	include
 // ==============================
-//#include "Engine.hpp"
-
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Component/Transform.hpp"
 #include "Core/System/Object/CameraObj.hpp"
@@ -163,10 +161,10 @@ private:
 	void DataLoad();
 
 private:
-	static Objects m_Objects;
+	inline static Objects m_Objects;
 #ifdef _DEBUG
-	static std::vector<GameObject *> m_ShowHierarchyObjects;
-	static ItemHierarchy *m_Hierarchy;
+	inline static std::vector<GameObject *> m_ShowHierarchyObjects;
+	inline static ItemHierarchy *m_Hierarchy;
 #endif
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;

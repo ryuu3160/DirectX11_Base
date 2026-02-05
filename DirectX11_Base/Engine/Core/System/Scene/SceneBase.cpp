@@ -18,20 +18,12 @@
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
-// ==============================
-//  前方宣言
-// ==============================
-SceneBase::Objects SceneBase::m_Objects;
-#ifdef _DEBUG
-std::vector<GameObject *> SceneBase::m_ShowHierarchyObjects;
-ItemHierarchy *SceneBase::m_Hierarchy = nullptr;
-#endif // DEBUG
-
 SceneBase::SceneBase(_In_ std::string_view In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
 	, m_Data(nullptr)
 {
+	m_Hierarchy = nullptr;
 	DataLoad();
 }
 
@@ -62,15 +54,7 @@ void SceneBase::CommonProcessScene() noexcept
 	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
 		[](GameObject *obj)
 		{
-			// 選択時のコールバック
-			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
-			inspectorWindow->ClearItems();
-
-			if(obj)
-			{
-				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
-				obj->RegisterDebugInspector(inspectorWindow);
-			}
+			obj->ReloadingInspector();
 		});
 #endif
 

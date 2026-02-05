@@ -425,6 +425,9 @@
     <ClCompile Include="Engine\Core\System\Generated\ComponentRegistry_Generated.cpp">
       <Filter>Engine\Core\System\Generated</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Component\GridComponent.cpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
@@ -725,6 +728,9 @@
       <Filter>Engine\Core\System\Component\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\ComponentRegistry.hpp">
+      <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Component\GridComponent.hpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClInclude>
   </ItemGroup>

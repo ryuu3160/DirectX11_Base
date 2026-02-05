@@ -125,7 +125,7 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 
 
 #ifdef _DEBUG
-void LineRenderer::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void LineRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 {
 }
 #endif

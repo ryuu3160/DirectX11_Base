@@ -112,7 +112,7 @@ protected:
 class ItemValue : public DebugItem
 {
 public:
-	ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave = false);
+	ItemValue(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave = false);
 	~ItemValue();
 
 	void DrawImGui() override;
@@ -143,7 +143,7 @@ private:
 class ItemText : public DebugItem
 {
 public:
-	ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
+	ItemText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
 	~ItemText();
 
 	void DrawImGui() override;
@@ -180,8 +180,8 @@ private:
 class ItemBind : public DebugItem
 {
 public:
-	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr);
-	ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ std::string* In_Ptr);
+	ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr);
+	ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ std::string* In_Ptr);
 	~ItemBind();
 
 	void DrawImGui() override;
@@ -223,7 +223,7 @@ private:
 class ItemCallback : public DebugItem
 {
 public:
-	ItemCallback(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func);
+	ItemCallback(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func);
 	~ItemCallback();
 
 	void DrawImGui() override;
@@ -240,7 +240,7 @@ class ItemGroup : public DebugItem
 {
 	friend class DebugItem;
 public:
-	ItemGroup(_In_ std::string In_Name);
+	ItemGroup(_In_ std::string_view In_Name);
 	~ItemGroup();
 
 	void DrawImGui() override;
@@ -294,16 +294,16 @@ public:
 		return item;
 	}
 
-private:
+protected:
 	void DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem);
-private:
+protected:
 	std::vector<DebugItem *> m_Items;
 };
 
 class ItemList : public DebugItem
 {
 public:
-	ItemList(_In_ std::string In_Name, _In_ ConstCallback In_Func = nullptr, _In_ bool In_IsSave = false);
+	ItemList(_In_ std::string_view In_Name, _In_ ConstCallback In_Func = nullptr, _In_ bool In_IsSave = false);
 	~ItemList();
 
 	void DrawImGui() override;
@@ -328,7 +328,7 @@ private:
 class ItemConsole : public DebugItem
 {
 public:
-	ItemConsole(_In_ std::string In_Name, _In_ bool In_IsOutputLogFile);
+	ItemConsole(_In_ std::string_view In_Name, _In_ bool In_IsOutputLogFile);
 	~ItemConsole();
 	void DrawImGui() override;
 
@@ -399,7 +399,7 @@ public:
 		AlignTextToFramePadding,	// テキストをフレームパディングに合わせる
 	};
 
-	ItemLayoutFunc(_In_ std::string In_Name, _In_ LayoutType In_LayoutType);
+	ItemLayoutFunc(_In_ std::string_view In_Name, _In_ LayoutType In_LayoutType);
 	~ItemLayoutFunc();
 	virtual void DrawImGui() override {};
 
@@ -416,7 +416,7 @@ private:
 class ItemSameLine : public ItemLayoutFunc
 {
 public:
-	ItemSameLine(_In_ std::string In_Name = "SameLine", _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
+	ItemSameLine(_In_ std::string_view In_Name = "SameLine", _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
 	~ItemSameLine();
 	void DrawImGui() override;
 private:
@@ -430,7 +430,7 @@ private:
 class ItemNewLine : public ItemLayoutFunc
 {
 public:
-	ItemNewLine(_In_ std::string In_Name = "NewLine");
+	ItemNewLine(_In_ std::string_view In_Name = "NewLine");
 	~ItemNewLine();
 	void DrawImGui() override;
 };
@@ -441,7 +441,7 @@ public:
 class ItemSpacing : public ItemLayoutFunc
 {
 public:
-	ItemSpacing(_In_ std::string In_Name = "Spacing", _In_ int In_SpaceNum = 1);
+	ItemSpacing(_In_ std::string_view In_Name = "Spacing", _In_ int In_SpaceNum = 1);
 	~ItemSpacing();
 	void DrawImGui() override;
 private:
@@ -454,7 +454,7 @@ private:
 class ItemSeparator : public ItemLayoutFunc
 {
 public:
-	ItemSeparator(_In_ std::string In_Name = "Separator");
+	ItemSeparator(_In_ std::string_view In_Name = "Separator");
 	~ItemSeparator();
 	void DrawImGui() override;
 };
@@ -467,7 +467,7 @@ public:
 class ItemIndent : public ItemLayoutFunc
 {
 public:
-	ItemIndent(_In_ std::string In_Name = "Indent", _In_ float In_IndentW = 0.0f);
+	ItemIndent(_In_ std::string_view In_Name = "Indent", _In_ float In_IndentW = 0.0f);
 	~ItemIndent();
 	void DrawImGui() override;
 private:
@@ -482,7 +482,7 @@ private:
 class ItemUnIndent : public ItemLayoutFunc
 {
 public:
-	ItemUnIndent(_In_ std::string In_Name = "UnIndent", _In_ float In_IndentW = 0.0f);
+	ItemUnIndent(_In_ std::string_view In_Name = "UnIndent", _In_ float In_IndentW = 0.0f);
 	~ItemUnIndent();
 	void DrawImGui() override;
 private:
@@ -498,7 +498,7 @@ private:
 class ItemDummy : public ItemLayoutFunc
 {
 public:
-	ItemDummy(_In_ std::string In_Name = "Dummy", _In_ float In_Width = 0.0f, _In_ float In_Height = 0.0f);
+	ItemDummy(_In_ std::string_view In_Name = "Dummy", _In_ float In_Width = 0.0f, _In_ float In_Height = 0.0f);
 	~ItemDummy();
 	void DrawImGui() override;
 private:
@@ -514,7 +514,7 @@ private:
 class ItemSetNextItemWidth : public ItemLayoutFunc
 {
 public:
-	ItemSetNextItemWidth(_In_ std::string In_Name = "NextItemWidth", _In_ float In_Width = 16.0f);
+	ItemSetNextItemWidth(_In_ std::string_view In_Name = "NextItemWidth", _In_ float In_Width = 16.0f);
 	~ItemSetNextItemWidth();
 	void DrawImGui() override;
 private:
@@ -524,7 +524,7 @@ private:
 class ItemAlignTextToFramePadding : public ItemLayoutFunc
 {
 public:
-	ItemAlignTextToFramePadding(_In_ std::string In_Name = "ItemAlignTextToFramePadding");
+	ItemAlignTextToFramePadding(_In_ std::string_view In_Name = "ItemAlignTextToFramePadding");
 	~ItemAlignTextToFramePadding();
 	void DrawImGui() override;
 };

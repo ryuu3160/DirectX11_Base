@@ -115,10 +115,6 @@ public:
 	/// <param name="[In_Scale]">設定するスケール値</param>
 	void SetScale(_In_ const float &In_Scale) noexcept { m_fScale = In_Scale; }
 
-//#if _DEBUG
-//    void Debug(debug::Window *window) final;
-//#endif
-
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成

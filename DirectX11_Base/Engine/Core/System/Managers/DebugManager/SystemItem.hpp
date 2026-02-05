@@ -16,6 +16,7 @@
 // ===============================
 class SceneBase;
 class GameObject;
+class Component;
 class Transform;
 
 // ==============================
@@ -120,7 +121,7 @@ class ItemComponentSelector : public DebugItem
 public:
     using UpdateCallback = std::function<void(GameObject *)>;
 
-    ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject, _In_ UpdateCallback In_Func = nullptr);
+    ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject);
     ~ItemComponentSelector();
 
     void DrawImGui() override;
@@ -139,5 +140,28 @@ private:
     GameObject *m_pGameObject;
     char m_SearchBuffer[256];
     std::string m_SelectedCategory;
-	UpdateCallback m_UpdateCallback;
+};
+
+/// <summary>
+/// コンポーネント専用のグループアイテム
+/// 右クリックメニュー付き
+/// </summary>
+class ItemComponentGroup : public ItemGroup
+{
+public:
+    ItemComponentGroup(_In_ std::string_view In_Name, _In_ Component *In_pComponent);
+    ~ItemComponentGroup();
+
+	void SetIsDeletable(_In_ bool In_IsDeletable) { m_IsDeletable = In_IsDeletable; }
+	void SetIsMovable(_In_ bool In_IsMovable) { m_IsMovable = In_IsMovable; }
+
+    void DrawImGui() override;
+
+private:
+    void DrawContextMenu();
+
+private:
+    bool m_IsDeletable;
+    bool m_IsMovable;
+    Component *m_pComponent;
 };

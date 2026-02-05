@@ -28,7 +28,9 @@ GameObject::GameObject(_In_ std::string In_Name)
 
 GameObject::~GameObject()
 {
+	m_InspectorComponent.clear();
 	m_Data = nullptr;
+	m_pTransform = nullptr;
 	auto itr = m_Components.begin();
 	// コンポーネントの削除
 	for (itr = m_Components.begin(); itr != m_Components.end();itr++)
@@ -210,6 +212,9 @@ void GameObject::RemoveComponent(_In_ std::string In_Name)
 					return;
 			}
 			m_DeadComponents.push_back(*itr);
+#ifdef _DEBUG
+			m_InspectorComponent.erase(std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), *itr), m_InspectorComponent.end());
+#endif
 		}
 	}
 }
@@ -402,24 +407,23 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 		});
 
 	// コンポーネントのインスペクター登録
-	for (auto &itr : m_Components)
+	for (auto &itr : m_InspectorComponent)
 	{
 		itr->RegisterDebugInspector(In_pWindow);
 	}
 
 	In_pWindow->CreateItem<ItemSeparator>();
-	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this,
-		[](GameObject *obj)
-		{
-			// 選択時のコールバック
-			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
-			inspectorWindow->ClearItems();
+	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this);
+}
+void GameObject::ReloadingInspector()
+{
+	auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+	window->ClearItems();
 
-			if(obj)
-			{
-				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
-				obj->RegisterDebugInspector(inspectorWindow);
-			}
-		});
+	if(this)
+	{
+		window->CreateItem<ItemValue>(this->GetName(), DebugItem::Label);
+		this->RegisterDebugInspector(window);
+	}
 }
 #endif

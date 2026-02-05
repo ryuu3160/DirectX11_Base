@@ -218,10 +218,10 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 // ==============================
 
 
-ItemValue::ItemValue(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave)
+ItemValue::ItemValue(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave)
 	: m_Value(), m_IsSave(In_IsSave), m_Notice(nullptr)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 
 	if(In_Kind == Kind::InputStr || In_Kind == Kind::Group || In_Kind == Kind::List || In_Kind == Kind::Command)
 	{
@@ -343,9 +343,9 @@ void ItemValue::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
 //  ItemText
 // ==============================
 
-ItemText::ItemText(_In_ std::string In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave)
+ItemText::ItemText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	m_Kind = Kind::InputStr;
 	m_Flags = In_Flags;
 	m_IsMultiline = In_IsMultiline;
@@ -405,10 +405,10 @@ void ItemText::DrawImGui()
 //  ItemBind
 // ==============================
 
-ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
+ItemBind::ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
 	: m_IsString(false), m_Notice(nullptr)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 
 	if(In_Kind == Kind::Group || In_Kind == Kind::List || In_Kind == Kind::Command)
 	{
@@ -420,7 +420,7 @@ ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ void *In_Pt
 	m_vPtr = In_Ptr;
 }
 
-ItemBind::ItemBind(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ std::string *In_Ptr)
+ItemBind::ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ std::string *In_Ptr)
 	: ItemBind(In_Name, In_Kind, static_cast<void *>(In_Ptr))
 {
 	m_IsString = true;
@@ -513,9 +513,9 @@ void ItemBind::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
 //  ItemCallback
 // ==============================
 
-ItemCallback::ItemCallback(_In_ std::string In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func)
+ItemCallback::ItemCallback(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	if(In_Kind == Kind::Group || In_Kind == Kind::List)
 	{
 		// グループ、リストはItemCallbackでは扱えない
@@ -623,9 +623,9 @@ void ItemCallback::DrawImGui()
 //  ItemGroup
 // ==============================
 
-ItemGroup::ItemGroup(_In_ std::string In_Name)
+ItemGroup::ItemGroup(_In_ std::string_view In_Name)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	m_Kind = Kind::Group;
 }
 
@@ -672,9 +672,9 @@ void ItemGroup::DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_p
 //  ItemList
 // ==============================
 
-ItemList::ItemList(_In_ std::string In_Name, _In_ ConstCallback In_Func, _In_ bool In_IsSave)
+ItemList::ItemList(_In_ std::string_view In_Name, _In_ ConstCallback In_Func, _In_ bool In_IsSave)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	m_Kind = Kind::List;
 	m_SelectNo = -1;
 	m_Func = In_Func;
@@ -719,11 +719,11 @@ void ItemList::DrawImGui()
 //  ItemConsole
 // ==============================
 
-ItemConsole::ItemConsole(_In_ std::string In_Name, _In_ bool In_IsOutputLogFile)
+ItemConsole::ItemConsole(_In_ std::string_view In_Name, _In_ bool In_IsOutputLogFile)
 	: m_IsShowClearButton(true), m_IsShowAutoScrollButton(true), m_IsAutoScroll(true), m_IsShowSerchBox(true)
 	, m_ScrollToBottom(false), m_IsOutputLogFile(In_IsOutputLogFile)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	m_Kind = Kind::Console;
 	m_SerchBuffer[0] = '\0';
 	LevelData DefaultLevel;
@@ -974,9 +974,9 @@ void ItemConsole::WriteLogToFile()
 //  ItemLayoutFunc
 // ==============================
 
-ItemLayoutFunc::ItemLayoutFunc(_In_ std::string In_Name, _In_ LayoutType In_LayoutType)
+ItemLayoutFunc::ItemLayoutFunc(_In_ std::string_view In_Name, _In_ LayoutType In_LayoutType)
 {
-	m_Name = In_Name;
+	m_Name = In_Name.data();
 	m_Kind = Kind::LayoutFunc;
 	m_LayoutType = In_LayoutType;
 }
@@ -989,7 +989,7 @@ ItemLayoutFunc::~ItemLayoutFunc()
 //  ItemSameLine
 // ==============================
 
-ItemSameLine::ItemSameLine(_In_ std::string In_Name, _In_ float In_OffsetX, _In_ float In_SpacingW)
+ItemSameLine::ItemSameLine(_In_ std::string_view In_Name, _In_ float In_OffsetX, _In_ float In_SpacingW)
 	: ItemLayoutFunc(In_Name, LayoutType::SameLine), m_OffsetX(In_OffsetX), m_SpacingW(In_SpacingW)
 {
 	if(m_SpacingW < 0.0f)
@@ -1008,7 +1008,7 @@ void ItemSameLine::DrawImGui()
 	ImGui::SameLine(m_OffsetX, m_SpacingW);
 }
 
-ItemNewLine::ItemNewLine(_In_ std::string In_Name)
+ItemNewLine::ItemNewLine(_In_ std::string_view In_Name)
 	: ItemLayoutFunc(In_Name, LayoutType::NewLine)
 {
 }
@@ -1024,7 +1024,7 @@ void ItemNewLine::DrawImGui()
 	ImGui::NewLine();
 }
 
-ItemSpacing::ItemSpacing(_In_ std::string In_Name, _In_ int In_SpaceNum)
+ItemSpacing::ItemSpacing(_In_ std::string_view In_Name, _In_ int In_SpaceNum)
 	: ItemLayoutFunc(In_Name, LayoutType::Spacing), m_SpaceNum(In_SpaceNum)
 {
 }
@@ -1041,7 +1041,7 @@ void ItemSpacing::DrawImGui()
 		ImGui::Spacing();
 }
 
-ItemSeparator::ItemSeparator(_In_ std::string In_Name)
+ItemSeparator::ItemSeparator(_In_ std::string_view In_Name)
 	: ItemLayoutFunc(In_Name, LayoutType::Separator)
 {
 }
@@ -1057,7 +1057,7 @@ void ItemSeparator::DrawImGui()
 	ImGui::Separator();
 }
 
-ItemIndent::ItemIndent(_In_ std::string In_Name, _In_ float In_IndentW)
+ItemIndent::ItemIndent(_In_ std::string_view In_Name, _In_ float In_IndentW)
 	: ItemLayoutFunc(In_Name, LayoutType::Indent), m_IndentW(In_IndentW)
 {
 	if(m_IndentW < 0.0f)
@@ -1075,7 +1075,7 @@ void ItemIndent::DrawImGui()
 	ImGui::Indent(m_IndentW);
 }
 
-ItemUnIndent::ItemUnIndent(_In_ std::string In_Name, _In_ float In_IndentW)
+ItemUnIndent::ItemUnIndent(_In_ std::string_view In_Name, _In_ float In_IndentW)
 	: ItemLayoutFunc(In_Name, LayoutType::UnIndent), m_IndentW(In_IndentW)
 {
 	if(m_IndentW < 0.0f)
@@ -1093,7 +1093,7 @@ void ItemUnIndent::DrawImGui()
 	ImGui::Unindent(m_IndentW);
 }
 
-ItemDummy::ItemDummy(_In_ std::string In_Name, _In_ float In_Width, _In_ float In_Height)
+ItemDummy::ItemDummy(_In_ std::string_view In_Name, _In_ float In_Width, _In_ float In_Height)
 	: ItemLayoutFunc(In_Name, LayoutType::Dummy), m_Width(In_Width), m_Height(In_Height)
 {
 	if(m_Width < 0.0f)
@@ -1113,7 +1113,7 @@ void ItemDummy::DrawImGui()
 	ImGui::Dummy(ImVec2(m_Width, m_Height));
 }
 
-ItemSetNextItemWidth::ItemSetNextItemWidth(_In_ std::string In_Name, _In_ float In_Width)
+ItemSetNextItemWidth::ItemSetNextItemWidth(_In_ std::string_view In_Name, _In_ float In_Width)
 	: ItemLayoutFunc(In_Name, LayoutType::SetNextItemWidth), m_Width(In_Width)
 {
 	if(m_Width < 0.0f)
@@ -1131,7 +1131,7 @@ void ItemSetNextItemWidth::DrawImGui()
 	ImGui::SetNextItemWidth(m_Width);
 }
 
-ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(_In_ std::string In_Name)
+ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(_In_ std::string_view In_Name)
 	: ItemLayoutFunc(In_Name, LayoutType::AlignTextToFramePadding)
 {
 }

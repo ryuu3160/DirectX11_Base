@@ -37,7 +37,6 @@ private:
 	void CreateGrid() noexcept;
 
 private:
-	GameObject *m_pCameraObj; // カメラオブジェクト
 	LineRenderer *m_pRenderComponent; // スカイボックス描画コンポーネント
 
 	float m_GridSize;

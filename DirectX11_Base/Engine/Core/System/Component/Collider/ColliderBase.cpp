@@ -165,10 +165,9 @@ void ColliderBase::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 }
 
 #ifdef _DEBUG
-void ColliderBase::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void ColliderBase::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>(m_Name);
-	group->CreateGroupItem<ItemBind>("IsTrigger", DebugItem::Kind::Bool, &m_IsTrigger);
-	group->CreateGroupItem<ItemBind>("LocalCenter", DebugItem::Kind::Vector, &m_Center);
+	In_pGroup->CreateGroupItem<ItemBind>("IsTrigger", DebugItem::Kind::Bool, &m_IsTrigger);
+	In_pGroup->CreateGroupItem<ItemBind>("LocalCenter", DebugItem::Kind::Vector, &m_Center);
 }
 #endif

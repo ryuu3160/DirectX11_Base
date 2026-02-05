@@ -16,6 +16,7 @@
 // ëOï˚êÈåæ
 // ==============================
 class GameObject;
+class ItemGroup;
 
 #undef GetObject
 
@@ -197,7 +198,8 @@ public:
 protected:
 
 #ifdef _DEBUG
-	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override;
+	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
+	virtual void Inspector(_In_ ItemGroup *In_pGroup) {};
 #endif // _DEBUG
 
 private:

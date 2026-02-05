@@ -193,11 +193,10 @@ void SphereCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 	DrawLatitudes.get();
 }
 
-void SphereCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void SphereCollider::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	ColliderBase::RegisterDebugInspector(In_pWindow);
-	ItemGroup &group = In_pWindow->GetGroupItem("SphereCollider");
-	group.CreateGroupItem<ItemBind>("Radius",DebugItem::Float, &m_Radius);
+	ColliderBase::Inspector(In_pGroup);
+    In_pGroup->CreateGroupItem<ItemBind>("Radius",DebugItem::Float, &m_Radius);
 }
 
 bool SphereCollider::IsCollisionToSphere(_In_ ColliderBase *In_Other) noexcept
