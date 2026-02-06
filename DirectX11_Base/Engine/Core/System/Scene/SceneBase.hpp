@@ -66,9 +66,9 @@ public:
 	/// 指定された名前でGameObjectを作成します
 	/// </summary>
 	/// <param name="[In_Name]">作成するGameObjectの名前</param>
+	/// <param name="[In_pParent]">親Transformへのポインタ(省略可能)</param>
 	/// <returns>新しく作成されたGameObjectへのポインタ</returns>
-	template<>
-	GameObject *CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept;
+	GameObject *CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent = nullptr) noexcept;
 
 	/// <summary>
 	/// 指定された名前に対応するオブジェクトへのポインタを取得します

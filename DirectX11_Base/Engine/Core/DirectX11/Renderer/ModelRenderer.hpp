@@ -41,6 +41,8 @@ public:
 public:
     ModelRenderer();
     ~ModelRenderer();
+
+	void Awake() noexcept override;
     void Update(_In_ float In_DeltaTime) noexcept final;
 
 	void SetVertexShader(_In_ Shader *In_Vs) noexcept;

@@ -75,7 +75,6 @@ void SceneBase::CommonProcessScene() noexcept
 #endif
 }
 
-template<>
 GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
 	GameObject *ptr = new GameObject(In_Name.data());
