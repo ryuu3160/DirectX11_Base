@@ -90,6 +90,10 @@ public:
 	requires std::derived_from<T, Component>
 	void RemoveComponent();
 
+	template<typename T>
+	requires std::derived_from<T, Component>
+	void RemoveComponent(_In_ T *In_pComponent);
+
 	void RemoveComponent(_In_ std::string In_Name);
 
 	/// <summary>
@@ -143,12 +147,13 @@ public:
 	DirectX::XMFLOAT3 GetRightBottomBackPosition() const noexcept;
 
 protected:
+	// 継承先では使用しない関数
+	void Update(_In_ float In_DeltaTime) noexcept override final {}
+	void LateUpdate(_In_ float In_DeltaTime) noexcept override final {}
+	void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override final {}
 	// 継承先で使用する関数
 	virtual void Init() noexcept override {}
 	virtual void Awake() noexcept override {}
-	virtual void Update(_In_ float In_DeltaTime) noexcept override {}
-	virtual void LateUpdate(_In_ float In_DeltaTime) noexcept override {}
-	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override {}
 
 	virtual void OnCollisionEnter(_In_ ColliderBase *In_Other) noexcept override {}
 	virtual void OnCollisionStay(_In_ ColliderBase *In_Other) noexcept override {}
@@ -159,7 +164,8 @@ protected:
 
 #ifdef _DEBUG
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
-	virtual void RegisterObjectDebugInspector(_In_ DebugWindow *In_pWindow) {}
+public:
+	void ReloadingInspector();
 #endif // _DEBUG
 
 private:
@@ -192,6 +198,9 @@ private:
 	Components			m_Components;		// コンポーネントの一覧
 	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
 	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
+#ifdef _DEBUG
+	Components			m_InspectorComponent;	// デバッグインスペクターに登録されているコンポーネントリスト
+#endif
 	std::shared_ptr<cpon_object> 		m_Data;				// 保存データ
 	Datas				m_Datas;			// 保存データ
 	SceneBase			*m_pScene;			// 所属しているシーンへのポインタ
@@ -212,6 +221,10 @@ inline T *GameObject::AddComponent()
 	m_Components.push_back(ptr);
 	m_InitComponents.push_back(ptr);
 
+#ifdef _DEBUG
+	m_InspectorComponent.push_back(ptr);
+#endif
+
 	return ptr;
 }
 
@@ -226,6 +239,10 @@ inline T *GameObject::AddComponent(_In_ Args && ...args)
 	// 管理リストに追加
 	m_Components.push_back(ptr);
 	m_InitComponents.push_back(ptr);
+
+#ifdef _DEBUG
+	m_InspectorComponent.push_back(ptr);
+#endif
 
 	return ptr;
 }
@@ -259,7 +276,36 @@ inline void GameObject::RemoveComponent()
 		// 型チェック
 		if (typeid(T) == typeid(**itr))
 		{
-			(*itr)->DestroySelf();
+			for(auto deadCmp : m_DeadComponents)
+			{
+				if(deadCmp == *itr)
+					return;
+			}
+			m_DeadComponents.push_back(*itr);
+#ifdef _DEBUG
+			m_InspectorComponent.erase(std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), *itr), m_InspectorComponent.end());
+#endif
+		}
+	}
+}
+
+template<typename T>
+requires std::derived_from<T, Component>
+inline void GameObject::RemoveComponent(T *In_pComponent)
+{
+	for(auto itr = m_Components.begin(); itr != m_Components.end(); ++itr)
+	{
+		if(*itr == In_pComponent)
+		{
+			for(auto deadCmp : m_DeadComponents)
+			{
+				if(deadCmp == *itr)
+					return;
+			}
+			m_DeadComponents.push_back(*itr);
+#ifdef _DEBUG
+			m_InspectorComponent.erase(std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), *itr), m_InspectorComponent.end());
+#endif
 		}
 	}
 }

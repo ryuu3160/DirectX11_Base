@@ -11,6 +11,7 @@
 #include "Transform.hpp"
 #include "Core/DirectX11/System/DX11_Math.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "Core/System/Object/GameObject.hpp"
 
 // ==============================
@@ -550,12 +551,16 @@ void Transform::SetQuat(_In_ const DirectX::XMFLOAT4 &In_Quat) noexcept
 	MarkDirty();
 }
 
-void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void Transform::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	// トランスフォームグループの作成
-	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>("Transform");
-	group->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
-	group->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
+	// トランスフォームは削除、移動不可
+	auto Group = dynamic_cast<ItemComponentGroup*>(In_pGroup);
+	Group->SetIsDeletable(false);
+	Group->SetIsMovable(false);
+
+	// トランスフォームグループのメンバーを作成
+	In_pGroup->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
+	In_pGroup->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
 		[this](bool IsWrite, void *arg)
 		{
 			DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
@@ -585,7 +590,7 @@ void Transform::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 				pVec->z = m_Euler.z;
 			}
 		});
-	group->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+	In_pGroup->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
 }
 
 DirectX::XMFLOAT3 Transform::SyncEulerFromQuat(_In_ DirectX::XMFLOAT4 In_Quat) noexcept

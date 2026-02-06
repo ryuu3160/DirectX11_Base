@@ -65,15 +65,14 @@ void RenderComponent::SaveLoad(_In_ DataAccessor *In_Data)
 }
 
 #ifdef _DEBUG
-void RenderComponent::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void RenderComponent::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	ItemGroup *group = In_pWindow->CreateItem<ItemGroup>(m_Name);
-	auto Bind1 = group->CreateGroupItem<ItemBind>("LayerGroup", DebugItem::Kind::Int, reinterpret_cast<void *>(&m_LayerGroup));
+	auto Bind1 = In_pGroup->CreateGroupItem<ItemBind>("LayerGroup", DebugItem::Kind::Int, reinterpret_cast<void *>(&m_LayerGroup));
 	Bind1->SetNoticeFunc([this]() { CheckLayerGroupChange(); });
-	auto Bind2 = group->CreateGroupItem<ItemBind>("Layer", DebugItem::Kind::Int, &m_nLayer);
+	auto Bind2 = In_pGroup->CreateGroupItem<ItemBind>("Layer", DebugItem::Kind::Int, &m_nLayer);
 	Bind2->SetNoticeFunc([this]() { CallLayerSortRequest(); });
-	group->CreateGroupItem<ItemBind>("AssetPath", DebugItem::Kind::Path, &m_AssetPath);
-	group->CreateGroupItem<ItemBind>("IsActive##RenderCmp", DebugItem::Kind::Bool, &m_IsActive);
+	In_pGroup->CreateGroupItem<ItemBind>("AssetPath", DebugItem::Kind::Path, &m_AssetPath);
+	In_pGroup->CreateGroupItem<ItemBind>("IsActive##RenderCmp", DebugItem::Kind::Bool, &m_IsActive);
 }
 #endif
 

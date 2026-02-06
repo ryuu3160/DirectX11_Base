@@ -9,8 +9,6 @@
 // ==============================
 //	include
 // ==============================
-//#include "Engine.hpp"
-
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Component/Transform.hpp"
 #include "Core/System/Object/CameraObj.hpp"
@@ -68,9 +66,9 @@ public:
 	/// 指定された名前でGameObjectを作成します
 	/// </summary>
 	/// <param name="[In_Name]">作成するGameObjectの名前</param>
+	/// <param name="[In_pParent]">親Transformへのポインタ(省略可能)</param>
 	/// <returns>新しく作成されたGameObjectへのポインタ</returns>
-	template<>
-	GameObject *CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept;
+	GameObject *CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent = nullptr) noexcept;
 
 	/// <summary>
 	/// 指定された名前に対応するオブジェクトへのポインタを取得します
@@ -163,10 +161,10 @@ private:
 	void DataLoad();
 
 private:
-	static Objects m_Objects;
+	inline static Objects m_Objects;
 #ifdef _DEBUG
-	static std::vector<GameObject *> m_ShowHierarchyObjects;
-	static ItemHierarchy *m_Hierarchy;
+	inline static std::vector<GameObject *> m_ShowHierarchyObjects;
+	inline static ItemHierarchy *m_Hierarchy;
 #endif
 	std::vector<GameObject *> m_InitObjects; // Initializeを呼び出すオブジェクトリスト
 	std::string m_Name;

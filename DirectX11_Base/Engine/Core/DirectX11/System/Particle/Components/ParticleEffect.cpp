@@ -130,20 +130,19 @@ void ParticleEffect::SetTexture(_In_ const FilePath &In_Path)
 }
 
 #ifdef _DEBUG
-void ParticleEffect::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void ParticleEffect::Inspector(_In_ ItemGroup *In_pGroup)
 {
-    RenderComponent::RegisterDebugInspector(In_pWindow);
-    auto &group = In_pWindow->GetGroupItem(m_Name);
-    group.CreateGroupItem<ItemCallback>("Play", DebugItem::Command, [this](bool IsSet, void *ptr)
+    RenderComponent::Inspector(In_pGroup);
+    In_pGroup->CreateGroupItem<ItemCallback>("Play", DebugItem::Command, [this](bool IsSet, void *ptr)
         {
             this->Play();
         });
-    group.CreateGroupItem<ItemSameLine>();
-    group.CreateGroupItem<ItemCallback>("Stop", DebugItem::Command, [this](bool IsSet, void *ptr)
+    In_pGroup->CreateGroupItem<ItemSameLine>();
+    In_pGroup->CreateGroupItem<ItemCallback>("Stop", DebugItem::Command, [this](bool IsSet, void *ptr)
         {
             this->Stop();
         });
-    group.CreateGroupItem<ItemIndent>();
+    In_pGroup->CreateGroupItem<ItemIndent>();
     
     // エミッター
     int num = 0;
@@ -151,7 +150,7 @@ void ParticleEffect::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
     {
         std::string Name = "Emitter";
         Name += ToString(num);
-        auto EmitterGroup = group.CreateGroupItem<ItemGroup>(Name);
+        auto EmitterGroup = In_pGroup->CreateGroupItem<ItemGroup>(Name);
         auto &Settings = itr->GetSettings();
         EmitterGroup->CreateGroupItem<ItemBind>("Position", DebugItem::Vector, &Settings.Position);
         EmitterGroup->CreateGroupItem<ItemBind>("Rate", DebugItem::Float, &Settings.EmitRate);
@@ -165,7 +164,7 @@ void ParticleEffect::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
         EmitterGroup->CreateGroupItem<ItemBind>("Angle", DebugItem::Float, &Settings.ShapeAngle);
         ++num;
     }
-    group.CreateGroupItem<ItemUnIndent>();
+    In_pGroup->CreateGroupItem<ItemUnIndent>();
 }
 #endif
 

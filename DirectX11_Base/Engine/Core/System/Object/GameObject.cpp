@@ -28,7 +28,9 @@ GameObject::GameObject(_In_ std::string In_Name)
 
 GameObject::~GameObject()
 {
+	m_InspectorComponent.clear();
 	m_Data = nullptr;
+	m_pTransform = nullptr;
 	auto itr = m_Components.begin();
 	// コンポーネントの削除
 	for (itr = m_Components.begin(); itr != m_Components.end();itr++)
@@ -103,8 +105,6 @@ void GameObject::ExecuteUpdate(_In_ float In_DeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->Update(In_DeltaTime);
 	}
-	// 継承先オブジェクトの処理
-	Update(In_DeltaTime);
 }
 
 void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
@@ -115,8 +115,6 @@ void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->LateUpdate(In_DeltaTime);
 	}
-	// 継承先オブジェクトの遅延処理
-	LateUpdate(In_DeltaTime);
 }
 
 void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
@@ -127,8 +125,6 @@ void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 		if(itr->m_IsActive)
 			itr->FixedUpdate(In_FixedDeltaTime);
 	}
-	// 継承先オブジェクトの固定間隔更新処理
-	FixedUpdate(In_FixedDeltaTime);
 }
 
 void GameObject::OnDrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
@@ -216,6 +212,9 @@ void GameObject::RemoveComponent(_In_ std::string In_Name)
 					return;
 			}
 			m_DeadComponents.push_back(*itr);
+#ifdef _DEBUG
+			m_InspectorComponent.erase(std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), *itr), m_InspectorComponent.end());
+#endif
 		}
 	}
 }
@@ -407,28 +406,24 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 			OnDisable();
 		});
 
-	// 継承先オブジェクトのインスペクター登録
-	RegisterObjectDebugInspector(In_pWindow);
-
 	// コンポーネントのインスペクター登録
-	for (auto &itr : m_Components)
+	for (auto &itr : m_InspectorComponent)
 	{
 		itr->RegisterDebugInspector(In_pWindow);
 	}
 
 	In_pWindow->CreateItem<ItemSeparator>();
-	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this,
-		[](GameObject *obj)
-		{
-			// 選択時のコールバック
-			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
-			inspectorWindow->ClearItems();
+	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this);
+}
+void GameObject::ReloadingInspector()
+{
+	auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+	window->ClearItems();
 
-			if(obj)
-			{
-				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
-				obj->RegisterDebugInspector(inspectorWindow);
-			}
-		});
+	if(this)
+	{
+		window->CreateItem<ItemValue>(this->GetName(), DebugItem::Label);
+		this->RegisterDebugInspector(window);
+	}
 }
 #endif

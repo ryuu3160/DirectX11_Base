@@ -142,11 +142,6 @@ void SceneRoot::Init()
 
 	ParticleCmp->AddEmitter(settings);
 	ParticleCmp->Play();
-	
-
-	// スカイボックスを作成
-	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	pSkyBox->SetCamera(pCamera);
 
 	// インスタンシングテスト
 	/*GameObject *pInstanced = CreateObject<GameObject>("Instanced");
@@ -220,7 +215,8 @@ void SceneRoot::Update(_In_ float In_DeltaTime)
 	if(pPatternScale)
 	{
 		auto PatternScaleComp = pPatternScale->GetComponent<ModelRenderer>();
-		PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
+		if(IsValid(PatternScaleComp))
+			PatternScaleComp->SetWriteParamForPS(pPatternScaleParam);
 	}
 
 	//GetObject<GameObject>("ParticleTest")->GetComponent<ParticleEffect>()->Play();

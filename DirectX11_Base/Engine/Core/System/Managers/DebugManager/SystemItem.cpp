@@ -9,9 +9,10 @@
 //	include
 // ==============================
 #include "SystemItem.hpp"
+#include "Core/System/Component/Component.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
-#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 // ==============================
 //	定数定義
@@ -373,10 +374,9 @@ void ItemHierarchy::SelectObject(_Inout_ GameObject *In_Obj)
 //  ItemComponentSelector
 // ==============================
 
-ItemComponentSelector::ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject, _In_ UpdateCallback In_Func)
+ItemComponentSelector::ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject)
     : m_pGameObject(In_pGameObject)
     , m_SelectedCategory("All")
-	, m_UpdateCallback(In_Func)
 {
     m_Name = In_Name;
     m_Kind = Kind::Command;
@@ -513,8 +513,7 @@ void ItemComponentSelector::DrawComponentList(const std::string &category)
                 if(newComponent)
                 {
                     // インスペクターを更新
-                    if(m_UpdateCallback)
-					    m_UpdateCallback(m_pGameObject);
+					m_pGameObject->ReloadingInspector();
                 }
             }
 
@@ -548,4 +547,85 @@ void ItemComponentSelector::DrawComponentList(const std::string &category)
     }
 
     ImGui::EndChild();
+}
+
+// ==============================
+//  ItemComponentGroup
+// ==============================
+
+ItemComponentGroup::ItemComponentGroup(_In_ std::string_view In_Name, _In_ Component *In_pComponent)
+    : ItemGroup(In_Name)
+    , m_pComponent(In_pComponent)
+	, m_IsDeletable(true), m_IsMovable(true)
+{
+    m_Kind = Kind::Group;
+}
+
+ItemComponentGroup::~ItemComponentGroup()
+{
+}
+
+void ItemComponentGroup::DrawImGui()
+{
+    if(m_Items.empty())
+        return;
+
+    // CollapsingHeader を表示
+    bool isOpen = ImGui::CollapsingHeader(m_Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+
+    // 右クリックメニュー
+    if(ImGui::BeginPopupContextItem())
+    {
+        DrawContextMenu(); 
+        ImGui::EndPopup();
+    }
+
+    // グループが展開されていれば中身を表示
+    if(isOpen)
+    {
+        for(auto &itr : m_Items)
+        {
+            itr->DrawImGui();
+        }
+    }
+}
+
+void ItemComponentGroup::DrawContextMenu()
+{
+    if(!m_pComponent)
+        return;
+
+    // ===========================
+    // Remove Component
+    // ===========================
+    if(m_IsDeletable)
+    {
+        if(ImGui::MenuItem("Remove Component"))
+        {
+            m_pComponent->DestroySelf();
+
+            // インスペクターを更新
+            m_pComponent->GetGameObject()->ReloadingInspector();
+        }
+        ImGui::Separator();
+    }
+
+    // ===========================
+    // Move Up/Down
+    // ===========================
+
+    if(m_IsMovable)
+    {
+        if(ImGui::MenuItem("Move Up"))
+        {
+            // TODO: コンポーネントの順序変更
+            DebugManager::GetInstance().DebugLog("Move up: %s", m_Name.c_str());
+        }
+
+        if(ImGui::MenuItem("Move Down"))
+        {
+            // TODO: コンポーネントの順序変更
+            DebugManager::GetInstance().DebugLog("Move down: %s", m_Name.c_str());
+        }
+    }
 }

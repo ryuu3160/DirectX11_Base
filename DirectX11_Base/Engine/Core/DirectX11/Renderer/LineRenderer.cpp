@@ -75,6 +75,8 @@ void LineRenderer::AddLine(_In_ DirectX::XMFLOAT3 In_Start, _In_ DirectX::XMFLOA
 	end.color = In_EndColor;
 	end.normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
+	std::lock_guard<std::mutex> lock(m_Mutex);
+
 	m_Data.lineVtxs.emplace_back(start);
 	m_Data.lineVtxs.emplace_back(end);
 	m_IsUpdate = true;
@@ -123,7 +125,7 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 
 
 #ifdef _DEBUG
-void LineRenderer::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void LineRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 {
 }
 #endif

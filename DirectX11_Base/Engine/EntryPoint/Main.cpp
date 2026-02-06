@@ -10,6 +10,7 @@
 // ==============================
 #include "Main.hpp"
 #include "Engine.hpp"
+#include "Core/System/Component/ComponentRegistry.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Game/Source/Scene/SceneGame.hpp"
 
@@ -37,6 +38,7 @@ HRESULT Main::Init()
 		return hr;
 
 	// 各種機能の初期化
+	RegisterAllComponents(); // コンポーネントの登録
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();

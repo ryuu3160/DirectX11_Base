@@ -141,13 +141,12 @@ void CapsuleCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
     DrawLowerHemisphere.get();
 }
 
-void CapsuleCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void CapsuleCollider::Inspector(_In_ ItemGroup *In_pGroup)
 {
-    ColliderBase::RegisterDebugInspector(In_pWindow);
-	ItemGroup &Group = In_pWindow->GetGroupItem("CapsuleCollider");
-	Group.CreateGroupItem<ItemBind>("Height", ItemBind::Kind::Float, &m_Height);
-	Group.CreateGroupItem<ItemBind>("Radius", ItemBind::Kind::Float, &m_Radius);
-	Group.CreateGroupItem<ItemBind>("Rotation##CapsuleCollider", ItemBind::Kind::Vector, &m_Rotation);
+    ColliderBase::Inspector(In_pGroup);
+	In_pGroup->CreateGroupItem<ItemBind>("Height", ItemBind::Kind::Float, &m_Height);
+	In_pGroup->CreateGroupItem<ItemBind>("Radius", ItemBind::Kind::Float, &m_Radius);
+	In_pGroup->CreateGroupItem<ItemBind>("Rotation##CapsuleCollider", ItemBind::Kind::Vector, &m_Rotation);
 }
 
 bool CapsuleCollider::IsCollisionToBox(_In_ ColliderBase *In_Other) noexcept

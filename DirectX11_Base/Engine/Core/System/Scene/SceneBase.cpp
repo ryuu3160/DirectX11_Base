@@ -14,23 +14,16 @@
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GridObject.hpp"
+#include "Core/System/Object/SkyBoxObj.hpp"
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
-
-// ==============================
-//  前方宣言
-// ==============================
-SceneBase::Objects SceneBase::m_Objects;
-#ifdef _DEBUG
-std::vector<GameObject *> SceneBase::m_ShowHierarchyObjects;
-ItemHierarchy *SceneBase::m_Hierarchy = nullptr;
-#endif // DEBUG
 
 SceneBase::SceneBase(_In_ std::string_view In_Name) noexcept
 	: m_Name(In_Name)
 	, m_SceneManager(SceneManager::GetInstance())
 	, m_Data(nullptr)
 {
+	m_Hierarchy = nullptr;
 	DataLoad();
 }
 
@@ -61,15 +54,7 @@ void SceneBase::CommonProcessScene() noexcept
 	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
 		[](GameObject *obj)
 		{
-			// 選択時のコールバック
-			auto *inspectorWindow = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
-			inspectorWindow->ClearItems();
-
-			if(obj)
-			{
-				inspectorWindow->CreateItem<ItemValue>(obj->GetName(), DebugItem::Label);
-				obj->RegisterDebugInspector(inspectorWindow);
-			}
+			obj->ReloadingInspector();
 		});
 #endif
 
@@ -81,14 +66,15 @@ void SceneBase::CommonProcessScene() noexcept
 	 // ゲーム用のカメラ作成
 	 auto pGameCamObj = CreateObject<CameraObj>("GameCamera");
 
+	 // デフォルトのスカイボックスを作成
+	 auto Skybox = CreateObject_NotAddHierarchy<SkyBoxObj>("SkyBox",pCamObj->GetTransform());
+
 #ifdef _DEBUG
 	// グリッドオブジェクトの作成
 	auto grid = CreateObject_NotAddHierarchy<GridObject>("GridObject");
-	grid->SetCamera(pCamObj);
 #endif
 }
 
-template<>
 GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
 	GameObject *ptr = new GameObject(In_Name.data());

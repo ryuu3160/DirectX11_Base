@@ -124,16 +124,15 @@ void Camera::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 }
 
 #ifdef _DEBUG
-void Camera::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void Camera::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	auto *group = In_pWindow->CreateItem<ItemGroup>("Camera Component");
-	group->CreateGroupItem<ItemBind>("is3D", DebugItem::Kind::Bool, &m_bIs3D);
-	group->CreateGroupItem<ItemBind>("Fovy", DebugItem::Kind::Float, &m_fFovy);
-	group->CreateGroupItem<ItemBind>("Focus", DebugItem::Kind::Float, &m_fFocus);
-	group->CreateGroupItem<ItemBind>("Width", DebugItem::Kind::Float, &m_fWidth);
-	group->CreateGroupItem<ItemBind>("Near", DebugItem::Kind::Float, &m_fNear);
-	group->CreateGroupItem<ItemBind>("Far", DebugItem::Kind::Float, &m_fFar);
-	group->CreateGroupItem<ItemBind>("Aspect", DebugItem::Kind::Float, &m_fAspect);
-	group->CreateGroupItem<ItemBind>("isShow", DebugItem::Kind::Bool, &m_bIsShow);
+	In_pGroup->CreateGroupItem<ItemBind>("is3D", DebugItem::Kind::Bool, &m_bIs3D);
+	In_pGroup->CreateGroupItem<ItemBind>("Fovy", DebugItem::Kind::Float, &m_fFovy);
+	In_pGroup->CreateGroupItem<ItemBind>("Focus", DebugItem::Kind::Float, &m_fFocus);
+	In_pGroup->CreateGroupItem<ItemBind>("Width", DebugItem::Kind::Float, &m_fWidth);
+	In_pGroup->CreateGroupItem<ItemBind>("Near", DebugItem::Kind::Float, &m_fNear);
+	In_pGroup->CreateGroupItem<ItemBind>("Far", DebugItem::Kind::Float, &m_fFar);
+	In_pGroup->CreateGroupItem<ItemBind>("Aspect", DebugItem::Kind::Float, &m_fAspect);
+	In_pGroup->CreateGroupItem<ItemBind>("isShow", DebugItem::Kind::Bool, &m_bIsShow);
 }
 #endif

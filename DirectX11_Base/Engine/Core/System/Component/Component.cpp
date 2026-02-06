@@ -10,6 +10,8 @@
 // ==============================
 #include "Component.hpp"
 #include "Core/System/Object/GameObject.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Managers/DebugManager/SystemItem.hpp"
 
 Component::Component(_In_ std::string In_Name)
 	: m_Name(In_Name), m_pGameObject(nullptr)
@@ -42,6 +44,8 @@ void Component::DestroySelf() noexcept
 #ifdef _DEBUG
 void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
+	auto *group = In_pWindow->CreateItem<ItemComponentGroup>(m_Name, this);
+	Inspector(group);
 }
 #endif
 

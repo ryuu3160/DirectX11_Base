@@ -126,12 +126,11 @@ void BoxCollider::DrawColliderOutline(_In_ Gizmos *In_Gizmos) noexcept
 	AddLineVertical.get();
 }
 
-void BoxCollider::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
+void BoxCollider::Inspector(_In_ ItemGroup *In_pGroup)
 {
-	ColliderBase::RegisterDebugInspector(In_pWindow);
-	ItemGroup &Group = In_pWindow->GetGroupItem("BoxCollider");
-	Group.CreateGroupItem<ItemBind>("HalfExtents", ItemBind::Kind::Vector, &m_HalfExtents);
-	Group.CreateGroupItem<ItemBind>("Rotation##BoxCollider", ItemBind::Kind::Vector, &m_Rotation);
+	ColliderBase::Inspector(In_pGroup);
+	In_pGroup->CreateGroupItem<ItemBind>("HalfExtents", ItemBind::Kind::Vector, &m_HalfExtents);
+	In_pGroup->CreateGroupItem<ItemBind>("Rotation##BoxCollider", ItemBind::Kind::Vector, &m_Rotation);
 }
 
 void BoxCollider::GetLocalVertices(_Out_ DirectX::XMFLOAT3 outVertices[8]) const noexcept

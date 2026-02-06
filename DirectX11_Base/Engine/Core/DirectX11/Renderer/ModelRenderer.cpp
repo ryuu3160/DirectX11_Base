@@ -36,17 +36,6 @@ ModelRenderer::ModelRenderer()
 	, m_bUseMaterialShader(false)
 	, m_pShaderParamsPS{}, m_pShaderParamsVS{}
 {
-	if (!m_defVS && !m_defPS) // ‚Ç‚¿‚ç‚ànullptr
-	{
-		MakeDefaultShader();
-	}
-	m_pVS = reinterpret_cast<VertexShader*>(m_defVS.get());
-	m_pPS = m_defPS.get();
-
-	m_vecMeshes.clear();
-
-	m_pShaderParamsPS.clear();
-	m_pShaderParamsVS.clear();
 }
 
 ModelRenderer::~ModelRenderer()
@@ -54,6 +43,21 @@ ModelRenderer::~ModelRenderer()
 	m_pShaderParamsPS.clear();
 	m_pShaderParamsVS.clear();
 	m_vecMeshes.clear();
+}
+
+void ModelRenderer::Awake() noexcept
+{
+	if(!m_defVS && !m_defPS) // ‚Ç‚¿‚ç‚ànullptr
+	{
+		MakeDefaultShader();
+	}
+	m_pVS = reinterpret_cast<VertexShader *>(m_defVS.get());
+	m_pPS = m_defPS.get();
+
+	m_vecMeshes.clear();
+
+	m_pShaderParamsPS.clear();
+	m_pShaderParamsVS.clear();
 }
 
 void ModelRenderer::Update(_In_ float In_DeltaTime) noexcept
@@ -67,8 +71,11 @@ void ModelRenderer::Update(_In_ float In_DeltaTime) noexcept
 void ModelRenderer::SetVertexShader(_In_ Shader *In_Vs) noexcept
 {
 	VertexShader *cast = reinterpret_cast<VertexShader *>(In_Vs);
-	if (cast)
+	if(cast)
+	{
 		m_pVS = cast;
+
+	}
 }
 
 void ModelRenderer::SetPixelShader(_In_ Shader *In_pShader) noexcept
