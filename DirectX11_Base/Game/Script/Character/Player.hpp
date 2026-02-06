@@ -22,7 +22,7 @@ namespace
 /// <summary>
 /// PlayerƒNƒ‰ƒX
 /// </summary>
-class Player : public GameObject
+class Player : public Component
 {
 public:
 	Player(_In_ std::string_view In_Name);

@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Player.hpp"
-#include "../Game/Source/Object/Missile.hpp"
+#include "Game/Script/Missile.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -55,7 +55,7 @@ namespace
 }
 
 Player::Player(_In_ std::string_view In_Name)
-	: GameObject(In_Name.data())
+	: Component(In_Name.data())
 	, m_fSpeed(1.0f), m_pCamera(nullptr), m_ShotMissileNum(0)
 	, m_IsDestroyed(false)
 {
@@ -67,22 +67,6 @@ Player::~Player()
 
 void Player::Awake() noexcept
 {
-	auto Model = AddComponent<ModelRenderer>();
-	Model->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
-	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
-
-	SetPosition(cx_PlayerStartPos);
-	SetScale(cx_PlayerScale);
-	SetQuat(cx_PlayerStartQuat);
-	m_fSpeed = cx_PlayerStartSpeed;
-
-	// ミサイルのリロードタイマーをセット
-	for(int i = 0; i < 4; ++i)
-	{
-		m_ReloadTimer.push_back({ i, 0.0f });
-	}
 }
 
 void Player::Init() noexcept
@@ -100,15 +84,13 @@ void Player::Update(_In_ float In_DeltaTime) noexcept
 	UpdateChildMissile();
 	UpdateShoot();
 	
-	if (GetPosition().y < 0.0f && !m_IsDestroyed)
+	if (m_pGameObject->GetPosition().y < 0.0f && !m_IsDestroyed)
 	{
 		m_IsDestroyed = true;
 		SoundManager::GetInstance().Play("Explosion");
 		m_fSpeed = 0.0f;
-		m_pTransform->Translate(0.0f, -2.0f, 0.0f); // 地面にめり込ませる
+		m_pGameObject->GetTransform()->Translate(0.0f, -2.0f, 0.0f); // 地面にめり込ませる
 	}
-
-	GameObject::Update(In_DeltaTime);
 }
 
 void Player::SetCamera(_In_ GameObject *In_Camera) noexcept
@@ -119,7 +101,7 @@ void Player::SetCamera(_In_ GameObject *In_Camera) noexcept
 void Player::UpdateMovement()
 {
 	// ----- 旋回処理 -----
-	DirectX::XMFLOAT4 Quat = GetQuat();
+	DirectX::XMFLOAT4 Quat = m_pGameObject->GetQuat();
 	DirectX::XMVECTOR qRotate = DirectX::XMLoadFloat4(&Quat);
 	DirectX::XMVECTOR quat;
 
@@ -127,14 +109,14 @@ void Player::UpdateMovement()
 	if (Input::IsKeyPress(LeftYawKey))
 	{
 		// 左ヨー
-		DirectX::XMFLOAT3 up = GetUp();
+		DirectX::XMFLOAT3 up = m_pGameObject->GetUp();
 		quat = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&up), -cx_YawSpeed);
 		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
 	if (Input::IsKeyPress(RightYawKey))
 	{
 		// 右ヨー
-		DirectX::XMFLOAT3 up = GetUp();
+		DirectX::XMFLOAT3 up = m_pGameObject->GetUp();
 		quat = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&up), cx_YawSpeed);
 		qRotate = DirectX::XMQuaternionMultiply(qRotate, quat);
 	}
@@ -209,10 +191,10 @@ void Player::UpdateMovement()
 	DirectX::XMStoreFloat4(&Quat, qRotate);
 
 	// 前方ベクトル取得
-	DirectX::XMFLOAT3 front = GetFront();
+	DirectX::XMFLOAT3 front = m_pGameObject->GetFront();
 
 	// 移動
-	m_pTransform->Translate((front * MOVE_SPEED_SCALE) * m_fSpeed);
+	m_pGameObject->GetTransform()->Translate((front * MOVE_SPEED_SCALE) * m_fSpeed);
 }
 
 void Player::UpdateShoot()
@@ -226,8 +208,8 @@ void Player::UpdateShoot()
 		// ミサイル発射SE
 		SoundManager::GetInstance().Play("Missile");
 		std::string name = "Missile" + std::to_string(m_ShotMissileNum);
-		auto obj = GetScene()->CreateObject<Missile>(name,nullptr,false);
-		DirectX::XMFLOAT3 Pos = GetPosition();
+		auto obj = m_pGameObject->GetScene()->CreateObject<Missile>(name,nullptr,false);
+		DirectX::XMFLOAT3 Pos = m_pGameObject->GetPosition();
 		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&Pos);
 		auto targetPos = m_pTarget->GetPosition();
 		DirectX::XMVECTOR pos2 = DirectX::XMLoadFloat3(&targetPos);
@@ -241,14 +223,14 @@ void Player::UpdateShoot()
 		++m_ShotMissileNum; // 発射したミサイルの番号をインクリメント
 
 		// ミサイルの初期位置を設定
-		DirectX::XMFLOAT3 pos = m_pTransform->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->GetPosition();
+		DirectX::XMFLOAT3 pos = m_pGameObject->GetTransform()->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->GetPosition();
 		obj->SetPosition(pos);
 		obj->SetStartPosition(pos);
-		obj->SetQuat(GetQuat());
+		obj->SetQuat(m_pGameObject->GetQuat());
 		obj->SetSpeed(cx_MissileSpeed); // 自機の速度に+2.0fした速度で発射
 
 		// 子オブジェクトを削除
-		m_pTransform->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->DestroySelf();
+		m_pGameObject->GetTransform()->FindChild("Missile" + std::to_string(m_MissileIndices[0]))->DestroySelf();
 		
 		// リロードタイマーをセット
 		m_ReloadTimer.push_back({ m_MissileIndices[0], cx_MissileReloadTime });
@@ -269,24 +251,24 @@ void Player::UpdateReload()
 			{
 				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				std::string name = "Missile" + std::to_string((*itr).first);
-				auto obj = GetScene()->CreateObject<Missile>(name, m_pTransform, false);
+				auto obj = m_pGameObject->GetScene()->CreateObject<Missile>(name, m_pGameObject->GetTransform(), false);
 				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
-				DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
-				pos -= GetFront() * 0.5f; // 少し後方にオフセット
+				DirectX::XMFLOAT3 pos = m_pGameObject->GetUp() * 1.03f;
+				pos -= m_pGameObject->GetFront() * 0.5f; // 少し後方にオフセット
 				switch ((*itr).first)
 				{
 				case 0:
-					pos += GetRight() * 1.68f; // 右側
+					pos += m_pGameObject->GetRight() * 1.68f; // 右側
 					break;
 				case 1:
-					pos += GetRight() * 1.26f; // 右側
+					pos += m_pGameObject->GetRight() * 1.26f; // 右側
 					break;
 				case 2:
-					pos -= GetRight() * 1.26f; // 左側
+					pos -= m_pGameObject->GetRight() * 1.26f; // 左側
 					break;
 				case 3:
-					pos -= GetRight() * 1.68f; // 左側
+					pos -= m_pGameObject->GetRight() * 1.68f; // 左側
 					break;
 				}
 				obj->SetPosition(pos);
@@ -301,26 +283,26 @@ void Player::UpdateReload()
 
 void Player::UpdateChildMissile()
 {
-	auto missiles = m_pTransform->GetChildren();
+	auto missiles = m_pGameObject->GetTransform()->GetChildren();
 	for (auto &itr : missiles)
 	{
 		// 位置更新
-		DirectX::XMFLOAT3 pos = GetUp() * 1.03f;
-		pos -= GetFront() * 0.5f; // 少し後方にオフセット
+		DirectX::XMFLOAT3 pos = m_pGameObject->GetUp() * 1.03f;
+		pos -= m_pGameObject->GetFront() * 0.5f; // 少し後方にオフセット
 		int num = FromString<int>(itr->GetGameObject()->GetName().substr(7)); // "Missile"の7文字目以降を数値に変換
 		switch (num)
 		{
 		case 0:
-			pos += GetRight() * 1.68f; // 右側
+			pos += m_pGameObject->GetRight() * 1.68f; // 右側
 			break;
 		case 1:
-			pos += GetRight() * 1.26f; // 右側
+			pos += m_pGameObject->GetRight() * 1.26f; // 右側
 			break;
 		case 2:
-			pos -= GetRight() * 1.26f; // 左側
+			pos -= m_pGameObject->GetRight() * 1.26f; // 左側
 			break;
 		case 3:
-			pos -= GetRight() * 1.68f; // 左側
+			pos -= m_pGameObject->GetRight() * 1.68f; // 左側
 			break;
 		}
 		itr->SetPosition(pos);

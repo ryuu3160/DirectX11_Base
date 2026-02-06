@@ -135,26 +135,29 @@
     <Filter Include="Game">
       <UniqueIdentifier>{4dda4223-894e-469b-a87d-c3cd55ed5709}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source">
-      <UniqueIdentifier>{f0d793d5-dec2-49c8-9ccf-2752fab45bd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Component\Camera">
       <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Core\System\Generated">
       <UniqueIdentifier>{b36b91f6-4cfc-4ce5-ad4d-d262cd32b53a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source\Scene">
-      <UniqueIdentifier>{74f19f34-c48e-4cd8-aa14-a141028be834}</UniqueIdentifier>
+    <Filter Include="Game\Script">
+      <UniqueIdentifier>{fdc89481-ef53-425e-93d6-7cfabe02dc74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source\Object">
-      <UniqueIdentifier>{e6dfc3d1-7980-4e4b-872a-d6db9ae72b2b}</UniqueIdentifier>
+    <Filter Include="Game\Object">
+      <UniqueIdentifier>{e4a58c3b-eee5-4479-991c-ddfea568cef6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source\Object\Character">
-      <UniqueIdentifier>{4f7abe01-2374-40a6-bf71-b4903829010d}</UniqueIdentifier>
+    <Filter Include="Game\Script\Character">
+      <UniqueIdentifier>{e27b85e4-5c44-42ae-acb5-ea07d3f1163f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source\Object\Environment">
-      <UniqueIdentifier>{1720234c-cf44-497f-a3df-6e2ccc5641c3}</UniqueIdentifier>
+    <Filter Include="Game\Script\Scene">
+      <UniqueIdentifier>{c579ac7e-2540-42ba-a9a8-4e1d8c1d1fc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Script\Environment">
+      <UniqueIdentifier>{0dc05f0c-265b-405f-bdd5-29cde3a1ebc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Object\Character">
+      <UniqueIdentifier>{c7ec5b82-5bb1-4043-ace2-7237ce4d7505}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -440,29 +443,35 @@
     <ClCompile Include="Engine\Core\System\Component\GridComponent.cpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Scene\SceneGame.cpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClCompile Include="Game\Script\Environment\SeaLevel.cpp">
+      <Filter>Game\Script\Environment</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Object\Character\Enemy.cpp">
-      <Filter>Game\Source\Object\Character</Filter>
+    <ClCompile Include="Game\Script\Scene\SceneGame.cpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Object\Character\Player.cpp">
-      <Filter>Game\Source\Object\Character</Filter>
+    <ClCompile Include="Game\Script\Scene\SceneResult.cpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Object\Environment\SeaLevel.cpp">
-      <Filter>Game\Source\Object\Environment</Filter>
+    <ClCompile Include="Game\Script\Scene\SceneTitle.cpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Object\MainCamera.cpp">
-      <Filter>Game\Source\Object</Filter>
+    <ClCompile Include="Game\Script\MainCamera.cpp">
+      <Filter>Game\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Object\Missile.cpp">
-      <Filter>Game\Source\Object</Filter>
+    <ClCompile Include="Game\Script\Missile.cpp">
+      <Filter>Game\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Scene\SceneResult.cpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClCompile Include="Game\Script\Character\Enemy.cpp">
+      <Filter>Game\Script\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Source\Scene\SceneTitle.cpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClCompile Include="Game\Script\Character\Player.cpp">
+      <Filter>Game\Script\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object\Character\EnemyObj.cpp">
+      <Filter>Game\Object\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Object\Character\PlayerObj.cpp">
+      <Filter>Game\Object\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -769,29 +778,35 @@
     <ClInclude Include="Engine\Core\System\Component\GridComponent.hpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Scene\SceneGame.hpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClInclude Include="Game\Script\Environment\SeaLevel.hpp">
+      <Filter>Game\Script\Environment</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Object\Character\Enemy.hpp">
-      <Filter>Game\Source\Object\Character</Filter>
+    <ClInclude Include="Game\Script\Scene\SceneGame.hpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Object\Character\Player.hpp">
-      <Filter>Game\Source\Object\Character</Filter>
+    <ClInclude Include="Game\Script\Scene\SceneResult.hpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Object\Environment\SeaLevel.hpp">
-      <Filter>Game\Source\Object\Environment</Filter>
+    <ClInclude Include="Game\Script\Scene\SceneTitle.hpp">
+      <Filter>Game\Script\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Object\MainCamera.hpp">
-      <Filter>Game\Source\Object</Filter>
+    <ClInclude Include="Game\Script\MainCamera.hpp">
+      <Filter>Game\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Object\Missile.hpp">
-      <Filter>Game\Source\Object</Filter>
+    <ClInclude Include="Game\Script\Missile.hpp">
+      <Filter>Game\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Scene\SceneResult.hpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClInclude Include="Game\Script\Character\Enemy.hpp">
+      <Filter>Game\Script\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Source\Scene\SceneTitle.hpp">
-      <Filter>Game\Source\Scene</Filter>
+    <ClInclude Include="Game\Script\Character\Player.hpp">
+      <Filter>Game\Script\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\Character\EnemyObj.hpp">
+      <Filter>Game\Object\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Object\Character\PlayerObj.hpp">
+      <Filter>Game\Object\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
