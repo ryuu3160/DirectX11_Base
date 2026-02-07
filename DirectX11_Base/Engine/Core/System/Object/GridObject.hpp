@@ -24,7 +24,7 @@ class GridObject : public GameObject
 {
 public:
 	GridObject();
-	GridObject(_In_ std::string In_Name);
+	GridObject(_In_ std::string_view In_Name);
 	~GridObject();
 
 	void Init() noexcept override;

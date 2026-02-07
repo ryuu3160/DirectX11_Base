@@ -124,7 +124,7 @@ public:
 		DebugLogError(msg);
 	}
 
-	void DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item);
+	void DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *Inout_Item);
 
 	void HideAllWindows();
 	void ShowAllWindows();
@@ -134,14 +134,14 @@ private:
 	~DebugManager();
 
 	void SaveDebugData();
-	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item);
-	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugWindow *In_Window);
+	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugItem *In_Item);
+	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindow *In_Window);
 
 	void LoadDebugData();
 
-	void WindowDataRead(_In_ std::string In_Path, _Inout_ DebugWindow *Inout_Window);
+	void WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindow *Inout_Window);
 
-	std::string CharacterLimitRecursion(_In_ std::string In_Text, _In_ int In_LimitNum);
+	std::string CharacterLimitRecursion(_In_ std::string_view In_Text, _In_ int In_LimitNum);
 
 private:
 	ImGuiWindowFlags m_ToolBarFlags;

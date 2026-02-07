@@ -14,7 +14,7 @@
 #include "Core/System/Component/Camera/CameraDCC.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
-RenderComponent::RenderComponent(_In_ std::string In_Name)
+RenderComponent::RenderComponent(_In_ std::string_view In_Name)
 	: Component(In_Name)
 	, m_nLayer(0), m_LayerGroup(LayerGroup::LayerGroup_Default), m_PrevLayerGroup(LayerGroup::LayerGroup_Default)
 	, m_RenderManager(RenderManager::GetInstance())

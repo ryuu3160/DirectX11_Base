@@ -26,7 +26,7 @@ class GameObject : public Object
 {
 	friend class SceneBase;
 public:
-	GameObject(_In_ std::string In_Name);
+	GameObject(_In_ std::string_view In_Name);
 	virtual ~GameObject();
 
 	virtual void OnEnable() noexcept override;
@@ -94,7 +94,7 @@ public:
 	requires std::derived_from<T, Component>
 	void RemoveComponent(_In_ T *In_pComponent);
 
-	void RemoveComponent(_In_ std::string In_Name);
+	void RemoveComponent(_In_ std::string_view In_Name);
 
 	/// <summary>
 	/// 自身を所属しているシーンから破棄します。
@@ -108,7 +108,7 @@ public:
 	inline SceneBase *GetScene() const noexcept { return m_pScene; }
 
 	inline const std::string &GetName() const noexcept { return m_Name; }
-	void Rename(_In_ std::string In_Name) noexcept;
+	void Rename(_In_ std::string_view In_Name) noexcept;
 
 	inline Transform *GetTransform() const noexcept { return m_pTransform; }
 

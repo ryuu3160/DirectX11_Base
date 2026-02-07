@@ -179,7 +179,7 @@ public:
 	};
 
 public:
-	Component(_In_ std::string In_Name);
+	Component(_In_ std::string_view In_Name);
 	virtual  ~Component();
 	virtual void OnEnable() noexcept override {};
 	virtual void OnDisable() noexcept override {};

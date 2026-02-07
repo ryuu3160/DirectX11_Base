@@ -15,7 +15,7 @@
 #include "Core/System/Managers/DebugManager/DebugItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
-ColliderBase::ColliderBase(_In_ std::string In_Name)
+ColliderBase::ColliderBase(_In_ std::string_view In_Name)
 	: Component(In_Name)
 	, m_IsTrigger(true), m_IsCollision(false), m_Type(COLLIDER_NONE)
 	, m_CollisionManager(CollisionManager::GetInstance())

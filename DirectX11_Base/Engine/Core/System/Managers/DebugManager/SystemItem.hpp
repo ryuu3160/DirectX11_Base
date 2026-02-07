@@ -32,7 +32,7 @@ class ItemHierarchy : public DebugItem
 public:
     using SelectCallback = std::function<void(GameObject *)>;
 
-    ItemHierarchy(_In_ std::string In_Name, _In_ SceneBase *In_pScene, _In_ SelectCallback In_Func = nullptr);
+    ItemHierarchy(_In_ std::string_view In_Name, _In_ SceneBase *In_pScene, _In_ SelectCallback In_Func = nullptr);
     ~ItemHierarchy();
 
     void DrawImGui() override;
@@ -121,7 +121,7 @@ class ItemComponentSelector : public DebugItem
 public:
     using UpdateCallback = std::function<void(GameObject *)>;
 
-    ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject);
+    ItemComponentSelector(_In_ std::string_view In_Name, _In_ GameObject *In_pGameObject);
     ~ItemComponentSelector();
 
     void DrawImGui() override;

@@ -38,7 +38,7 @@ enum ColliderType
 class ColliderBase : public Component
 {
 public:
-	ColliderBase(_In_ std::string In_Name);
+	ColliderBase(_In_ std::string_view In_Name);
 	virtual ~ColliderBase();
 
 	virtual void SaveLoad(_In_ DataAccessor *In_Data) override;

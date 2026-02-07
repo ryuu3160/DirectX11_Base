@@ -16,7 +16,7 @@ CameraObj::CameraObj()
 {
 }
 
-CameraObj::CameraObj(_In_ std::string In_Name)
+CameraObj::CameraObj(_In_ std::string_view In_Name)
 	: GameObject(In_Name)
 	, m_pComponent(nullptr)
 {

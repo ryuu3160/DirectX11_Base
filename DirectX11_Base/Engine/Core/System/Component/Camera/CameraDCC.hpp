@@ -30,7 +30,7 @@ private:
 	};
 public:
 	CameraDCC();
-	CameraDCC(_In_ std::string In_Name);
+	CameraDCC(_In_ std::string_view In_Name);
 	~CameraDCC();
 
 	void Init() noexcept override;

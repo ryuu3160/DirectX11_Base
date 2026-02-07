@@ -26,7 +26,7 @@ CameraDCC::CameraDCC()
 {
 }
 
-CameraDCC::CameraDCC(_In_ std::string In_Name)
+CameraDCC::CameraDCC(_In_ std::string_view In_Name)
 	: Component(In_Name)
 	, m_nState(CAM_DCC_NONE)
 	, m_pCamera(nullptr)

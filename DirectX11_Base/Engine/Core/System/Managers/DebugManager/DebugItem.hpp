@@ -91,7 +91,7 @@ public:
 
 public:
 	// •¶š—ñ‚©‚ç€–Ú‚Ìí•Ê‚ğæ“¾
-	static Kind StrToKind(_In_ std::string In_Str);
+	static Kind StrToKind(_In_ std::string_view In_Str);
 	// €–Ú‚Ìí•Ê‚©‚ç•¶š—ñ‚ğæ“¾
 	static std::string KindToStr(_In_ Kind In_Kind);
 

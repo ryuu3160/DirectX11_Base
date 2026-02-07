@@ -27,7 +27,7 @@ class CameraObj : public GameObject
 {
 public:
 	CameraObj();
-	CameraObj(_In_ std::string In_Name);
+	CameraObj(_In_ std::string_view In_Name);
 	~CameraObj();
 
 	virtual void Awake() noexcept override;

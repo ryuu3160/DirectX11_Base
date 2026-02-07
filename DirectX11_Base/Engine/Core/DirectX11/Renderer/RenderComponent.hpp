@@ -40,7 +40,7 @@ enum LayerGroup : int
 class RenderComponent : public Component
 {
 public:
-	RenderComponent(_In_ std::string In_Name);
+	RenderComponent(_In_ std::string_view In_Name);
 	virtual ~RenderComponent();
 
 	/// <summary>
