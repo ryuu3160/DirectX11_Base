@@ -156,7 +156,7 @@ void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_vie
 	m_Objects.insert(std::pair<std::string, GameObject *>(NewObjName, gameObj));
 }
 
-void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
+void SceneBase::DestroyObj(_In_ std::string_view In_Name) noexcept
 {
 	// Šù‚É”jŠü—\’èƒŠƒXƒg‚É“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
 	for (auto &itr : m_DeadItems)
@@ -164,7 +164,7 @@ void SceneBase::DestroyObj(_In_ std::string In_Name) noexcept
 		if (itr == In_Name)
 			return;
 	}
-	m_DeadItems.push_back(In_Name);
+	m_DeadItems.push_back(In_Name.data());
 }
 
 void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept

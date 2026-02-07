@@ -91,7 +91,7 @@ public:
 	/// 指定された名前のオブジェクトを破棄します
 	/// </summary>
 	/// <param name="[In_Name]">破棄するオブジェクトの名前</param>
-	void DestroyObj(_In_ std::string In_Name) noexcept;
+	void DestroyObj(_In_ std::string_view In_Name) noexcept;
 
 	/// <summary>
 	/// シーンを取得する関数

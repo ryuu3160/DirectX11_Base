@@ -13,8 +13,8 @@
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
 
-Component::Component(_In_ std::string In_Name)
-	: m_Name(In_Name), m_pGameObject(nullptr)
+Component::Component(_In_ std::string_view In_Name)
+	: m_Name(In_Name.data()), m_pGameObject(nullptr)
 {
 }
 

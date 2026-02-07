@@ -170,7 +170,7 @@ void DebugItem::RemoveListItem(_In_ std::string_view In_Name)
 	}
 }
 
-DebugItem::Kind DebugItem::StrToKind(_In_ std::string In_Str)
+DebugItem::Kind DebugItem::StrToKind(_In_ std::string_view In_Str)
 {
 	if (In_Str == "Label")		return DebugItem::Label;
 	if (In_Str == "Bool")		return DebugItem::Bool;

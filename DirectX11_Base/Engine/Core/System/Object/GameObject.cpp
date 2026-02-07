@@ -16,8 +16,8 @@
 #include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 
-GameObject::GameObject(_In_ std::string In_Name)
-	: m_Name(In_Name)
+GameObject::GameObject(_In_ std::string_view In_Name)
+	: m_Name(In_Name.data())
 	, m_pScene(nullptr)
 	, m_Data(nullptr)
 	, m_pTransform(nullptr)
@@ -200,7 +200,7 @@ Component *GameObject::AddComponentByName(_In_ std::string_view In_Name)
 	return component;
 }
 
-void GameObject::RemoveComponent(_In_ std::string In_Name)
+void GameObject::RemoveComponent(_In_ std::string_view In_Name)
 {
 	for (auto itr = m_Components.begin(); itr != m_Components.end(); ++itr)
 	{
@@ -229,7 +229,7 @@ void GameObject::DestroySelf() noexcept
 		itr->GetGameObject()->DestroySelf();
 }
 
-void GameObject::Rename(_In_ std::string In_Name) noexcept
+void GameObject::Rename(_In_ std::string_view In_Name) noexcept
 {
 	m_pScene->RenameObj(m_Name, In_Name);
 	m_Name = In_Name;

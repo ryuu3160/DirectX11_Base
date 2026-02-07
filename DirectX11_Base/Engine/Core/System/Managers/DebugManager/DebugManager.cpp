@@ -417,19 +417,20 @@ void DebugManager::SaveDebugData()
 	}
 }
 
-void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugItem *In_Item)
+void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugItem *In_Item)
 {
+	std::string Path = In_Path.data();
+
 	if (In_Item->GetKind() == DebugItem::Kind::Group)
 	{
 		ItemGroup *group = dynamic_cast<ItemGroup *>(In_Item);
 		if (!group)
 			return;
-
-		In_Path += group->GetName() + "/";
+		Path += group->GetName() + "/";
 
 		for (auto &item : group->GetGroupItems())
 		{
-			DataWrite(Inout_Data, In_Path, item);
+			DataWrite(Inout_Data, Path, item);
 		}
 
 		return;
@@ -455,7 +456,7 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	// Ží—Þ•Û‘¶
 	Inout_Data += DebugItem::KindToStr(In_Item->GetKind()) + ",";
 	// ƒpƒX•Û‘¶
-	Inout_Data += In_Path + In_Item->GetName() + ",";
+	Inout_Data += Path + In_Item->GetName() + ",";
 	// ’l•Û‘¶
 	switch (In_Item->GetKind())
 	{
@@ -540,13 +541,13 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	Inout_Data += "\n";
 }
 
-void DebugManager::WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string In_Path, _In_ DebugWindow *In_Window)
+void DebugManager::WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindow *In_Window)
 {
 	if (!In_Window)
 		return;
 
 	Inout_Data += "Window,";
-	Inout_Data += In_Path + In_Window->GetName() + ",";
+	Inout_Data += In_Path.data() + In_Window->GetName() + ",";
 	Inout_Data += In_Window->IsOpen() ? "1" : "0";
 	Inout_Data += "\n";
 }
@@ -582,44 +583,48 @@ void DebugManager::LoadDebugData()
 	}
 }
 
-void DebugManager::WindowDataRead(_In_ std::string In_Path, _Inout_ DebugWindow *Inout_Window)
+void DebugManager::WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindow *Inout_Window)
 {
 	if (!Inout_Window)
 		return;
-	In_Path += Inout_Window->GetName();
+
+	std::string Path = In_Path.data();
+	Path += Inout_Window->GetName();
 	auto DataItr = std::find_if(m_SaveData.begin(), m_SaveData.end(),
-		[&In_Path](const SaveData &data)
+		[&Path](const SaveData &data)
 		{
-			return (data.path == In_Path);
+			return (data.path == Path);
 		});
 	if (DataItr == m_SaveData.end())
 		return;
 	Inout_Window->SetIsOpen(atoi(DataItr->value.c_str()) > 0);
 }
 
-std::string DebugManager::CharacterLimitRecursion(_In_ std::string In_Text, _In_ int In_LimitNum)
+std::string DebugManager::CharacterLimitRecursion(_In_ std::string_view In_Text, _In_ int In_LimitNum)
 {
 	if (In_Text.length() >= In_LimitNum)
 	{
-		std::string text;
-		text = In_Text.substr(In_Text.find('\n') + 1);
+		std::string text = In_Text.data();
+		text = text.substr(In_Text.find('\n') + 1);
 		return CharacterLimitRecursion(text, In_LimitNum);
 	}
-	return In_Text;
+	return In_Text.data();
 }
 
-void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_Item)
+void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *Inout_Item)
 {
+	std::string Path = In_Path.data();
+
 	if (Inout_Item->GetKind() == DebugItem::Kind::Group)
 	{
 		ItemGroup *group = dynamic_cast<ItemGroup *>(Inout_Item);
 		if (!group)
 			return;
-		In_Path += group->GetName() + "/";
+		Path += group->GetName() + "/";
 
 		for(auto &item : group->GetGroupItems())
 		{
-			DataRead(In_Path, item);
+			DataRead(Path, item);
 		}
 		return;
 	}
@@ -633,7 +638,7 @@ void DebugManager::DataRead(_In_ std::string In_Path, _Inout_ DebugItem *Inout_I
 	if (!pValue && !pList)
 		return;
 
-	In_Path += Inout_Item->GetName();
+	Path += Inout_Item->GetName();
 
 	auto DataItr = std::find_if(m_SaveData.begin(), m_SaveData.end(),
 		[&In_Path](const SaveData &data)

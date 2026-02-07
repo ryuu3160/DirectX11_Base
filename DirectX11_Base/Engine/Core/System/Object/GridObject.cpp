@@ -17,7 +17,7 @@ GridObject::GridObject()
 {
 }
 
-GridObject::GridObject(_In_ std::string In_Name)
+GridObject::GridObject(_In_ std::string_view In_Name)
 	: GameObject(In_Name)
 	, m_pRenderComponent(nullptr)
 	, m_pGridComponent(nullptr)

@@ -19,7 +19,7 @@ class SkyBoxObj : public GameObject
 {
 public:
 	SkyBoxObj();
-	SkyBoxObj(_In_ std::string In_Name);
+	SkyBoxObj(_In_ std::string_view In_Name);
 	~SkyBoxObj();
 
 	void Awake() noexcept override;

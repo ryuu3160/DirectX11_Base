@@ -25,7 +25,7 @@ namespace
 //  ItemHierarchy
 // ==============================
 
-ItemHierarchy::ItemHierarchy(_In_ std::string In_Name, _In_ SceneBase *In_pScene, _In_ SelectCallback In_Func)
+ItemHierarchy::ItemHierarchy(_In_ std::string_view In_Name, _In_ SceneBase *In_pScene, _In_ SelectCallback In_Func)
     : m_pScene(In_pScene)
     , m_SelectedObject(nullptr)
     , m_DraggedObject(nullptr)
@@ -33,7 +33,7 @@ ItemHierarchy::ItemHierarchy(_In_ std::string In_Name, _In_ SceneBase *In_pScene
 	, m_RenamingObject(nullptr)
 	, m_RenameJustStarted(false)
 {
-    m_Name = In_Name;
+    m_Name = In_Name.data();
     m_Kind = Kind::__Hierarchy;
     m_RenameBuffer[0] = '\0';
 }
@@ -374,11 +374,11 @@ void ItemHierarchy::SelectObject(_Inout_ GameObject *In_Obj)
 //  ItemComponentSelector
 // ==============================
 
-ItemComponentSelector::ItemComponentSelector(_In_ std::string In_Name, _In_ GameObject *In_pGameObject)
+ItemComponentSelector::ItemComponentSelector(_In_ std::string_view In_Name, _In_ GameObject *In_pGameObject)
     : m_pGameObject(In_pGameObject)
     , m_SelectedCategory("All")
 {
-    m_Name = In_Name;
+    m_Name = In_Name.data();
     m_Kind = Kind::Command;
     m_SearchBuffer[0] = '\0';
 }

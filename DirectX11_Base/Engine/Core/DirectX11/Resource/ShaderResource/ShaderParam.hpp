@@ -18,7 +18,7 @@ class ShaderParam
 public:
 
 	template <typename T>
-	ShaderParam(_In_ std::string In_ParamName, _In_ int In_SlotNum, _In_ T *In_Param, _In_ size_t In_ArraySize)
+	ShaderParam(_In_ std::string_view In_ParamName, _In_ int In_SlotNum, _In_ T *In_Param, _In_ size_t In_ArraySize)
 		: m_pParam(In_Param), m_SlotNum(In_SlotNum), m_ParamName(In_ParamName)
 	{
 		if (In_Param == nullptr || In_ArraySize == 0)
