@@ -41,21 +41,21 @@ public:
 	/// </summary>
 	/// <param name="[In_ObjectName]">取得するオブジェクトの名前</param>
 	/// <returns>指定された名前に対応するcpon_objectへの参照</returns>
-	cpon_object &operator[](_In_ std::string In_ObjectName);
+	cpon_object &operator[](_In_ std::string_view In_ObjectName);
 
 	/// <summary>
 	/// 指定された名前のオブジェクトへのシェアポインタを返します
 	/// </summary>
 	/// <param name="[In_ObjectName]">取得するオブジェクトの名前</param>
 	/// <returns>指定された名前のcpon_objectへのシェアポインタ</returns>
-	std::shared_ptr<cpon_object> GetObjectPtr(_In_ std::string In_ObjectName);
+	std::shared_ptr<cpon_object> GetObjectPtr(_In_ std::string_view In_ObjectName);
 
 	/// <summary>
 	/// 指定された名前のオブジェクトを作成し、その参照を返します
 	/// </summary>
 	/// <param name="[In_ObjectName]">作成するオブジェクトの名前を表す文字列ビュー</param>
 	/// <returns>作成された cpon_object への参照を返します</returns>
-	std::shared_ptr<cpon_object> CreateObject(_In_ std::string_view In_ObjectName);
+	std::shared_ptr<cpon_object> CreateObject(_In_ const std::string_view In_ObjectName);
 
 	/// <summary>
 	/// <para>指定された名前のオブジェクトを作成します</para>
@@ -63,7 +63,7 @@ public:
 	/// </summary>
 	/// <param name="[In_ObjectName]">オブジェクト名</param>
 	/// <returns>作成された、または既にあるオブジェクトへのシェアポインタ</returns>
-	std::shared_ptr<cpon_object> TryCreateObject(_In_ std::string In_ObjectName);
+	std::shared_ptr<cpon_object> TryCreateObject(_In_ std::string_view In_ObjectName);
 
 	/// <summary>
 	/// 既に存在するオブジェクトを追加します
@@ -94,7 +94,7 @@ public:
 	/// </summary>
 	/// <param name="[In_FilePath]">書き込み先のファイルパスを表す入力用のstd::string_view</param>
 	/// <returns>書き込みに成功した場合はtrue、失敗した場合はfalseを返します</returns>
-	bool WriteToFile(_In_ std::string_view In_FilePath);
+	bool WriteToFile(_In_ const std::string_view In_FilePath);
 
 	/// <summary>
 	/// <para>指定したファイルからデータを読み込みます</para>
@@ -102,7 +102,7 @@ public:
 	/// </summary>
 	/// <param name="[In_FilePath]">読み込むファイルのパスを示す文字列ビュー。</param>
 	/// <returns>読み込みに成功した場合はtrue、失敗した場合はfalseを返します</returns>
-	bool LoadFromFile(_In_ std::string_view In_FilePath);
+	bool LoadFromFile(_In_ const std::string_view In_FilePath);
 
 private:
 
@@ -116,16 +116,16 @@ private:
 	void WriteDataBlockArray(_In_ std::ofstream &In_File, _In_ const cpon_block::Array &In_Array);
 
 	bool ReadObject(_In_ std::ifstream &In_File, _In_ std::string_view In_Line, _In_ std::shared_ptr<cpon_object> In_Object, _In_ std::string_view In_FilePath);
-	std::string ReadObjectName(_In_ std::string_view In_Line) const;
-	int ReadObjectDataCount(_In_ std::string_view In_Line);
-	void ReadBlockInfo(_In_ std::string_view In_Line, _Out_ int &Out_BlockNum, _Out_ std::string &Out_BlockHints);
-	void ReadHintInfo(_In_ std::string_view In_Hint, _Out_ std::string &Out_HintID, _Out_ std::string &Out_HintType);
-	void ReadBlockValue(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::string_view In_Line, _In_ std::string_view In_HintID, _In_ std::string_view In_HintType);
-	void ReadBlockArray(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::string_view In_Line, _In_ std::string_view In_HintID, _In_ std::string_view In_HintType);
+	std::string ReadObjectName(_In_ const std::string_view In_Line) const;
+	int ReadObjectDataCount(_In_ const std::string_view In_Line);
+	void ReadBlockInfo(_In_ const std::string_view In_Line, _Out_ int &Out_BlockNum, _Out_ std::string &Out_BlockHints);
+	void ReadHintInfo(_In_ const std::string_view In_Hint, _Out_ std::string &Out_HintID, _Out_ std::string &Out_HintType);
+	void ReadBlockValue(_In_ std::shared_ptr<cpon_block> In_Block, _In_ const std::string_view In_Line, _In_ const std::string_view In_HintID, _In_ const std::string_view In_HintType);
+	void ReadBlockArray(_In_ std::shared_ptr<cpon_block> In_Block, _In_ const std::string_view In_Line, _In_ const std::string_view In_HintID, _In_ const std::string_view In_HintType);
 
-	int CountElement(_In_ std::string_view In_Data, _In_ char In_CountTarget) const noexcept;
+	int CountElement(_In_ const std::string_view In_Data, _In_ char In_CountTarget) const noexcept;
 
-	cpon_block::Array CreateArrayByType(_In_ std::string_view In_Type);
+	cpon_block::Array CreateArrayByType(_In_ const std::string_view In_Type);
 
 	template<typename T>
 	std::string ToStr(_In_ T In_Value)
@@ -138,7 +138,7 @@ private:
 	}
 
 	template<typename T>
-	T FromStr(_In_ std::string_view In_Str)
+	T FromStr(_In_ const std::string_view In_Str)
 	{
 		T Value;
 		std::from_chars(In_Str.data(), In_Str.data() + In_Str.size(), Value);

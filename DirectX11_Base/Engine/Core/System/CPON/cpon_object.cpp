@@ -10,7 +10,7 @@
 // ==============================
 #include "cpon_object.hpp"
 
-void cpon_block::SetValue(_In_ std::string_view In_Key, _In_ const DataItem &In_Value)
+void cpon_block::SetValue(_In_ const std::string_view In_Key, _In_ const DataItem &In_Value)
 {
 	auto result = m_BlockData.try_emplace(std::string(In_Key), In_Value);
 	if(!result.second)
@@ -22,7 +22,7 @@ void cpon_block::SetValue(_In_ std::string_view In_Key, _In_ const DataItem &In_
 	CreateHints(In_Key, In_Value);
 }
 
-cpon_block::Array *cpon_block::CreateArray(_In_ std::string_view In_Key, _In_ const Array &In_Values)
+cpon_block::Array *cpon_block::CreateArray(_In_ const std::string_view In_Key, _In_ const Array &In_Values)
 {
 	auto res = m_BlockData.try_emplace(std::string(In_Key), In_Values);
 	if(!res.second)
@@ -32,7 +32,7 @@ cpon_block::Array *cpon_block::CreateArray(_In_ std::string_view In_Key, _In_ co
 	return &(std::get<Array>(m_BlockData[std::string(In_Key)]));
 }
 
-cpon_block::Object cpon_block::CreateObject(_In_ std::string_view In_Key)
+cpon_block::Object cpon_block::CreateObject(_In_ const std::string_view In_Key)
 {
 	Object obj = std::make_shared<cpon_object>(m_NestedLevel);
 	auto res = this->m_BlockData.try_emplace(std::string(In_Key), obj);
@@ -56,7 +56,7 @@ cpon_block::Object cpon_block::AddObject(_In_ Object In_Object)
 	return In_Object;
 }
 
-cpon_block::Object cpon_block::GetObject(_In_ std::string_view In_Key)
+cpon_block::Object cpon_block::GetObject(_In_ const std::string_view In_Key)
 {
 	auto itr = m_BlockData.find(std::string(In_Key));
 	if(itr != m_BlockData.end())
@@ -77,7 +77,7 @@ cpon_block::Object cpon_block::GetObject(_In_ std::string_view In_Key)
 	}
 }
 
-void cpon_block::CreateHints(_In_ std::string_view In_TagName, _In_ DataItem In_Data)
+void cpon_block::CreateHints(_In_ const std::string_view In_TagName, _In_ DataItem In_Data)
 {
 	if (m_BlockHintsRef.find(std::string(In_TagName) + ":") != std::string::npos)
 		return;

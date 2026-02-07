@@ -30,12 +30,12 @@ cpon_object &cpon::operator[](_In_ int In_Index)
 	return *(m_Objects[In_Index]);
 }
 
-cpon_object &cpon::operator[](_In_ std::string In_ObjectName)
+cpon_object &cpon::operator[](_In_ std::string_view In_ObjectName)
 {
 	auto itr = std::find_if(m_Objects.begin(), m_Objects.end(),
 		[&In_ObjectName](const std::shared_ptr<cpon_object> &obj)
 		{
-			return obj->GetObjectName() == In_ObjectName;
+			return obj->GetObjectName() == In_ObjectName.data();
 		});
 	if (itr != m_Objects.end())
 		return **itr;
@@ -43,19 +43,19 @@ cpon_object &cpon::operator[](_In_ std::string In_ObjectName)
 	throw std::out_of_range("指定された名前のオブジェクトが存在しません: " + In_ObjectName);
 }
 
-std::shared_ptr<cpon_object> cpon::GetObjectPtr(_In_ std::string In_ObjectName)
+std::shared_ptr<cpon_object> cpon::GetObjectPtr(_In_ std::string_view In_ObjectName)
 {
 	auto itr = std::find_if(m_Objects.begin(), m_Objects.end(),
 		[&In_ObjectName](const std::shared_ptr<cpon_object> &obj)
 		{
-			return obj->GetObjectName() == In_ObjectName;
+			return obj->GetObjectName() == In_ObjectName.data();
 		});
 	if(itr != m_Objects.end())
 		return *itr;
 	return nullptr;
 }
 
-std::shared_ptr<cpon_object> cpon::CreateObject(_In_ std::string_view In_ObjectName)
+std::shared_ptr<cpon_object> cpon::CreateObject(_In_ const std::string_view In_ObjectName)
 {
 	auto newObject = std::make_shared<cpon_object>();
 	newObject->SetObjectName(In_ObjectName);
@@ -63,12 +63,12 @@ std::shared_ptr<cpon_object> cpon::CreateObject(_In_ std::string_view In_ObjectN
 	return newObject;
 }
 
-std::shared_ptr<cpon_object> cpon::TryCreateObject(_In_ std::string In_ObjectName)
+std::shared_ptr<cpon_object> cpon::TryCreateObject(_In_ std::string_view In_ObjectName)
 {
 	auto itr = std::find_if(m_Objects.begin(), m_Objects.end(),
 		[&In_ObjectName](const std::shared_ptr<cpon_object> &obj)
 		{
-			return obj->GetObjectName() == In_ObjectName;
+			return obj->GetObjectName() == In_ObjectName.data();
 		});
 	if(itr != m_Objects.end())
 		return *itr;
@@ -91,7 +91,7 @@ void cpon::ClearObjectsData() noexcept
 	m_FileHeader.clear();
 }
 
-bool cpon::WriteToFile(_In_ std::string_view In_FilePath)
+bool cpon::WriteToFile(_In_ const std::string_view In_FilePath)
 {
 	if (IsStringNpos(In_FilePath.find(".cpon")))
 	{
@@ -124,7 +124,7 @@ bool cpon::WriteToFile(_In_ std::string_view In_FilePath)
 	return true;
 }
 
-bool cpon::LoadFromFile(_In_ std::string_view In_FilePath)
+bool cpon::LoadFromFile(_In_ const std::string_view In_FilePath)
 {
 	if (IsStringNpos(In_FilePath.find(".cpon")))
 	{
@@ -379,14 +379,14 @@ bool cpon::ReadObject(_In_ std::ifstream &In_File, _In_ std::string_view In_Line
 	return true;
 }
 
-std::string cpon::ReadObjectName(_In_ std::string_view In_Line) const
+std::string cpon::ReadObjectName(_In_ const std::string_view In_Line) const
 {
 	std::string Line = std::string(In_Line);
 	std::string ObjName = Line;
 	return ObjName.erase(ObjName.find("["));
 }
 
-int cpon::ReadObjectDataCount(_In_ std::string_view In_Line)
+int cpon::ReadObjectDataCount(_In_ const std::string_view In_Line)
 {
 	int ObjCount;
 	std::string NumStr = std::string(In_Line);
@@ -395,7 +395,7 @@ int cpon::ReadObjectDataCount(_In_ std::string_view In_Line)
 	return ObjCount;
 }
 
-void cpon::ReadBlockInfo(_In_ std::string_view In_Line, _Out_ int &Out_BlockNum, _Out_ std::string &Out_BlockHints)
+void cpon::ReadBlockInfo(_In_ const std::string_view In_Line, _Out_ int &Out_BlockNum, _Out_ std::string &Out_BlockHints)
 {
 	std::string Line = std::string(In_Line);
 	std::string BlockNumStr;
@@ -407,7 +407,7 @@ void cpon::ReadBlockInfo(_In_ std::string_view In_Line, _Out_ int &Out_BlockNum,
 	Out_BlockHints = BlockHints.erase(Line.find("}"));
 }
 
-void cpon::ReadHintInfo(_In_ std::string_view In_Hint, _Out_ std::string &Out_HintID, _Out_ std::string &Out_HintType)
+void cpon::ReadHintInfo(_In_ const std::string_view In_Hint, _Out_ std::string &Out_HintID, _Out_ std::string &Out_HintType)
 {
 	std::string Hint = std::string(In_Hint);
 	std::string HintID;
@@ -420,7 +420,7 @@ void cpon::ReadHintInfo(_In_ std::string_view In_Hint, _Out_ std::string &Out_Hi
 	Out_HintType = HintType.erase(0, HintType.find(":") + 1);
 }
 
-void cpon::ReadBlockValue(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::string_view In_Line, _In_ std::string_view In_HintID, _In_ std::string_view In_HintType)
+void cpon::ReadBlockValue(_In_ std::shared_ptr<cpon_block> In_Block, _In_ const std::string_view In_Line, _In_ const std::string_view In_HintID, _In_ const std::string_view In_HintType)
 {
 	if (In_HintType == "string")
 		In_Block->SetValue(In_HintID, In_Line.data());
@@ -441,7 +441,7 @@ void cpon::ReadBlockValue(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::s
 	}
 }
 
-void cpon::ReadBlockArray(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::string_view In_Line, _In_ std::string_view In_HintID, _In_ std::string_view In_HintType)
+void cpon::ReadBlockArray(_In_ std::shared_ptr<cpon_block> In_Block, _In_ const std::string_view In_Line, _In_ const std::string_view In_HintID, _In_ const std::string_view In_HintType)
 {
 	std::string Line = std::string(In_Line);
 	std::string ArrayType = std::string(In_HintType);
@@ -490,7 +490,7 @@ void cpon::ReadBlockArray(_In_ std::shared_ptr<cpon_block> In_Block, _In_ std::s
 	In_Block->CreateArray(In_HintID, array);
 }
 
-int cpon::CountElement(_In_ std::string_view In_Data, _In_ char In_CountTarget) const noexcept
+int cpon::CountElement(_In_ const std::string_view In_Data, _In_ char In_CountTarget) const noexcept
 {
 	if (In_Data.empty())
 		return 0;
@@ -503,7 +503,7 @@ int cpon::CountElement(_In_ std::string_view In_Data, _In_ char In_CountTarget) 
 	return Count;
 }
 
-cpon_block::Array cpon::CreateArrayByType(_In_ std::string_view In_Type)
+cpon_block::Array cpon::CreateArrayByType(_In_ const std::string_view In_Type)
 {
 	if(In_Type == "<string>")
 		return cpon_block::Array(std::vector<std::string>{});
