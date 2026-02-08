@@ -641,9 +641,9 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 	Path += Inout_Item->GetName();
 
 	auto DataItr = std::find_if(m_SaveData.begin(), m_SaveData.end(),
-		[&In_Path](const SaveData &data)
+		[&Path](const SaveData &data)
 		{
-			return (data.path == In_Path);
+			return (data.path == Path);
 		});
 
 	if(DataItr == m_SaveData.end())
