@@ -11,7 +11,7 @@
 #include "SeaLevel.hpp"
 
 SeaLevel::SeaLevel(_In_ std::string_view In_Name, _In_ bool In_IsInstance)
-	: GameObject(In_Name.data())
+	: Component(In_Name.data())
 	, m_pRenderComponent(nullptr)
 	, m_pCameraObj(nullptr)
 	, m_pPlayer(nullptr)
@@ -27,42 +27,13 @@ SeaLevel::~SeaLevel()
 
 void SeaLevel::Awake() noexcept
 {
-	SetPosition({ 0.0f,0.0f,0.0f });
-	SetScale({ 1.0f,1.0f,1.0f });
-	SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+	m_pGameObject->SetPosition({ 0.0f,0.0f,0.0f });
+	m_pGameObject->SetScale({ 1.0f,1.0f,1.0f });
+	m_pGameObject->SetQuat({ 0.0f,0.0f,0.0f,0.0f });
+}
 
-	// レンダーコンポーネントの設定
-	if(m_IsInstance)
-	{
-		// インスタンシング
-		m_pRenderComponent = AddComponent<InstancedModelRenderer>();
-		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("IVS_InstancedObject"));
-		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetLayer(-1); // レイヤーの設定
-
-		// インスタンシングの設定
-		InstancedMesh::AlignInstanceData instanceData;
-		instanceData.CountX = 200;
-		instanceData.CountZ = 200;
-		instanceData.CountY = 1;
-		instanceData.StartPos = GetPosition();
-		instanceData.Scale = GetScale();
-		instanceData.Quaternion = GetQuat();
-		instanceData.IsWrite = true;
-		instanceData.ShiftPosOffset = { 1.0f,0.0f,1.0f };
-		instanceData.AnchorPoint = { InstancedMesh::AnchorX::Center, InstancedMesh::AnchorY::Bottom, InstancedMesh::AnchorZ::Center };
-
-		reinterpret_cast<InstancedModelRenderer *>(m_pRenderComponent)->SetAlignInstanceData(instanceData);
-	}
-	else
-	{
-		m_pRenderComponent = AddComponent<ModelRenderer>();
-		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetAssetPath("Assets/Model/Ground/Ocean.fbx");
-		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_PatternScale"));
-		reinterpret_cast<ModelRenderer *>(m_pRenderComponent)->SetLayer(-1); // レイヤーの設定
-	}
+void SeaLevel::Init() noexcept
+{
 }
 
 void SeaLevel::SetFilePath(_In_ const FilePath &In_Path) noexcept
@@ -104,7 +75,7 @@ void SeaLevel::LateUpdate(_In_ float In_DeltaTime) noexcept
 	if (m_pPlayer && m_IsInstance)
 	{
 		auto pos = m_pPlayer->GetPosition();
-		pos.y = GetPosition().y;
-		SetPosition(pos);
+		pos.y = m_pGameObject->GetPosition().y;
+		m_pGameObject->SetPosition(pos);
 	}
 }

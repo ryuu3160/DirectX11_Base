@@ -21,13 +21,14 @@ namespace
 /// <summary>
 /// EnemyƒNƒ‰ƒX
 /// </summary>
-class Enemy : public GameObject
+class Enemy : public Component
 {
 public:
-	Enemy(_In_ std::string In_Name);
+	Enemy(_In_ std::string_view In_Name = "Enemy");
 	~Enemy();
 
 	void Awake() noexcept override;
+	void Init() noexcept override;
 
 	void Update(_In_ float In_DeltaTime) noexcept override;
 

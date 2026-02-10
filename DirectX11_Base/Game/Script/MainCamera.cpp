@@ -9,11 +9,11 @@
 //	include
 // ==============================
 #include "MainCamera.hpp"
-#include "Game/Source/Object/Character/Player.hpp"
+#include "Game/Object/Character/PlayerObj.hpp"
 
 MainCamera::MainCamera()
-	: GameObject("MainCamera")
-	, m_pComponent(AddComponent<Camera>())
+	: Component("MainCamera")
+	, m_pComponent(nullptr)
 	, m_pPlayer(nullptr)
 	, m_CameraMode(0)
 {
@@ -22,6 +22,11 @@ MainCamera::MainCamera()
 
 MainCamera::~MainCamera()
 {
+}
+
+void MainCamera::Init() noexcept
+{
+	m_pComponent = m_pGameObject->GetComponent<Camera>();
 }
 
 void MainCamera::Update(_In_ float In_DeltaTime) noexcept
@@ -48,7 +53,7 @@ void MainCamera::LateUpdate(_In_ float In_DeltaTime) noexcept
 	}
 }
 
-void MainCamera::SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept
+void MainCamera::SetTargetPlayer(_In_opt_ PlayerObj *In_pPlayer) noexcept
 {
 	m_pPlayer = In_pPlayer;
 }
@@ -59,13 +64,13 @@ void MainCamera::UpdateThirdPerson() noexcept
 	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
 	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
 
-	SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
+	m_pGameObject->SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
 
 	// 焦点距離を設定
 	m_pComponent->SetFocus(10.0f);
 
 	// カメラの位置調整
-	SetPosition((PlayerPosition - PlayerForward * 10.0f) + PlayerUp * 1.0f);
+	m_pGameObject->SetPosition((PlayerPosition - PlayerForward * 10.0f) + PlayerUp * 1.0f);
 }
 
 void MainCamera::UpdateFirstPerson() noexcept
@@ -73,11 +78,11 @@ void MainCamera::UpdateFirstPerson() noexcept
 	DirectX::XMFLOAT3 PlayerPosition = m_pPlayer->GetPosition();		// プレイヤーオブジェクトの位置を取得
 	DirectX::XMFLOAT3 PlayerForward = m_pPlayer->GetFront();	// プレイヤーオブジェクトの前方向ベクトルを取得
 	DirectX::XMFLOAT3 PlayerUp = m_pPlayer->GetUp();			// プレイヤーオブジェクトの上方向ベクトルを取得
-	SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
+	m_pGameObject->SetQuat(m_pPlayer->GetQuat()); // プレイヤーの回転と同期
 
 	// 焦点距離を設定
 	m_pComponent->SetFocus(10.0f);
 
 	// カメラの位置調整
-	SetPosition((PlayerPosition + PlayerForward * 10.0f) + PlayerUp * 1.0f);
+	m_pGameObject->SetPosition((PlayerPosition + PlayerForward * 10.0f) + PlayerUp * 1.0f);
 }

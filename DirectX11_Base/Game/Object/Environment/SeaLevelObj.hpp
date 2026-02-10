@@ -14,22 +14,18 @@
 /// <summary>
 /// SeaLevelƒNƒ‰ƒX
 /// </summary>
-class SeaLevel : public Component
+class SeaLevelObj : public GameObject
 {
 public:
-	SeaLevel(_In_ std::string_view In_Name = "SeaLevel", _In_ bool In_IsInstance = false);
-	~SeaLevel();
+	SeaLevelObj(_In_ std::string_view In_Name, _In_ bool In_IsInstance);
+	~SeaLevelObj();
 
 	void Awake() noexcept override;
-	void Init() noexcept override;
 
 	void SetFilePath(_In_ const FilePath &In_Path) noexcept;
 	void SetCamera(_In_ GameObject *In_Cam) noexcept;
 	void SetPlayer(_In_ GameObject *In_Player) noexcept;
 	void SetPatternScale(_In_ const DirectX::XMFLOAT2 &In_Scale) noexcept { m_PatternScale = In_Scale; }
-
-	void Update(_In_ float In_DeltaTime) noexcept override;
-	void LateUpdate(_In_ float In_DeltaTime) noexcept override;
 
 private:
 	GameObject *m_pPlayer;

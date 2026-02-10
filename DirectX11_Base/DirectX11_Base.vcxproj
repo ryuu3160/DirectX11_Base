@@ -289,6 +289,8 @@
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Game\Object\Character\EnemyObj.cpp" />
     <ClCompile Include="Game\Object\Character\PlayerObj.cpp" />
+    <ClCompile Include="Game\Object\Environment\SeaLevelObj.cpp" />
+    <ClCompile Include="Game\Object\Weapon\MissileObj.cpp" />
     <ClCompile Include="Game\Script\Character\Enemy.cpp" />
     <ClCompile Include="Game\Script\Character\Player.cpp" />
     <ClCompile Include="Game\Script\Environment\SeaLevel.cpp" />
@@ -420,6 +422,8 @@
     <ClInclude Include="Engine\ThirdParty\ImGui\imstb_truetype.h" />
     <ClInclude Include="Game\Object\Character\EnemyObj.hpp" />
     <ClInclude Include="Game\Object\Character\PlayerObj.hpp" />
+    <ClInclude Include="Game\Object\Environment\SeaLevelObj.hpp" />
+    <ClInclude Include="Game\Object\Weapon\MissileObj.hpp" />
     <ClInclude Include="Game\Script\Character\Enemy.hpp" />
     <ClInclude Include="Game\Script\Character\Player.hpp" />
     <ClInclude Include="Game\Script\Environment\SeaLevel.hpp" />

@@ -14,7 +14,7 @@
 // ==============================
 //  前方宣言
 // ==============================
-class Player;
+class PlayerObj;
 
 // ==============================
 //	定数定義
@@ -27,7 +27,7 @@ namespace
 /// <summary>
 /// MainCameraクラス
 /// </summary>
-class MainCamera : public GameObject
+class MainCamera : public Component
 {
 public:
 	/// <summary>
@@ -40,11 +40,13 @@ public:
 	/// </summary>
 	~MainCamera();
 
+	void Init() noexcept override;
+
 	void Update(_In_ float In_DeltaTime) noexcept override final;
 
 	void LateUpdate(_In_ float In_DeltaTime) noexcept override final;
 
-	void SetTargetPlayer(_In_opt_ Player *In_pPlayer) noexcept;
+	void SetTargetPlayer(_In_opt_ PlayerObj *In_pPlayer) noexcept;
 
 private:
 	// 3人称視点カメラの更新
@@ -53,7 +55,7 @@ private:
 	void UpdateFirstPerson() noexcept;
 
 private:
-	Player *m_pPlayer;
+	PlayerObj *m_pPlayer;
 	Camera *m_pComponent;
 	int m_CameraMode;
 };

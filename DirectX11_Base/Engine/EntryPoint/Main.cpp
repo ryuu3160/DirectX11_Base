@@ -12,7 +12,7 @@
 #include "Engine.hpp"
 #include "Core/System/Component/ComponentRegistry.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
-#include "Game/Source/Scene/SceneGame.hpp"
+#include "Game/Script/Scene/SceneGame.hpp"
 
 // ==============================
 //  プロトタイプ宣言

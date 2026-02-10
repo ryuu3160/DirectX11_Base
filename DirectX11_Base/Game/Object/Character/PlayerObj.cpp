@@ -51,10 +51,11 @@ void PlayerObj::Awake() noexcept
 {
 	auto Model = AddComponent<ModelRenderer>();
 	auto PlayerScript = AddComponent<Player>();
-	Model->SetAssetPath("Assets/Model/Character/F15E/F15E.fbx");
+	Model->SetAssetPath("Engine/Assets/Model/Character/F15E/F15E.fbx");
 	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
 	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
 	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
+	Model->SetScale(0.005f);
 
 
 	SetPosition(cx_PlayerStartPos);

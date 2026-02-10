@@ -10,9 +10,10 @@
 // ==============================
 #include "SceneGame.hpp"
 #include "SceneResult.hpp"
-#include "Game/Source/Object/Character/Player.hpp"
-#include "Game/Source/Object/Character/Enemy.hpp"
-#include "Game/Source/Object/Environment/SeaLevel.hpp"
+#include "Game/Object/Character/PlayerObj.hpp"
+#include "Game/Object/Character/EnemyObj.hpp"
+#include "Game/Object/Environment/SeaLevelObj.hpp"
+#include "Game/Script/Character/Player.hpp"
 
 // ===============================
 //  定数
@@ -50,32 +51,23 @@ void SceneGame::Init()
 	SoundManager::GetInstance().Load("GameBGM", "Assets/Sound/BGM/BattleBGM.wav", true, true);
 	SoundManager::GetInstance().Play("GameBGM");
 
-	auto player = CreateObject<Player>("Player");
-	player->SetCamera(pCamera);
+	auto player = CreateObject<PlayerObj>("Player");
 
 	// 敵の生成
 	std::string name = "Enemy1";
-	auto enemy1 = CreateObject<Enemy>(name);
-	enemy1->SetCamera(pCamera);
+	//auto enemy1 = CreateObject<EnemyObj>(name);
 
 	auto pos = player->GetPosition();
 	pos.z += 100.0f;
-	enemy1->SetPosition(pos);
-
-	// ターゲットをプレイヤーに設定
-	player->SetTarget(enemy1);
+	//enemy1->SetPosition(pos);
 
 	// 海面オブジェクトの生成
-	SeaLevel *pSeaLevel = CreateObject<SeaLevel>("SeaLevel",nullptr,false);
+	SeaLevelObj *pSeaLevel = CreateObject<SeaLevelObj>("SeaLevel",nullptr,false);
 	pSeaLevel->SetCamera(pCamera);
 	pSeaLevel->SetPlayer(player);
 	pSeaLevel->SetScale({ 100000.0f,1.0f,100000.0f });
 	pSeaLevel->SetPatternScale({ 5000.0f,5000.0f });
 	pSeaLevel->SetPosition({ 0.0f,0.1f,0.0f });
-
-	// スカイドームを作成
-	SkyBoxObj *pSkyBox = CreateObject<SkyBoxObj>("SkyBox");
-	pSkyBox->SetCamera(pCamera);
 
 	// 制限時間のタイマー設定
 	m_Timer->AppendTimeCounter("GameTimer",true);
@@ -102,7 +94,7 @@ void SceneGame::Update(_In_ float In_DeltaTime)
 
 	m_Timer->UpdateTimeCounter("GameTimer");
 
-	if(!GetObject<Enemy>("Enemy1"))
+	if(!GetObject<EnemyObj>("Enemy1"))
 	{
 		// 敵が破壊されたらリザルトへ
 		if (!m_ChangeScene)
@@ -120,8 +112,9 @@ void SceneGame::Update(_In_ float In_DeltaTime)
 
 	// 制限時間を超えた、又はプレイヤーが破壊されたらシーンチェンジ
 	float time = m_Timer->GetTimeCountSecond("GameTimer");
-	auto player = GetObject<Player>("Player");
-	bool IsPlayerDead = player->IsDestroyed();
+	auto player = GetObject<PlayerObj>("Player");
+	auto PlayerCmp = player->GetComponent<Player>();
+	bool IsPlayerDead = PlayerCmp->IsDestroyed();
 	if ((time >= TIME_LIMIT || IsPlayerDead) && !m_ChangeScene)
 	{
 		if (m_ChangeResultTIme <= 0.0f)

@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: Player.cpp
-	Summary: （このファイルで何をするか記載する）
+	Summary: プレイヤーの処理
 	Author: AT13C192 01 青木雄一郎
 	Date: 2025/8/25 Mon AM 04:04:43 初回作成
 ===================================================================+*/
@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Player.hpp"
-#include "Game/Script/Missile.hpp"
+#include "Game/Object/Weapon/MissileObj.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -37,21 +37,22 @@ namespace
 	const inline constexpr float cx_MaximumAscentAltitude = 15000.0f; // 最大上昇高度
 
 	// キー定義
-	const inline constexpr char LeftYawKey = 'Q';		// 左ヨー
-	const inline constexpr char RightYawKey = 'E';	// 右ヨー
-	const inline constexpr char LeftRollKey = 'A';	// 左ロール
-	const inline constexpr char RightRollKey = 'D';	// 右ロール
-	const inline constexpr char PitchUpKey = 'W';	// ピッチUP
-	const inline constexpr char PitchDownKey = 'S';	// ピッチDown
-	const inline constexpr char SpeedUpKey = 'I';	// 速度UP
-	const inline constexpr char SpeedDownKey = 'K';	// 速度Down
-	const inline constexpr char BrakeKey = 'U';	// 急ブレーキ
-	const inline constexpr char ShootKey = VK_SPACE;	// 射撃
+	inline constexpr char LeftYawKey = 'Q';		// 左ヨー
+	inline constexpr char RightYawKey = 'E';	// 右ヨー
+	inline constexpr char LeftRollKey = 'A';	// 左ロール
+	inline constexpr char RightRollKey = 'D';	// 右ロール
+	inline constexpr char PitchUpKey = 'W';	// ピッチUP
+	inline constexpr char PitchDownKey = 'S';	// ピッチDown
+	inline constexpr char SpeedUpKey = 'I';	// 速度UP
+	inline constexpr char SpeedDownKey = 'K';	// 速度Down
+	inline constexpr char BrakeKey = 'U';	// 急ブレーキ
+	inline constexpr char ShootKey = VK_SPACE;	// 射撃
 
 	// ミサイル関連
-	const inline constexpr float cx_MissileScale = 1.4f; // ミサイルの相対スケール
-	const inline constexpr float cx_MissileReloadTime = 5.0f; // ミサイルのリロード時間
-	const inline constexpr float cx_MissileSpeed = 1180.4f; // ミサイルの速度
+	inline constexpr float cx_MissileScale = 1.4f; // ミサイルの相対スケール
+	inline constexpr float cx_MissileReloadTime = 5.0f; // ミサイルのリロード時間
+	inline constexpr float cx_MissileSpeed = 1180.4f; // ミサイルの速度
+	inline constexpr int cx_MissileMax = 4; // ミサイルの最大数
 }
 
 Player::Player(_In_ std::string_view In_Name)
@@ -208,7 +209,7 @@ void Player::UpdateShoot()
 		// ミサイル発射SE
 		SoundManager::GetInstance().Play("Missile");
 		std::string name = "Missile" + std::to_string(m_ShotMissileNum);
-		auto obj = m_pGameObject->GetScene()->CreateObject<Missile>(name,nullptr,false);
+		auto obj = m_pGameObject->GetScene()->CreateObject<MissileObj>(name,nullptr,false);
 		DirectX::XMFLOAT3 Pos = m_pGameObject->GetPosition();
 		DirectX::XMVECTOR pos1 = DirectX::XMLoadFloat3(&Pos);
 		auto targetPos = m_pTarget->GetPosition();
@@ -251,7 +252,7 @@ void Player::UpdateReload()
 			{
 				m_MissileIndices.push_back((*itr).first); // ミサイルインデックスを追加
 				std::string name = "Missile" + std::to_string((*itr).first);
-				auto obj = m_pGameObject->GetScene()->CreateObject<Missile>(name, m_pGameObject->GetTransform(), false);
+				auto obj = m_pGameObject->GetScene()->CreateObject<MissileObj>(name, m_pGameObject->GetTransform(), false);
 				obj->SetScale({ cx_MissileScale,cx_MissileScale,cx_MissileScale });
 				// ミサイルの初期位置を設定
 				DirectX::XMFLOAT3 pos = m_pGameObject->GetUp() * 1.03f;

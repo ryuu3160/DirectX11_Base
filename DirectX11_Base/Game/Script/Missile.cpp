@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Missile.hpp"
-#include "Game/Source/Object/Character/Enemy.hpp"
+#include "Game/Object/Character/EnemyObj.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -22,9 +22,8 @@ namespace
 	const inline constexpr float cx_StartDuration = 15.0f; // 開始時のイージング時間
 }
 
-Missile::Missile(_In_ std::string In_Name, _In_ const bool &In_IsAddCollider)
-	: GameObject(In_Name), m_Speed(0.0f), m_EaseData{}, m_StartPos{}, m_pTarget(nullptr)
-	, m_IsAddCollider(In_IsAddCollider)
+Missile::Missile(_In_ std::string_view In_Name)
+	: Component(In_Name), m_Speed(0.0f), m_EaseData{}, m_StartPos{}, m_pTarget(nullptr)
 {
 }
 
@@ -34,19 +33,10 @@ Missile::~Missile()
 
 void Missile::Awake() noexcept
 {
-	auto Model = AddComponent<ModelRenderer>();
-	Model->SetAssetPath("Assets/Model/Weapon/AIM-120.fbx");
-	Model->SetVertexShader(ShaderManager::GetInstance().GetShader("VS_Object"));
-	Model->SetPixelShader(ShaderManager::GetInstance().GetShader("PS_TexColor"));
-	Model->IsUseMaterialShader(true); // マテリアルシェーダーを使用する
-	SetScale({ MissileScale,MissileScale,MissileScale });
+}
 
-	//if (m_IsAddCollider)
-	//{
-	//	// コライダー追加
-	//	auto collider = AddComponent<SphereCollider>();
-	//	collider->SetRadius(1.0f); // 半径を設定
-	//}
+void Missile::Init() noexcept
+{
 }
 
 void Missile::Update(_In_ float In_DeltaTime) noexcept
@@ -54,36 +44,6 @@ void Missile::Update(_In_ float In_DeltaTime) noexcept
 	if(IsAutoDestroy())
 	{
 		return;
-	}
-
-	// コライダーが有効な場合、衝突判定を行う
-	if (m_IsAddCollider)
-	{
-		// 衝突していたら自分を消す
-		auto pos1 = GetPosition();
-		auto pos2 = m_pTarget ? m_pTarget->GetPosition() : DirectX::XMFLOAT3{};
-		float radiusSum = 1.0f + 2.0f;
-		float distSq = (pos1.x - pos2.x) * (pos1.x - pos2.x) +
-			(pos1.y - pos2.y) * (pos1.y - pos2.y) +
-			(pos1.z - pos2.z) * (pos1.z - pos2.z);
-
-		// 半径の和の二乗と距離の二乗を比較
-		if (distSq <= radiusSum * radiusSum)
-		{
-			SoundManager::GetInstance().Play("Explosion");
-			DestroySelf();
-
-			dynamic_cast<Enemy *>(m_pTarget)->DestroySelf();
-
-			return;
-		}
-
-		/*if(GetComponent<SphereCollider>()->IsCollision())
-		{
-			SoundManager::GetInstance().Play("Explosion");
-			DestroySelf();
-			return;
-		}*/
 	}
 
 	float speed;
@@ -101,11 +61,11 @@ void Missile::Update(_In_ float In_DeltaTime) noexcept
 	if (m_pTarget)
 	{
 		DirectX::XMFLOAT3 targetPos = m_pTarget->GetPosition();
-		DirectX::XMFLOAT3 MyPos = GetPosition();
+		DirectX::XMFLOAT3 MyPos = m_pGameObject->GetPosition();
 		DirectX::XMVECTOR toTarget = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&targetPos), DirectX::XMLoadFloat3(&MyPos));
 		toTarget = DirectX::XMVector3Normalize(toTarget);
 		// 現在の前方ベクトル
-		auto front = GetFront();
+		auto front = m_pGameObject->GetFront();
 		DirectX::XMVECTOR currentFront = DirectX::XMLoadFloat3(&front);
 		// 回転軸を計算
 		DirectX::XMVECTOR rotationAxis = DirectX::XMVector3Cross(currentFront, toTarget);
@@ -116,23 +76,22 @@ void Missile::Update(_In_ float In_DeltaTime) noexcept
 			angle = maxRotationAngle;
 		if (DirectX::XMVectorGetX(DirectX::XMVector3Length(rotationAxis)) > 0.0001f)
 		{
-			DirectX::XMFLOAT4 Quat = GetQuat();
+			DirectX::XMFLOAT4 Quat = m_pGameObject->GetQuat();
 			rotationAxis = DirectX::XMVector3Normalize(rotationAxis);
 			DirectX::XMVECTOR quat = DirectX::XMQuaternionRotationAxis(rotationAxis, angle);
 			DirectX::XMVECTOR currentQuat = DirectX::XMLoadFloat4(&Quat);
 			currentQuat = DirectX::XMQuaternionMultiply(quat, currentQuat);
 			currentQuat = DirectX::XMQuaternionNormalize(currentQuat);
 			DirectX::XMStoreFloat4(&Quat, currentQuat);
-			SetQuat(Quat);
+			m_pGameObject->SetQuat(Quat);
 		}
 	}
 
 
 	// 前方ベクトル取得
-	DirectX::XMFLOAT3 front = GetFront();
+	DirectX::XMFLOAT3 front = m_pGameObject->GetFront();
 	// 移動
-	m_pTransform->Translate((front * cx_MoveSpeedScale) * speed);
-	GameObject::Update(In_DeltaTime);
+	m_pGameObject->GetTransform()->Translate((front * cx_MoveSpeedScale) * speed);
 }
 
 void Missile::SetSpeed(_In_ const float &In_Speed) noexcept
@@ -147,7 +106,7 @@ void Missile::SetSpeed(_In_ const float &In_Speed) noexcept
 bool Missile::IsAutoDestroy() noexcept
 {
 	float Length;
-	DirectX::XMFLOAT3 Pos = GetPosition();
+	DirectX::XMFLOAT3 Pos = m_pGameObject->GetPosition();
 	DirectX::XMVECTOR start = DirectX::XMLoadFloat3(&m_StartPos);
 	DirectX::XMVECTOR now = DirectX::XMLoadFloat3(&Pos);
 	DirectX::XMVECTOR sub = DirectX::XMVectorSubtract(now, start);

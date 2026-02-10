@@ -24,7 +24,7 @@ namespace
 class EnemyObj : public GameObject
 {
 public:
-	EnemyObj(_In_ std::string In_Name);
+	EnemyObj(_In_ std::string_view In_Name = "EnemyObj");
 	~EnemyObj();
 
 	void Awake() noexcept override;

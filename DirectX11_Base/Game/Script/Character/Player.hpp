@@ -10,14 +10,6 @@
 //	include
 // ==============================
 #include "Engine.hpp"
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-	// ミサイル関連
-	const inline constexpr int cx_MissileMax = 4; // ミサイルの最大数
-}
 
 /// <summary>
 /// Playerクラス
@@ -25,7 +17,7 @@ namespace
 class Player : public Component
 {
 public:
-	Player(_In_ std::string_view In_Name);
+	Player(_In_ std::string_view In_Name = "Player");
 	~Player();
 
 	void Awake() noexcept override;
