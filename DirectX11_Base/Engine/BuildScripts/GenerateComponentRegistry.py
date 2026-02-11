@@ -104,6 +104,9 @@ def find_component_classes(source_dir, exclude_dirs=None):
                     # Component 自体はスキップ
                     if class_name == 'Component':
                         continue
+                    # Transformもスキップ
+                    if class_name == 'Transform':
+                        continue
                     # RenderComponent もスキップ
                     if class_name == 'RenderComponent':
                         continue
