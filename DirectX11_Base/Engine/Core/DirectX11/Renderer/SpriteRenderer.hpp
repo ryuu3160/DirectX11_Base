@@ -171,6 +171,11 @@ public:
 	/// <param name="[In_Pos]">ピクセル単位の座標</param>
 	void SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) noexcept;
 
+	protected:
+#ifdef _DEBUG
+		virtual void Inspector(_In_ ItemGroup *In_pGroup) override;
+#endif // _DEBUG
+
 private:
 	/// <summary>
 	/// デフォルトのシェーダーを作成

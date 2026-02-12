@@ -268,6 +268,20 @@ void SpriteRenderer::SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) noex
 	m_pGameObject->SetPosition(pos);
 }
 
+#ifdef _DEBUG
+void SpriteRenderer::Inspector(_In_ ItemGroup *In_pGroup)
+{
+	RenderComponent::Inspector(In_pGroup);
+
+	In_pGroup->CreateGroupItem<ItemCallback>("Load##SpriteRenderer", DebugItem::Command, [this](bool, void *)
+		{
+			auto texture = TextureManager::GetInstance().LoadTexture(m_AssetPath).get();
+			if(texture)
+				m_SpriteData.texture = texture;
+		});
+}
+#endif
+
 void SpriteRenderer::MakeDefaultShader() noexcept
 {
 	m_defVS = std::make_shared<VertexShader>();

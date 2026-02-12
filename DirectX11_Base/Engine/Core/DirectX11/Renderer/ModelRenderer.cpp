@@ -63,7 +63,8 @@ void ModelRenderer::Awake() noexcept
 void ModelRenderer::Update(_In_ float In_DeltaTime) noexcept
 {
 	// Šù‚ÉƒƒbƒVƒ…‚ª“Ç‚Ýž‚Ü‚ê‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢
-	if (!m_vecMeshes.empty()) return;
+	if (!m_vecMeshes.empty())
+		return;
 
 	this->Load(m_AssetPath, m_fScale);
 }
@@ -270,6 +271,20 @@ void ModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::function<
 		delete[] newVtx;
 	}
 }
+
+#ifdef _DEBUG
+void ModelRenderer::Inspector(_In_ ItemGroup *In_pGroup)
+{
+	RenderComponent::Inspector(In_pGroup);
+
+	In_pGroup->CreateGroupItem<ItemBind>("ModelScale##ModelRenderer", DebugItem::Float, &m_fScale);
+	In_pGroup->CreateGroupItem<ItemCallback>("Load##ModelRenderer", DebugItem::Command, [this](bool,void*)
+		{
+			m_vecMeshes.clear();
+			Load(m_AssetPath, m_fScale);
+		});
+}
+#endif
 
 void ModelRenderer::MakeDefaultShader()
 {

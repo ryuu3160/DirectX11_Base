@@ -18,19 +18,18 @@ EditorCamera[1]{IsActive:bool,Transform:object,Camera:object,CameraDCC:object}:
     IsShow:false
   CameraDCC:[0]{}:
 
-GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object,GridComponent:object}:
+RootModel0Child[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]0, 0, 0
+    Position:[3]1, 0, 2.3841858e-07
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-    ParentName:
-  LineRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:
-    LayerGroup:-1
+    ParentName:RootModel0
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
+    LayerGroup:0
     Layer:0
-  GridComponent:[0]{}:
 
 GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
   IsActive:true
@@ -63,35 +62,19 @@ SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
     LayerGroup:-2
     Layer:0
 
-RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,BoxCollider:object}:
+GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object,GridComponent:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]3, 1, 0
+    Position:[3]0, 0, 0
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
     ParentName:
-  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
-    LayerGroup:0
+  LineRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:
+    LayerGroup:-1
     Layer:0
-  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
-    IsTrigger:true
-    LocalCenter:[3]0, 0, 0
-    HalfExtents:[3]0.5, 0.5, 0.5
-
-RootModel0Child[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]1, 0, 2.3841858e-07
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-    ParentName:RootModel0
-  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
-    LayerGroup:0
-    Layer:0
+  GridComponent:[0]{}:
 
 RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object}:
   IsActive:true
@@ -109,6 +92,23 @@ RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollide
     IsTrigger:true
     LocalCenter:[3]0, 1, 0
   MovementComponent:[0]{}:
+
+RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object,BoxCollider:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]3, 1, 0
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+    ParentName:
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
+    LayerGroup:0
+    Layer:0
+  BoxCollider:[1]{IsTrigger:bool,LocalCenter:array<float>,HalfExtents:array<float>}:
+    IsTrigger:true
+    LocalCenter:[3]0, 0, 0
+    HalfExtents:[3]0.5, 0.5, 0.5
 
 ParticleTest[1]{IsActive:bool,Transform:object,ParticleEffect:object,BoxCollider:object}:
   IsActive:true
