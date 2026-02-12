@@ -61,6 +61,30 @@ void ItemHierarchy::DrawImGui()
         }
     }
 
+	// 右クリックメニュー(空白領域)
+    if(ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        if(!ImGui::IsAnyItemHovered())
+        {
+			ImGui::OpenPopup("Hierarchy_EmptyContextMenu");
+        }
+    }
+	if(ImGui::BeginPopup("Hierarchy_EmptyContextMenu"))
+    {
+        // 空白領域の右クリックメニュー
+        if(ImGui::MenuItem("Create Empty GameObject"))
+        {
+            // 新しい空のGameObjectを作成
+            GameObject *NewObj = m_pScene->CreateObject("Empty");
+            if(NewObj)
+            {
+                SelectObject(NewObj);
+                StartRename(NewObj);
+            }
+        }
+        ImGui::EndPopup();
+    }
+
     // 予約された親子関係の変更を実行
     ExecutePendingParentChanges();
 }
