@@ -11,6 +11,7 @@
 #include "DebugWindow.hpp"
 #include "DebugItem.hpp"
 #include "InitializeImGui.hpp"
+#include "Engine/Core/System/Utility/EngineUtility.hpp"
 
 // ==============================
 //	’è”’è‹`
@@ -38,8 +39,8 @@ void DebugWindow::Draw() noexcept
 {
 	for (const auto &item : m_Items)
 	{
-		item->DrawImGui();
-		//DrawImgui(item);
+		if(item)
+			item->DrawImGui();
 	}
 }
 

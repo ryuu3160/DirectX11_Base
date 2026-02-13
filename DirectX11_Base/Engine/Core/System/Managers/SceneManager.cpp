@@ -83,9 +83,6 @@ void SceneManager::RootUpdate(_In_ float In_DeltaTime) noexcept
 	// 遅延更新
 	_RootUpdateLate(In_DeltaTime);
 
-	// コンポーネント削除予約リストの処理
-	_ExecuteDestroyObjectsComponents();
-
 	// フェードの処理
 	m_FadeManager.Update(In_DeltaTime);
 }
@@ -120,6 +117,17 @@ void SceneManager::DestroyObjects() noexcept
 	{
 		if (itr.second)
 			itr.second->_DestroyObjects();
+	}
+}
+
+void SceneManager::DestroyObjectsComponents() noexcept
+{
+	if(m_pCurrentScene)
+		m_pCurrentScene->_ExecuteDestroyObjectsComponents();
+	for(auto &itr : m_SubScene)
+	{
+		if(itr.second)
+			itr.second->_ExecuteDestroyObjectsComponents();
 	}
 }
 
@@ -208,17 +216,6 @@ void SceneManager::_RootUpdateLate(_In_ float In_DeltaTime) noexcept
 	{
 		if (itr.second)
 			itr.second->_RootUpdateLate(In_DeltaTime);
-	}
-}
-
-void SceneManager::_ExecuteDestroyObjectsComponents() noexcept
-{
-	if (m_pCurrentScene)
-		m_pCurrentScene->_ExecuteDestroyObjectsComponents();
-	for (auto &itr : m_SubScene)
-	{
-		if (itr.second)
-			itr.second->_ExecuteDestroyObjectsComponents();
 	}
 }
 

@@ -612,6 +612,9 @@ void ItemComponentGroup::DrawImGui()
             itr->DrawImGui();
         }
     }
+
+	// 削除されたコンポーネントの処理
+    DeleteComponent();
 }
 
 void ItemComponentGroup::DrawContextMenu()
@@ -626,10 +629,7 @@ void ItemComponentGroup::DrawContextMenu()
     {
         if(ImGui::MenuItem("Remove Component"))
         {
-            m_pComponent->DestroySelf();
-
-            // インスペクターを更新
-            m_pComponent->GetGameObject()->ReloadingInspector();
+			m_DeletedComponents.push_back(m_pComponent);
         }
         ImGui::Separator();
     }
@@ -652,4 +652,18 @@ void ItemComponentGroup::DrawContextMenu()
             DebugManager::GetInstance().DebugLog("Move down: %s", m_Name.c_str());
         }
     }
+}
+
+void ItemComponentGroup::DeleteComponent()
+{
+    if(m_DeletedComponents.empty())
+        return;
+
+    for(auto &itr : m_DeletedComponents)
+    {
+        if(itr)
+            itr->DestroySelf();
+    }
+    // インスペクターを更新
+    m_pComponent->GetGameObject()->ReloadingInspector();
 }

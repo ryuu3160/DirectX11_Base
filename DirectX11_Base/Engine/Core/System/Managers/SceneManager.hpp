@@ -49,6 +49,11 @@ public:
 	void DestroyObjects() noexcept;
 
 	/// <summary>
+	/// 削除予約リストに追加されたオブジェクトのコンポーネントを破棄します
+	/// </summary>
+	void DestroyObjectsComponents() noexcept;
+
+	/// <summary>
 	/// <para>シーンの切り替えを行うアップデート</para>
 	/// <para>すべてのアップデートが終わった後に呼び出してください。</para>
 	/// </summary>
@@ -95,8 +100,6 @@ private:
 
 	void _RootUpdateMain(_In_ float In_DeltaTime) noexcept;
 	void _RootUpdateLate(_In_ float In_DeltaTime) noexcept;
-
-	void _ExecuteDestroyObjectsComponents() noexcept;
 
 	/// <summary>
 	/// 削除予約リストに追加されたサブシーンを削除します。

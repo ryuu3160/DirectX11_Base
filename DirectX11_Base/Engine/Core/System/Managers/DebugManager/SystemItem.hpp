@@ -159,9 +159,11 @@ public:
 
 private:
     void DrawContextMenu();
+    void DeleteComponent();
 
 private:
     bool m_IsDeletable;
     bool m_IsMovable;
     Component *m_pComponent;
+	std::vector<Component *> m_DeletedComponents;
 };

@@ -197,10 +197,12 @@ void Draw()
 	DebugManager::GetInstance().Draw();
 	InitializeImGui::EndImGuiFrame();
 
-	// オブジェクトの破棄は非同期で行う
-	std::future<void> fut = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
+	// オブジェクトの破棄とコンポーネントの破棄は非同期で行う
+	std::future<void> DestroyCmpFuture = std::async(std::launch::async, &SceneManager::DestroyObjectsComponents, &SceneM);
+	std::future<void> DestroyObjFuture = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
 
 	DX11.Swap();
 
-	fut.get(); // 破棄が終わるまで待機
+	DestroyCmpFuture.get(); // コンポーネントの破棄が終わるまで待機
+	DestroyObjFuture.get(); // 破棄が終わるまで待機
 }
