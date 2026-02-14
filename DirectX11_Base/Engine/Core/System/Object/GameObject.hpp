@@ -94,7 +94,23 @@ public:
 	requires std::derived_from<T, Component>
 	void RemoveComponent(_In_ T *In_pComponent);
 
+	/// <summary>
+	/// 指定された名前のコンポーネントを削除します
+	/// </summary>
+	/// <param name="[In_Name]">削除するコンポーネントの名前</param>
 	void RemoveComponent(_In_ std::string_view In_Name);
+
+	/// <summary>
+	/// コンポーネントの順序を上に変更します
+	/// </summary>
+	/// <param name="[In_pComponent]">順序を変更するコンポーネントへのポインタ</param>
+	void ChangeOrderComponentUP(_In_ Component *In_pComponent) noexcept;
+
+	/// <summary>
+	/// コンポーネントの順序を下に移動します
+	/// </summary>
+	/// <param name="[In_pComponent]">順序を変更するコンポーネントへのポインター</param>
+	void ChangeOrderComponentDown(_In_ Component *In_pComponent) noexcept;
 
 	/// <summary>
 	/// 自身を所属しているシーンから破棄します。

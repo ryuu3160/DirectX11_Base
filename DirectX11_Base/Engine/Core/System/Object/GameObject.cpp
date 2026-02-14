@@ -219,6 +219,40 @@ void GameObject::RemoveComponent(_In_ std::string_view In_Name)
 	}
 }
 
+void GameObject::ChangeOrderComponentUP(_In_ Component *In_pComponent) noexcept
+{
+	auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
+	if (itr != m_Components.end() && itr != m_Components.begin())
+	{
+		std::iter_swap(itr, std::prev(itr));
+	}
+
+#ifdef _DEBUG
+	auto inspectorItr = std::find(m_InspectorComponent.begin(), m_InspectorComponent.end(), In_pComponent);
+	if (inspectorItr != m_InspectorComponent.end() && inspectorItr != m_InspectorComponent.begin())
+	{
+		std::iter_swap(inspectorItr, std::prev(inspectorItr));
+	}
+#endif
+}
+
+void GameObject::ChangeOrderComponentDown(_In_ Component *In_pComponent) noexcept
+{
+	auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
+	if (itr != m_Components.end() && std::next(itr) != m_Components.end())
+	{
+		std::iter_swap(itr, std::next(itr));
+	}
+
+#ifdef _DEBUG
+	auto inspectorItr = std::find(m_InspectorComponent.begin(), m_InspectorComponent.end(),In_pComponent);
+	if(inspectorItr != m_InspectorComponent.end() && std::next(inspectorItr) != m_InspectorComponent.end())
+	{
+		std::iter_swap(inspectorItr, std::next(inspectorItr));
+	}
+#endif
+}
+
 void GameObject::DestroySelf() noexcept
 {
 	Object::DestroySelf();
