@@ -41,6 +41,16 @@ void Component::DestroySelf() noexcept
 	m_pGameObject->RemoveComponent(m_Name);
 }
 
+void Component::ChangeOrderUP() noexcept
+{
+	m_pGameObject->ChangeOrderComponentUP(this);
+}
+
+void Component::ChangeOrderDown() noexcept
+{
+	m_pGameObject->ChangeOrderComponentDown(this);
+}
+
 #ifdef _DEBUG
 void Component::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {

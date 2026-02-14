@@ -160,10 +160,12 @@ public:
 private:
     void DrawContextMenu();
     void DeleteComponent();
+	void ChangeComponentOrder();
 
 private:
     bool m_IsDeletable;
     bool m_IsMovable;
     Component *m_pComponent;
 	std::vector<Component *> m_DeletedComponents;
+	std::vector<std::function<void()>> m_MoveActions;
 };

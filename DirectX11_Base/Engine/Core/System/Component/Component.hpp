@@ -188,12 +188,23 @@ public:
 	virtual void Update(_In_ float In_DeltaTime) noexcept override;
 	virtual void LateUpdate(_In_ float In_DeltaTime) noexcept override;
 	virtual void FixedUpdate(_In_ double In_FixedDeltaTime) noexcept override;
+	std::string GetName() const noexcept { return m_Name; }
 
 	virtual void SaveLoad(_In_ DataAccessor *In_Data) {}
 
 	GameObject *GetGameObject() const noexcept { return m_pGameObject; }
 
 	void DestroySelf() noexcept override final;
+
+	/// <summary>
+	/// ‡˜‚ğã•ûŒü‚É•ÏX‚µ‚Ü‚·
+	/// </summary>
+	void ChangeOrderUP() noexcept;
+
+	/// <summary>
+	/// ‡˜‚ğ‰º‚É•ÏX‚µ‚Ü‚·
+	/// </summary>
+	void ChangeOrderDown() noexcept;
 
 protected:
 

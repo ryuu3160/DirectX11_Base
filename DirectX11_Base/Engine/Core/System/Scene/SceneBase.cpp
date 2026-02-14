@@ -257,6 +257,19 @@ void SceneBase::_ExecuteDestroyObjectsComponents() noexcept
 	}
 }
 
+void SceneBase::_ExecuteChangeOrderComponents() noexcept
+{
+	// シーンが所持しているオブジェクトのコンポーネント順序変更処理を実行
+	for(auto &itr : m_SceneObjects)
+	{
+		// アクティブかつ初期化済みなら順序変更処理を実行
+		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
+		{
+			itr->ExecuteChangeOrderComponents();
+		}
+	}
+}
+
 void SceneBase::_RootDraw() noexcept
 {
 	// シーン自体の描画

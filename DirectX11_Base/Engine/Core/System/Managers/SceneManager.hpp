@@ -54,6 +54,11 @@ public:
 	void DestroyObjectsComponents() noexcept;
 
 	/// <summary>
+	/// コンポーネントの順序を変更します
+	/// </summary>
+	void ChangeOrderComponents() noexcept;
+
+	/// <summary>
 	/// <para>シーンの切り替えを行うアップデート</para>
 	/// <para>すべてのアップデートが終わった後に呼び出してください。</para>
 	/// </summary>

@@ -131,6 +131,17 @@ void SceneManager::DestroyObjectsComponents() noexcept
 	}
 }
 
+void SceneManager::ChangeOrderComponents() noexcept
+{
+	if (m_pCurrentScene)
+		m_pCurrentScene->_ExecuteChangeOrderComponents();
+	for (auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_ExecuteChangeOrderComponents();
+	}
+}
+
 void SceneManager::UpdateSceneChange() noexcept
 {
 	// ƒV[ƒ“‚Ì“Ç‚İ‚İ‚ª–³‚¢ê‡‚Í‰½‚à‚µ‚È‚¢

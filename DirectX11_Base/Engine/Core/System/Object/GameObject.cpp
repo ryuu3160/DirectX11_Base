@@ -221,16 +221,23 @@ void GameObject::RemoveComponent(_In_ std::string_view In_Name)
 
 void GameObject::ChangeOrderComponentUP(_In_ Component *In_pComponent) noexcept
 {
-	auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
-	if (itr != m_Components.end() && itr != m_Components.begin())
+	m_ChangeOrderFuncs.push_back([this, In_pComponent]()
 	{
-		std::iter_swap(itr, std::prev(itr));
-	}
+		auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
+		if (itr != m_Components.end() && itr != m_Components.begin())
+		{
+			if((*std::prev(itr))->GetName() == "Transform")
+				return;
 
+			std::iter_swap(itr, std::prev(itr));
+		}
+	});
 #ifdef _DEBUG
 	auto inspectorItr = std::find(m_InspectorComponent.begin(), m_InspectorComponent.end(), In_pComponent);
-	if (inspectorItr != m_InspectorComponent.end() && inspectorItr != m_InspectorComponent.begin())
+	if(inspectorItr != m_InspectorComponent.end() && inspectorItr != m_InspectorComponent.begin())
 	{
+		if((*std::prev(inspectorItr))->GetName() == "Transform")
+			return;
 		std::iter_swap(inspectorItr, std::prev(inspectorItr));
 	}
 #endif
@@ -238,14 +245,17 @@ void GameObject::ChangeOrderComponentUP(_In_ Component *In_pComponent) noexcept
 
 void GameObject::ChangeOrderComponentDown(_In_ Component *In_pComponent) noexcept
 {
-	auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
-	if (itr != m_Components.end() && std::next(itr) != m_Components.end())
+	m_ChangeOrderFuncs.push_back([this, In_pComponent]()
 	{
-		std::iter_swap(itr, std::next(itr));
-	}
+		auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
+		if (itr != m_Components.end() && std::next(itr) != m_Components.end())
+		{
+			std::iter_swap(itr, std::next(itr));
+		}
+	});
 
 #ifdef _DEBUG
-	auto inspectorItr = std::find(m_InspectorComponent.begin(), m_InspectorComponent.end(),In_pComponent);
+	auto inspectorItr = std::find(m_InspectorComponent.begin(), m_InspectorComponent.end(), In_pComponent);
 	if(inspectorItr != m_InspectorComponent.end() && std::next(inspectorItr) != m_InspectorComponent.end())
 	{
 		std::iter_swap(inspectorItr, std::next(inspectorItr));
@@ -398,6 +408,18 @@ void GameObject::ExecuteDestroyComponents() noexcept
 		}
 	}
 	m_DeadComponents.clear();
+}
+
+void GameObject::ExecuteChangeOrderComponents() noexcept
+{
+	if(m_ChangeOrderFuncs.empty())
+		return;
+
+	for(auto &func : m_ChangeOrderFuncs)
+	{
+		func();
+	}
+	m_ChangeOrderFuncs.clear();
 }
 
 void GameObject::DataWrite(_In_ cpon *In_pCpon)

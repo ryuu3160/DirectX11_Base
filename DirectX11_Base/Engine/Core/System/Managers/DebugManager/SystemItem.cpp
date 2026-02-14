@@ -583,6 +583,8 @@ ItemComponentGroup::ItemComponentGroup(_In_ std::string_view In_Name, _In_ Compo
 	, m_IsDeletable(true), m_IsMovable(true)
 {
     m_Kind = Kind::Group;
+    m_DeletedComponents.clear();
+    m_MoveActions.clear();
 }
 
 ItemComponentGroup::~ItemComponentGroup()
@@ -613,6 +615,9 @@ void ItemComponentGroup::DrawImGui()
         }
     }
 
+	// 順序変更の処理
+    ChangeComponentOrder();
+    
 	// 削除されたコンポーネントの処理
     DeleteComponent();
 }
@@ -642,14 +647,18 @@ void ItemComponentGroup::DrawContextMenu()
     {
         if(ImGui::MenuItem("Move Up"))
         {
-            // TODO: コンポーネントの順序変更
-            DebugManager::GetInstance().DebugLog("Move up: %s", m_Name.c_str());
+            m_MoveActions.push_back([this]()
+            {
+                m_pComponent->ChangeOrderUP();
+            });
         }
 
         if(ImGui::MenuItem("Move Down"))
         {
-            // TODO: コンポーネントの順序変更
-            DebugManager::GetInstance().DebugLog("Move down: %s", m_Name.c_str());
+            m_MoveActions.push_back([this]()
+            {
+                m_pComponent->ChangeOrderDown();
+            });
         }
     }
 }
@@ -664,6 +673,21 @@ void ItemComponentGroup::DeleteComponent()
         if(itr)
             itr->DestroySelf();
     }
+    // インスペクターを更新
+    m_pComponent->GetGameObject()->ReloadingInspector();
+}
+
+void ItemComponentGroup::ChangeComponentOrder()
+{
+    if(m_MoveActions.empty())
+        return;
+
+    for(auto &itr : m_MoveActions)
+    {
+        if(itr)
+            itr();
+    }
+    m_MoveActions.clear();
     // インスペクターを更新
     m_pComponent->GetGameObject()->ReloadingInspector();
 }

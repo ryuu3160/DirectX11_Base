@@ -148,6 +148,11 @@ private:
 	void _ExecuteDestroyObjectsComponents() noexcept;
 
 	/// <summary>
+	/// コンポーネントの順序変更を実行します
+	/// </summary>
+	void _ExecuteChangeOrderComponents() noexcept;
+
+	/// <summary>
 	/// シーンの描画を行います
 	/// </summary>
 	void _RootDraw() noexcept;

@@ -194,6 +194,7 @@ private:
 	void _destroySelf() noexcept;
 
 	void ExecuteDestroyComponents() noexcept;
+	void ExecuteChangeOrderComponents() noexcept;
 
 	void DataWrite(_In_ cpon *In_pCpon);
 	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
@@ -214,6 +215,7 @@ private:
 	Components			m_Components;		// コンポーネントの一覧
 	Components			m_InitComponents;	// 初期化を呼び出すコンポーネントリスト
 	Components			m_DeadComponents;	// 破棄予定のコンポーネントリスト
+	std::vector<std::function<void()>> m_ChangeOrderFuncs;	// コンポーネントの順序変更関数リスト
 #ifdef _DEBUG
 	Components			m_InspectorComponent;	// デバッグインスペクターに登録されているコンポーネントリスト
 #endif
