@@ -111,6 +111,9 @@ void CollisionManager::CheckAllCollisions() noexcept
 	for(auto itr = m_ColliderPairList.begin(); itr != m_ColliderPairList.end();)
 	{
 		// コライダーが有効かチェック
+		if(!(itr->first.pColliderA && itr->first.pColliderB))
+			continue;
+
 		IsActive = itr->first.pColliderA->IsActive() && itr->first.pColliderB->IsActive();
 
 		if(itr->first.pColliderA->CheckCollision(itr->first.pColliderB) && IsActive)
@@ -292,8 +295,15 @@ int CollisionManager::GetAllCollisionList(_In_ ColliderPairMap &In_ColPairs)
 
 bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMap &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac)
 {
+	// セルの存在チェック
+	if(In_Elem < 0 || In_Elem >= static_cast<int>(m_OctreeCells.size()))
+		return false;
+
+	if(!m_OctreeCells[In_Elem])
+		return false;
+
 	std::list<ColliderBase *>::iterator itr;
-	// ① 空間内のオブジェクト同士の衝突リスト作成
+	// 空間内のオブジェクト同士の衝突リスト作成
 	TreeData* Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
 	while(Tree1 != nullptr)
 	{
@@ -318,7 +328,7 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 			Inout_ColPairs.emplace(Pair,false);
 			Tree2 = Tree2->GetNextTree();
 		}
-		// ② 衝突スタックとの衝突リスト作成
+		// 衝突スタックとの衝突リスト作成
 		for(itr = Inout_ColStac.begin(); itr != Inout_ColStac.end(); ++itr)
 		{
 			if(!CheckCollisionActive(*itr))
@@ -331,7 +341,7 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 	}
 
 	bool ChildFlag = false;
-	// ③ 子空間に移動
+	// 子空間に移動
 	int ObjNum = 0;
 	int i, NextElem;
 	for(i = 0; i < 8; i++)
@@ -345,7 +355,7 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 		{
 			if(!ChildFlag)
 			{
-				// ④ 登録オブジェクトをスタックに追加
+				// 登録オブジェクトをスタックに追加
 				Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();
 				while(Tree1)
 				{
@@ -365,7 +375,7 @@ bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMa
 		}
 	}
 
-	// ⑤ スタックからオブジェクトを外す
+	// スタックからオブジェクトを外す
 	if(ChildFlag)
 	{
 		for(i = 0; i < ObjNum; ++i)
@@ -387,10 +397,21 @@ void CollisionManager::RemoveColliderPair(_In_ ColliderBase *In_Collider)
 	}
 }
 
-bool CollisionManager::CheckCollisionActive(_In_ ColliderBase *In_Collider) noexcept
+bool CollisionManager::CheckCollisionActive(_In_opt_ ColliderBase *In_Collider) noexcept
 {
 	if(!In_Collider)
 		return false;
+
+#ifdef _DEBUG
+	// 0xFEEEFEEEや0xDDDDDDDDなどの削除済みメモリのマジックナンバーをチェック
+	uintptr_t ptr = reinterpret_cast<uintptr_t>(In_Collider);
+	if(ptr == 0xFEEEFEEE || ptr == 0xDDDDDDDD || ptr == 0xCDCDCDCD)
+	{
+		std::string AddressStr = std::format("0x{:X}", ptr);
+		DebugManager::GetInstance().DebugLogError("Invalid pointer detected: {}", AddressStr);
+		return false;
+	}
+#endif
 
 	if(In_Collider->IsActive() && In_Collider->IsInitialized() && In_Collider->IsActiveParent())
 		return true;

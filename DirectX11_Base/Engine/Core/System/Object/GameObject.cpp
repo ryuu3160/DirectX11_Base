@@ -250,6 +250,8 @@ void GameObject::ChangeOrderComponentDown(_In_ Component *In_pComponent) noexcep
 		auto itr = std::find(m_Components.begin(), m_Components.end(), In_pComponent);
 		if (itr != m_Components.end() && std::next(itr) != m_Components.end())
 		{
+			if(*std::next(itr) == nullptr)
+				return;
 			std::iter_swap(itr, std::next(itr));
 		}
 	});

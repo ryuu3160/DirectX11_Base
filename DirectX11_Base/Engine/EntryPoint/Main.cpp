@@ -19,6 +19,7 @@
 void Update(_In_ float In_DeltaTime);
 void FixedUpdate(_In_ double In_FixedDeltaTime);
 void Draw();
+void ExecuteObjectsChange();
 
 // ==============================
 //  グローバル変数
@@ -145,7 +146,7 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 
 		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
 		{
-			// 固定刻みで物理更新（衝突検出・解決を含む）
+			// 固定刻みで物理更新(衝突検出・解決を含む)
 			FixedUpdate(FixedDeltaTime);
 
 			// 当たり判定処理
@@ -165,6 +166,7 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 		// Inputの更新終了処理
 		Input::EndUpdate();
 		Draw();	// 描画処理
+		ExecuteObjectsChange(); // オブジェクトの変更処理
 	}
 }
 
@@ -197,14 +199,13 @@ void Draw()
 	DebugManager::GetInstance().Draw();
 	InitializeImGui::EndImGuiFrame();
 
-	// オブジェクトの破棄とコンポーネントの破棄、コンポーネントの順序変更を非同期で実行
-	std::future<void> ChangeOrderFuture = std::async(std::launch::async, &SceneManager::ChangeOrderComponents, &SceneM);
-	std::future<void> DestroyCmpFuture = std::async(std::launch::async, &SceneManager::DestroyObjectsComponents, &SceneM);
-	std::future<void> DestroyObjFuture = std::async(std::launch::async, &SceneManager::DestroyObjects, &SceneM);
-
 	DX11.Swap();
+}
 
-	ChangeOrderFuture.get(); // コンポーネントの順序変更が終わるまで待機
-	DestroyCmpFuture.get(); // コンポーネントの破棄が終わるまで待機
-	DestroyObjFuture.get(); // 破棄が終わるまで待機
+void ExecuteObjectsChange()
+{
+	auto &SceneM = SceneManager::GetInstance();
+	SceneM.DestroyObjectsComponents();
+	SceneM.DestroyObjects();
+	SceneM.ChangeOrderComponents();
 }

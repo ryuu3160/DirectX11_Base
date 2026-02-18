@@ -37,23 +37,31 @@ bool TreeData::Remove()
 	if (!m_pCell)
 		return false;
 
+	TreeData *prev = m_spPrev;
+	TreeData *next = m_spNext;
+	OctreeCell *cell = m_pCell;
+
 	// 自身を登録している空間に自信を通知
-	if(!m_pCell->OnRemove(this))
+	if(cell && !cell->OnRemove(this))
 		return false;
 
 	// 逸脱処理
 	// 前後のオブジェクトを結び付ける
-	if (m_spPrev != nullptr)
+	if(prev != nullptr)
 	{
-		m_spPrev->m_spNext = m_spNext;
-		m_spPrev = nullptr;
+		prev->m_spNext = next;
 	}
-	if (m_spNext != nullptr)
+	if(next != nullptr)
 	{
-		m_spNext->m_spPrev = m_spPrev;
-		m_spNext = nullptr;
+		next->m_spPrev = prev;
 	}
+
+	// 自身のリンクをリセット
+	m_spPrev = nullptr;
+	m_spNext = nullptr;
 	m_pCell = nullptr;
+	m_pCollider = nullptr;
+
 	return true;
 }
 

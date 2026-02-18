@@ -45,7 +45,7 @@ void SceneRoot::Init()
 	Component1->SetScale(0.005f);
 
 	//pModel->SetPosition({0.0f, 1.0f, 0.0f});
-	pModel->AddComponent<BoxCollider>();
+	//pModel->AddComponent<BoxCollider>();
 
 	auto child = CreateObject<GameObject>("RootModel0Child");
 	child->GetTransform()->SetParent(pModel->GetTransform());
@@ -107,7 +107,7 @@ void SceneRoot::Init()
 	// パーティクルテスト
 	auto ParticleObj = CreateObject<GameObject>("ParticleTest");
 	auto ParticleCmp = ParticleObj->AddComponent<ParticleEffect>();
-	ParticleObj->AddComponent<BoxCollider>();
+	//ParticleObj->AddComponent<BoxCollider>();
 	ParticleCmp->SetTexture("Engine/Assets/Texture/TestTextureWhite.png");
 
 	// エミッター設定

@@ -38,7 +38,7 @@ void Component::FixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 void Component::DestroySelf() noexcept
 {
 	Object::DestroySelf();
-	m_pGameObject->RemoveComponent(m_Name);
+	m_pGameObject->RemoveComponent(this);
 }
 
 void Component::ChangeOrderUP() noexcept

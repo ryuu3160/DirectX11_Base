@@ -668,13 +668,19 @@ void ItemComponentGroup::DeleteComponent()
     if(m_DeletedComponents.empty())
         return;
 
-    for(auto &itr : m_DeletedComponents)
+    auto ComponentsToDelete = std::move(m_DeletedComponents);
+    GameObject *pGameObj = m_pComponent->GetGameObject();
+
+    m_DeletedComponents.clear();
+
+    for(auto &itr : ComponentsToDelete)
     {
         if(itr)
             itr->DestroySelf();
     }
     // インスペクターを更新
-    m_pComponent->GetGameObject()->ReloadingInspector();
+    if(pGameObj)
+        pGameObj->ReloadingInspector();
 }
 
 void ItemComponentGroup::ChangeComponentOrder()
@@ -682,12 +688,17 @@ void ItemComponentGroup::ChangeComponentOrder()
     if(m_MoveActions.empty())
         return;
 
-    for(auto &itr : m_MoveActions)
+	auto MoveActionsToExecute = std::move(m_MoveActions);
+	GameObject *pGameObj = m_pComponent->GetGameObject();
+
+	m_MoveActions.clear();
+
+    for(auto &itr : MoveActionsToExecute)
     {
         if(itr)
             itr();
     }
-    m_MoveActions.clear();
     // インスペクターを更新
-    m_pComponent->GetGameObject()->ReloadingInspector();
+    if(pGameObj)
+        pGameObj->ReloadingInspector();
 }

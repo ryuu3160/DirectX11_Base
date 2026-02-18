@@ -101,7 +101,7 @@ public:
 	void DebugLogError(_In_ std::string_view In_Msg);
 
 	template<typename ...Args>
-	inline void DebugLog(_In_ const char* In_Format, Args&& ...In_Args)
+	inline void DebugLog(_In_ std::string_view In_Format, Args&& ...In_Args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);
@@ -109,7 +109,7 @@ public:
 	}
 
 	template<typename ...Args>
-	inline void DebugLogWarning(_In_ const char *In_Format, Args&& ...In_Args)
+	inline void DebugLogWarning(_In_ std::string_view In_Format, Args&& ...In_Args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);
@@ -117,7 +117,7 @@ public:
 	}
 
 	template<typename ...Args>
-	inline void DebugLogError(_In_ const char *In_Format, Args&& ...In_Args)
+	inline void DebugLogError(_In_ std::string_view In_Format, Args&& ...In_Args)
 	{
 		std::string msg = std::vformat(In_Format, std::make_format_args(In_Args...));
 		msg = ShiftJISToUTF8(msg);

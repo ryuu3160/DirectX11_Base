@@ -63,12 +63,12 @@ public:
 	// ------------------------------
 	// Setter
 	// ------------------------------
-	inline void SetNextTree(_In_ TreeData *In_spNext) noexcept
+	inline void SetNextTree(_In_opt_ TreeData *In_spNext) noexcept
 	{
 		m_spNext = In_spNext;
 	}
 
-	inline void SetPrevTree(_In_ TreeData *In_spPrev) noexcept
+	inline void SetPrevTree(_In_opt_ TreeData *In_spPrev) noexcept
 	{
 		m_spPrev = In_spPrev;
 	}

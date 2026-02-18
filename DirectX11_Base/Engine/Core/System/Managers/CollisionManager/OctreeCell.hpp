@@ -42,6 +42,8 @@ public:
 
 	bool OnRemove(_In_ TreeData *In_pTree) noexcept;
 
+	void Clear() noexcept;
+
 private:
-	TreeData *m_spLatest; // 最新のTreeDataへのスマートポインタ
+	TreeData *m_spLatest; // 最新のTreeDataへのポインタ
 };

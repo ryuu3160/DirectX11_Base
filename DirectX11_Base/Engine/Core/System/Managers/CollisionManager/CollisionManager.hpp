@@ -145,7 +145,7 @@ private:
 	/// </summary>
 	/// <param name="[In_Collider]">チェックするコライダーへのポインタ</param>
 	/// <returns>衝突判定がアクティブな場合はtrue、そうでない場合はfalse</returns>
-	bool CheckCollisionActive(_In_ ColliderBase *In_Collider) noexcept;
+	bool CheckCollisionActive(_In_opt_ ColliderBase *In_Collider) noexcept;
 
 private:
 
