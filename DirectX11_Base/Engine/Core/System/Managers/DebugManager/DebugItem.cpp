@@ -220,6 +220,7 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 
 ItemValue::ItemValue(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave)
 	: m_Value(), m_IsSave(In_IsSave), m_Notice(nullptr), m_EnableDrag(false)
+	, m_DragSpeed(1.0f), m_DragMin(0.0f), m_DragMax(0.0f)
 {
 	m_Name = In_Name.data();
 
@@ -470,7 +471,7 @@ void ItemText::DrawImGui()
 // ==============================
 
 ItemBind::ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
-	: m_IsString(false), m_Notice(nullptr)
+	: m_IsString(false), m_Notice(nullptr), m_EnableDrag(false), m_DragSpeed(1.0f), m_DragMin(0.0f), m_DragMax(0.0f)
 {
 	m_Name = In_Name.data();
 
@@ -642,6 +643,7 @@ void ItemBind::DrawDragValue()
 // ==============================
 
 ItemCallback::ItemCallback(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func)
+	: m_EnableDrag(false), m_DragSpeed(1.0f), m_DragMin(0.0f), m_DragMax(0.0f)
 {
 	m_Name = In_Name.data();
 	if(In_Kind == Kind::Group || In_Kind == Kind::List)
@@ -681,8 +683,17 @@ ItemCallback::~ItemCallback()
 {
 }
 
+void ItemCallback::EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed, _In_ float In_DragMin, _In_ float In_DragMax)
+{
+	m_EnableDrag = In_Enable;
+	m_DragSpeed = In_DragSpeed;
+	m_DragMin = In_DragMin;
+	m_DragMax = In_DragMax;
+}
+
 void ItemCallback::DrawImGui()
 {
+	// ドラッグが関係ない項目
 	switch (m_Kind)
 	{
 		// 項目名のみの表示
@@ -695,38 +706,6 @@ void ItemCallback::DrawImGui()
 		this->CallFunc(false, &std::get<bool>(m_Value));
 		if (ImGui::Checkbox(m_Name.c_str(), &std::get<bool>(m_Value)))
 			this->CallFunc(true, &std::get<bool>(m_Value));
-	}
-	break;
-		// 整数項目の表示
-	case DebugItem::Int:
-	{
-		this->CallFunc(false, &std::get<int>(m_Value));
-		if (ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value)))
-			this->CallFunc(true, &std::get<int>(m_Value));
-	}
-	break;
-		// 小数項目の表示
-	case DebugItem::Float:
-	{
-		this->CallFunc(false, &std::get<float>(m_Value));
-		if (ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value)))
-			this->CallFunc(true, &std::get<float>(m_Value));
-	}
-	break;
-		// 2Dベクトル項目の表示
-	case DebugItem::Float2:
-	{
-		this->CallFunc(false, &std::get<DirectX::XMFLOAT2>(m_Value));
-		if (ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f"))
-			this->CallFunc(true, &std::get<DirectX::XMFLOAT2>(m_Value).x);
-	}
-	break;
-		// ベクトル項目の表示
-	case DebugItem::Vector:
-	{
-		this->CallFunc(false, &std::get<DirectX::XMFLOAT3>(m_Value));
-		if (ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f"))
-			this->CallFunc(true, &std::get<DirectX::XMFLOAT3>(m_Value).x);
 	}
 	break;
 		// 色項目の表示
@@ -742,6 +721,93 @@ void ItemCallback::DrawImGui()
 		if (ImGui::Button(m_Name.c_str()) && this)
 			this->CallFunc(false, nullptr);
 		break;
+	default:
+		break;
+	}
+
+	if (m_EnableDrag)
+		DrawDragValue();
+	else
+		DrawInputValue();
+}
+
+void ItemCallback::DrawInputValue()
+{
+	switch(m_Kind)
+	{
+	// 整数項目の表示
+	case DebugItem::Int:
+	{
+		this->CallFunc(false, &std::get<int>(m_Value));
+		if(ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value)))
+			this->CallFunc(true, &std::get<int>(m_Value));
+	}
+	break;
+	// 小数項目の表示
+	case DebugItem::Float:
+	{
+		this->CallFunc(false, &std::get<float>(m_Value));
+		if(ImGui::InputFloat(m_Name.c_str(), &std::get<float>(m_Value)))
+			this->CallFunc(true, &std::get<float>(m_Value));
+	}
+	break;
+	// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT2>(m_Value));
+		if(ImGui::InputFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT2>(m_Value).x);
+	}
+	break;
+	// ベクトル項目の表示
+	case DebugItem::Vector:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT3>(m_Value));
+		if(ImGui::InputFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT3>(m_Value).x);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void ItemCallback::DrawDragValue()
+{
+	switch(m_Kind)
+	{
+		// 整数項目の表示
+	case DebugItem::Int:
+	{
+		this->CallFunc(false, &std::get<int>(m_Value));
+		if(ImGui::DragInt(m_Name.c_str(), &std::get<int>(m_Value), m_DragSpeed, static_cast<int>(m_DragMin), static_cast<int>(m_DragMax)))
+			this->CallFunc(true, &std::get<int>(m_Value));
+	}
+	break;
+	// 小数項目の表示
+	case DebugItem::Float:
+	{
+		this->CallFunc(false, &std::get<float>(m_Value));
+		if(ImGui::DragFloat(m_Name.c_str(), &std::get<float>(m_Value), m_DragSpeed, m_DragMin, m_DragMax))
+			this->CallFunc(true, &std::get<float>(m_Value));
+	}
+	break;
+	// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT2>(m_Value));
+		if(ImGui::DragFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT2>(m_Value).x);
+	}
+	break;
+	// ベクトル項目の表示
+	case DebugItem::Vector:
+	{
+		this->CallFunc(false, &std::get<DirectX::XMFLOAT3>(m_Value));
+		if(ImGui::DragFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
+			this->CallFunc(true, &std::get<DirectX::XMFLOAT3>(m_Value).x);
+	}
+	break;
 	default:
 		break;
 	}

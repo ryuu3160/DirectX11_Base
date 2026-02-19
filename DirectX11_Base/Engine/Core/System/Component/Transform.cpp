@@ -559,8 +559,8 @@ void Transform::Inspector(_In_ ItemGroup *In_pGroup)
 	Group->SetIsMovable(false);
 
 	// トランスフォームグループのメンバーを作成
-	In_pGroup->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
-	In_pGroup->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
+	auto PosBind = In_pGroup->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);
+	auto RotationCallback = In_pGroup->CreateGroupItem<ItemCallback>("Rotation", DebugItem::Kind::Vector,
 		[this](bool IsWrite, void *arg)
 		{
 			DirectX::XMFLOAT3 *pVec = static_cast<DirectX::XMFLOAT3 *>(arg);
@@ -590,7 +590,12 @@ void Transform::Inspector(_In_ ItemGroup *In_pGroup)
 				pVec->z = m_Euler.z;
 			}
 		});
-	In_pGroup->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+	auto ScaleBind = In_pGroup->CreateGroupItem<ItemBind>("Scale", DebugItem::Kind::Vector, &m_Scale);
+
+	// 各種設定
+	PosBind->EnableDrag(true);
+	RotationCallback->EnableDrag(true);
+	ScaleBind->EnableDrag(true);
 }
 
 DirectX::XMFLOAT3 Transform::SyncEulerFromQuat(_In_ DirectX::XMFLOAT4 In_Quat) noexcept

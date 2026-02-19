@@ -261,14 +261,24 @@ public:
 	ItemCallback(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ CallBack In_Func);
 	~ItemCallback();
 
+	void EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed = 1.0f, _In_ float In_DragMin = 0.0f, _In_ float In_DragMax = 0.0f);
+
 	void DrawImGui() override;
 
 	Value &GetValue() { return m_Value; }
 	void CallFunc(_In_ bool In_IsSet, _In_opt_ void *In_Ptr) { m_Func(In_IsSet, In_Ptr); }
 
 private:
+	void DrawInputValue();
+	void DrawDragValue();
+
+private:
 	Value m_Value;
 	CallBack m_Func;
+	float m_DragSpeed;
+	float m_DragMin;
+	float m_DragMax;
+	bool m_EnableDrag;
 };
 
 class ItemGroup : public DebugItem
