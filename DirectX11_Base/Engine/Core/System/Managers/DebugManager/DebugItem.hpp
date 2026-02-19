@@ -119,6 +119,15 @@ public:
 
 	bool IsSave() const { return m_IsSave; }
 
+	/// <summary>
+	/// ドラッグ機能を有効または無効にします
+	/// </summary>
+	/// <param name="In_Enable">ドラッグ機能を有効にするかどうか</param>
+	/// <param name="In_DragSpeed">ドラッグの速度</param>
+	/// <param name="In_DragMin">ドラッグの最小値</param>
+	/// <param name="In_DragMax">ドラッグの最大値</param>
+	void EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed = 1.0f, _In_ float In_DragMin = 0.0f, _In_ float In_DragMax = 0.0f);
+
 	Value &GetValue() { return m_Value; }
 
 	template<typename T>
@@ -135,9 +144,18 @@ public:
 	void SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept;
 
 private:
+
+	void DrawInputValue();
+	void DrawDragValue();
+
+private:
 	Value m_Value;
 	std::function<void()> m_Notice;
+	float m_DragSpeed;
+	float m_DragMin;
+	float m_DragMax;
 	bool m_IsSave;
+	bool m_EnableDrag;
 };
 
 class ItemText : public DebugItem
@@ -184,6 +202,15 @@ public:
 	ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ std::string* In_Ptr);
 	~ItemBind();
 
+	/// <summary>
+	/// ドラッグ機能を有効または無効にします
+	/// </summary>
+	/// <param name="In_Enable">ドラッグ機能を有効にするかどうか</param>
+	/// <param name="In_DragSpeed">ドラッグの速度</param>
+	/// <param name="In_DragMin">ドラッグの最小値</param>
+	/// <param name="In_DragMax">ドラッグの最大値</param>
+	void EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed = 1.0f, _In_ float In_DragMin = 0.0f, _In_ float In_DragMax = 0.0f);
+
 	void DrawImGui() override;
 
 	template <typename T>
@@ -209,8 +236,16 @@ public:
 	void SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept;
 
 private:
+	void DrawInputValue();
+	void DrawDragValue();
+
+private:
 	void *m_vPtr;
+	float m_DragSpeed;
+	float m_DragMin;
+	float m_DragMax;
 	bool m_IsString;
+	bool m_EnableDrag;
 	std::function<void()> m_Notice;
 };
 

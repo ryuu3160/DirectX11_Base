@@ -219,7 +219,7 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 
 
 ItemValue::ItemValue(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ bool In_IsSave)
-	: m_Value(), m_IsSave(In_IsSave), m_Notice(nullptr)
+	: m_Value(), m_IsSave(In_IsSave), m_Notice(nullptr), m_EnableDrag(false)
 {
 	m_Name = In_Name.data();
 
@@ -262,6 +262,7 @@ ItemValue::~ItemValue()
 
 void ItemValue::DrawImGui()
 {
+	// ドラッグが関係ない項目
 	switch (m_Kind)
 	{
 		// 項目名のみの表示
@@ -276,6 +277,54 @@ void ItemValue::DrawImGui()
 				m_Notice();
 		}
 		break;
+		// 色項目の表示
+	case DebugItem::Color:
+		if(ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// パス項目の表示
+	case DebugItem::Path:
+	{
+		char buffer[MAX_PATH];
+		strncpy_s(buffer, std::get<std::string>(m_Value).c_str(), MAX_PATH);
+		if(ImGui::InputText(m_Name.c_str(), buffer, MAX_PATH))
+		{
+			std::get<std::string>(m_Value) = buffer;
+			if(m_Notice)
+				m_Notice();
+		}
+	}
+	break;
+	default:
+		break;
+	}
+
+	if(m_EnableDrag)
+		DrawDragValue();
+	else
+		DrawInputValue();
+}
+
+void ItemValue::EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed, _In_ float In_DragMin, _In_ float In_DragMax)
+{
+	m_EnableDrag = In_Enable;
+	m_DragSpeed = In_DragSpeed;
+	m_DragMin = In_DragMin;
+	m_DragMax = In_DragMax;
+}
+
+void ItemValue::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
+{
+	m_Notice = In_NoticeFunc;
+}
+
+void ItemValue::DrawInputValue()
+{
+	switch(m_Kind)
+	{
 		// 整数項目の表示
 	case DebugItem::Int:
 		if(ImGui::InputInt(m_Name.c_str(), &std::get<int>(m_Value)))
@@ -308,35 +357,50 @@ void ItemValue::DrawImGui()
 				m_Notice();
 		}
 		break;
-		// 色項目の表示
-	case DebugItem::Color:
-		if(ImGui::ColorEdit4(m_Name.c_str(), &std::get<DirectX::XMFLOAT4>(m_Value).x))
-		{
-			if(m_Notice)
-				m_Notice();
-		}
-		break;
-		// パス項目の表示
-	case DebugItem::Path:
-	{
-		char buffer[MAX_PATH];
-		strncpy_s(buffer, std::get<std::string>(m_Value).c_str(), MAX_PATH);
-		if(ImGui::InputText(m_Name.c_str(), buffer, MAX_PATH))
-		{
-			std::get<std::string>(m_Value) = buffer;
-			if(m_Notice)
-				m_Notice();
-		}
-	}
-	break;
 	default:
 		break;
 	}
 }
 
-void ItemValue::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
+void ItemValue::DrawDragValue()
 {
-	m_Notice = In_NoticeFunc;
+	switch(m_Kind)
+	{
+		// 整数項目の表示
+	case DebugItem::Int:
+		if(ImGui::DragInt(m_Name.c_str(), &std::get<int>(m_Value), m_DragSpeed, static_cast<int>(m_DragMin), static_cast<int>(m_DragMax)))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// 小数項目の表示
+	case DebugItem::Float:
+		if(ImGui::DragFloat(m_Name.c_str(), &std::get<float>(m_Value),m_DragSpeed, m_DragMin, m_DragMax))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+		if(ImGui::DragFloat2(m_Name.c_str(), &std::get<DirectX::XMFLOAT2>(m_Value).x, m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+		if(ImGui::DragFloat3(m_Name.c_str(), &std::get<DirectX::XMFLOAT3>(m_Value).x, m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 // ==============================
@@ -430,8 +494,17 @@ ItemBind::~ItemBind()
 {
 }
 
+void ItemBind::EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed, _In_ float In_DragMin, _In_ float In_DragMax)
+{
+	m_EnableDrag = In_Enable;
+	m_DragSpeed = In_DragSpeed;
+	m_DragMin = In_DragMin;
+	m_DragMax = In_DragMax;
+}
+
 void ItemBind::DrawImGui()
 {
+	// ドラッグが関係ない項目
 	switch (m_Kind)
 	{
 		// 項目名のみの表示
@@ -450,6 +523,42 @@ void ItemBind::DrawImGui()
 				m_Notice();
 		}
 		break;
+		// 色項目の表示
+	case DebugItem::Color:
+		if(ImGui::ColorEdit4(m_Name.c_str(), this->GetPtr<float>()))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// パス項目の表示
+	case DebugItem::Path:
+		// 紐づけ項目の表示
+		if(ImGui::InputText(m_Name.c_str(), this->GetPtr<char>(), MAX_PATH))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+	default:
+		break;
+	}
+
+	if(m_EnableDrag)
+		DrawDragValue();
+	else
+		DrawInputValue();
+}
+
+void ItemBind::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
+{
+	m_Notice = In_NoticeFunc;
+}
+
+void ItemBind::DrawInputValue()
+{
+	switch(m_Kind)
+	{
 		// 整数項目の表示
 	case DebugItem::Int:
 		if(ImGui::InputInt(m_Name.c_str(), this->GetPtr<int>()))
@@ -482,18 +591,42 @@ void ItemBind::DrawImGui()
 				m_Notice();
 		}
 		break;
-		// 色項目の表示
-	case DebugItem::Color:
-		if(ImGui::ColorEdit4(m_Name.c_str(), this->GetPtr<float>()))
+	default:
+		break;
+	}
+}
+
+void ItemBind::DrawDragValue()
+{
+	switch(m_Kind)
+	{
+		// 整数項目の表示
+	case DebugItem::Int:
+		if(ImGui::DragInt(m_Name.c_str(), this->GetPtr<int>(),m_DragSpeed, static_cast<int>(m_DragMin),static_cast<int>(m_DragMax)))
 		{
 			if(m_Notice)
 				m_Notice();
 		}
 		break;
-		// パス項目の表示
-	case DebugItem::Path:
-		// 紐づけ項目の表示
-		if(ImGui::InputText(m_Name.c_str(), this->GetPtr<char>(), MAX_PATH))
+		// 小数項目の表示
+	case DebugItem::Float:
+		if(ImGui::DragFloat(m_Name.c_str(), this->GetPtr<float>(), m_DragSpeed, m_DragMin, m_DragMax))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// 2Dベクトル項目の表示
+	case DebugItem::Float2:
+		if(ImGui::DragFloat2(m_Name.c_str(), this->GetPtr<float>(), m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
+		{
+			if(m_Notice)
+				m_Notice();
+		}
+		break;
+		// ベクトル項目の表示
+	case DebugItem::Vector:
+		if(ImGui::DragFloat3(m_Name.c_str(), this->GetPtr<float>(), m_DragSpeed, m_DragMin, m_DragMax, "%.2f"))
 		{
 			if(m_Notice)
 				m_Notice();
@@ -502,11 +635,6 @@ void ItemBind::DrawImGui()
 	default:
 		break;
 	}
-}
-
-void ItemBind::SetNoticeFunc(_In_ std::function<void()> In_NoticeFunc) noexcept
-{
-	m_Notice = In_NoticeFunc;
 }
 
 // ==============================
