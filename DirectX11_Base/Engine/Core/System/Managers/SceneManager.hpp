@@ -44,19 +44,14 @@ public:
 	void RootDraw() noexcept;
 
 	/// <summary>
+	/// シーンのコンテンツの変更を行います
+	/// </summary>
+	void ChangeSceneContent();
+
+	/// <summary>
 	/// 削除予約リストに追加されたオブジェクトを破棄します。
 	/// </summary>
 	void DestroyObjects() noexcept;
-
-	/// <summary>
-	/// 削除予約リストに追加されたオブジェクトのコンポーネントを破棄します
-	/// </summary>
-	void DestroyObjectsComponents() noexcept;
-
-	/// <summary>
-	/// コンポーネントの順序を変更します
-	/// </summary>
-	void ChangeOrderComponents() noexcept;
 
 	/// <summary>
 	/// <para>シーンの切り替えを行うアップデート</para>

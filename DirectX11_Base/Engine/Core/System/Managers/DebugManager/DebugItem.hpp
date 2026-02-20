@@ -89,6 +89,8 @@ public:
 
 	virtual void DrawImGui() {};
 
+	virtual void ChangeImGuiItem() {};
+
 public:
 	// 文字列から項目の種別を取得
 	static Kind StrToKind(_In_ std::string_view In_Str);
@@ -338,6 +340,11 @@ public:
 		dynamic_cast<ItemGroup*>(this)->m_Items.push_back(static_cast<DebugItem*>(item));
 		return item;
 	}
+
+	/// <summary>
+	/// グループのアイテムをクリアします
+	/// </summary>
+	void ClearGroupItems();
 
 protected:
 	void DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem);

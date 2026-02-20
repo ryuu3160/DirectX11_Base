@@ -857,6 +857,15 @@ void ItemGroup::DrawImGui()
 	}
 }
 
+void ItemGroup::ClearGroupItems()
+{
+	for(auto &itr : m_Items)
+	{
+		delete itr;
+	}
+	m_Items.clear();
+}
+
 void ItemGroup::DataRead(_In_ std::string_view In_FullPath, _In_ DebugItem *In_pItem)
 {
 	DebugManager::GetInstance().DataRead(In_FullPath.data(), In_pItem);

@@ -44,6 +44,15 @@ void DebugWindow::Draw() noexcept
 	}
 }
 
+void DebugWindow::ChangeItems() noexcept
+{
+	for(const auto &item : m_Items)
+	{
+		if(item)
+			item->ChangeImGuiItem();
+	}
+}
+
 DebugItem &DebugWindow::operator[](_In_ std::string_view In_ItemName)
 {
 	auto itr = FindItem(In_ItemName);

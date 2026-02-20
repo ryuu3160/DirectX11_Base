@@ -108,6 +108,22 @@ void SceneManager::RootDraw() noexcept
 	m_RenderManager.DrawAll();
 }
 
+void SceneManager::ChangeSceneContent()
+{
+	// オブジェクトについているコンポーネントの変更処理
+	if(m_pCurrentScene)
+		m_pCurrentScene->_ExecuteChangeObjectsComponents();
+
+	for(auto &itr : m_SubScene)
+	{
+		if (itr.second)
+			itr.second->_ExecuteChangeObjectsComponents();
+	}
+
+	// オブジェクトの変更処理
+	DestroyObjects();
+}
+
 void SceneManager::DestroyObjects() noexcept
 {
 	if (m_pCurrentScene)
@@ -117,28 +133,6 @@ void SceneManager::DestroyObjects() noexcept
 	{
 		if (itr.second)
 			itr.second->_DestroyObjects();
-	}
-}
-
-void SceneManager::DestroyObjectsComponents() noexcept
-{
-	if(m_pCurrentScene)
-		m_pCurrentScene->_ExecuteDestroyObjectsComponents();
-	for(auto &itr : m_SubScene)
-	{
-		if(itr.second)
-			itr.second->_ExecuteDestroyObjectsComponents();
-	}
-}
-
-void SceneManager::ChangeOrderComponents() noexcept
-{
-	if (m_pCurrentScene)
-		m_pCurrentScene->_ExecuteChangeOrderComponents();
-	for (auto &itr : m_SubScene)
-	{
-		if (itr.second)
-			itr.second->_ExecuteChangeOrderComponents();
 	}
 }
 

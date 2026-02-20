@@ -205,7 +205,5 @@ void Draw()
 void ExecuteObjectsChange()
 {
 	auto &SceneM = SceneManager::GetInstance();
-	SceneM.DestroyObjectsComponents();
-	SceneM.DestroyObjects();
-	SceneM.ChangeOrderComponents();
+	SceneM.ChangeSceneContent();
 }

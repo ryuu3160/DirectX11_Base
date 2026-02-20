@@ -30,6 +30,8 @@ public:
 
 	void Draw() noexcept;
 
+	void ChangeItems() noexcept;
+
 	DebugItem &operator[](_In_ std::string_view In_ItemName);
 
 	ItemGroup &GetGroupItem(_In_ std::string_view In_ItemName);

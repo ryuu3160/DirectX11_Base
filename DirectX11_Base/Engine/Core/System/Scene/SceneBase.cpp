@@ -244,28 +244,16 @@ void SceneBase::_RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 	FixedUpdate(In_FixedDeltaTime);
 }
 
-void SceneBase::_ExecuteDestroyObjectsComponents() noexcept
+void SceneBase::_ExecuteChangeObjectsComponents() noexcept
 {
-	// シーンが所持しているオブジェクトのコンポーネント破棄処理を実行
+	// シーンが所持しているオブジェクトのコンポーネントの変更処理
 	for(auto &itr : m_SceneObjects)
 	{
-		// アクティブかつ初期化済みなら破棄処理を実行
-		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
+		// アクティブかつ初期化済みなら実行
+		if(itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 		{
-			itr->ExecuteDestroyComponents();
-		}
-	}
-}
-
-void SceneBase::_ExecuteChangeOrderComponents() noexcept
-{
-	// シーンが所持しているオブジェクトのコンポーネント順序変更処理を実行
-	for(auto &itr : m_SceneObjects)
-	{
-		// アクティブかつ初期化済みなら順序変更処理を実行
-		if (itr && itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
-		{
-			itr->ExecuteChangeOrderComponents();
+			itr->ExecuteChangeOrderComponents();	// 順序変更処理
+			itr->ExecuteDestroyComponents();		// 削除処理
 		}
 	}
 }

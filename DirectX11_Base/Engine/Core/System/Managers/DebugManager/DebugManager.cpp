@@ -196,6 +196,7 @@ void DebugManager::Draw() noexcept
 			if(ImGui::Begin(name.c_str()))
 			{
 				window->Draw();
+				window->ChangeItems();
 			}
 			ImGui::End();
 		}

@@ -143,14 +143,9 @@ private:
 	void _RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept;
 
 	/// <summary>
-	/// オブジェクトのコンポーネント削除予約リストを処理する
+	/// オブジェクトのコンポーネントの変更を実行します
 	/// </summary>
-	void _ExecuteDestroyObjectsComponents() noexcept;
-
-	/// <summary>
-	/// コンポーネントの順序変更を実行します
-	/// </summary>
-	void _ExecuteChangeOrderComponents() noexcept;
+	void _ExecuteChangeObjectsComponents() noexcept;
 
 	/// <summary>
 	/// シーンの描画を行います

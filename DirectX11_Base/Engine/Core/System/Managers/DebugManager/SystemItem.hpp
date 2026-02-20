@@ -157,6 +157,8 @@ public:
 
     void DrawImGui() override;
 
+    void ChangeImGuiItem() override;
+
 private:
     void DrawContextMenu();
     void DeleteComponent();

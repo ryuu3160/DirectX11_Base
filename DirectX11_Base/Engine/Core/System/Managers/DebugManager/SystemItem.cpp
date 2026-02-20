@@ -614,11 +614,14 @@ void ItemComponentGroup::DrawImGui()
             itr->DrawImGui();
         }
     }
+}
 
-	// 順序変更の処理
+void ItemComponentGroup::ChangeImGuiItem()
+{
+    // 順序変更の処理
     ChangeComponentOrder();
-    
-	// 削除されたコンポーネントの処理
+
+    // 削除されたコンポーネントの処理
     DeleteComponent();
 }
 
