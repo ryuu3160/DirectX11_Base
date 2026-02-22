@@ -63,7 +63,25 @@ public:
 	/// <param name="[In_RTV]">カラー描画先となるレンダーターゲットビューへのポインタ (RenderTarget*)。</param>
 	/// <param name="[In_DSV]">深度およびステンシル情報を保持するデプスステンシルへのポインタ (DepthStencil*)。</param>
 	/// <returns>作成または既に作成されているRenderContextへのポインタ。</returns>
-	RenderContext* CreateRenderContext(_In_ const std::string &In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
+	RenderContext* CreateRenderContext(_In_ std::string_view In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept;
+
+	/// <summary>
+	/// レンダーコンテキストを削除します
+	/// </summary>
+	/// <param name="[In_Name]">削除するレンダーコンテキストの名前</param>
+	void RemoveRenderContext(_In_ std::string_view In_Name);
+
+	/// <summary>
+	/// カメラに関連付けられたレンダリングコンテキストを削除します
+	/// </summary>
+	/// <param name="In_Camera">レンダリングコンテキストを削除するカメラ</param>
+	void RemoveRenderContext(_In_ const Camera *In_Camera);
+
+	/// <summary>
+	/// レンダリングコンテキストからカメラを削除します
+	/// </summary>
+	/// <param name="[In_Camera]">削除するカメラへのポインタ</param>
+	void RemoveRenderContextCamera(_In_ const Camera *In_Camera);
 
 	/// <summary>
 	/// 指定した名前のレンダーコンテキストを取得する

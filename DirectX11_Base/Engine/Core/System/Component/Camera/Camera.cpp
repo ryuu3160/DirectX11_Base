@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 #include "Core/DirectX11/System/Gizmos.hpp"
 #include "Core/System/Object/GameObject.hpp"
+#include "Core/DirectX11/System/RenderManager.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 Camera::Camera()
@@ -27,6 +28,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
+	RenderManager::GetInstance().RemoveRenderContextCamera(this);
 }
 
 void Camera::Init() noexcept

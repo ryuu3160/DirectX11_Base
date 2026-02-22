@@ -41,6 +41,8 @@ public:
 	inline RenderTarget *GetRTV() noexcept { return m_pRTV; }
 	inline DepthStencil *GetDSV() noexcept { return m_pDSV; }
 
+	inline void RemoveCamera() noexcept { m_pCamera = nullptr; }
+
 	void SwapCamera(_In_ Camera *In_pCamera) noexcept;
 	void SwapCamera(_In_ RenderContext *In_pContext) noexcept;
 

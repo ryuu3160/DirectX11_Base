@@ -75,7 +75,7 @@ RenderContext *RenderManager::CreateMainRenderContext(_In_ Camera *In_Camera, _I
 	return Context;
 }
 
-RenderContext* RenderManager::CreateRenderContext(_In_ const std::string &In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
+RenderContext* RenderManager::CreateRenderContext(_In_ std::string_view In_Name, _In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _In_ DepthStencil *In_DSV) noexcept
 {
 	RenderContext *Context = new RenderContext();
 	DirectX::XMFLOAT4X4 ViewMatrix;
@@ -84,7 +84,7 @@ RenderContext* RenderManager::CreateRenderContext(_In_ const std::string &In_Nam
 	ViewMatrix = In_Camera->GetView(false);
 	ProjMatrix = In_Camera->GetProj(false);
 	Context->Create(In_Camera, In_RTV, In_DSV);
-	auto Result = m_RenderContexts.try_emplace(In_Name, Context);
+	auto Result = m_RenderContexts.try_emplace(In_Name.data(), Context);
 	if (!Result.second)
 	{
 		// 既に同じ名前のコンテキストが存在する場合は古い方を削除して置き換え
@@ -93,9 +93,50 @@ RenderContext* RenderManager::CreateRenderContext(_In_ const std::string &In_Nam
 	}
 	else
 	{
-		m_RenderContextNames.push_back(In_Name);
+		m_RenderContextNames.push_back(In_Name.data());
 	}
 	return Context;
+}
+
+void RenderManager::RemoveRenderContext(_In_ std::string_view In_Name)
+{
+	auto ctx = m_RenderContexts.find(In_Name.data());
+	if (ctx != m_RenderContexts.end())
+	{
+		delete ctx->second;
+		m_RenderContexts.erase(ctx);
+		auto nameItr = std::find(m_RenderContextNames.begin(), m_RenderContextNames.end(), In_Name.data());
+		if (nameItr != m_RenderContextNames.end())
+			m_RenderContextNames.erase(nameItr);
+	}
+}
+
+void RenderManager::RemoveRenderContext(_In_ const Camera *In_Camera)
+{
+	for (auto ctxItr = m_RenderContexts.begin(); ctxItr != m_RenderContexts.end(); ++ctxItr)
+	{
+		if (ctxItr->second->GetCamera() == In_Camera)
+		{
+			delete ctxItr->second;
+			auto nameItr = std::find(m_RenderContextNames.begin(), m_RenderContextNames.end(), ctxItr->first);
+			if (nameItr != m_RenderContextNames.end())
+				m_RenderContextNames.erase(nameItr);
+			m_RenderContexts.erase(ctxItr);
+			break;
+		}
+	}
+}
+
+void RenderManager::RemoveRenderContextCamera(const Camera *In_Camera)
+{
+	for(auto itr : m_RenderContexts)
+	{
+		if(itr.second->GetCamera() == In_Camera)
+		{
+			itr.second->RemoveCamera();
+			break;
+		}
+	}
 }
 
 RenderContext *RenderManager::GetRenderContext(_In_ const std::string &In_Name)
@@ -143,6 +184,12 @@ void RenderManager::DrawAll() noexcept
 		// レンダーターゲットとデプスステンシルをセット
 		auto rtv = ctx->second->GetRTV();
 		auto dsv = ctx->second->GetDSV();
+		if(!rtv || !dsv)
+		{
+			// RTVかDSVがnullptrの場合は描画できないためスキップ
+			continue;
+		}
+
 		DX11Core.SetRenderTargets(1, &rtv, dsv);
 
 		if(!ctx->second->IsMainContext())

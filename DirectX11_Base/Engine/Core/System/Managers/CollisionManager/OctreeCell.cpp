@@ -69,7 +69,7 @@ bool OctreeCell::OnRemove(_In_ TreeData *In_pTree) noexcept
 		return false;
 
 	// 削除対象が先頭ノードの場合
-	if(m_spLatest == In_pTree)
+	if(m_spLatest && m_spLatest == In_pTree)
 	{
 		// 次のノードを先頭にする(nullptrの可能性もある)
 		m_spLatest = In_pTree->GetNextTree();

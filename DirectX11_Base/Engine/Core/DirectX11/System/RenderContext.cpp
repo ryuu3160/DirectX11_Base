@@ -47,6 +47,13 @@ void RenderContext::Create(_In_ Camera *In_Camera, _In_ RenderTarget *In_RTV, _I
 
 void RenderContext::ReCalculateMatrices() noexcept
 {
+	if(!m_pCamera)
+	{
+		m_pRTV = nullptr;
+		m_pDSV = nullptr;
+		return;
+	}
+
 	m_ViewMatrix = m_pCamera->GetView(false);
 
 	bool PrevIs3D = m_pCamera->Is3D();

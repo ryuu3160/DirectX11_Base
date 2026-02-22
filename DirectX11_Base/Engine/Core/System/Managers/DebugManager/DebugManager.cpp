@@ -295,7 +295,8 @@ void DebugManager::DebugLog(_In_ std::string_view In_Msg)
 			auto TextItem = dynamic_cast<ItemConsole *>(&item);
 			if(TextItem)
 			{
-				TextItem->AddOutput(In_Msg);
+				std::string Msg = Util::ShiftJISToUTF8(In_Msg);
+				TextItem->AddOutput(Msg);
 			}
 		}
 	}
@@ -312,7 +313,8 @@ void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
 			auto TextItem = dynamic_cast<ItemConsole *>(&item);
 			if(TextItem)
 			{
-				TextItem->AddOutput(In_Msg, ImVec4(1.0f, 1.0f, 0.3f, 1.0f), "Warning");
+				std::string Msg = Util::ShiftJISToUTF8(In_Msg);
+				TextItem->AddOutput(Msg, ImVec4(1.0f, 1.0f, 0.3f, 1.0f), "Warning");
 			}
 		}
 	}
@@ -329,7 +331,8 @@ void DebugManager::DebugLogError(_In_ std::string_view In_Msg)
 			auto TextItem = dynamic_cast<ItemConsole *>(&item);
 			if(TextItem)
 			{
-				TextItem->AddOutput(In_Msg, ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Error");
+				std::string Msg = Util::ShiftJISToUTF8(In_Msg);
+				TextItem->AddOutput(Msg, ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "Error");
 			}
 		}
 	}
