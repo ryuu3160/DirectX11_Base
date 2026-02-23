@@ -54,7 +54,8 @@ void SceneBase::CommonProcessScene() noexcept
 	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
 		[](GameObject *obj)
 		{
-			obj->ReloadingInspector();
+			if(obj)
+				obj->ReloadingInspector();
 		});
 #endif
 

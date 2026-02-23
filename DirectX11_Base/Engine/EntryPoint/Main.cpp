@@ -146,7 +146,7 @@ void Main::GameLoop(_In_ FrameManager &In_Frame)
 
 		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
 		{
-			// 固定刻みで物理更新(衝突検出・解決を含む)
+			// 固定刻みで物理更新
 			FixedUpdate(FixedDeltaTime);
 
 			// 当たり判定処理

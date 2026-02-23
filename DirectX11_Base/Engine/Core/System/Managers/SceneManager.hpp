@@ -127,7 +127,6 @@ private:
 
 	RenderManager &m_RenderManager; // レンダリングマネージャーのインスタンス
 	FadeManager &m_FadeManager;
-	CollisionManager &m_CollisionManager;
 };
 
 /// <summary>

@@ -399,7 +399,7 @@ void ItemHierarchy::SelectObject(_Inout_ GameObject *In_Obj)
 // ==============================
 
 ItemComponentSelector::ItemComponentSelector(_In_ std::string_view In_Name, _In_ GameObject *In_pGameObject)
-    : m_pGameObject(In_pGameObject)
+	: m_pGameObject(In_pGameObject), m_IsAddingComponent(false)
     , m_SelectedCategory("All")
 {
     m_Name = In_Name.data();
@@ -416,7 +416,7 @@ void ItemComponentSelector::DrawImGui()
     if(!m_pGameObject)
         return;
 
-    //"Add Component" ボタン
+    // AddComponentボタン
     float buttonWidth = ImGui::GetContentRegionAvail().x;
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 0.2f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.7f, 0.3f, 1.0f));
@@ -437,6 +437,16 @@ void ItemComponentSelector::DrawImGui()
 void ItemComponentSelector::SetGameObject(_In_ GameObject *In_pGameObject)
 {
     m_pGameObject = In_pGameObject;
+}
+
+void ItemComponentSelector::ChangeImGuiItem()
+{
+    if(m_IsAddingComponent)
+    {
+        // インスペクターを更新
+        m_pGameObject->ReloadingInspector();
+		m_IsAddingComponent = false;
+    }
 }
 
 void ItemComponentSelector::DrawComponentPopup()
@@ -476,7 +486,7 @@ void ItemComponentSelector::DrawCategoryTabs()
     auto &registry = ComponentRegistry::GetInstance();
     auto categories = registry.GetAllCategories();
 
-    // "All" カテゴリを先頭に追加
+    // Allカテゴリを先頭に追加
     categories.insert(categories.begin(), "All");
 
     if(ImGui::BeginTabBar("ComponentCategories"))
@@ -535,10 +545,7 @@ void ItemComponentSelector::DrawComponentList(const std::string &category)
                 Component *newComponent = m_pGameObject->AddComponentByName(info.Name);
 
                 if(newComponent)
-                {
-                    // インスペクターを更新
-					m_pGameObject->ReloadingInspector();
-                }
+                    m_IsAddingComponent = true;
             }
 
             ImGui::CloseCurrentPopup();

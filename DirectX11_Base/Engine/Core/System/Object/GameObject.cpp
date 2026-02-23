@@ -96,13 +96,21 @@ void GameObject::ExecuteAwake() noexcept
 
 void GameObject::ExecuteUpdate(_In_ float In_DeltaTime) noexcept
 {
+#ifdef _DEBUG
+	if(m_IsReloadingInspector)
+	{
+		ExecuteReloadingInspector();
+		m_IsReloadingInspector = false;
+	}
+#endif
+
 	// 初期化が呼ばれていないコンポーネントの初期化
 	InitializeComponents();
 
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		if(itr->m_IsActive)
+		if(itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 			itr->Update(In_DeltaTime);
 	}
 }
@@ -112,7 +120,7 @@ void GameObject::ExecuteLateUpdate(_In_ float In_DeltaTime) noexcept
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		if(itr->m_IsActive)
+		if(itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 			itr->LateUpdate(In_DeltaTime);
 	}
 }
@@ -122,7 +130,7 @@ void GameObject::ExecuteFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 	// コンポーネントの処理
 	for (auto &itr : m_Components)
 	{
-		if(itr->m_IsActive)
+		if(itr->m_IsActive && itr->m_IsInitialized && itr->m_IsActiveParent)
 			itr->FixedUpdate(In_FixedDeltaTime);
 	}
 }
@@ -474,6 +482,10 @@ void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 	auto componentSelector = In_pWindow->CreateItem<ItemComponentSelector>("AddComponent", this);
 }
 void GameObject::ReloadingInspector()
+{
+	m_IsReloadingInspector = true;
+}
+void GameObject::ExecuteReloadingInspector()
 {
 	auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
 	window->ClearItems();

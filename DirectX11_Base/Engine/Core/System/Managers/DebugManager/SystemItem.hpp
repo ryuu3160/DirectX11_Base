@@ -114,7 +114,7 @@ private:
 };
 
 /// <summary>
-/// Unity 風の Add Component セレクター
+/// Unity風のAddComponentセレクター
 /// </summary>
 class ItemComponentSelector : public DebugItem
 {
@@ -131,6 +131,8 @@ public:
     /// </summary>
     void SetGameObject(_In_ GameObject *In_pGameObject);
 
+	void ChangeImGuiItem() override;
+
 private:
     void DrawComponentPopup();
     void DrawCategoryTabs();
@@ -140,6 +142,7 @@ private:
     GameObject *m_pGameObject;
     char m_SearchBuffer[256];
     std::string m_SelectedCategory;
+    bool m_IsAddingComponent;
 };
 
 /// <summary>

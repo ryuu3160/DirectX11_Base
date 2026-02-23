@@ -10,13 +10,11 @@
 // ==============================
 #include "SceneManager.hpp"
 #include "Core/DirectX11/System/RenderManager.hpp"
-#include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
 #include "Core/System/Managers/FadeManager.hpp"
 
 SceneManager::SceneManager()
 	: m_RenderManager(RenderManager::GetInstance())
 	, m_FadeManager(FadeManager::GetInstance())
-	, m_CollisionManager(CollisionManager::GetInstance())
 	, m_IsInitialized(false)
 {
 	m_pCurrentScene = nullptr;
@@ -67,9 +65,6 @@ void SceneManager::RootFixedUpdate(_In_ double In_FixedDeltaTime) noexcept
 		if (itr.second)
 			itr.second->_RootFixedUpdate(In_FixedDeltaTime);
 	}
-
-	// “–‚½‚è”»’è‚ÌXV
-	m_CollisionManager.CheckAllCollisions();
 }
 
 void SceneManager::RootUpdate(_In_ float In_DeltaTime) noexcept

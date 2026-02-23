@@ -182,6 +182,9 @@ protected:
 	virtual void RegisterDebugInspector(_In_ DebugWindow *In_pWindow) override final;
 public:
 	void ReloadingInspector();
+private:
+	void ExecuteReloadingInspector();
+
 #endif // _DEBUG
 
 private:
@@ -218,6 +221,7 @@ private:
 	std::vector<std::function<void()>> m_ChangeOrderFuncs;	// コンポーネントの順序変更関数リスト
 #ifdef _DEBUG
 	Components			m_InspectorComponent;	// デバッグインスペクターに登録されているコンポーネントリスト
+	bool				m_IsReloadingInspector; // インスペクターの再読み込みをするかどうか
 #endif
 	std::shared_ptr<cpon_object> 		m_Data;				// 保存データ
 	Datas				m_Datas;			// 保存データ

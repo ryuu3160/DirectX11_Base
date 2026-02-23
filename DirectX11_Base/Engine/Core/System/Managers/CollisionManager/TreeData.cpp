@@ -10,6 +10,7 @@
 // ==============================
 #include "TreeData.hpp"
 #include "OctreeCell.hpp"
+#include "Engine/DebugEditor.hpp"
 
 // ==============================
 //	’è”’è‹`
