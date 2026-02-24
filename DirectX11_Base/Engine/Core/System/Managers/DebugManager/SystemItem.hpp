@@ -180,3 +180,99 @@ private:
 	std::vector<Component *> m_DeletedComponents;
 	std::vector<std::function<void()>> m_MoveActions;
 };
+
+/// <summary>
+/// Unity のプロジェクトウィンドウ/UE のコンテンツドロワー
+/// ファイルブラウザ機能
+/// </summary>
+class ItemProjectWindow : public DebugItem
+{
+public:
+    ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::string_view In_RootPath);
+    ~ItemProjectWindow();
+
+    void DrawImGui() override;
+
+    /// <summary>
+    /// ルートパスを設定
+    /// </summary>
+    void SetRootPath(_In_ std::string_view In_RootPath);
+
+    /// <summary>
+    /// 選択中のファイルパスを取得
+    /// </summary>
+    std::string GetSelectedFilePath() const;
+
+    /// <summary>
+    /// ファイルが選択されたときのコールバックを設定
+    /// </summary>
+    void SetFileSelectedCallback(_In_ std::function<void(const std::string &)> In_Callback);
+
+private:
+    /// <summary>
+    /// フォルダツリーを描画（左側）
+    /// </summary>
+    void DrawFolderTree(const std::filesystem::path &In_Path, bool In_IsRoot = false);
+
+    /// <summary>
+    /// ファイル一覧を描画（右側）
+    /// </summary>
+    void DrawFileList();
+
+    /// <summary>
+    /// 右クリックメニューを描画
+    /// </summary>
+    void DrawContextMenu();
+
+    /// <summary>
+    /// ファイルアイコンを取得
+    /// </summary>
+    const char *GetFileIcon(const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// 現在のフォルダのファイル一覧を更新
+    /// </summary>
+    void RefreshCurrentFolder();
+
+    /// <summary>
+    /// フィルタリング処理
+    /// </summary>
+    bool PassFilter(const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// 新規フォルダ作成
+    /// </summary>
+    void CreateNewFolder();
+
+    /// <summary>
+    /// ファイル/フォルダ削除
+    /// </summary>
+    void DeleteItem(const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// リネーム処理
+    /// </summary>
+    void RenameItem(const std::filesystem::path &In_OldPath, const std::string &In_NewName);
+
+private:
+    std::filesystem::path m_RootPath;
+    std::filesystem::path m_CurrentPath;
+    std::filesystem::path m_SelectedItem;
+
+    std::vector<std::filesystem::path> m_CurrentFiles;
+    std::vector<std::filesystem::path> m_CurrentFolders;
+
+    char m_SearchBuffer[256];
+    char m_RenameBuffer[256];
+
+    bool m_IsRenaming;
+    std::filesystem::path m_RenamingItem;
+
+    std::function<void(const std::string &)> m_FileSelectedCallback;
+
+    // フィルター設定
+    bool m_ShowImages;
+    bool m_ShowModels;
+    bool m_ShowScripts;
+    bool m_ShowAll;
+};

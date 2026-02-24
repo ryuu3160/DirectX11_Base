@@ -55,6 +55,7 @@ public:
 		// システム専用
 		__Hierarchy, // ヒエラルキーウィンドウ
 		__ComponentSelector, // コンポーネントセレクター
+		__ProjectWindow, // プロジェクトウィンドウ
 	};
 
 protected:

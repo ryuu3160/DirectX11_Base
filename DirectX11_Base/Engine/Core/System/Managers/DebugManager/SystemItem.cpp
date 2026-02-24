@@ -302,7 +302,7 @@ void ItemHierarchy::LookAtSelectedObject()
 {
 	if(m_SelectedObject && m_pEditorCamera)
     {
-        // カメラの forward ベクトルを取得
+        // カメラのフロントベクトルを取得
         DirectX::XMFLOAT3 Forward = m_pEditorCamera->GetTransform()->GetFront();
 
         // オブジェクトの位置
@@ -314,7 +314,7 @@ void ItemHierarchy::LookAtSelectedObject()
         // 新しいカメラ位置
         DirectX::XMFLOAT3 newCameraPos = TargetPos - Forward * FocusDistance;
 
-        // カメラの位置を更新（回転は変えない）
+        // カメラの位置を更新
         m_pEditorCamera->GetTransform()->SetPosition(newCameraPos);
     }
 }
@@ -741,4 +741,518 @@ void ItemComponentGroup::ChangeComponentOrder()
     // インスペクターを更新
     if(pGameObj)
         pGameObj->ReloadingInspector();
+}
+
+// ==============================
+//  ItemProjectWindow
+// ==============================
+
+ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::string_view In_RootPath)
+    : m_RootPath(In_RootPath)
+    , m_CurrentPath(In_RootPath)
+    , m_IsRenaming(false)
+    , m_ShowImages(true)
+    , m_ShowModels(true)
+    , m_ShowScripts(true)
+    , m_ShowAll(true)
+{
+    m_Name = In_Name.data();
+    m_Kind = Kind::__ProjectWindow; // プロジェクトウィンドウ用の特殊な Kind
+    m_SearchBuffer[0] = '\0';
+    m_RenameBuffer[0] = '\0';
+
+    // ルートパスが存在しない場合は作成
+    if(!std::filesystem::exists(m_RootPath))
+    {
+        std::filesystem::create_directories(m_RootPath);
+    }
+
+    RefreshCurrentFolder();
+}
+
+ItemProjectWindow::~ItemProjectWindow()
+{
+}
+
+void ItemProjectWindow::DrawImGui()
+{
+    if(m_Kind != Kind::__Hierarchy)
+        return;
+
+    // ツールバー
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
+
+    // 検索ボックス
+    ImGui::SetNextItemWidth(200.0f);
+    if(ImGui::InputTextWithHint("##ProjectSearch", "Search...", m_SearchBuffer, sizeof(m_SearchBuffer)))
+    {
+        RefreshCurrentFolder();
+    }
+    ImGui::SameLine();
+
+    // フィルターボタン
+    if(ImGui::Checkbox("All", &m_ShowAll))
+    {
+        m_ShowImages = m_ShowAll;
+        m_ShowModels = m_ShowAll;
+        m_ShowScripts = m_ShowAll;
+        RefreshCurrentFolder();
+    }
+    ImGui::SameLine();
+    if(ImGui::Checkbox("Images", &m_ShowImages)) RefreshCurrentFolder();
+    ImGui::SameLine();
+    if(ImGui::Checkbox("Models", &m_ShowModels)) RefreshCurrentFolder();
+    ImGui::SameLine();
+    if(ImGui::Checkbox("Scripts", &m_ShowScripts)) RefreshCurrentFolder();
+
+    ImGui::PopStyleVar();
+    ImGui::Separator();
+
+    // メインエリア（左：フォルダツリー、右：ファイル一覧）
+    ImGui::BeginChild("##FolderTree", ImVec2(250, 0), true);
+    {
+        DrawFolderTree(m_RootPath, true);
+    }
+    ImGui::EndChild();
+
+    ImGui::SameLine();
+
+    ImGui::BeginChild("##FileList", ImVec2(0, 0), true);
+    {
+        // 現在のパス表示
+        std::string relativePath = std::filesystem::relative(m_CurrentPath, m_RootPath).string();
+        if(relativePath.empty() || relativePath == ".")
+            relativePath = "Root";
+        ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "Current: %s", relativePath.c_str());
+        ImGui::Separator();
+
+        DrawFileList();
+    }
+    ImGui::EndChild();
+
+    // 右クリックメニュー
+    DrawContextMenu();
+}
+
+void ItemProjectWindow::DrawFolderTree(const std::filesystem::path &In_Path, bool In_IsRoot)
+{
+    if(!std::filesystem::exists(In_Path) || !std::filesystem::is_directory(In_Path))
+        return;
+
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+    // 選択中のフォルダならハイライト
+    if(m_CurrentPath == In_Path)
+        flags |= ImGuiTreeNodeFlags_Selected;
+
+    // 子フォルダがない場合は Leaf
+    bool hasSubFolders = false;
+    try
+    {
+        for(const auto &entry : std::filesystem::directory_iterator(In_Path))
+        {
+            if(entry.is_directory())
+            {
+                hasSubFolders = true;
+                break;
+            }
+        }
+    }
+    catch(...) {}
+
+    if(!hasSubFolders)
+        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+    std::string label = In_IsRoot ? "Root" : In_Path.filename().string();
+    bool nodeOpen = ImGui::TreeNodeEx(In_Path.string().c_str(), flags, "%s %s", ICON_FOLDER, label.c_str());
+
+    // クリックでフォルダを開く
+    if(ImGui::IsItemClicked())
+    {
+        m_CurrentPath = In_Path;
+        RefreshCurrentFolder();
+    }
+
+    // 子フォルダを描画
+    if(nodeOpen && hasSubFolders)
+    {
+        try
+        {
+            std::vector<std::filesystem::path> subFolders;
+            for(const auto &entry : std::filesystem::directory_iterator(In_Path))
+            {
+                if(entry.is_directory())
+                    subFolders.push_back(entry.path());
+            }
+
+            // ソート
+            std::sort(subFolders.begin(), subFolders.end(),
+                [](const auto &a, const auto &b)
+                {
+                    return a.filename().string() < b.filename().string();
+                });
+
+            for(const auto &folder : subFolders)
+            {
+                DrawFolderTree(folder, false);
+            }
+        }
+        catch(...) {}
+
+        ImGui::TreePop();
+    }
+}
+
+void ItemProjectWindow::DrawFileList()
+{
+    // フォルダ一覧
+    for(const auto &folder : m_CurrentFolders)
+    {
+        ImGui::PushID(folder.string().c_str());
+
+        bool isSelected = (m_SelectedItem == folder);
+
+        if(ImGui::Selectable((std::string(ICON_FOLDER) + " " + folder.filename().string()).c_str(),
+            isSelected, ImGuiSelectableFlags_AllowDoubleClick))
+        {
+            m_SelectedItem = folder;
+
+            // ダブルクリックでフォルダを開く
+            if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                m_CurrentPath = folder;
+                RefreshCurrentFolder();
+            }
+        }
+
+        // 右クリックメニュー
+        if(ImGui::BeginPopupContextItem())
+        {
+            if(ImGui::MenuItem("Open"))
+            {
+                m_CurrentPath = folder;
+                RefreshCurrentFolder();
+            }
+            if(ImGui::MenuItem("Rename"))
+            {
+                m_IsRenaming = true;
+                m_RenamingItem = folder;
+                strncpy_s(m_RenameBuffer, folder.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+            }
+            if(ImGui::MenuItem("Delete"))
+            {
+                DeleteItem(folder);
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::PopID();
+    }
+
+    // ファイル一覧
+    for(const auto &file : m_CurrentFiles)
+    {
+        ImGui::PushID(file.string().c_str());
+
+        bool isSelected = (m_SelectedItem == file);
+
+        std::string icon = GetFileIcon(file);
+        std::string displayName = icon + " " + file.filename().string();
+
+        if(ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_AllowDoubleClick))
+        {
+            m_SelectedItem = file;
+
+            // ダブルクリックでファイルを開く（コールバック呼び出し）
+            if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && m_FileSelectedCallback)
+            {
+                m_FileSelectedCallback(file.string());
+            }
+        }
+
+        // 右クリックメニュー
+        if(ImGui::BeginPopupContextItem())
+        {
+            if(ImGui::MenuItem("Copy Path"))
+            {
+                ImGui::SetClipboardText(file.string().c_str());
+            }
+            if(ImGui::MenuItem("Copy Relative Path"))
+            {
+                std::string relativePath = std::filesystem::relative(file, m_RootPath).string();
+                ImGui::SetClipboardText(relativePath.c_str());
+            }
+            if(ImGui::MenuItem("Rename"))
+            {
+                m_IsRenaming = true;
+                m_RenamingItem = file;
+                strncpy_s(m_RenameBuffer, file.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+            }
+            if(ImGui::MenuItem("Delete"))
+            {
+                DeleteItem(file);
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::PopID();
+    }
+
+    // リネーム処理
+    if(m_IsRenaming)
+    {
+        ImGui::OpenPopup("Rename");
+        if(ImGui::BeginPopupModal("Rename", &m_IsRenaming, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("New name:");
+            ImGui::SetNextItemWidth(300);
+            bool confirmed = ImGui::InputText("##RenameInput", m_RenameBuffer, sizeof(m_RenameBuffer),
+                ImGuiInputTextFlags_EnterReturnsTrue);
+
+            if(ImGui::Button("OK", ImVec2(120, 0)) || confirmed)
+            {
+                RenameItem(m_RenamingItem, m_RenameBuffer);
+                m_IsRenaming = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if(ImGui::Button("Cancel", ImVec2(120, 0)))
+            {
+                m_IsRenaming = false;
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+    }
+}
+
+void ItemProjectWindow::DrawContextMenu()
+{
+    // 空白領域の右クリックメニュー
+    if(ImGui::BeginPopupContextWindow("##ProjectContextMenu", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+    {
+        if(ImGui::MenuItem("New Folder"))
+        {
+            CreateNewFolder();
+        }
+
+        if(ImGui::MenuItem("Refresh"))
+        {
+            RefreshCurrentFolder();
+        }
+
+        if(ImGui::MenuItem("Open in Explorer"))
+        {
+            std::string command = "explorer " + m_CurrentPath.string();
+            system(command.c_str());
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+const char *ItemProjectWindow::GetFileIcon(const std::filesystem::path &In_Path)
+{
+    std::string ext = In_Path.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    // 画像ファイル
+    if(ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga" || ext == ".dds")
+        return ICON_IMAGE;
+
+    // モデルファイル
+    if(ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == ".glb")
+        return ICON_MODEL;
+
+    // スクリプトファイル
+    if(ext == ".cpp" || ext == ".h" || ext == ".hpp" || ext == ".c" || ext == ".cs" || ext == ".py" || ext == ".lua")
+        return ICON_SCRIPT;
+
+    // テキストファイル
+    if(ext == ".txt" || ext == ".md" || ext == ".json" || ext == ".xml" || ext == ".csv")
+        return ICON_TEXT;
+
+    // シェーダーファイル
+    if(ext == ".hlsl" || ext == ".glsl" || ext == ".shader")
+        return ICON_SHADER;
+
+    // オーディオファイル
+    if(ext == ".wav" || ext == ".mp3" || ext == ".ogg" || ext == ".flac")
+        return ICON_AUDIO;
+
+    return ICON_FILE;
+}
+
+void ItemProjectWindow::RefreshCurrentFolder()
+{
+    m_CurrentFiles.clear();
+    m_CurrentFolders.clear();
+
+    if(!std::filesystem::exists(m_CurrentPath) || !std::filesystem::is_directory(m_CurrentPath))
+        return;
+
+    try
+    {
+        for(const auto &entry : std::filesystem::directory_iterator(m_CurrentPath))
+        {
+            if(entry.is_directory())
+            {
+                m_CurrentFolders.push_back(entry.path());
+            }
+            else if(entry.is_regular_file())
+            {
+                if(PassFilter(entry.path()))
+                    m_CurrentFiles.push_back(entry.path());
+            }
+        }
+
+        // ソート
+        std::sort(m_CurrentFolders.begin(), m_CurrentFolders.end(),
+            [](const auto &a, const auto &b)
+            {
+                return a.filename().string() < b.filename().string();
+            });
+
+        std::sort(m_CurrentFiles.begin(), m_CurrentFiles.end(),
+            [](const auto &a, const auto &b)
+            {
+                return a.filename().string() < b.filename().string();
+            });
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to refresh folder: {}", e.what());
+    }
+}
+
+bool ItemProjectWindow::PassFilter(const std::filesystem::path &In_Path)
+{
+    std::string filename = In_Path.filename().string();
+    std::string ext = In_Path.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    // 検索フィルター
+    if(m_SearchBuffer[0] != '\0')
+    {
+        std::string search = m_SearchBuffer;
+        std::transform(search.begin(), search.end(), search.begin(), ::tolower);
+        std::string lowerFilename = filename;
+        std::transform(lowerFilename.begin(), lowerFilename.end(), lowerFilename.begin(), ::tolower);
+
+        if(lowerFilename.find(search) == std::string::npos)
+            return false;
+    }
+
+    // 拡張子フィルター
+    if(!m_ShowAll)
+    {
+        bool passImageFilter = m_ShowImages && (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp" || ext == ".tga" || ext == ".dds");
+        bool passModelFilter = m_ShowModels && (ext == ".fbx" || ext == ".obj" || ext == ".gltf" || ext == ".glb");
+        bool passScriptFilter = m_ShowScripts && (ext == ".cpp" || ext == ".h" || ext == ".hpp" || ext == ".c" || ext == ".cs" || ext == ".py" || ext == ".lua");
+
+        if(!passImageFilter && !passModelFilter && !passScriptFilter)
+            return false;
+    }
+
+    return true;
+}
+
+void ItemProjectWindow::CreateNewFolder()
+{
+    std::string newFolderName = "NewFolder";
+    std::filesystem::path newFolderPath = m_CurrentPath / newFolderName;
+
+    // 同名のフォルダが存在する場合は番号を付ける
+    int count = 1;
+    while(std::filesystem::exists(newFolderPath))
+    {
+        newFolderPath = m_CurrentPath / (newFolderName + std::to_string(count));
+        count++;
+    }
+
+    try
+    {
+        std::filesystem::create_directory(newFolderPath);
+        RefreshCurrentFolder();
+
+        // 作成したフォルダを選択してリネーム状態にする
+        m_SelectedItem = newFolderPath;
+        m_IsRenaming = true;
+        m_RenamingItem = newFolderPath;
+        strncpy_s(m_RenameBuffer, newFolderPath.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to create folder: {}", e.what());
+    }
+}
+
+void ItemProjectWindow::DeleteItem(const std::filesystem::path &In_Path)
+{
+    try
+    {
+        if(std::filesystem::is_directory(In_Path))
+            std::filesystem::remove_all(In_Path);
+        else
+            std::filesystem::remove(In_Path);
+
+        RefreshCurrentFolder();
+
+        if(m_SelectedItem == In_Path)
+            m_SelectedItem.clear();
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to delete item: {}", e.what());
+    }
+}
+
+void ItemProjectWindow::RenameItem(const std::filesystem::path &In_OldPath, const std::string &In_NewName)
+{
+    if(In_NewName.empty())
+    {
+        DebugManager::GetInstance().DebugLogWarning("Name cannot be empty");
+        return;
+    }
+
+    std::filesystem::path newPath = In_OldPath.parent_path() / In_NewName;
+
+    if(std::filesystem::exists(newPath))
+    {
+        DebugManager::GetInstance().DebugLogWarning("Item with this name already exists");
+        return;
+    }
+
+    try
+    {
+        std::filesystem::rename(In_OldPath, newPath);
+        RefreshCurrentFolder();
+
+        if(m_SelectedItem == In_OldPath)
+            m_SelectedItem = newPath;
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to rename item: {}", e.what());
+    }
+}
+
+void ItemProjectWindow::SetRootPath(_In_ std::string_view In_RootPath)
+{
+    m_RootPath = In_RootPath;
+    m_CurrentPath = m_RootPath;
+    RefreshCurrentFolder();
+}
+
+std::string ItemProjectWindow::GetSelectedFilePath() const
+{
+    if(m_SelectedItem.empty())
+        return "";
+    return m_SelectedItem.string();
+}
+
+void ItemProjectWindow::SetFileSelectedCallback(_In_ std::function<void(const std::string &)> In_Callback)
+{
+    m_FileSelectedCallback = In_Callback;
 }
