@@ -58,7 +58,7 @@ private:
 	{
 		// デバッグモードのみ名前の競合チェック
 #ifdef _DEBUG
-		auto itr = m_mapShaders.find(In_FileName.data());
+		auto itr = m_mapShaders.find(std::string(In_FileName));
 		if (itr != m_mapShaders.end())
 		{
 			// 既に同じ名前のシェーダーが存在する場合はnullptrを返す
