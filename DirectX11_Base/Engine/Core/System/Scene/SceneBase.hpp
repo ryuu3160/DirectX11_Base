@@ -78,7 +78,14 @@ public:
 	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します</returns>
 	template <typename T>
 	requires std::derived_from<T, GameObject>
-	T *GetObject(_In_ std::string_view In_Name) noexcept;
+	T *GetObject(_In_ std::string_view In_Name) const noexcept;
+
+	/// <summary>
+	/// 指定された名前に対応するオブジェクトへのポインタを取得します
+	/// </summary>
+	/// <param name="[In_Name]">検索するオブジェクトの名前を表す文字列ビュー</param>
+	/// <returns>見つかった場合はオブジェクトへのポインタ、見つからない場合はnullptrを返します</returns>
+	GameObject *GetObject(_In_ std::string_view In_Name) const noexcept;
 
 	/// <summary>
 	/// オブジェクト名を変更します
@@ -365,7 +372,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 /// <returns>見つかった場合は指定した型Tのポインタ、見つからなかった場合はnullptrを返します</returns>
 template <typename T>
 requires std::derived_from<T, GameObject>
-T *SceneBase::GetObject(_In_ std::string_view In_Name) noexcept
+T *SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
 {
 	// オブジェクトの探索
 	std::string ObjName = m_Name + "_";

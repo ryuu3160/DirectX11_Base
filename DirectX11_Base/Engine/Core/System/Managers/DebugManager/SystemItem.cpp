@@ -14,6 +14,7 @@
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
+#include "Engine/Core/DirectX11/System/DX11_Math.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -36,6 +37,10 @@ ItemHierarchy::ItemHierarchy(_In_ std::string_view In_Name, _In_ SceneBase *In_p
     m_Name = In_Name.data();
     m_Kind = Kind::__Hierarchy;
     m_RenameBuffer[0] = '\0';
+	m_pEditorCamera = m_pScene->GetObject("EditorCamera");
+
+    if(!m_pEditorCamera)
+		Debug::DebugLogError("ItemHierarchy: EditorCamera Not Found in the scene. Please ensure there is a GameObject named 'EditorCamera' in the scene.");
 }
 
 ItemHierarchy::~ItemHierarchy()
@@ -177,6 +182,10 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *In_Obj)
             m_SelectCallback(nullptr);
     }
 
+    // Fキーで選択中のオブジェクトを注視
+    if(ImGui::IsKeyPressed(ImGuiKey_F))
+        LookAtSelectedObject();
+
     // 右クリックメニュー
     if(ImGui::BeginPopupContextItem())
     {
@@ -286,6 +295,27 @@ void ItemHierarchy::ShowContextMenu(_In_ GameObject *In_Obj)
             // 親から外す処理の予約
 			m_PendingParentChanges.push_back({ In_Obj, nullptr });
         }
+    }
+}
+
+void ItemHierarchy::LookAtSelectedObject()
+{
+	if(m_SelectedObject && m_pEditorCamera)
+    {
+        // カメラの forward ベクトルを取得
+        DirectX::XMFLOAT3 Forward = m_pEditorCamera->GetTransform()->GetFront();
+
+        // オブジェクトの位置
+        DirectX::XMFLOAT3 TargetPos = m_SelectedObject->GetTransform()->GetPosition();
+
+        // フォーカス距離
+        float FocusDistance = 5.0f;
+
+        // 新しいカメラ位置
+        DirectX::XMFLOAT3 newCameraPos = TargetPos - Forward * FocusDistance;
+
+        // カメラの位置を更新（回転は変えない）
+        m_pEditorCamera->GetTransform()->SetPosition(newCameraPos);
     }
 }
 

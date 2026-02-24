@@ -24,7 +24,7 @@ class Transform;
 // ==============================
 
 /// <summary>
-/// Unity 風のヒエラルキーウィンドウ
+/// ヒエラルキーウィンドウ
 /// ツリー構造とドラッグ&ドロップをサポート
 /// </summary>
 class ItemHierarchy : public DebugItem
@@ -73,6 +73,11 @@ private:
     /// </summary>
     void ShowContextMenu(_In_ GameObject *In_Obj);
 
+    /// <summary>
+    /// 選択されたオブジェクトを注視します
+    /// </summary>
+    void LookAtSelectedObject();
+
 private:
 
     /// <summary>
@@ -103,6 +108,7 @@ private:
     };
 
     SceneBase *m_pScene;                    // 対象シーン
+	GameObject *m_pEditorCamera;            // エディターカメラ
     GameObject *m_SelectedObject;           // 選択中のオブジェクト
     GameObject *m_DraggedObject;            // ドラッグ中のオブジェクト
     SelectCallback m_SelectCallback;        // 選択時のコールバック

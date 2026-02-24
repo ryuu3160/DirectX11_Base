@@ -49,6 +49,10 @@ SceneBase::~SceneBase()
 void SceneBase::CommonProcessScene() noexcept
 {
 #ifdef _DEBUG
+	// エディタ用のカメラ作成
+	 auto pCamObj = CreateObject_NotAddHierarchy<CameraObj>("EditorCamera");
+	 pCamObj->AddComponent<CameraDCC>();
+
 	auto &DebugM = DebugManager::GetInstance();
 	DebugWindow *window = DebugM.GetDebugWindow("System", "Hierarchy");
 	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
@@ -59,11 +63,6 @@ void SceneBase::CommonProcessScene() noexcept
 		});
 #endif
 
-	// メインカメラの作成
-#ifdef _DEBUG
-	 auto pCamObj = CreateObject_NotAddHierarchy<CameraObj>("EditorCamera");
-	 pCamObj->AddComponent<CameraDCC>();
-#endif
 	 // ゲーム用のカメラ作成
 	 auto pGameCamObj = CreateObject<CameraObj>("GameCamera");
 
@@ -128,6 +127,34 @@ GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Tran
 	// ヒエラルキーに追加
 	m_ShowHierarchyObjects.push_back(ptr);
 #endif
+
+	return ptr;
+}
+
+GameObject * SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
+{
+	// オブジェクトの探索
+	std::string ObjName = m_Name + "_";
+	ObjName += In_Name.data();
+	Objects::iterator itr = m_Objects.find(ObjName);
+	if(itr == m_Objects.end())
+		return nullptr;
+
+	// 型変換
+	GameObject *ptr = dynamic_cast<GameObject *>(itr->second);
+
+	if(!ptr)
+	{
+		Debug::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
+		return nullptr;
+	}
+
+	// 破棄予約されていた場合は取得不可
+	if(ptr->IsDestroySelf())
+	{
+		Debug::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
+		return nullptr;
+	}
 
 	return ptr;
 }
