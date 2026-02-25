@@ -7,3 +7,4 @@ Color,System/DebugMenu/Grid##GridObject/GridColor##GridObject,0.8725868464/0.872
 Bool,System/DebugMenu/Grid##GridObject/GridAxis##GridObject,1
 Window,System/Hierarchy,1
 Window,System/Inspector,1
+Window,System/Project,1

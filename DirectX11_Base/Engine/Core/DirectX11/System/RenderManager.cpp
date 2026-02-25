@@ -127,7 +127,7 @@ void RenderManager::RemoveRenderContext(_In_ const Camera *In_Camera)
 	}
 }
 
-void RenderManager::RemoveRenderContextCamera(const Camera *In_Camera)
+void RenderManager::RemoveRenderContextCamera(_In_ const Camera *In_Camera)
 {
 	for(auto itr : m_RenderContexts)
 	{

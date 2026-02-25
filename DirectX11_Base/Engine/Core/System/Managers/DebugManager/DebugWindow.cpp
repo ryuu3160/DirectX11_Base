@@ -21,7 +21,7 @@ namespace
 	static DebugItem *s_NullItem = nullptr;
 }
 
-DebugWindow::DebugWindow(_In_ std::string_view In_Name)
+DebugWindow::DebugWindow(_In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags)
 	: m_Name(In_Name), m_IsOpen(true), m_IsDummy(false)
 {
 }

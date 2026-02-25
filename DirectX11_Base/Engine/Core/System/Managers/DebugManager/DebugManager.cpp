@@ -13,6 +13,7 @@
 #include "Core/DirectX11/System/RenderManager.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
+#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
 
 // ==============================
 //	定数定義
@@ -65,6 +66,46 @@ void DebugManager::Init()
 	auto Output = log->CreateItem<ItemConsole>("ConsoleLog",true);
 	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
 	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
+
+	// プロジェクトウィンドウ追加
+	auto ProjectWindow = CreateDebugWindow("System", "Project");
+	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Engine/Assets");
+
+	// プロジェクトウィンドウの設定
+	// フォルダアイコンを読み込み
+	auto FolderTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/folder.png");
+	Project->SetDefaultFolderIcon(FolderTexture);
+
+	// ファイルアイコンを読み込み
+	auto FileTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/file.png");
+	Project->SetDefaultFileIcon(FileTexture);
+
+	// 拡張子ごとのアイコン
+	auto ImageTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/image.png");
+	Project->RegisterIcon(".png", ImageTexture);
+	Project->RegisterIcon(".jpg", ImageTexture);
+	Project->RegisterIcon(".jpeg", ImageTexture);
+
+	auto ScriptTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/script.png");
+	Project->RegisterIcon(".cpp", ScriptTexture);
+	Project->RegisterIcon(".h", ScriptTexture);
+	Project->RegisterIcon(".hpp", ScriptTexture);
+
+	auto CponTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/cpon.png");
+	Project->RegisterIcon(".cpon", CponTexture);
+
+	auto fbxTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/model.png");
+	Project->RegisterIcon(".fbx", fbxTexture);
+	Project->RegisterIcon(".obj", fbxTexture);
+
+	// アイコンサイズを設定
+	Project->SetIconSize(100.0f);
+
+	// ファイル選択時のコールバック
+	Project->SetFileSelectedCallback([](const std::string &path)
+		{
+			DebugManager::GetInstance().DebugLog("File selected: {}", path);
+		});
 
 	AddToolBarMenu("Camera", "Editor", [this]()
 		{
@@ -214,7 +255,7 @@ void DebugManager::Draw() noexcept
 	}
 }
 
-DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
+DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags)
 {
 	auto itr = m_ToolBarFuncs.try_emplace(In_GroupName.data());
 
@@ -227,7 +268,7 @@ DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName,
 	if (WinItr != m_DebugWindows.end())
 		return *WinItr;
 
-	DebugWindow *NewWindow = new DebugWindow(In_Name);
+	DebugWindow *NewWindow = new DebugWindow(In_Name, In_Flags);
 	NewWindow->m_GroupName = std::string(In_GroupName);
 	std::string Path = In_GroupName.data();
 	Path += "/";

@@ -698,9 +698,14 @@ namespace DX11Math
 	/// <returns>-πからπの範囲に正規化されたラジアン角度</returns>
 	static inline float NormalizeRadAngle(_In_ float In_Rad)
 	{
-		while (In_Rad > PI)
+		// 異常値対策
+		if(!std::isfinite(In_Rad))
+			return 0.0f;
+
+		In_Rad = std::fmod(In_Rad, TWO_PI);
+		if(In_Rad >= PI)
 			In_Rad -= TWO_PI;
-		while (In_Rad < -PI)
+		if(In_Rad < -PI)
 			In_Rad += TWO_PI;
 		return In_Rad;
 	}
@@ -725,9 +730,14 @@ namespace DX11Math
 	/// <returns>-180度から180度の範囲に正規化された角度</returns>
 	static inline float NormalizeDegAngle(_In_ float In_Deg)
 	{
-		while (In_Deg > 180.0f)
+		// 異常値対策
+		if(!std::isfinite(In_Deg))
+			return 0.0f;
+
+		In_Deg = std::fmod(In_Deg, 360.0f);
+		if(In_Deg >= 180.0f)
 			In_Deg -= 360.0f;
-		while (In_Deg < -180.0f)
+		if(In_Deg < -180.0f)
 			In_Deg += 360.0f;
 		return In_Deg;
 	}

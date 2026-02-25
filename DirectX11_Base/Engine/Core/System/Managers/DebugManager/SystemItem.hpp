@@ -18,6 +18,20 @@ class SceneBase;
 class GameObject;
 class Component;
 class Transform;
+class Texture;
+
+// ==============================
+//  定数定義
+// ==============================
+// ファイルアイコン（Unicode）
+#define ICON_FOLDER     u8"\U0001F4C1"
+#define ICON_FILE       u8"\U0001F4C4"
+#define ICON_IMAGE      u8"\U0001F5BC"
+#define ICON_MODEL      u8"\U0001F5BF"
+#define ICON_SCRIPT     u8"\U0001F4DC"
+#define ICON_TEXT       u8"\U0001F4DD"
+#define ICON_SHADER     u8"\U0001F4A1"
+#define ICON_AUDIO      u8"\U0001F3B5"
 
 // ==============================
 // ItemHierarchy クラス
@@ -208,6 +222,26 @@ public:
     /// </summary>
     void SetFileSelectedCallback(_In_ std::function<void(const std::string &)> In_Callback);
 
+    /// <summary>
+    /// アイコン画像を登録（拡張子とテクスチャIDV のペア）
+    /// </summary>
+    void RegisterIcon(_In_ std::string_view In_Extension, _In_ std::shared_ptr<Texture> In_Texture);
+
+    /// <summary>
+    /// デフォルトフォルダアイコンを設定
+    /// </summary>
+    void SetDefaultFolderIcon(_In_ std::shared_ptr<Texture> In_Texture);
+
+    /// <summary>
+    /// デフォルトファイルアイコンを設定
+    /// </summary>
+    void SetDefaultFileIcon(_In_ std::shared_ptr<Texture> In_Texture);
+
+    /// <summary>
+    /// グリッドのアイコンサイズを設定
+    /// </summary>
+    void SetIconSize(_In_ float In_Size) { m_IconSize = In_Size; }
+
 private:
     /// <summary>
     /// フォルダツリーを描画（左側）
@@ -215,9 +249,14 @@ private:
     void DrawFolderTree(const std::filesystem::path &In_Path, bool In_IsRoot = false);
 
     /// <summary>
-    /// ファイル一覧を描画（右側）
+    /// ファイル一覧を描画（右側・グリッド表示）
     /// </summary>
-    void DrawFileList();
+    void DrawFileGrid();
+
+    /// <summary>
+    /// パンくずリストを描画
+    /// </summary>
+    void DrawBreadcrumb();
 
     /// <summary>
     /// 右クリックメニューを描画
@@ -225,9 +264,9 @@ private:
     void DrawContextMenu();
 
     /// <summary>
-    /// ファイルアイコンを取得
+    /// ファイルアイコン（テクスチャ）を取得
     /// </summary>
-    const char *GetFileIcon(const std::filesystem::path &In_Path);
+    std::shared_ptr<Texture> GetFileIconTexture(const std::filesystem::path &In_Path);
 
     /// <summary>
     /// 現在のフォルダのファイル一覧を更新
@@ -269,6 +308,12 @@ private:
     std::filesystem::path m_RenamingItem;
 
     std::function<void(const std::string &)> m_FileSelectedCallback;
+
+    // アイコン関連
+    std::unordered_map<std::string, std::shared_ptr<Texture>> m_IconMap;
+    std::shared_ptr<Texture> m_DefaultFolderIcon;
+    std::shared_ptr<Texture> m_DefaultFileIcon;
+    float m_IconSize;
 
     // フィルター設定
     bool m_ShowImages;

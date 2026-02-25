@@ -25,8 +25,10 @@ class DebugWindow
 {
 	friend class DebugManager;
 public:
-	DebugWindow(_In_ std::string_view In_Name);
+	DebugWindow(_In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags = 0);
 	~DebugWindow();
+
+	void AddWindowFlags(_In_ ImGuiWindowFlags In_Flags) noexcept { m_WindowFlags |= In_Flags; }
 
 	void Draw() noexcept;
 
@@ -77,6 +79,7 @@ private:
 	std::string m_GroupName;
 	std::string m_Name;
 	std::vector<DebugItem *> m_Items;
+	ImGuiWindowFlags m_WindowFlags;
 };
 
 template<typename T, typename ...Args>

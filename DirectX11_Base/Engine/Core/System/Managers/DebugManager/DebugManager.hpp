@@ -12,6 +12,7 @@
 #include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
 #include "Core/System/Managers/DebugManager/DebugWindow.hpp"
 #include "Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "Core/System/Managers/DebugManager/SystemItem.hpp"
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Utility/Utility.hpp"
 
@@ -56,7 +57,7 @@ public:
 	/// </summary>
 	/// <param name="[In_Name]">ウィンドウ名</param>
 	/// <returns>作成されたウィンドウへのポインタ</returns>
-	DebugWindow *CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name);
+	DebugWindow *CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags = 0);
 
 	/// <summary>
 	/// ツールバーにメニュー項目を追加する

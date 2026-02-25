@@ -25,6 +25,9 @@ void InitializeImGui::InitImGui()
 	ImGui_ImplWin32_Init(Window::GetInstance().GetHwnd());
 	ImGui_ImplDX11_Init(Instance.GetDevice(), Instance.GetDeviceContext());
 
+	// ウィンドウの移動をタイトルバーからのみ可能にする
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+
 	// フォントの設定
 	io.Fonts->AddFontFromFileTTF("Engine\\Assets\\Fonts\\NotoSansJP-Medium.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 	// ドッキングの有効化
