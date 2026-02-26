@@ -844,7 +844,7 @@ void ItemProjectWindow::DrawImGui()
     DrawContextMenu();
 }
 
-void ItemProjectWindow::DrawFolderTree(const std::filesystem::path &In_Path, bool In_IsRoot)
+void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsRoot)
 {
     if(!std::filesystem::exists(In_Path) || !std::filesystem::is_directory(In_Path))
         return;
@@ -1169,7 +1169,7 @@ void ItemProjectWindow::DrawContextMenu()
     }
 }
 
-std::shared_ptr<Texture> ItemProjectWindow::GetFileIconTexture(const std::filesystem::path &In_Path)
+std::shared_ptr<Texture> ItemProjectWindow::GetFileIconTexture(_In_ const std::filesystem::path &In_Path)
 {
     if(std::filesystem::is_directory(In_Path))
     {
@@ -1230,7 +1230,7 @@ void ItemProjectWindow::RefreshCurrentFolder()
     }
 }
 
-bool ItemProjectWindow::PassFilter(const std::filesystem::path &In_Path)
+bool ItemProjectWindow::PassFilter(_In_ const std::filesystem::path &In_Path)
 {
     std::string filename = In_Path.filename().string();
     std::string ext = In_Path.extension().string();
@@ -1290,7 +1290,7 @@ void ItemProjectWindow::CreateNewFolder()
     }
 }
 
-void ItemProjectWindow::DeleteItem(const std::filesystem::path &In_Path)
+void ItemProjectWindow::DeleteItem(_In_ const std::filesystem::path &In_Path)
 {
     try
     {
@@ -1310,7 +1310,7 @@ void ItemProjectWindow::DeleteItem(const std::filesystem::path &In_Path)
     }
 }
 
-void ItemProjectWindow::RenameItem(const std::filesystem::path &In_OldPath, const std::string &In_NewName)
+void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath, const std::string &In_NewName)
 {
     if(In_NewName.empty())
     {

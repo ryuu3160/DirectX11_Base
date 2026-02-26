@@ -237,6 +237,12 @@ public:
     /// </summary>
     void SetDefaultFileIcon(_In_ std::shared_ptr<Texture> In_Texture);
 
+	/// <summary>
+	/// アイコンのサイズを取得
+	/// </summary>
+	/// <returns>アイコンのサイズ</returns>
+	float GetIconSize() const { return m_IconSize; }
+
     /// <summary>
     /// グリッドのアイコンサイズを設定
     /// </summary>
@@ -246,7 +252,7 @@ private:
     /// <summary>
     /// フォルダツリーを描画（左側）
     /// </summary>
-    void DrawFolderTree(const std::filesystem::path &In_Path, bool In_IsRoot = false);
+    void DrawFolderTree(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsRoot = false);
 
     /// <summary>
     /// ファイル一覧を描画（右側・グリッド表示）
@@ -266,7 +272,7 @@ private:
     /// <summary>
     /// ファイルアイコン（テクスチャ）を取得
     /// </summary>
-    std::shared_ptr<Texture> GetFileIconTexture(const std::filesystem::path &In_Path);
+    std::shared_ptr<Texture> GetFileIconTexture(_In_ const std::filesystem::path &In_Path);
 
     /// <summary>
     /// 現在のフォルダのファイル一覧を更新
@@ -276,7 +282,7 @@ private:
     /// <summary>
     /// フィルタリング処理
     /// </summary>
-    bool PassFilter(const std::filesystem::path &In_Path);
+    bool PassFilter(_In_ const std::filesystem::path &In_Path);
 
     /// <summary>
     /// 新規フォルダ作成
@@ -286,12 +292,12 @@ private:
     /// <summary>
     /// ファイル/フォルダ削除
     /// </summary>
-    void DeleteItem(const std::filesystem::path &In_Path);
+    void DeleteItem(_In_ const std::filesystem::path &In_Path);
 
     /// <summary>
     /// リネーム処理
     /// </summary>
-    void RenameItem(const std::filesystem::path &In_OldPath, const std::string &In_NewName);
+    void RenameItem(_In_ const std::filesystem::path &In_OldPath, _In_ const std::string &In_NewName);
 
 private:
     std::filesystem::path m_RootPath;

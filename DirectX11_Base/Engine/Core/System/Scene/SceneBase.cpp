@@ -60,6 +60,11 @@ void SceneBase::CommonProcessScene() noexcept
 		{
 			if(obj)
 				obj->ReloadingInspector();
+			else
+			{
+				auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+				window->ClearItems();
+			}
 		});
 #endif
 

@@ -134,6 +134,8 @@ private:
 	DebugManager();
 	~DebugManager();
 
+	void ProjectWindowInit();
+
 	void SaveDebugData();
 	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugItem *In_Item);
 	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindow *In_Window);

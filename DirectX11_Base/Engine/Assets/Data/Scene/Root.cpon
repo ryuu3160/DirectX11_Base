@@ -1,18 +1,4 @@
-#ObjNum : 11
-GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object,GridComponent:object}:
-  IsActive:true
-  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]0, 0, 0
-    Scale:[3]1, 1, 1
-    Quat:[4]0, 0, 0, 1
-    Euler:[3]0, 0, 0
-    ParentName:
-  LineRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:
-    LayerGroup:-1
-    Layer:0
-  GridComponent:[0]{}:
-
+#ObjNum : 12
 EditorCamera[1]{IsActive:bool,Transform:object,Camera:object,CameraDCC:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
@@ -32,17 +18,17 @@ EditorCamera[1]{IsActive:bool,Transform:object,Camera:object,CameraDCC:object}:
     IsShow:false
   CameraDCC:[0]{}:
 
-RootModel0Child[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
+TestFade[1]{IsActive:bool,Transform:object,SpriteRenderer:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]1, 0, 2.3841858e-07
+    Position:[3]0, 0, 0
     Scale:[3]1, 1, 1
     Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-    ParentName:RootModel0
-  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
-    LayerGroup:0
+    ParentName:
+  SpriteRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Texture/fade.jpg
+    LayerGroup:4
     Layer:0
 
 GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
@@ -63,6 +49,32 @@ GameCamera[1]{IsActive:bool,Transform:object,Camera:object}:
     Focus:1
     IsShow:false
 
+SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]0, 5.9604645e-08, -4.7683716e-07
+    Scale:[3]1, 1, 1
+    Quat:[4]-0.21631518, 0.19702978, -0.024137318, 0.95597255
+    Euler:[3]0, 0, 0
+    ParentName:EditorCamera
+  SkyBoxRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Model/SkyBox/sky.obj
+    LayerGroup:-2
+    Layer:0
+
+RootModel0Child[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
+  IsActive:true
+  Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
+    Position:[3]1, 0, 2.3841858e-07
+    Scale:[3]1, 1, 1
+    Quat:[4]0, 0, 0, 1
+    Euler:[3]0, 0, 0
+    ParentName:RootModel0
+  ModelRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:Engine/Assets/Model/Weapon/AIM-120.fbx
+    LayerGroup:0
+    Layer:0
+
 RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
@@ -76,18 +88,19 @@ RootModel0[1]{IsActive:bool,Transform:object,ModelRenderer:object}:
     LayerGroup:0
     Layer:0
 
-SkyBox[1]{IsActive:bool,Transform:object,SkyBoxRenderer:object}:
+GridObject[1]{IsActive:bool,Transform:object,LineRenderer:object,GridComponent:object}:
   IsActive:true
   Transform:[1]{Position:array<float>,Scale:array<float>,Quat:array<float>,Euler:array<float>,ParentName:string}:
-    Position:[3]0, 5.9604645e-08, -4.7683716e-07
+    Position:[3]0, 0, 0
     Scale:[3]1, 1, 1
-    Quat:[4]-0.21631518, 0.19702978, -0.024137318, 0.95597255
+    Quat:[4]0, 0, 0, 1
     Euler:[3]0, 0, 0
-    ParentName:EditorCamera
-  SkyBoxRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
-    AssetPath:Engine/Assets/Model/SkyBox/sky.obj
-    LayerGroup:-2
+    ParentName:
+  LineRenderer:[1]{AssetPath:string,LayerGroup:int,Layer:int}:
+    AssetPath:
+    LayerGroup:-1
     Layer:0
+  GridComponent:[0]{}:
 
 RootModel1[1]{IsActive:bool,Transform:object,ModelRenderer:object,CapsuleCollider:object,MovementComponent:object}:
   IsActive:true

@@ -8,3 +8,4 @@ Bool,System/DebugMenu/Grid##GridObject/GridAxis##GridObject,1
 Window,System/Hierarchy,1
 Window,System/Inspector,1
 Window,System/Project,1
+__ProjectWindow,System/Project/ProjectWindow,50

@@ -68,44 +68,7 @@ void DebugManager::Init()
 	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
 
 	// プロジェクトウィンドウ追加
-	auto ProjectWindow = CreateDebugWindow("System", "Project");
-	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Engine/Assets");
-
-	// プロジェクトウィンドウの設定
-	// フォルダアイコンを読み込み
-	auto FolderTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/folder.png");
-	Project->SetDefaultFolderIcon(FolderTexture);
-
-	// ファイルアイコンを読み込み
-	auto FileTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/file.png");
-	Project->SetDefaultFileIcon(FileTexture);
-
-	// 拡張子ごとのアイコン
-	auto ImageTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/image.png");
-	Project->RegisterIcon(".png", ImageTexture);
-	Project->RegisterIcon(".jpg", ImageTexture);
-	Project->RegisterIcon(".jpeg", ImageTexture);
-
-	auto ScriptTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/script.png");
-	Project->RegisterIcon(".cpp", ScriptTexture);
-	Project->RegisterIcon(".h", ScriptTexture);
-	Project->RegisterIcon(".hpp", ScriptTexture);
-
-	auto CponTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/cpon.png");
-	Project->RegisterIcon(".cpon", CponTexture);
-
-	auto fbxTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/model.png");
-	Project->RegisterIcon(".fbx", fbxTexture);
-	Project->RegisterIcon(".obj", fbxTexture);
-
-	// アイコンサイズを設定
-	Project->SetIconSize(100.0f);
-
-	// ファイル選択時のコールバック
-	Project->SetFileSelectedCallback([](const std::string &path)
-		{
-			DebugManager::GetInstance().DebugLog("File selected: {}", path);
-		});
+	ProjectWindowInit();
 
 	AddToolBarMenu("Camera", "Editor", [this]()
 		{
@@ -425,6 +388,41 @@ DebugManager::~DebugManager()
 	m_ToolBarFuncs.clear();
 }
 
+void DebugManager::ProjectWindowInit()
+{
+	auto ProjectWindow = CreateDebugWindow("System", "Project");
+	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Engine/Assets");
+
+	// プロジェクトウィンドウの設定
+	// フォルダアイコンを読み込み
+	auto FolderTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/folder.png");
+	Project->SetDefaultFolderIcon(FolderTexture);
+
+	// ファイルアイコンを読み込み
+	auto FileTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/file.png");
+	Project->SetDefaultFileIcon(FileTexture);
+
+	// 拡張子ごとのアイコン
+	auto ImageTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/image.png");
+	Project->RegisterIcon(".png", ImageTexture);
+	Project->RegisterIcon(".jpg", ImageTexture);
+	Project->RegisterIcon(".jpeg", ImageTexture);
+
+	auto ScriptTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/script.png");
+	Project->RegisterIcon(".cpp", ScriptTexture);
+	Project->RegisterIcon(".h", ScriptTexture);
+	Project->RegisterIcon(".hpp", ScriptTexture);
+
+	auto CponTexture = TextureManager::GetInstance().LoadTexture("Engine/Assets/Icons/cpon.png");
+	Project->RegisterIcon(".cpon", CponTexture);
+
+	// ファイル選択時のコールバック
+	Project->SetFileSelectedCallback([](const std::string &path)
+		{
+			DebugManager::GetInstance().DebugLog("File selected: {}", path);
+		});
+}
+
 void DebugManager::SaveDebugData()
 {
 	std::fstream file("Engine\\Assets\\DebugResource\\DebugManagerData.csv", std::ios::out | std::ios::trunc);
@@ -485,6 +483,7 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	ItemValue *pValue = dynamic_cast<ItemValue *>(In_Item);
 	ItemList *pList = nullptr;
 	ItemText *pText = nullptr;
+	ItemProjectWindow *pProject = nullptr;
 
 	if(!pValue)
 		pList = dynamic_cast<ItemList *>(In_Item);
@@ -493,9 +492,12 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 		pText = dynamic_cast<ItemText *>(In_Item);
 
 	if(!pValue && !pList && !pText)
+		pProject = dynamic_cast<ItemProjectWindow *>(In_Item);
+
+	if(!pValue && !pList && !pText && !pProject)
 		return;
 
-	if(!((pValue && pValue->IsSave()) || (pList && pList->IsSave()) || (pText && pText->IsSave())))
+	if(!((pValue && pValue->IsSave()) || (pList && pList->IsSave()) || (pText && pText->IsSave()) || pProject))
 		return;
 
 	// 種類保存
@@ -582,6 +584,16 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 			ValueStrZ = ToString(vec.z);
 			Inout_Data += ValueStrX + "/" + ValueStrY + "/" + ValueStrZ;
 		}
+		break;
+
+	case DebugItem::__ProjectWindow:
+		if (pProject)
+		{
+			std::string ValueStr;
+			ValueStr = ToString(pProject->GetIconSize());
+			Inout_Data += ValueStr;
+		}
+		break;
 	}
 	Inout_Data += "\n";
 }
@@ -677,10 +689,16 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 	// 保存フラグの確認
 	ItemValue *pValue = dynamic_cast<ItemValue *>(Inout_Item);
 	ItemList *pList = nullptr;
+	ItemText *pText = nullptr;
+	ItemProjectWindow *pProject = nullptr;
 
 	if(!pValue)
 		pList = dynamic_cast<ItemList *>(Inout_Item);
 	if (!pValue && !pList)
+		pText = dynamic_cast<ItemText *>(Inout_Item);
+	if(!pValue && !pList && !pText)
+		pProject = dynamic_cast<ItemProjectWindow *>(Inout_Item);
+	if(!pValue && !pList && !pText && !pProject)
 		return;
 
 	Path += Inout_Item->GetName();
@@ -778,6 +796,11 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 		elem = value;
 		vec.z = FromString<float>(elem);
 		pValue->GetValue() = vec;
+	}
+	break;
+	case DebugItem::__ProjectWindow:
+	{
+		pProject->SetIconSize(FromString<float>(DataItr->value));
 	}
 	break;
 	}

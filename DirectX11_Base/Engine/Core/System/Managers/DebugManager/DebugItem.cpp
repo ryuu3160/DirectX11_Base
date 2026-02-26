@@ -187,6 +187,8 @@ DebugItem::Kind DebugItem::StrToKind(_In_ std::string_view In_Str)
 	if (In_Str == "List")		return DebugItem::List;
 	if (In_Str == "LayoutFunc")	return DebugItem::LayoutFunc;
 	if (In_Str == "__Hierarchy")	return DebugItem::__Hierarchy;
+	if(In_Str == "__ComponentSelector")	return DebugItem::__ComponentSelector;
+	if(In_Str == "__ProjectWindow")	return DebugItem::__ProjectWindow;
 	return DebugItem::Label;
 }
 
@@ -210,6 +212,8 @@ std::string DebugItem::KindToStr(_In_ Kind In_Kind)
 	case DebugItem::List:		return "List";
 	case DebugItem::LayoutFunc:	return "LayoutFunc";
 	case DebugItem::__Hierarchy:	return "__Hierarchy";
+	case DebugItem::__ComponentSelector:	return "__ComponentSelector";
+	case DebugItem::__ProjectWindow:	return "__ProjectWindow";
 	}
 }
 
