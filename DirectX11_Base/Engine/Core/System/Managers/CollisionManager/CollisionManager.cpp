@@ -402,17 +402,6 @@ bool CollisionManager::CheckCollisionActive(_In_opt_ ColliderBase *In_Collider) 
 	if(!In_Collider)
 		return false;
 
-#ifdef _DEBUG
-	// 0xFEEEFEEEや0xDDDDDDDDなどの削除済みメモリのマジックナンバーをチェック
-	uintptr_t ptr = reinterpret_cast<uintptr_t>(In_Collider);
-	if(ptr == 0xFEEEFEEE || ptr == 0xDDDDDDDD || ptr == 0xCDCDCDCD)
-	{
-		std::string AddressStr = std::format("0x{:X}", ptr);
-		DebugManager::GetInstance().DebugLogError("Invalid pointer detected: {}", AddressStr);
-		return false;
-	}
-#endif
-
 	if(In_Collider->IsActive() && In_Collider->IsInitialized() && In_Collider->IsActiveParent())
 		return true;
 	return false;
