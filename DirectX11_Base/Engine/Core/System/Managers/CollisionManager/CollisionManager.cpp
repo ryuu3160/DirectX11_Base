@@ -295,13 +295,6 @@ int CollisionManager::GetAllCollisionList(_In_ ColliderPairMap &In_ColPairs)
 
 bool CollisionManager::GetCollisionList(_In_ int In_Elem, _Inout_ ColliderPairMap &Inout_ColPairs, _Inout_ std::list<ColliderBase *> &Inout_ColStac)
 {
-	// セルの存在チェック
-	if(In_Elem < 0 || In_Elem >= static_cast<int>(m_OctreeCells.size()))
-		return false;
-
-	if(!m_OctreeCells[In_Elem])
-		return false;
-
 	std::list<ColliderBase *>::iterator itr;
 	// 空間内のオブジェクト同士の衝突リスト作成
 	TreeData* Tree1 = m_OctreeCells[In_Elem]->GetFirstObj();

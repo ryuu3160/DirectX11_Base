@@ -62,14 +62,12 @@ bool OctreeCell::Push(_In_ TreeData *In_spTree, _In_ int In_MortonNum) noexcept
 
 bool OctreeCell::OnRemove(_In_ TreeData *In_pTree) noexcept
 {
-	if(!In_pTree)
-		return false;
-
 	// 削除対象が先頭ノードの場合
-	if(m_spLatest && m_spLatest == In_pTree)
+	if(m_spLatest == In_pTree)
 	{
-		// 次のノードを先頭にする(nullptrの可能性もある)
-		m_spLatest = In_pTree->GetNextTree();
+		// 次のオブジェクトにすげ替え
+		if(m_spLatest != nullptr)
+			m_spLatest = m_spLatest->GetNextTree();
 	}
 	return true;
 }
