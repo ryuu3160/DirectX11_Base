@@ -42,6 +42,20 @@ void ParticleEffect::Init() noexcept
 
 void ParticleEffect::Update(_In_ float In_Tick) noexcept
 {
+    if(!m_RemoveIndices.empty())
+    {
+        for(auto &itr : m_RemoveIndices)
+        {
+            if(itr >= 0 && itr < m_Emitters.size())
+            {
+                m_Emitters[itr].reset();
+                m_Emitters.erase(m_Emitters.begin() + itr);
+            }
+        }
+        m_RemoveIndices.clear();
+        m_pGameObject->ReloadingInspector();
+    }
+
     // 全エミッターの更新
     for(auto &emitter : m_Emitters)
     {
@@ -105,6 +119,55 @@ ParticleEmitter *ParticleEffect::AddEmitter(_In_ const EmitterSettings &In_Setti
     return m_Emitters.back().get();
 }
 
+ParticleEmitter *ParticleEffect::AddEmitter()
+{
+    // デフォルトのエミッター設定
+    EmitterSettings settings;
+    settings.EmitRate = 10.0f;              // 1秒間に10個放出
+    settings.MaxParticles = 500;             // 最大500個
+    settings.Duration = 2.0f;                // 放出時間
+    settings.IsLooping = true;              // ループ
+    // 速度の範囲
+    settings.VelocityMin = DirectX::XMFLOAT3(-3, -3, -3);
+    settings.VelocityMax = DirectX::XMFLOAT3(3, 3, 3);
+    // 色の変化 (オレンジ → 透明な赤)
+    settings.ColorStart = DirectX::XMFLOAT4(1.0f, 0.5f, 0.0f, 1.0f);
+    settings.ColorEnd = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f);
+    // サイズの変化
+    settings.SizeStart = DirectX::XMFLOAT2(1.0f, 1.0f);
+    settings.SizeEnd = DirectX::XMFLOAT2(0.2f, 0.2f);
+    // 寿命
+    settings.LifeTimeMin = 0.5f;
+    settings.LifeTimeMax = 1.0f;
+    // 重力 (上に吹き上がる)
+    settings.GravityScale = -0.3f;
+    // 放出形状(球状)
+    settings.EmitShape = EmitterSettings::Shape::Sphere;
+    settings.ShapeRadius = 0.5f;
+    auto emitter = std::make_unique<ParticleEmitter>();
+    emitter->Init(settings);
+    m_Emitters.push_back(std::move(emitter));
+    return m_Emitters.back().get();
+}
+
+void ParticleEffect::RemoveEmitter(_In_ ParticleEmitter *In_pEmitter) noexcept
+{
+    for(int i = 0; i < m_Emitters.size(); ++i)
+    {
+        if(m_Emitters[i].get() == In_pEmitter)
+        {
+			m_RemoveIndices.push_back(i);
+            break;
+        }
+	}
+}
+
+void ParticleEffect::RemoveEmitter(_In_ int In_Index) noexcept
+{
+	if(In_Index >= 0 && In_Index < m_Emitters.size())
+        m_RemoveIndices.push_back(In_Index);
+}
+
 void ParticleEffect::Play()
 {
     for(auto &emitter : m_Emitters)
@@ -149,22 +212,33 @@ void ParticleEffect::Inspector(_In_ ItemGroup *In_pGroup)
     for(auto &itr : m_Emitters)
     {
         std::string Name = "Emitter";
-        Name += ToString(num);
+		std::string NumStr = ToString(num);
+        Name += NumStr;
         auto EmitterGroup = In_pGroup->CreateGroupItem<ItemGroup>(Name);
         auto &Settings = itr->GetSettings();
-        EmitterGroup->CreateGroupItem<ItemBind>("Position", DebugItem::Vector, &Settings.Position);
-        EmitterGroup->CreateGroupItem<ItemBind>("Rate", DebugItem::Float, &Settings.EmitRate);
-        EmitterGroup->CreateGroupItem<ItemBind>("MaxParticle", DebugItem::Int, &Settings.MaxParticles);
-        EmitterGroup->CreateGroupItem<ItemBind>("Duration", DebugItem::Float, &Settings.Duration);
-        EmitterGroup->CreateGroupItem<ItemBind>("IsLoop", DebugItem::Bool, &Settings.IsLooping);
-        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMin", DebugItem::Float, &Settings.LifeTimeMin);
-        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMax", DebugItem::Float, &Settings.LifeTimeMax);
-        EmitterGroup->CreateGroupItem<ItemBind>("GravityScale", DebugItem::Float, &Settings.GravityScale);
-        EmitterGroup->CreateGroupItem<ItemBind>("Radius", DebugItem::Float, &Settings.ShapeRadius);
-        EmitterGroup->CreateGroupItem<ItemBind>("Angle", DebugItem::Float, &Settings.ShapeAngle);
+        EmitterGroup->CreateGroupItem<ItemBind>("Position##" + NumStr, DebugItem::Vector, &Settings.Position);
+        EmitterGroup->CreateGroupItem<ItemBind>("Rate##" + NumStr, DebugItem::Float, &Settings.EmitRate);
+        EmitterGroup->CreateGroupItem<ItemBind>("MaxParticle##" + NumStr, DebugItem::Int, &Settings.MaxParticles);
+        EmitterGroup->CreateGroupItem<ItemBind>("Duration##" + NumStr, DebugItem::Float, &Settings.Duration);
+        EmitterGroup->CreateGroupItem<ItemBind>("IsLoop##" + NumStr, DebugItem::Bool, &Settings.IsLooping);
+        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMin##" + NumStr, DebugItem::Float, &Settings.LifeTimeMin);
+        EmitterGroup->CreateGroupItem<ItemBind>("LifeTimeMax##" + NumStr, DebugItem::Float, &Settings.LifeTimeMax);
+        EmitterGroup->CreateGroupItem<ItemBind>("GravityScale##" + NumStr, DebugItem::Float, &Settings.GravityScale);
+        EmitterGroup->CreateGroupItem<ItemBind>("Radius##" + NumStr, DebugItem::Float, &Settings.ShapeRadius);
+        EmitterGroup->CreateGroupItem<ItemBind>("Angle##" + NumStr, DebugItem::Float, &Settings.ShapeAngle);
+        EmitterGroup->CreateGroupItem<ItemCallback>("Remove##" + NumStr, DebugItem::Command, [this, num](bool IsSet, void *ptr)
+            {
+                this->RemoveEmitter(num);
+			});
         ++num;
     }
     In_pGroup->CreateGroupItem<ItemUnIndent>();
+    // エミッター追加ボタン
+    In_pGroup->CreateGroupItem<ItemCallback>("Add Emitter", DebugItem::Command, [this](bool IsSet, void *ptr)
+        {
+            this->AddEmitter();
+            m_pGameObject->ReloadingInspector();
+		});
 }
 #endif
 

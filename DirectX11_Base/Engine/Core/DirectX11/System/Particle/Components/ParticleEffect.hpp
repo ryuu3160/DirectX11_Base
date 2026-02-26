@@ -33,6 +33,21 @@ public:
     ParticleEmitter *AddEmitter(_In_ const EmitterSettings &In_Settings);
 
     /// <summary>
+    /// デフォルトのパーティクルエミッターを追加します
+    /// </summary>
+    /// <returns>追加されたパーティクルエミッターへのポインター</returns>
+    ParticleEmitter *AddEmitter();
+
+	void RemoveEmitter(_In_ ParticleEmitter *In_pEmitter) noexcept;
+
+	void RemoveEmitter(_In_ int In_Index) noexcept;
+
+	/// <summary>
+	/// すべてのエミッターをクリアします
+	/// </summary>
+	void ClearEmitters() noexcept { m_Emitters.clear(); }
+
+    /// <summary>
     /// すべてのエミッターを再生
     /// </summary>
     void Play();
@@ -97,6 +112,7 @@ private:
     std::shared_ptr<Texture> m_Texture;
     std::vector<std::unique_ptr<ParticleEmitter>> m_Emitters;
     std::vector<InstanceData> m_InstanceDataArray;
+	std::vector<int> m_RemoveIndices; // 削除するインスタンスのインデックスリスト
 
     DirectX::XMFLOAT3 m_Gravity;
     bool m_bMeshInitialized; // メッシュが初期化済みか
