@@ -45,9 +45,6 @@ bool OctreeCell::Push(_In_ TreeData *In_spTree, _In_ int In_MortonNum) noexcept
 	if (In_spTree->CompareCell(this))
 		return false; // ‚·‚Å‚É“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í“o˜^‚µ‚È‚¢
 
-	In_spTree->SetPrevTree(nullptr);
-	In_spTree->SetNextTree(nullptr);
-
 	if (!m_spLatest)
 	{
 		m_spLatest = In_spTree;
