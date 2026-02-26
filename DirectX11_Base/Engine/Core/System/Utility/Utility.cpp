@@ -87,4 +87,72 @@ namespace Util
 
 		return utf8Str;
 	}
+	void OpenInSystemExplorer(const std::filesystem::path &In_Path)
+	{
+		try
+		{
+			// 絶対パスに変換
+			std::filesystem::path absolutePath = std::filesystem::absolute(In_Path);
+
+			// 存在確認
+			if(!std::filesystem::exists(absolutePath))
+			{
+				OutputDebugStringA(("Path does not exist: " + absolutePath.string() + "\n").c_str());
+				return;
+			}
+
+#ifdef _WIN32
+			// Windows: パス区切り文字を \ に統一
+			std::string pathStr = absolutePath.string();
+			std::replace(pathStr.begin(), pathStr.end(), '/', '\\');
+
+			std::string command = "explorer \"" + pathStr + "\"";
+			system(command.c_str());
+#elif __APPLE__
+			// macOS
+			std::string command = "open \"" + absolutePath.string() + "\"";
+			system(command.c_str());
+#elif __linux__
+			// Linux
+			std::string command = "xdg-open \"" + absolutePath.string() + "\"";
+			system(command.c_str());
+#endif
+		}
+		catch(const std::exception &e)
+		{
+			OutputDebugStringA(("Failed to open in system explorer: " + std::string(e.what()) + "\n").c_str());
+		}
+	}
+	void ShowInSystemExplorer(const std::filesystem::path &In_Path)
+	{
+		try
+		{
+			std::filesystem::path absolutePath = std::filesystem::absolute(In_Path);
+
+			if(!std::filesystem::exists(absolutePath))
+			{
+				OutputDebugStringA(("Path does not exist: " + absolutePath.string() + "\n").c_str());
+				return;
+			}
+
+#ifdef _WIN32
+			std::string pathStr = absolutePath.string();
+			std::replace(pathStr.begin(), pathStr.end(), '/', '\\');
+
+			std::string command = "explorer /select,\"" + pathStr + "\"";
+			system(command.c_str());
+#elif __APPLE__
+			std::string command = "open -R \"" + absolutePath.string() + "\"";
+			system(command.c_str());
+#elif __linux__
+			std::string parentPath = absolutePath.parent_path().string();
+			std::string command = "xdg-open \"" + parentPath + "\"";
+			system(command.c_str());
+#endif
+		}
+		catch(const std::exception &e)
+		{
+			OutputDebugStringA(("Failed to show in system explorer: " + std::string(e.what()) + "\n").c_str());
+		}
+	}
 }

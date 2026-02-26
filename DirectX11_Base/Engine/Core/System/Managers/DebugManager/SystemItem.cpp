@@ -21,7 +21,9 @@
 namespace
 {
 }
-
+#include <thread>
+#include <atomic>
+#include <mutex>
 // ==============================
 //  ItemHierarchy
 // ==============================
@@ -183,7 +185,7 @@ void ItemHierarchy::DrawObjectNode(_Inout_ GameObject *In_Obj)
     }
 
     // Fキーで選択中のオブジェクトを注視
-    if(ImGui::IsKeyPressed(ImGuiKey_F))
+    if(ImGui::IsKeyPressed(ImGuiKey_F) && ImGui::IsWindowFocused())
         LookAtSelectedObject();
 
     // 右クリックメニュー
@@ -758,6 +760,9 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
     , m_DefaultFolderIcon(nullptr)
     , m_DefaultFileIcon(nullptr)
     , m_IconSize(80.0f)
+    , m_IsWatching(false)
+    , m_NeedsRefresh(false)
+    , m_hDirectory(INVALID_HANDLE_VALUE)
 {
     m_Name = In_Name.data();
     m_Kind = Kind::__ProjectWindow;
@@ -771,10 +776,15 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
     }
 
     RefreshCurrentFolder();
+	// ディレクトリの監視を開始
+    StartWatching();
 }
 
 ItemProjectWindow::~ItemProjectWindow()
 {
+	// 監視を停止
+    StopWatching();
+
     // テクスチャの解放はテクスチャマネージャーに任せる
     m_IconMap.clear();
 	m_DefaultFileIcon = nullptr;
@@ -785,6 +795,23 @@ void ItemProjectWindow::DrawImGui()
 {
     if(m_Kind != Kind::__ProjectWindow)
         return;
+
+    if(m_NeedsRefresh)
+    {
+        // 連続して変更があっても一度だけリフレッシュするように少し待つ
+        static auto lastRefreshTime = std::chrono::steady_clock::now();
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastRefreshTime).count();
+
+        if(elapsed > 500)  // 500ms のデバウンス
+        {
+            RefreshCurrentFolder();
+            m_NeedsRefresh = false;
+            lastRefreshTime = now;
+
+            DebugManager::GetInstance().DebugLog("Project window refreshed due to file system changes");
+        }
+    }
 
     // ツールバー
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
@@ -839,9 +866,6 @@ void ItemProjectWindow::DrawImGui()
         DrawFileGrid();
     }
     ImGui::EndChild();
-
-    // 右クリックメニュー
-    DrawContextMenu();
 }
 
 void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsRoot)
@@ -978,6 +1002,7 @@ void ItemProjectWindow::DrawFileGrid()
     allItems.insert(allItems.end(), m_CurrentFiles.begin(), m_CurrentFiles.end());
 
     int column = 0;
+    bool IsAnyItemHovered = false;
 
     for(const auto &item : allItems)
     {
@@ -986,7 +1011,7 @@ void ItemProjectWindow::DrawFileGrid()
         // グリッドの1セル
         ImGui::BeginGroup();
 
-        bool isFolder = std::filesystem::is_directory(item);
+        bool IsFolder = std::filesystem::is_directory(item);
         bool isSelected = (m_SelectedItem == item);
 
         // 選択状態の背景色
@@ -999,7 +1024,7 @@ void ItemProjectWindow::DrawFileGrid()
         }
 
         // アイコン表示
-        std::shared_ptr<Texture> iconTexture = GetFileIconTexture(item);
+        auto iconTexture = GetFileIconTexture(item);
 
         if(iconTexture)
         {
@@ -1015,7 +1040,7 @@ void ItemProjectWindow::DrawFileGrid()
             drawList->AddRect(min, max, IM_COL32(100, 100, 100, 255));
 
             // 中央にテキストアイコン
-            std::string icon = isFolder ? "Folder" : "File";
+            std::string icon =IsFolder ? "Folder" : "File";
             ImVec2 textSize = ImGui::CalcTextSize(icon.c_str());
             ImVec2 textPos = ImVec2(
                 min.x + (max.x - min.x - textSize.x) * 0.5f,
@@ -1032,7 +1057,7 @@ void ItemProjectWindow::DrawFileGrid()
             // ダブルクリック
             if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
-                if(isFolder)
+                if(IsFolder)
                 {
                     m_CurrentPath = item;
                     RefreshCurrentFolder();
@@ -1043,36 +1068,6 @@ void ItemProjectWindow::DrawFileGrid()
                 }
             }
         }
-
-        //// 右クリックメニュー
-        //if(ImGui::BeginPopupContextItem())
-        //{
-        //    if(isFolder && ImGui::MenuItem("Open"))
-        //    {
-        //        m_CurrentPath = item;
-        //        RefreshCurrentFolder();
-        //    }
-        //    if(ImGui::MenuItem("Copy Path"))
-        //    {
-        //        ImGui::SetClipboardText(item.string().c_str());
-        //    }
-        //    if(ImGui::MenuItem("Copy Relative Path"))
-        //    {
-        //        std::string relativePath = std::filesystem::relative(item, m_RootPath).string();
-        //        ImGui::SetClipboardText(relativePath.c_str());
-        //    }
-        //    if(ImGui::MenuItem("Rename"))
-        //    {
-        //        m_IsRenaming = true;
-        //        m_RenamingItem = item;
-        //        strncpy_s(m_RenameBuffer, item.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
-        //    }
-        //    if(ImGui::MenuItem("Delete"))
-        //    {
-        //        DeleteItem(item);
-        //    }
-        //    ImGui::EndPopup();
-        //}
 
         // ファイル名（アイコンの下）
         std::string filename = item.filename().string();
@@ -1095,6 +1090,62 @@ void ItemProjectWindow::DrawFileGrid()
 
         ImGui::EndGroup();
 
+        if(ImGui::IsItemHovered())
+			IsAnyItemHovered = true;
+
+        // 右クリックメニュー
+        if(ImGui::BeginPopupContextItem("##ItemContext"))
+        {
+            if(IsFolder)
+            {
+                if(ImGui::MenuItem("Open"))
+                {
+                    m_CurrentPath = item;
+                    RefreshCurrentFolder();
+                }
+
+                // エクスプローラーで開く
+                if(ImGui::MenuItem("Open with Explorer"))
+                {
+					Util::OpenInSystemExplorer(item.string());
+                }
+
+                ImGui::Separator();
+            }
+            // エクスプローラーで表示
+            if(ImGui::MenuItem("Show in Explorer"))
+            {
+                Util::ShowInSystemExplorer(item.string());
+            }
+
+            if(ImGui::MenuItem("Copy Path"))
+            {
+                // 絶対パスに変換
+                std::filesystem::path absolutePath = std::filesystem::absolute(item);
+                // Windows: パス区切り文字を \ に統一
+                std::string pathStr = absolutePath.string();
+                std::replace(pathStr.begin(), pathStr.end(), '/', '\\');
+
+                ImGui::SetClipboardText(pathStr.c_str());
+            }
+            if(ImGui::MenuItem("Copy Relative Path"))
+            {
+                std::string relativePath = std::filesystem::relative(item, m_RootPath).string();
+                ImGui::SetClipboardText(relativePath.c_str());
+            }
+            if(ImGui::MenuItem("Rename","F2"))
+            {
+                m_IsRenaming = true;
+                m_RenamingItem = item;
+                strncpy_s(m_RenameBuffer, item.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+            }
+            if(ImGui::MenuItem("Delete","Del"))
+            {
+                DeleteItem(item);
+            }
+            ImGui::EndPopup();
+        }
+
         ImGui::PopID();
 
         // グリッドレイアウト
@@ -1107,6 +1158,71 @@ void ItemProjectWindow::DrawFileGrid()
         {
             column = 0;
         }
+    }
+
+    // キーボードショートカット
+    if(ImGui::IsWindowFocused())
+    {
+        // F2: リネーム
+        if(!m_SelectedItem.empty() && ImGui::IsKeyPressed(ImGuiKey_F2))
+        {
+            m_IsRenaming = true;
+            m_RenamingItem = m_SelectedItem;
+            strncpy_s(m_RenameBuffer, m_SelectedItem.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+        }
+
+        // Delete: 削除
+        if(!m_SelectedItem.empty() && ImGui::IsKeyPressed(ImGuiKey_Delete))
+        {
+            DeleteItem(m_SelectedItem);
+        }
+    }
+
+    // ----- 空白領域の右クリックメニュー -----
+
+    // 空白領域をクリックしたか判定
+    bool IsWindowHovered = ImGui::IsWindowHovered();
+
+    // 空白領域で左クリック → 選択解除
+    if(IsWindowHovered && !IsAnyItemHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    {
+        m_SelectedItem.clear();
+    }
+
+    // 空白領域で右クリック → コンテキストメニューを開く
+    if(IsWindowHovered && !IsAnyItemHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup("##EmptyAreaContext");
+    }
+
+    // 空白領域のコンテキストメニュー
+    if(ImGui::BeginPopup("##EmptyAreaContext"))
+    {
+        // 現在のフォルダパスを表示
+        std::string currentFolder = m_CurrentPath.filename().string();
+        if(currentFolder.empty())
+            currentFolder = "Root";
+        ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "Current: %s", currentFolder.c_str());
+        ImGui::Separator();
+
+        if(ImGui::MenuItem("New Folder", "Ctrl+Shift+N"))
+        {
+            CreateNewFolder();
+        }
+
+        ImGui::Separator();
+
+        if(ImGui::MenuItem("Refresh", "F5"))
+        {
+            RefreshCurrentFolder();
+        }
+
+        if(ImGui::MenuItem("Open in Explorer"))
+        {
+            OpenInSystemExplorer(m_CurrentPath);
+        }
+
+        ImGui::EndPopup();
     }
 
     ImGui::EndChild();
@@ -1141,31 +1257,6 @@ void ItemProjectWindow::DrawFileGrid()
 
             ImGui::EndPopup();
         }
-    }
-}
-
-void ItemProjectWindow::DrawContextMenu()
-{
-    // 空白領域の右クリックメニュー
-    if(ImGui::BeginPopupContextWindow("##ProjectContextMenu", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
-    {
-        if(ImGui::MenuItem("New Folder"))
-        {
-            CreateNewFolder();
-        }
-
-        if(ImGui::MenuItem("Refresh"))
-        {
-            RefreshCurrentFolder();
-        }
-
-        if(ImGui::MenuItem("Open in Explorer"))
-        {
-            std::string command = "explorer \"" + m_CurrentPath.string() + "\"";
-            system(command.c_str());
-        }
-
-        ImGui::EndPopup();
     }
 }
 
@@ -1228,9 +1319,18 @@ void ItemProjectWindow::RefreshCurrentFolder()
     {
         DebugManager::GetInstance().DebugLogError("Failed to refresh folder: {}", e.what());
     }
+
+	// 監視しているパスが変わっていれば監視を更新
+    static std::filesystem::path lastWatchedPath;
+    if(lastWatchedPath != m_CurrentPath)
+    {
+        lastWatchedPath = m_CurrentPath;
+        StopWatching();
+        StartWatching();
+    }
 }
 
-bool ItemProjectWindow::PassFilter(_In_ const std::filesystem::path &In_Path)
+bool ItemProjectWindow::PassFilter(_In_ const std::filesystem::path &In_Path) const
 {
     std::string filename = In_Path.filename().string();
     std::string ext = In_Path.extension().string();
@@ -1310,7 +1410,7 @@ void ItemProjectWindow::DeleteItem(_In_ const std::filesystem::path &In_Path)
     }
 }
 
-void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath, const std::string &In_NewName)
+void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath, _In_ const std::string &In_NewName)
 {
     if(In_NewName.empty())
     {
@@ -1337,6 +1437,153 @@ void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath,
     catch(const std::exception &e)
     {
         DebugManager::GetInstance().DebugLogError("Failed to rename item: {}", e.what());
+    }
+}
+
+void ItemProjectWindow::WatchFileSystemChanges()
+{
+    while(m_IsWatching)
+    {
+        // 現在監視中のパスを取得
+        std::filesystem::path watchPath = m_CurrentPath;
+
+        // ディレクトリハンドルを開く
+        m_hDirectory = CreateFileW(
+            watchPath.wstring().c_str(),
+            FILE_LIST_DIRECTORY,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            NULL,
+            OPEN_EXISTING,
+            FILE_FLAG_BACKUP_SEMANTICS,
+            NULL
+        );
+
+        if(m_hDirectory == INVALID_HANDLE_VALUE)
+        {
+            DebugManager::GetInstance().DebugLogError("Failed to open directory for watching: {}", watchPath.string());
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            continue;
+        }
+
+        // バッファを準備
+        const DWORD bufferSize = 4096;
+        BYTE buffer[bufferSize];
+        DWORD bytesReturned = 0;
+
+        // 変更を監視
+        BOOL result = ReadDirectoryChangesW(
+            m_hDirectory,
+            buffer,
+            bufferSize,
+            TRUE,  // サブディレクトリも監視
+            FILE_NOTIFY_CHANGE_FILE_NAME |
+            FILE_NOTIFY_CHANGE_DIR_NAME |
+            FILE_NOTIFY_CHANGE_SIZE |
+            FILE_NOTIFY_CHANGE_LAST_WRITE,
+            &bytesReturned,
+            NULL,
+            NULL
+        );
+
+        if(result && bytesReturned > 0)
+        {
+            // 変更を検出
+            FILE_NOTIFY_INFORMATION *info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(buffer);
+
+            do
+            {
+                // ファイル名を取得
+                std::wstring filename(info->FileName, info->FileNameLength / sizeof(WCHAR));
+
+#ifdef _DEBUG
+                std::string action;
+                switch(info->Action)
+                {
+                case FILE_ACTION_ADDED:
+                    action = "Added";
+                    break;
+                case FILE_ACTION_REMOVED:
+                    action = "Removed";
+                    break;
+                case FILE_ACTION_MODIFIED:
+                    action = "Modified";
+                    break;
+                case FILE_ACTION_RENAMED_OLD_NAME:
+                    action = "Renamed (old)";
+                    break;
+                case FILE_ACTION_RENAMED_NEW_NAME:
+                    action = "Renamed (new)";
+                    break;
+                default:
+                    action = "Unknown";
+                    break;
+                }
+
+                // wstringからstringへの変換（Windows API使用）
+                int size_needed = WideCharToMultiByte(CP_UTF8, 0, filename.c_str(), (int)filename.length(), NULL, 0, NULL, NULL);
+                std::string filenameStr(size_needed, 0);
+                WideCharToMultiByte(CP_UTF8, 0, filename.c_str(), (int)filename.length(), &filenameStr[0], size_needed, NULL, NULL);
+                DebugManager::GetInstance().DebugLog("File system change detected: {} - {}", action, filenameStr);
+#endif
+
+                // リフレッシュフラグを立てる
+                m_NeedsRefresh = true;
+
+                // 次の通知へ
+                if(info->NextEntryOffset == 0)
+                    break;
+                info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(
+                    reinterpret_cast<BYTE *>(info) + info->NextEntryOffset
+                    );
+
+            } while(true);
+        }
+
+        // ディレクトリハンドルを閉じる
+        if(m_hDirectory != INVALID_HANDLE_VALUE)
+        {
+            CloseHandle(m_hDirectory);
+            m_hDirectory = INVALID_HANDLE_VALUE;
+        }
+
+        // パスが変更されていないか確認
+        if(watchPath != m_CurrentPath)
+        {
+            // パスが変わったので再監視
+            continue;
+        }
+
+        if(!m_IsWatching)
+            break;
+    }
+}
+
+void ItemProjectWindow::StartWatching()
+{
+    if(m_IsWatching)
+        return;
+
+    m_IsWatching = true;
+    m_WatcherThread = std::thread(&ItemProjectWindow::WatchFileSystemChanges, this);
+}
+
+void ItemProjectWindow::StopWatching()
+{
+    if(!m_IsWatching)
+        return;
+
+    m_IsWatching = false;
+
+    // ディレクトリハンドルを閉じてスレッドを終了させる
+    if(m_hDirectory != INVALID_HANDLE_VALUE)
+    {
+        CloseHandle(m_hDirectory);
+        m_hDirectory = INVALID_HANDLE_VALUE;
+    }
+
+    if(m_WatcherThread.joinable())
+    {
+        m_WatcherThread.join();
     }
 }
 

@@ -21,19 +21,6 @@ class Transform;
 class Texture;
 
 // ==============================
-//  定数定義
-// ==============================
-// ファイルアイコン（Unicode）
-#define ICON_FOLDER     u8"\U0001F4C1"
-#define ICON_FILE       u8"\U0001F4C4"
-#define ICON_IMAGE      u8"\U0001F5BC"
-#define ICON_MODEL      u8"\U0001F5BF"
-#define ICON_SCRIPT     u8"\U0001F4DC"
-#define ICON_TEXT       u8"\U0001F4DD"
-#define ICON_SHADER     u8"\U0001F4A1"
-#define ICON_AUDIO      u8"\U0001F3B5"
-
-// ==============================
 // ItemHierarchy クラス
 // ==============================
 
@@ -265,11 +252,6 @@ private:
     void DrawBreadcrumb();
 
     /// <summary>
-    /// 右クリックメニューを描画
-    /// </summary>
-    void DrawContextMenu();
-
-    /// <summary>
     /// ファイルアイコン（テクスチャ）を取得
     /// </summary>
     std::shared_ptr<Texture> GetFileIconTexture(_In_ const std::filesystem::path &In_Path);
@@ -282,7 +264,7 @@ private:
     /// <summary>
     /// フィルタリング処理
     /// </summary>
-    bool PassFilter(_In_ const std::filesystem::path &In_Path);
+    bool PassFilter(_In_ const std::filesystem::path &In_Path) const;
 
     /// <summary>
     /// 新規フォルダ作成
@@ -299,7 +281,28 @@ private:
     /// </summary>
     void RenameItem(_In_ const std::filesystem::path &In_OldPath, _In_ const std::string &In_NewName);
 
+    /// <summary>
+    /// ファイルシステムの変更を監視するスレッド
+    /// </summary>
+    void WatchFileSystemChanges();
+
+    /// <summary>
+    /// ファイル監視を開始
+    /// </summary>
+    void StartWatching();
+
+    /// <summary>
+    /// ファイル監視を停止
+    /// </summary>
+    void StopWatching();
+
 private:
+    // ファイル監視関連
+    std::thread m_WatcherThread;
+    std::atomic<bool> m_IsWatching;
+    std::atomic<bool> m_NeedsRefresh;
+    HANDLE m_hDirectory;
+
     std::filesystem::path m_RootPath;
     std::filesystem::path m_CurrentPath;
     std::filesystem::path m_SelectedItem;

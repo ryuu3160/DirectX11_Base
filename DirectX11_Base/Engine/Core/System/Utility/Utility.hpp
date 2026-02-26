@@ -185,6 +185,18 @@ namespace Util
     {
         return std::vformat(In_Format, std::make_format_args(In_Args...));
     }
+
+    /// <summary>
+    /// システムのエクスプローラーで指定されたパスを開きます
+    /// </summary>
+    /// <param name="In_Path">開くファイルまたはフォルダーのパス</param>
+    void OpenInSystemExplorer(const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// システムエクスプローラーで指定されたパスを表示します
+    /// </summary>
+    /// <param name="In_Path">システムエクスプローラーで表示するパス</param>
+    void ShowInSystemExplorer(const std::filesystem::path &In_Path);
 }
 
 using namespace Util; // Util名前空間をグローバルに展開
