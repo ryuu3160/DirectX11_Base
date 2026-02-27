@@ -764,6 +764,7 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
     , m_NeedsRefresh(false)
     , m_hDirectory(INVALID_HANDLE_VALUE)
     , m_hStopEvent(nullptr)
+    , m_ShowDeleteConfirmation(false)
 {
     m_Name = In_Name.data();
     m_Kind = Kind::__ProjectWindow;
@@ -879,6 +880,56 @@ void ItemProjectWindow::DrawImGui()
         DrawFileGrid();
     }
     ImGui::EndChild();
+
+    // 削除確認ダイアログ
+    if(m_ShowDeleteConfirmation)
+    {
+        ImGui::OpenPopup("Delete Confirmation");
+
+        if(ImGui::BeginPopupModal("Delete Confirmation", &m_ShowDeleteConfirmation, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            std::string targetName = m_DeleteTarget.filename().string();
+            ImGui::Text("Are you sure you want to delete?");
+            ImGui::Separator();
+            ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "%s", targetName.c_str());
+            ImGui::Separator();
+
+            bool isFolder = std::filesystem::is_directory(m_DeleteTarget);
+            if(isFolder)
+            {
+                ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.5f, 1.0f), "This folder and all its contents will be deleted!");
+            }
+
+            ImGui::Spacing();
+
+            if(ImGui::Button("Delete", ImVec2(120, 0)))
+            {
+                DeleteItem(m_DeleteTarget);
+
+                // 削除したフォルダが選択中だった場合、親フォルダに移動
+                if(m_CurrentPath == m_DeleteTarget || IsSubPath(m_CurrentPath, m_DeleteTarget))
+                {
+                    StopWatching();
+                    m_CurrentPath = m_DeleteTarget.parent_path();
+                    RefreshCurrentFolder();
+                    StartWatching();
+                }
+
+                m_ShowDeleteConfirmation = false;
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::SameLine();
+
+            if(ImGui::Button("Cancel", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Escape))
+            {
+                m_ShowDeleteConfirmation = false;
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+    }
 }
 
 void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsRoot)
@@ -935,6 +986,85 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
     {
         m_CurrentPath = In_Path;
         RefreshCurrentFolder();
+    }
+
+	// 右クリックメニュー
+    if(ImGui::BeginPopupContextItem("##TreeFolderContext"))
+    {
+        // 現在のフォルダ名を表示
+        ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "%s", label.c_str());
+        ImGui::Separator();
+
+        // Open
+        if(ImGui::MenuItem("Open"))
+        {
+            StopWatching();
+            m_CurrentPath = In_Path;
+            RefreshCurrentFolder();
+            StartWatching();
+        }
+
+        // Open with Explorer
+        if(ImGui::MenuItem("Open with Explorer"))
+        {
+            OpenInSystemExplorer(In_Path);
+        }
+
+        ImGui::Separator();
+
+        // New Folder
+        if(ImGui::MenuItem("New Folder"))
+        {
+            CreateNewFolderAt(In_Path);
+        }
+
+        ImGui::Separator();
+
+        // Copy Path
+        if(ImGui::MenuItem("Copy Path"))
+        {
+            std::filesystem::path absolutePath = std::filesystem::absolute(In_Path);
+            ImGui::SetClipboardText(absolutePath.string().c_str());
+        }
+
+        // Copy Relative Path
+        if(ImGui::MenuItem("Copy Relative Path"))
+        {
+            std::string relativePath = std::filesystem::relative(In_Path, m_RootPath).string();
+            ImGui::SetClipboardText(relativePath.c_str());
+        }
+
+        // ルートフォルダ以外のみ編集可能
+        if(!In_IsRoot)
+        {
+            ImGui::Separator();
+
+            // Rename
+            if(ImGui::MenuItem("Rename", "F2"))
+            {
+                m_IsRenaming = true;
+                m_RenamingItem = In_Path;
+                strncpy_s(m_RenameBuffer, In_Path.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+            }
+
+            // Delete
+            if(ImGui::MenuItem("Delete", "Del"))
+            {
+                // 削除確認ダイアログを表示
+                m_ShowDeleteConfirmation = true;
+                m_DeleteTarget = In_Path;
+            }
+        }
+
+        ImGui::Separator();
+
+        // Refresh
+        if(ImGui::MenuItem("Refresh", "F5"))
+        {
+            RefreshCurrentFolder();
+        }
+
+        ImGui::EndPopup();
     }
 
     // 子フォルダを描画
@@ -1154,7 +1284,9 @@ void ItemProjectWindow::DrawFileGrid()
             }
             if(ImGui::MenuItem("Delete","Del"))
             {
-                DeleteItem(item);
+                // 削除確認ダイアログを表示
+                m_ShowDeleteConfirmation = true;
+                m_DeleteTarget = item;
             }
             ImGui::EndPopup();
         }
@@ -1187,7 +1319,9 @@ void ItemProjectWindow::DrawFileGrid()
         // Delete: 削除
         if(!m_SelectedItem.empty() && ImGui::IsKeyPressed(ImGuiKey_Delete))
         {
-            DeleteItem(m_SelectedItem);
+            // 削除確認ダイアログを表示
+            m_ShowDeleteConfirmation = true;
+            m_DeleteTarget = m_SelectedItem;
         }
     }
 
@@ -1374,7 +1508,7 @@ void ItemProjectWindow::CreateNewFolder()
     while(std::filesystem::exists(newFolderPath))
     {
         newFolderPath = m_CurrentPath / (newFolderName + std::to_string(count));
-        count++;
+        ++count;
     }
 
     try
@@ -1382,6 +1516,39 @@ void ItemProjectWindow::CreateNewFolder()
         std::filesystem::create_directory(newFolderPath);
         RefreshCurrentFolder();
 
+        m_SelectedItem = newFolderPath;
+        m_IsRenaming = true;
+        m_RenamingItem = newFolderPath;
+        strncpy_s(m_RenameBuffer, newFolderPath.filename().string().c_str(), sizeof(m_RenameBuffer) - 1);
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to create folder: {}", e.what());
+    }
+}
+
+void ItemProjectWindow::CreateNewFolderAt(_In_ const std::filesystem::path &In_ParentPath)
+{
+    std::string newFolderName = "NewFolder";
+    std::filesystem::path newFolderPath = In_ParentPath / newFolderName;
+
+    int count = 1;
+    while(std::filesystem::exists(newFolderPath))
+    {
+        newFolderPath = In_ParentPath / (newFolderName + std::to_string(count));
+        count++;
+    }
+
+    try
+    {
+        std::filesystem::create_directory(newFolderPath);
+
+        DebugManager::GetInstance().DebugLog("Created new folder: {}", newFolderPath.string());
+
+        // 現在のフォルダをリフレッシュ（作成したフォルダが表示されるように）
+        RefreshCurrentFolder();
+
+        // 作成したフォルダを選択してリネーム状態にする
         m_SelectedItem = newFolderPath;
         m_IsRenaming = true;
         m_RenamingItem = newFolderPath;
@@ -1443,6 +1610,29 @@ void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath,
     }
 }
 
+bool ItemProjectWindow::IsSubPath(_In_ const std::filesystem::path &In_Path, _In_ const std::filesystem::path &In_BasePath)
+{
+    std::filesystem::path relativePath;
+
+    try
+    {
+        relativePath = std::filesystem::relative(In_Path, In_BasePath);
+    }
+    catch(...)
+    {
+        return false;
+    }
+
+    // 相対パスが ".." で始まる場合はサブパスではない
+    auto it = relativePath.begin();
+    if(it != relativePath.end() && *it == "..")
+    {
+        return false;
+    }
+
+    return true;
+}
+
 void ItemProjectWindow::WatchFileSystemChanges()
 {
     const DWORD bufferSize = 4096;
@@ -1462,22 +1652,30 @@ void ItemProjectWindow::WatchFileSystemChanges()
             continue;  // 新しいパスで監視を開始
         }
 
-        // ディレクトリハンドルを開く(非同期モード)
-        m_hDirectory = CreateFileW(
-            watchPath.wstring().c_str(),
-            FILE_LIST_DIRECTORY,
-            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-            NULL,
-            OPEN_EXISTING,
-            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,  // 非同期フラグ
-            NULL
-        );
+		HANDLE hDirectory = INVALID_HANDLE_VALUE;
 
-        if(m_hDirectory == INVALID_HANDLE_VALUE)
+		// ディレクトリハンドルを開く
         {
-            DebugManager::GetInstance().DebugLogError("Failed to open directory for watching: {}", watchPath.string());
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-            continue;
+            std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
+            // ディレクトリハンドルを開く(非同期モード)
+            hDirectory = CreateFileW(
+                watchPath.wstring().c_str(),
+                FILE_LIST_DIRECTORY,
+                FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                NULL,
+                OPEN_EXISTING,
+                FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,  // 非同期フラグ
+                NULL
+            );
+
+            if(hDirectory == INVALID_HANDLE_VALUE)
+            {
+                DebugManager::GetInstance().DebugLogError("Failed to open directory for watching: {}", watchPath.string());
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+                continue;
+            }
+
+            m_hDirectory = hDirectory;
         }
 
         // OVERLAPPEDをリセット
@@ -1487,7 +1685,7 @@ void ItemProjectWindow::WatchFileSystemChanges()
 
         // 非同期で変更を監視
         BOOL result = ReadDirectoryChangesW(
-            m_hDirectory,
+            hDirectory,
             buffer,
             bufferSize,
             TRUE,
@@ -1502,8 +1700,9 @@ void ItemProjectWindow::WatchFileSystemChanges()
 
         if(!result && GetLastError() != ERROR_IO_PENDING)
         {
+            std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
             DebugManager::GetInstance().DebugLogError("ReadDirectoryChangesW failed: {}", GetLastError());
-            CloseHandle(m_hDirectory);
+            CloseHandle(hDirectory);
             m_hDirectory = INVALID_HANDLE_VALUE;
             std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
@@ -1516,8 +1715,13 @@ void ItemProjectWindow::WatchFileSystemChanges()
         if(waitResult == WAIT_OBJECT_0)
         {
             // 停止イベントがシグナルされた->終了
-            CancelIo(m_hDirectory);
-            CloseHandle(m_hDirectory);
+            CancelIoEx(hDirectory, &m_Overlapped);
+            // I/Oのキャンセルを待つ
+            DWORD bytesTransferred = 0;
+            GetOverlappedResult(hDirectory, &m_Overlapped, &bytesTransferred, TRUE);
+
+            std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
+            CloseHandle(hDirectory);
             m_hDirectory = INVALID_HANDLE_VALUE;
             break;
         }
@@ -1525,7 +1729,7 @@ void ItemProjectWindow::WatchFileSystemChanges()
         {
             // 変更イベントがシグナルされた->変更を処理
             DWORD bytesTransferred = 0;
-            if(GetOverlappedResult(m_hDirectory, &m_Overlapped, &bytesTransferred, FALSE))
+            if(GetOverlappedResult(hDirectory, &m_Overlapped, &bytesTransferred, FALSE))
             {
                 if(bytesTransferred > 0)
                 {
@@ -1549,20 +1753,20 @@ void ItemProjectWindow::WatchFileSystemChanges()
         }
 
         // ハンドルを閉じる
-        CloseHandle(m_hDirectory);
-        m_hDirectory = INVALID_HANDLE_VALUE;
+        {
+            std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
+            CloseHandle(m_hDirectory);
+            m_hDirectory = INVALID_HANDLE_VALUE;
+        }
 
         // パスが変更されたかチェック
         if(watchPath != m_CurrentPath)
-        {
             continue;
-        }
 
         // 監視継続フラグをチェック
         if(!m_IsWatching)
             break;
     }
-    DebugManager::GetInstance().DebugLog("File watcher thread exited");
 }
 
 void ItemProjectWindow::StartWatching()
@@ -1587,14 +1791,16 @@ void ItemProjectWindow::StopWatching()
         SetEvent(m_hStopEvent);
     }
 
-	// ディレクトリハンドルが開いている場合はキャンセルして閉じる
-    if(m_hDirectory != INVALID_HANDLE_VALUE)
+    // ハンドルをキャンセル
     {
-        CancelIo(m_hDirectory);  // 非同期I/Oをキャンセル
-        CloseHandle(m_hDirectory);
-        m_hDirectory = INVALID_HANDLE_VALUE;
+        std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
+        if(m_hDirectory != INVALID_HANDLE_VALUE)
+        {
+            CancelIoEx(m_hDirectory, &m_Overlapped);
+        }
     }
 
+    // スレッドの終了を待つ
     if(m_WatcherThread.joinable())
     {
         m_WatcherThread.join();

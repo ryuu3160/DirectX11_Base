@@ -291,7 +291,7 @@ DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName,
 void DebugManager::DebugLog(_In_ std::string_view In_Msg)
 {
 	auto window = GetDebugWindow("System", "Log");
-	if(window->NotDummy())
+	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
 		if(item.GetKind() == DebugItem::Kind::Console)
@@ -309,7 +309,7 @@ void DebugManager::DebugLog(_In_ std::string_view In_Msg)
 void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
 {
 	auto window = GetDebugWindow("System", "Log");
-	if(window->NotDummy())
+	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
 		if(item.GetKind() == DebugItem::Kind::Console)
@@ -327,7 +327,7 @@ void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
 void DebugManager::DebugLogError(_In_ std::string_view In_Msg)
 {
 	auto window = GetDebugWindow("System", "Log");
-	if(window->NotDummy())
+	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
 		if(item.GetKind() == DebugItem::Kind::Console)

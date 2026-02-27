@@ -272,6 +272,11 @@ private:
     void CreateNewFolder();
 
     /// <summary>
+    /// 指定したパスに新規フォルダを作成
+    /// </summary>
+    void CreateNewFolderAt(_In_ const std::filesystem::path &In_ParentPath);
+
+    /// <summary>
     /// ファイル/フォルダ削除
     /// </summary>
     void DeleteItem(_In_ const std::filesystem::path &In_Path);
@@ -280,6 +285,11 @@ private:
     /// リネーム処理
     /// </summary>
     void RenameItem(_In_ const std::filesystem::path &In_OldPath, _In_ const std::string &In_NewName);
+
+    /// <summary>
+    /// path が basePath のサブパスかどうかを判定
+    /// </summary>
+    bool IsSubPath(_In_ const std::filesystem::path &In_Path, _In_ const std::filesystem::path &In_BasePath);
 
     /// <summary>
     /// ファイルシステムの変更を監視するスレッド
@@ -304,6 +314,7 @@ private:
     HANDLE m_hDirectory;
     OVERLAPPED m_Overlapped;  // 非同期I/O用
     HANDLE m_hStopEvent;      // 停止イベント
+    std::mutex m_DirectoryHandleMutex;
 
     std::filesystem::path m_RootPath;
     std::filesystem::path m_CurrentPath;
@@ -316,7 +327,9 @@ private:
     char m_RenameBuffer[256];
 
     bool m_IsRenaming;
+    bool m_ShowDeleteConfirmation;
     std::filesystem::path m_RenamingItem;
+    std::filesystem::path m_DeleteTarget;
 
     std::function<void(const std::string &)> m_FileSelectedCallback;
 
