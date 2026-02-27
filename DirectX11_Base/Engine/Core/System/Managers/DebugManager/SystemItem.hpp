@@ -302,6 +302,8 @@ private:
     std::atomic<bool> m_IsWatching;
     std::atomic<bool> m_NeedsRefresh;
     HANDLE m_hDirectory;
+    OVERLAPPED m_Overlapped;  // 非同期I/O用
+    HANDLE m_hStopEvent;      // 停止イベント
 
     std::filesystem::path m_RootPath;
     std::filesystem::path m_CurrentPath;

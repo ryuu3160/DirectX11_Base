@@ -763,11 +763,18 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
     , m_IsWatching(false)
     , m_NeedsRefresh(false)
     , m_hDirectory(INVALID_HANDLE_VALUE)
+    , m_hStopEvent(nullptr)
 {
     m_Name = In_Name.data();
     m_Kind = Kind::__ProjectWindow;
     m_SearchBuffer[0] = '\0';
     m_RenameBuffer[0] = '\0';
+
+    // 停止イベント
+    m_hStopEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
+
+    ZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
+    m_Overlapped.hEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
 
     // ルートパスが存在しない場合は作成
     if(!std::filesystem::exists(m_RootPath))
@@ -785,6 +792,19 @@ ItemProjectWindow::~ItemProjectWindow()
 	// 監視を停止
     StopWatching();
 
+    // イベントハンドルを閉じる
+    if(m_Overlapped.hEvent != nullptr)
+    {
+        CloseHandle(m_Overlapped.hEvent);
+        m_Overlapped.hEvent = nullptr;
+    }
+
+    if(m_hStopEvent != nullptr)
+    {
+        CloseHandle(m_hStopEvent);
+        m_hStopEvent = nullptr;
+    }
+
     // テクスチャの解放はテクスチャマネージャーに任せる
     m_IconMap.clear();
 	m_DefaultFileIcon = nullptr;
@@ -798,19 +818,12 @@ void ItemProjectWindow::DrawImGui()
 
     if(m_NeedsRefresh)
     {
-        // 連続して変更があっても一度だけリフレッシュするように少し待つ
-        static auto lastRefreshTime = std::chrono::steady_clock::now();
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastRefreshTime).count();
+        m_NeedsRefresh = false;
+        RefreshCurrentFolder();
 
-        if(elapsed > 500)  // 500ms のデバウンス
-        {
-            RefreshCurrentFolder();
-            m_NeedsRefresh = false;
-            lastRefreshTime = now;
-
-            DebugManager::GetInstance().DebugLog("Project window refreshed due to file system changes");
-        }
+#ifdef _DEBUG
+        DebugManager::GetInstance().DebugLog("Project window refreshed");
+#endif
     }
 
     // ツールバー
@@ -897,10 +910,10 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
     if(!hasSubFolders)
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
-    std::string label = In_IsRoot ? "Assets" : In_Path.filename().string();
+    std::string label = In_IsRoot ? "Assets" : Util::ShiftJISToUTF8(In_Path.filename().string());
 
     // TreeNodeEx をラベルなしで描画
-    bool nodeOpen = ImGui::TreeNodeEx(In_Path.string().c_str(), flags, "");
+    bool nodeOpen = ImGui::TreeNodeEx(Util::ShiftJISToUTF8(In_Path.string()).c_str(), flags, "");
 
     // 同じ行にアイコンを配置
     ImGui::SameLine();
@@ -1070,7 +1083,7 @@ void ItemProjectWindow::DrawFileGrid()
         }
 
         // ファイル名（アイコンの下）
-        std::string filename = item.filename().string();
+        std::string filename = Util::ShiftJISToUTF8(item.filename().string());
 
         // 長いファイル名は省略
         ImVec2 textSize = ImGui::CalcTextSize(filename.c_str());
@@ -1302,7 +1315,6 @@ void ItemProjectWindow::RefreshCurrentFolder()
             }
         }
 
-        // ソート
         std::sort(m_CurrentFolders.begin(), m_CurrentFolders.end(),
             [](const auto &a, const auto &b)
             {
@@ -1318,15 +1330,6 @@ void ItemProjectWindow::RefreshCurrentFolder()
     catch(const std::exception &e)
     {
         DebugManager::GetInstance().DebugLogError("Failed to refresh folder: {}", e.what());
-    }
-
-	// 監視しているパスが変わっていれば監視を更新
-    static std::filesystem::path lastWatchedPath;
-    if(lastWatchedPath != m_CurrentPath)
-    {
-        lastWatchedPath = m_CurrentPath;
-        StopWatching();
-        StartWatching();
     }
 }
 
@@ -1442,19 +1445,31 @@ void ItemProjectWindow::RenameItem(_In_ const std::filesystem::path &In_OldPath,
 
 void ItemProjectWindow::WatchFileSystemChanges()
 {
+    const DWORD bufferSize = 4096;
+    BYTE buffer[bufferSize];
+
     while(m_IsWatching)
     {
-        // 現在監視中のパスを取得
         std::filesystem::path watchPath = m_CurrentPath;
 
-        // ディレクトリハンドルを開く
+        // パスが変わったらすぐに新しい監視を開始
+        if(m_hDirectory != INVALID_HANDLE_VALUE && watchPath != m_CurrentPath)
+        {
+            DebugManager::GetInstance().DebugLog("Path changed during wait, canceling current watch");
+            CancelIo(m_hDirectory);
+            CloseHandle(m_hDirectory);
+            m_hDirectory = INVALID_HANDLE_VALUE;
+            continue;  // 新しいパスで監視を開始
+        }
+
+        // ディレクトリハンドルを開く(非同期モード)
         m_hDirectory = CreateFileW(
             watchPath.wstring().c_str(),
             FILE_LIST_DIRECTORY,
             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
             NULL,
             OPEN_EXISTING,
-            FILE_FLAG_BACKUP_SEMANTICS,
+            FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,  // 非同期フラグ
             NULL
         );
 
@@ -1465,97 +1480,89 @@ void ItemProjectWindow::WatchFileSystemChanges()
             continue;
         }
 
-        // バッファを準備
-        const DWORD bufferSize = 4096;
-        BYTE buffer[bufferSize];
+        // OVERLAPPEDをリセット
+        ResetEvent(m_Overlapped.hEvent);
+
         DWORD bytesReturned = 0;
 
-        // 変更を監視
+        // 非同期で変更を監視
         BOOL result = ReadDirectoryChangesW(
             m_hDirectory,
             buffer,
             bufferSize,
-            TRUE,  // サブディレクトリも監視
+            TRUE,
             FILE_NOTIFY_CHANGE_FILE_NAME |
             FILE_NOTIFY_CHANGE_DIR_NAME |
             FILE_NOTIFY_CHANGE_SIZE |
             FILE_NOTIFY_CHANGE_LAST_WRITE,
             &bytesReturned,
-            NULL,
+            &m_Overlapped,  // OVERLAPPEDを渡す
             NULL
         );
 
-        if(result && bytesReturned > 0)
+        if(!result && GetLastError() != ERROR_IO_PENDING)
         {
-            // 変更を検出
-            FILE_NOTIFY_INFORMATION *info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(buffer);
-
-            do
-            {
-                // ファイル名を取得
-                std::wstring filename(info->FileName, info->FileNameLength / sizeof(WCHAR));
-
-#ifdef _DEBUG
-                std::string action;
-                switch(info->Action)
-                {
-                case FILE_ACTION_ADDED:
-                    action = "Added";
-                    break;
-                case FILE_ACTION_REMOVED:
-                    action = "Removed";
-                    break;
-                case FILE_ACTION_MODIFIED:
-                    action = "Modified";
-                    break;
-                case FILE_ACTION_RENAMED_OLD_NAME:
-                    action = "Renamed (old)";
-                    break;
-                case FILE_ACTION_RENAMED_NEW_NAME:
-                    action = "Renamed (new)";
-                    break;
-                default:
-                    action = "Unknown";
-                    break;
-                }
-
-                // wstringからstringへの変換（Windows API使用）
-                int size_needed = WideCharToMultiByte(CP_UTF8, 0, filename.c_str(), (int)filename.length(), NULL, 0, NULL, NULL);
-                std::string filenameStr(size_needed, 0);
-                WideCharToMultiByte(CP_UTF8, 0, filename.c_str(), (int)filename.length(), &filenameStr[0], size_needed, NULL, NULL);
-                DebugManager::GetInstance().DebugLog("File system change detected: {} - {}", action, filenameStr);
-#endif
-
-                // リフレッシュフラグを立てる
-                m_NeedsRefresh = true;
-
-                // 次の通知へ
-                if(info->NextEntryOffset == 0)
-                    break;
-                info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(
-                    reinterpret_cast<BYTE *>(info) + info->NextEntryOffset
-                    );
-
-            } while(true);
-        }
-
-        // ディレクトリハンドルを閉じる
-        if(m_hDirectory != INVALID_HANDLE_VALUE)
-        {
+            DebugManager::GetInstance().DebugLogError("ReadDirectoryChangesW failed: {}", GetLastError());
             CloseHandle(m_hDirectory);
             m_hDirectory = INVALID_HANDLE_VALUE;
-        }
-
-        // パスが変更されていないか確認
-        if(watchPath != m_CurrentPath)
-        {
-            // パスが変わったので再監視
+            std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
         }
 
+        // イベントを待つ(停止イベントまたは変更イベント)
+        HANDLE waitHandles[2] = { m_hStopEvent, m_Overlapped.hEvent };
+        DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, INFINITE);
+
+        if(waitResult == WAIT_OBJECT_0)
+        {
+            // 停止イベントがシグナルされた->終了
+            CancelIo(m_hDirectory);
+            CloseHandle(m_hDirectory);
+            m_hDirectory = INVALID_HANDLE_VALUE;
+            break;
+        }
+        else if(waitResult == WAIT_OBJECT_0 + 1)
+        {
+            // 変更イベントがシグナルされた->変更を処理
+            DWORD bytesTransferred = 0;
+            if(GetOverlappedResult(m_hDirectory, &m_Overlapped, &bytesTransferred, FALSE))
+            {
+                if(bytesTransferred > 0)
+                {
+                    FILE_NOTIFY_INFORMATION *info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(buffer);
+
+                    do
+                    {
+                        std::wstring filename(info->FileName, info->FileNameLength / sizeof(WCHAR));
+
+                        m_NeedsRefresh = true;
+
+                        if(info->NextEntryOffset == 0)
+                            break;
+                        info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(
+                            reinterpret_cast<BYTE *>(info) + info->NextEntryOffset
+                            );
+
+                    } while(true);
+                }
+            }
+        }
+
+        // ハンドルを閉じる
+        CloseHandle(m_hDirectory);
+        m_hDirectory = INVALID_HANDLE_VALUE;
+
+        // パスが変更されたかチェック
+        if(watchPath != m_CurrentPath)
+        {
+            continue;
+        }
+
+        // 監視継続フラグをチェック
         if(!m_IsWatching)
             break;
     }
+    DebugManager::GetInstance().DebugLog("File watcher thread exited");
 }
 
 void ItemProjectWindow::StartWatching()
@@ -1574,9 +1581,16 @@ void ItemProjectWindow::StopWatching()
 
     m_IsWatching = false;
 
-    // ディレクトリハンドルを閉じてスレッドを終了させる
+	// 監視スレッドに停止を通知
+    if(m_hStopEvent != nullptr)
+    {
+        SetEvent(m_hStopEvent);
+    }
+
+	// ディレクトリハンドルが開いている場合はキャンセルして閉じる
     if(m_hDirectory != INVALID_HANDLE_VALUE)
     {
+        CancelIo(m_hDirectory);  // 非同期I/Oをキャンセル
         CloseHandle(m_hDirectory);
         m_hDirectory = INVALID_HANDLE_VALUE;
     }
