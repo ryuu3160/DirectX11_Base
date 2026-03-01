@@ -839,6 +839,7 @@ void ItemProjectWindow::DrawImGui()
     ImGui::SameLine();
 
     // フィルターボタン
+    bool IsAnyFilterChanged = false;
     if(ImGui::Checkbox("All", &m_ShowAll))
     {
         m_ShowImages = m_ShowAll;
@@ -847,11 +848,22 @@ void ItemProjectWindow::DrawImGui()
         RefreshCurrentFolder();
     }
     ImGui::SameLine();
-    if(ImGui::Checkbox("Images", &m_ShowImages)) RefreshCurrentFolder();
+    if(ImGui::Checkbox("Images", &m_ShowImages))
+        IsAnyFilterChanged = true;
     ImGui::SameLine();
-    if(ImGui::Checkbox("Models", &m_ShowModels)) RefreshCurrentFolder();
+    if(ImGui::Checkbox("Models", &m_ShowModels))
+        IsAnyFilterChanged = true;
     ImGui::SameLine();
-    if(ImGui::Checkbox("Scripts", &m_ShowScripts)) RefreshCurrentFolder();
+    if(ImGui::Checkbox("Scripts", &m_ShowScripts))
+        IsAnyFilterChanged = true;
+
+	// フィルターのいずれかが変更された場合、全体の表示状態を更新してリフレッシュ
+    if(IsAnyFilterChanged)
+    {
+        m_ShowAll = m_ShowImages && m_ShowModels && m_ShowScripts;
+        RefreshCurrentFolder();
+    }
+
     ImGui::SameLine();
 
     // アイコンサイズスライダー
@@ -937,6 +949,8 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
     if(!std::filesystem::exists(In_Path) || !std::filesystem::is_directory(In_Path))
         return;
 
+    ImGui::PushID(In_Path.string().c_str());
+
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
     // 選択中のフォルダならハイライト
@@ -964,7 +978,7 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
     std::string label = In_IsRoot ? "Assets" : Util::ShiftJISToUTF8(In_Path.filename().string());
 
     // TreeNodeEx をラベルなしで描画
-    bool nodeOpen = ImGui::TreeNodeEx(Util::ShiftJISToUTF8(In_Path.string()).c_str(), flags, "");
+    bool nodeOpen = ImGui::TreeNodeEx("##node", flags, "");
 
     // 同じ行にアイコンを配置
     ImGui::SameLine();
@@ -989,7 +1003,7 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
     }
 
 	// 右クリックメニュー
-    if(ImGui::BeginPopupContextItem("##TreeFolderContext"))
+    if(ImGui::BeginPopupContextItem("##context"))
     {
         // 現在のフォルダ名を表示
         ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "%s", label.c_str());
@@ -1056,14 +1070,6 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
             }
         }
 
-        ImGui::Separator();
-
-        // Refresh
-        if(ImGui::MenuItem("Refresh", "F5"))
-        {
-            RefreshCurrentFolder();
-        }
-
         ImGui::EndPopup();
     }
 
@@ -1095,6 +1101,8 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
 
         ImGui::TreePop();
     }
+
+    ImGui::PopID();
 }
 
 void ItemProjectWindow::DrawBreadcrumb()
