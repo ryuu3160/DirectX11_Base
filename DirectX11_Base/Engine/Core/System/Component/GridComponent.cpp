@@ -78,6 +78,14 @@ void GridComponent::Update(_In_ float In_DeltaTime) noexcept
 	}
 }
 
+void GridComponent::SaveLoad(_In_ DataAccessor *In_Data)
+{
+	In_Data->AccessValue<float>("GridSize", &m_GridSize);
+	In_Data->AccessValue<float>("GridMargin", &m_GridMargin);
+	In_Data->AccessValue<DirectX::XMFLOAT4>("GridColor", &m_GridColor);
+	In_Data->AccessValue<bool>("GridAxis", &m_GridAxis);
+}
+
 void GridComponent::CreateGrid() noexcept
 {
 	// ƒOƒŠƒbƒh‚Ìì¬

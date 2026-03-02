@@ -32,6 +32,8 @@ public:
 
 	void Update(_In_ float In_DeltaTime) noexcept override final;
 
+	void SaveLoad(_In_ DataAccessor *In_Data) override final;
+
 private:
 
 	void CreateGrid() noexcept;
