@@ -1,10 +1,10 @@
 Window,System/Log,1
 Window,System/DebugMenu,1
-Color,System/DebugMenu/ScreenColor,0.0000000000/0.0000000000/0.0000000000/0.0000000000
-Float,System/DebugMenu/Grid##GridObject/GridSize##GridObject,0
-Float,System/DebugMenu/Grid##GridObject/GridMargin##GridObject,0
-Color,System/DebugMenu/Grid##GridObject/GridColor##GridObject,0.0000000000/0.0000000000/0.0000000000/0.0000000000
-Bool,System/DebugMenu/Grid##GridObject/GridAxis##GridObject,0
+Color,System/DebugMenu/ScreenColor,0.0470588244/0.7647058964/0.7921568751/1.0000000000
+Float,System/DebugMenu/Grid##GridObject/GridSize##GridObject,20
+Float,System/DebugMenu/Grid##GridObject/GridMargin##GridObject,1
+Color,System/DebugMenu/Grid##GridObject/GridColor##GridObject,0.8725868464/0.8725868464/0.8725868464/1.0000000000
+Bool,System/DebugMenu/Grid##GridObject/GridAxis##GridObject,1
 Window,System/Hierarchy,1
 Window,System/Inspector,1
 Window,System/Project,1

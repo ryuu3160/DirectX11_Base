@@ -953,6 +953,10 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
 
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
+	// ルートフォルダのデフォルトは開いている状態
+    if(In_IsRoot)
+        flags |= ImGuiTreeNodeFlags_DefaultOpen;
+
     // 選択中のフォルダならハイライト
     if(m_CurrentPath == In_Path)
         flags |= ImGuiTreeNodeFlags_Selected;
