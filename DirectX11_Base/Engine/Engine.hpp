@@ -30,12 +30,6 @@ namespace RyuuEngine
 #include "Core/DirectX11/System/DX11_Math.hpp"           // DirectX Math ヘルパー
 
 // ==============================
-// Data Format
-// ==============================
-#include "Core/System/CPON/cpon.hpp"                     // CPON(カスタムデータ形式)
-#include "Core/System/CPON/cpon_object.hpp"
-
-// ==============================
 // ryuu_lib(ユーティリティライブラリ)
 // ==============================
 #include "ryuu_lib/Singleton/Singleton.hpp"

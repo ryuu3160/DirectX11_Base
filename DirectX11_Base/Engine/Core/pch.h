@@ -108,3 +108,6 @@ using Microsoft::WRL::ComPtr;
 
 // NlohmannJsonも変更頻度が低い
 #include "ThirdParty/NlohmannJson/nlohmann/json.hpp"
+
+// CPONも変更頻度が低い
+#include "ThirdParty/CPON/cpon.hpp"

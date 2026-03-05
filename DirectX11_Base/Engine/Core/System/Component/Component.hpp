@@ -10,7 +10,6 @@
 //	include
 // ==============================
 #include "Core/System/Object/Object.hpp"
-#include "Core/System/CPON/cpon.hpp"
 
 // ==============================
 // ëOï˚êÈåæ
@@ -96,7 +95,7 @@ public:
 			if (m_IsWrite)
 			{
 				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z };
-				(*m_Data)[0]->CreateArray(In_Key, vec);
+				(*m_Data)[0]->SetArray(In_Key, vec);
 			}
 			else
 			{
@@ -125,7 +124,7 @@ public:
 			if(m_IsWrite)
 			{
 				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z, Inout_Value->w };
-				(*m_Data)[0]->CreateArray(In_Key, vec);
+				(*m_Data)[0]->SetArray(In_Key, vec);
 			}
 			else
 			{

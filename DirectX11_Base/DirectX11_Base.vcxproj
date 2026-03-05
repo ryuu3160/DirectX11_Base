@@ -231,8 +231,6 @@
     <ClCompile Include="Engine\Core\System\Component\MovementComponent.cpp" />
     <ClCompile Include="Engine\Core\System\Component\PlayerController.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Transform.cpp" />
-    <ClCompile Include="Engine\Core\System\CPON\cpon.cpp" />
-    <ClCompile Include="Engine\Core\System\CPON\cpon_object.cpp" />
     <ClCompile Include="Engine\Core\System\Generated\ComponentRegistry_Generated.cpp" />
     <ClCompile Include="Engine\Core\System\Input\Input.cpp" />
     <ClCompile Include="Engine\Core\System\Input\InputSystem.cpp" />
@@ -280,6 +278,8 @@
     <ClCompile Include="Engine\ryuu_lib\RandomModule\Random.cpp" />
     <ClCompile Include="Engine\ryuu_lib\Singleton\SingletonController.cpp" />
     <ClCompile Include="Engine\ryuu_lib\WindowGenerator\Window.cpp" />
+    <ClCompile Include="Engine\ThirdParty\CPON\cpon.cpp" />
+    <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp" />
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui.cpp" />
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_draw.cpp" />
@@ -341,8 +341,6 @@
     <ClInclude Include="Engine\Core\System\Component\MovementComponent.hpp" />
     <ClInclude Include="Engine\Core\System\Component\PlayerController.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Transform.hpp" />
-    <ClInclude Include="Engine\Core\System\CPON\cpon.hpp" />
-    <ClInclude Include="Engine\Core\System\CPON\cpon_object.hpp" />
     <ClInclude Include="Engine\Core\System\Input\Input.hpp" />
     <ClInclude Include="Engine\Core\System\Input\InputSystem.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\CameraManager.hpp" />
@@ -400,6 +398,8 @@
     <ClInclude Include="Engine\ryuu_lib\Singleton\Singleton.hpp" />
     <ClInclude Include="Engine\ryuu_lib\Singleton\SingletonController.hpp" />
     <ClInclude Include="Engine\ryuu_lib\WindowGenerator\Window.hpp" />
+    <ClInclude Include="Engine\ThirdParty\CPON\cpon.hpp" />
+    <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp" />
     <ClInclude Include="Engine\ThirdParty\ImGui\imconfig.h" />
     <ClInclude Include="Engine\ThirdParty\ImGui\imgui.h" />
     <ClInclude Include="Engine\ThirdParty\ImGui\imgui_impl_dx11.h" />

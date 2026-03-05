@@ -60,9 +60,6 @@
     <Filter Include="Engine\Core\System\Component">
       <UniqueIdentifier>{174fbf91-7a33-47a4-bfc7-6e812a88b760}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Core\System\CPON">
-      <UniqueIdentifier>{82ff5062-fdd0-4933-ad8f-6099700a241d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Input">
       <UniqueIdentifier>{b4fd3f7d-41c3-42ed-b550-d473f2dfec9c}</UniqueIdentifier>
     </Filter>
@@ -143,6 +140,9 @@
     </Filter>
     <Filter Include="Engine\Core\System\Generated">
       <UniqueIdentifier>{b36b91f6-4cfc-4ce5-ad4d-d262cd32b53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ThirdParty\CPON">
+      <UniqueIdentifier>{956271ba-cf0c-4556-9126-9b3c6abeb1bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -265,12 +265,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\Transform.cpp">
       <Filter>Engine\Core\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\System\CPON\cpon.cpp">
-      <Filter>Engine\Core\System\CPON</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\System\CPON\cpon_object.cpp">
-      <Filter>Engine\Core\System\CPON</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Input\Input.cpp">
       <Filter>Engine\Core\System\Input</Filter>
@@ -428,6 +422,12 @@
     <ClCompile Include="Engine\Core\System\Component\GridComponent.cpp">
       <Filter>Engine\Core\System\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\CPON\cpon.cpp">
+      <Filter>Engine\ThirdParty\CPON</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp">
+      <Filter>Engine\ThirdParty\CPON</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
@@ -555,12 +555,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\Transform.hpp">
       <Filter>Engine\Core\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\System\CPON\cpon.hpp">
-      <Filter>Engine\Core\System\CPON</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\System\CPON\cpon_object.hpp">
-      <Filter>Engine\Core\System\CPON</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Input\Input.hpp">
       <Filter>Engine\Core\System\Input</Filter>
@@ -732,6 +726,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\GridComponent.hpp">
       <Filter>Engine\Core\System\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\CPON\cpon.hpp">
+      <Filter>Engine\ThirdParty\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp">
+      <Filter>Engine\ThirdParty\CPON</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
