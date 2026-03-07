@@ -12,6 +12,7 @@
 #include "Engine.hpp"
 #include "Core/System/Component/ComponentRegistry.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
+#include "Core/System/Utility/CustomWindowProc.hpp"
 
 // ==============================
 //  プロトタイプ宣言
@@ -114,6 +115,7 @@ HRESULT Main::Init()
 	// ImGui専用のウィンドウプロシージャを登録
 	Instance.AddCustomProc(ImGui_ImplWin32_WndProcHandler);
 #endif
+	Instance.AddCustomProc(EngineCustomWindowProc::DisableSingleAltKey);
 
 	return hr;
 }

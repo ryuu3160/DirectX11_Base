@@ -262,6 +262,10 @@
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerLoader.cpp" />
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.cpp" />
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.cpp" />
+    <ClCompile Include="Engine\Core\System\Utility\CustomWindowProc.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
       <SubType>
       </SubType>
@@ -372,6 +376,10 @@
     <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerSceneSelecter.hpp" />
     <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManagerWindow.hpp" />
     <ClInclude Include="Engine\Core\System\Utility\Concept.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\CustomWindowProc.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
       <SubType>
       </SubType>
