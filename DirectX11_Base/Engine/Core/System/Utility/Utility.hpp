@@ -189,14 +189,24 @@ namespace Util
     /// <summary>
     /// システムのエクスプローラーで指定されたパスを開きます
     /// </summary>
-    /// <param name="In_Path">開くファイルまたはフォルダーのパス</param>
+    /// <param name="[In_Path]">開くファイルまたはフォルダーのパス</param>
     void OpenInSystemExplorer(const std::filesystem::path &In_Path);
 
     /// <summary>
     /// システムエクスプローラーで指定されたパスを表示します
     /// </summary>
-    /// <param name="In_Path">システムエクスプローラーで表示するパス</param>
+    /// <param name="[In_Path]">システムエクスプローラーで表示するパス</param>
     void ShowInSystemExplorer(const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// 指定されたファイルパスをデフォルトのアプリケーションで開きます
+    /// </summary>
+    /// <param name="[In_FilePath]">開くファイルのパス</param>
+    inline void OpenWithDefaultApp(_In_ std::string_view In_FilePath)
+    {
+        std::wstring wpath = std::filesystem::path(In_FilePath).wstring();
+        ShellExecuteW(NULL, L"open", wpath.c_str(), NULL, NULL, SW_SHOW);
+    }
 }
 
 using namespace Util; // Util名前空間をグローバルに展開
