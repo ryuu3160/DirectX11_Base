@@ -252,6 +252,32 @@ private:
     void DrawBreadcrumb();
 
     /// <summary>
+    /// Createメニューを描画
+    /// </summary>
+    void DrawCreateMenu(_In_ const std::filesystem::path &In_Path = "");
+
+	/// <summary>
+	/// 指定されたパスのアイテムを開きます
+	/// </summary>
+    /// <param name="[In_Path]">開くアイテムのパス</param>
+	void OpenItem(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsFolder);
+
+    /// <summary>
+    /// C++Script を作成
+    /// </summary>
+    void CreateCppScript(_In_ std::string_view In_ScriptName);
+
+	/// <summary>
+	/// エディターでファイルを開きます
+	/// </summary>
+	void OpenFileInEditor(_In_ const std::filesystem::path &In_Path);
+
+    /// <summary>
+    /// テンプレートからファイルを生成
+    /// </summary>
+    bool GenerateFromTemplate(_In_ const std::filesystem::path &In_TemplatePath, _In_ const std::filesystem::path &In_OutputPath, _In_ const std::map<std::string, std::string> &In_Replacements);
+
+    /// <summary>
     /// ファイルアイコン（テクスチャ）を取得
     /// </summary>
     std::shared_ptr<Texture> GetFileIconTexture(_In_ const std::filesystem::path &In_Path);
@@ -309,28 +335,34 @@ private:
 private:
     // ファイル監視関連
     std::thread m_WatcherThread;
-    std::atomic<bool> m_IsWatching;
-    std::atomic<bool> m_NeedsRefresh;
     HANDLE m_hDirectory;
     OVERLAPPED m_Overlapped;  // 非同期I/O用
     HANDLE m_hStopEvent;      // 停止イベント
     std::mutex m_DirectoryHandleMutex;
 
+	// パス関連
     std::filesystem::path m_RootPath;
     std::filesystem::path m_CurrentPath;
     std::filesystem::path m_SelectedItem;
 
+    // リネームと削除の対象
+    std::filesystem::path m_RenamingItem;
+    std::filesystem::path m_DeleteTarget;
+    // スクリプトを作成するパス
+    std::filesystem::path m_ScriptOutputPath;
+
+	// 現在のフォルダの内容
     std::vector<std::filesystem::path> m_CurrentFiles;
     std::vector<std::filesystem::path> m_CurrentFolders;
 
+	// フィルタリング用バッファ
     char m_SearchBuffer[256];
+	// リネーム用バッファ
     char m_RenameBuffer[256];
+	// スクリプト作成用バッファ
+    char m_ScriptNameBuffer[256] = {};
 
-    bool m_IsRenaming;
-    bool m_ShowDeleteConfirmation;
-    std::filesystem::path m_RenamingItem;
-    std::filesystem::path m_DeleteTarget;
-
+	// ファイル選択時のコールバック
     std::function<void(const std::string &)> m_FileSelectedCallback;
 
     // アイコン関連
@@ -339,9 +371,17 @@ private:
     std::shared_ptr<Texture> m_DefaultFileIcon;
     float m_IconSize;
 
+	// 監視状態
+    std::atomic<bool> m_IsWatching;
+    std::atomic<bool> m_NeedsRefresh;
     // フィルター設定
     bool m_ShowImages;
     bool m_ShowModels;
     bool m_ShowScripts;
     bool m_ShowAll;
+	// リネームと削除の確認フラグ
+    bool m_IsRenaming;
+    bool m_ShowDeleteConfirmation;
+	// Createメニュー用
+    bool m_ShowScriptNameInput = false;
 };

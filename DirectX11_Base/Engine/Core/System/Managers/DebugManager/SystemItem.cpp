@@ -15,6 +15,7 @@
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 #include "Engine/Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/System/Utility/VisualStudioHelper.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -770,6 +771,7 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
     m_Kind = Kind::__ProjectWindow;
     m_SearchBuffer[0] = '\0';
     m_RenameBuffer[0] = '\0';
+	m_ScriptNameBuffer[0] = '\0';
 
     // 停止イベント
     m_hStopEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
@@ -942,6 +944,57 @@ void ItemProjectWindow::DrawImGui()
             ImGui::EndPopup();
         }
     }
+
+    // スクリプト名入力ダイアログ
+    if(m_ShowScriptNameInput)
+    {
+        ImGui::OpenPopup("Create C++ Script");
+        m_ShowScriptNameInput = false;
+    }
+
+    // モーダルダイアログ
+    if(ImGui::BeginPopupModal("Create C++ Script", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Enter script name:");
+        ImGui::Spacing();
+
+        // 入力フィールド
+        ImGui::SetNextItemWidth(300.0f);
+        bool enterPressed = ImGui::InputText("##scriptname", m_ScriptNameBuffer, sizeof(m_ScriptNameBuffer),
+            ImGuiInputTextFlags_EnterReturnsTrue);
+
+        ImGui::Spacing();
+
+        // プレビュー
+        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "Will create:");
+        ImGui::Indent();
+        ImGui::Text("%s.hpp", m_ScriptNameBuffer);
+        ImGui::Text("%s.cpp", m_ScriptNameBuffer);
+        ImGui::Unindent();
+
+        ImGui::Spacing();
+        ImGui::Separator();
+        ImGui::Spacing();
+
+        // ボタン
+        if(ImGui::Button("Create", ImVec2(120, 0)) || enterPressed)
+        {
+            if(strlen(m_ScriptNameBuffer) > 0)
+            {
+                CreateCppScript(m_ScriptNameBuffer);
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Cancel", ImVec2(120, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsRoot)
@@ -1013,13 +1066,11 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
         ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "%s", label.c_str());
         ImGui::Separator();
 
-        // Open
-        if(ImGui::MenuItem("Open"))
+        // Createメニュー
+        if(ImGui::BeginMenu("Create"))
         {
-            StopWatching();
-            m_CurrentPath = In_Path;
-            RefreshCurrentFolder();
-            StartWatching();
+            DrawCreateMenu(In_Path);
+            ImGui::EndMenu();
         }
 
         // Open with Explorer
@@ -1028,12 +1079,13 @@ void ItemProjectWindow::DrawFolderTree(_In_ const std::filesystem::path &In_Path
             OpenInSystemExplorer(In_Path);
         }
 
-        ImGui::Separator();
-
-        // New Folder
-        if(ImGui::MenuItem("New Folder"))
+        // Open
+        if(ImGui::MenuItem("Open"))
         {
-            CreateNewFolderAt(In_Path);
+            StopWatching();
+            m_CurrentPath = In_Path;
+            RefreshCurrentFolder();
+            StartWatching();
         }
 
         ImGui::Separator();
@@ -1143,6 +1195,219 @@ void ItemProjectWindow::DrawBreadcrumb()
     }
 }
 
+void ItemProjectWindow::DrawCreateMenu(_In_ const std::filesystem::path &In_Path)
+{
+    // New Folder
+    if(ImGui::MenuItem("New Folder"))
+    {
+        if(In_Path == "")
+            CreateNewFolder();
+        else
+            CreateNewFolderAt(In_Path);
+    }
+
+    ImGui::Separator();
+
+    // C++Script
+    if(ImGui::MenuItem("C++ Script"))
+    {
+        m_ShowScriptNameInput = true;
+        memset(m_ScriptNameBuffer, 0, sizeof(m_ScriptNameBuffer));
+        strcpy_s(m_ScriptNameBuffer, "NewComponent");
+
+        if(In_Path == "")
+            m_ScriptOutputPath = m_CurrentPath;
+        else
+        {
+            m_ScriptOutputPath = In_Path;
+            // 選択されたフォルダを開く
+            m_CurrentPath = In_Path;
+            RefreshCurrentFolder();
+        }
+    }
+}
+
+void ItemProjectWindow::OpenItem(_In_ const std::filesystem::path &In_Path, _In_ bool In_IsFolder)
+{
+    if(In_IsFolder)
+    {
+        m_CurrentPath = In_Path;
+        RefreshCurrentFolder();
+    }
+    else
+    {
+        // ファイルの場合は拡張子に応じて処理
+        std::string ext = In_Path.extension().string();
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+        // C++ファイルはVisual Studioで開く
+        if(ext == ".cpp" || ext == ".hpp" || ext == ".h" || ext == ".c")
+        {
+            OpenFileInEditor(In_Path);
+        }
+        // HLSLファイルもVisual Studioで開く
+        else if(ext == ".hlsl")
+        {
+            OpenFileInEditor(In_Path);
+        }
+        // その他のファイルはコールバックを呼ぶ
+        else if(m_FileSelectedCallback)
+        {
+            m_FileSelectedCallback(In_Path.string());
+        }
+        // コールバックがない場合はデフォルトアプリで開く
+        else
+        {
+            Util::OpenWithDefaultApp(In_Path.string());
+        }
+    }
+}
+
+void ItemProjectWindow::CreateCppScript(_In_ std::string_view In_ScriptName)
+{
+    std::string scriptName(In_ScriptName);
+
+    // ファイル名の検証
+    if(scriptName.empty())
+    {
+        DebugManager::GetInstance().DebugLogError("Script name cannot be empty");
+        return;
+    }
+
+    // 無効な文字をチェック
+    const std::string invalidChars = "\\/:*?\"<>|";
+    if(scriptName.find_first_of(invalidChars) != std::string::npos)
+    {
+        DebugManager::GetInstance().DebugLogError("Script name contains invalid characters");
+        return;
+    }
+
+    // 出力パス
+    std::filesystem::path OutputDir;
+    if(m_ScriptOutputPath != "")
+        OutputDir = m_ScriptOutputPath;
+    else
+        OutputDir = m_CurrentPath;
+
+    std::filesystem::path hppPath = OutputDir / (scriptName + ".hpp");
+    std::filesystem::path cppPath = OutputDir / (scriptName + ".cpp");
+
+    // 既に存在するかチェック
+    if(std::filesystem::exists(hppPath) || std::filesystem::exists(cppPath))
+    {
+        DebugManager::GetInstance().DebugLogError("Script already exists: {}", scriptName);
+        return;
+    }
+
+    // テンプレートパス
+    std::filesystem::path templateHpp = "Engine/Templates/ComponentTemplate.hpp";
+    std::filesystem::path templateCpp = "Engine/Templates/ComponentTemplate.cpp";
+
+    // テンプレートが存在するか確認
+    if(!std::filesystem::exists(templateHpp) || !std::filesystem::exists(templateCpp))
+    {
+        DebugManager::GetInstance().DebugLogError("Template files not found");
+        return;
+    }
+
+    // 置換マップ
+    std::map<std::string, std::string> replacements;
+    replacements["{COMPONENT_NAME}"] = scriptName;
+    replacements["{COMPONENT_DESCRIPTION}"] = scriptName + " component";
+
+    // ファイル生成
+    bool hppSuccess = GenerateFromTemplate(templateHpp, hppPath, replacements);
+    bool cppSuccess = GenerateFromTemplate(templateCpp, cppPath, replacements);
+
+    if(hppSuccess && cppSuccess)
+    {
+        DebugManager::GetInstance().DebugLog("Created C++ Script: {}", scriptName);
+        DebugManager::GetInstance().DebugLog("  - {}", hppPath.string());
+        DebugManager::GetInstance().DebugLog("  - {}", cppPath.string());
+
+        // フォルダをリフレッシュ
+        RefreshCurrentFolder();
+
+        // ファイルを開く
+        OpenFileInEditor(hppPath);
+		OpenFileInEditor(cppPath);
+    }
+    else
+    {
+        DebugManager::GetInstance().DebugLogError("Failed to create script files");
+    }
+}
+
+void ItemProjectWindow::OpenFileInEditor(_In_ const std::filesystem::path &In_Path)
+{
+    std::string ext = In_Path.extension().string();
+    std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+    // C++/HLSLファイルはVisual Studioで開く
+    if(ext == ".cpp" || ext == ".hpp" || ext == ".h" || ext == ".c" || ext == ".hlsl")
+    {
+        // ソリューションパスを取得
+        std::filesystem::path solutionPath = "DirectX11_Base.sln";
+
+        VisualStudioHelper::OpenFileInVisualStudio(In_Path, solutionPath);
+    }
+    // その他のファイルはデフォルトアプリで開く
+    else
+    {
+        Util::OpenWithDefaultApp(In_Path.string());
+    }
+}
+
+bool ItemProjectWindow::GenerateFromTemplate(_In_ const std::filesystem::path &In_TemplatePath, _In_ const std::filesystem::path &In_OutputPath, _In_ const std::map<std::string, std::string> &In_Replacements)
+{
+    try
+    {
+        // テンプレートを読み込み
+        std::ifstream templateFile(In_TemplatePath);
+        if(!templateFile.is_open())
+        {
+            DebugManager::GetInstance().DebugLogError("Failed to open template: {}",
+                In_TemplatePath.string());
+            return false;
+        }
+
+        std::stringstream buffer;
+        buffer << templateFile.rdbuf();
+        std::string content = buffer.str();
+        templateFile.close();
+
+        // 置換処理
+        for(const auto &[key, value] : In_Replacements)
+        {
+            size_t pos = 0;
+            while((pos = content.find(key, pos)) != std::string::npos)
+            {
+                content.replace(pos, key.length(), value);
+                pos += value.length();
+            }
+        }
+
+        // ファイルに書き込み
+        std::ofstream outputFile(In_OutputPath);
+        if(!outputFile.is_open())
+        {
+            DebugManager::GetInstance().DebugLogError("Failed to create file: {}",
+                In_OutputPath.string());
+            return false;
+        }
+
+        outputFile << content;
+        outputFile.close();
+
+        return true;
+    }
+    catch(const std::exception &e)
+    {
+        DebugManager::GetInstance().DebugLogError("Error generating file: {}", e.what());
+        return false;
+    }
+}
+
 void ItemProjectWindow::DrawFileGrid()
 {
     ImGui::BeginChild("##GridContent");
@@ -1212,15 +1477,7 @@ void ItemProjectWindow::DrawFileGrid()
             // ダブルクリック
             if(ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
-                if(IsFolder)
-                {
-                    m_CurrentPath = item;
-                    RefreshCurrentFolder();
-                }
-                else if(m_FileSelectedCallback)
-                {
-                    m_FileSelectedCallback(item.string());
-                }
+                OpenItem(item, IsFolder);
             }
         }
 
@@ -1251,22 +1508,21 @@ void ItemProjectWindow::DrawFileGrid()
         // 右クリックメニュー
         if(ImGui::BeginPopupContextItem("##ItemContext"))
         {
-            if(IsFolder)
+            // Createメニュー
+            if(ImGui::BeginMenu("Create"))
             {
-                if(ImGui::MenuItem("Open"))
-                {
-                    m_CurrentPath = item;
-                    RefreshCurrentFolder();
-                }
-
-                // エクスプローラーで開く
-                if(ImGui::MenuItem("Open with Explorer"))
-                {
-					Util::OpenInSystemExplorer(item.string());
-                }
-
-                ImGui::Separator();
+                if(IsFolder)
+                    DrawCreateMenu(item);
+                else
+                    DrawCreateMenu();
+                ImGui::EndMenu();
             }
+
+            if(ImGui::MenuItem("Open"))
+            {
+                OpenItem(item, IsFolder);
+            }
+
             // エクスプローラーで表示
             if(ImGui::MenuItem("Show in Explorer"))
             {
@@ -1364,17 +1620,14 @@ void ItemProjectWindow::DrawFileGrid()
         ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), "Current: %s", currentFolder.c_str());
         ImGui::Separator();
 
-        if(ImGui::MenuItem("New Folder", "Ctrl+Shift+N"))
+        // Createメニュー
+        if(ImGui::BeginMenu("Create"))
         {
-            CreateNewFolder();
+            DrawCreateMenu();
+            ImGui::EndMenu();
         }
 
         ImGui::Separator();
-
-        if(ImGui::MenuItem("Refresh", "F5"))
-        {
-            RefreshCurrentFolder();
-        }
 
         if(ImGui::MenuItem("Open in Explorer"))
         {
@@ -1557,7 +1810,10 @@ void ItemProjectWindow::CreateNewFolderAt(_In_ const std::filesystem::path &In_P
 
         DebugManager::GetInstance().DebugLog("Created new folder: {}", newFolderPath.string());
 
-        // 現在のフォルダをリフレッシュ（作成したフォルダが表示されるように）
+        // 親フォルダを開いた状態にする
+		m_CurrentPath = In_ParentPath;
+
+        // 現在のフォルダをリフレッシュ
         RefreshCurrentFolder();
 
         // 作成したフォルダを選択してリネーム状態にする
