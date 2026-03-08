@@ -428,6 +428,10 @@
     <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp">
       <Filter>Engine\ThirdParty\CPON</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\CustomWindowProc.cpp" />
+    <ClCompile Include="Engine\Core\System\Utility\VisualStudioHelper.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
@@ -732,6 +736,10 @@
     </ClInclude>
     <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp">
       <Filter>Engine\ThirdParty\CPON</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\CustomWindowProc.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\VisualStudioHelper.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -271,6 +271,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\Utility.cpp" />
+    <ClCompile Include="Engine\Core\System\Utility\VisualStudioHelper.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\EntryPoint\EntryPoint.cpp" />
     <ClCompile Include="Engine\EntryPoint\Main.cpp" />
     <ClCompile Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
@@ -385,6 +389,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\Utility.hpp" />
+    <ClInclude Include="Engine\Core\System\Utility\VisualStudioHelper.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\DebugEditor.hpp">
       <SubType>
       </SubType>
