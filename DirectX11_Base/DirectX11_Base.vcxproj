@@ -270,6 +270,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\ProjectFileManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\Utility.cpp" />
     <ClCompile Include="Engine\Core\System\Utility\VisualStudioHelper.cpp">
       <SubType>
@@ -385,6 +389,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\ProjectFileManager.hpp">
       <SubType>
       </SubType>
     </ClInclude>

@@ -16,6 +16,7 @@
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 #include "Engine/Core/DirectX11/System/DX11_Math.hpp"
 #include "Core/System/Utility/VisualStudioHelper.hpp"
+#include "Core/System/Utility/ProjectFileManager.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -823,10 +824,6 @@ void ItemProjectWindow::DrawImGui()
     {
         m_NeedsRefresh = false;
         RefreshCurrentFolder();
-
-#ifdef _DEBUG
-        DebugManager::GetInstance().DebugLog("Project window refreshed");
-#endif
     }
 
     // ツールバー
@@ -1324,6 +1321,38 @@ void ItemProjectWindow::CreateCppScript(_In_ std::string_view In_ScriptName)
         DebugManager::GetInstance().DebugLog("Created C++ Script: {}", scriptName);
         DebugManager::GetInstance().DebugLog("  - {}", hppPath.string());
         DebugManager::GetInstance().DebugLog("  - {}", cppPath.string());
+
+        // プロジェクトファイルに追加
+
+        // フィルターパスを決定(現在のフォルダから)
+        std::filesystem::path relativePath = m_CurrentPath;
+        std::string filterPath = relativePath.string();
+        std::replace(filterPath.begin(), filterPath.end(), '/', '\\');
+
+        // プロジェクトに追加
+        ProjectFileManager::AddCppScriptToProject(cppPath, hppPath, filterPath);
+
+        // Python スクリプトを実行(ComponentRegistry更新)
+        std::thread([scriptName]()
+            {
+                DebugManager::GetInstance().DebugLog("Running code generation...");
+
+				std::string ProjectDir = std::filesystem::current_path().string();
+                std::string Command = "python " + ProjectDir;
+                Command += "\\Engine\\BuildScripts\\GenerateComponentRegistry.py --source-dir ";
+				Command += ProjectDir + " --output " + ProjectDir + "\\Engine\\Core\\System\\Generated\\ComponentRegistry_Generated.cpp";
+                int result = system(Command.c_str());
+
+                if(result == 0)
+                {
+                    DebugManager::GetInstance().DebugLog("Component registry updated");
+                    DebugManager::GetInstance().DebugLog("{} is now available in AddComponent list!", scriptName);
+                }
+                else
+                {
+                    DebugManager::GetInstance().DebugLogError("Failed to update component registry");
+                }
+            }).detach();
 
         // フォルダをリフレッシュ
         RefreshCurrentFolder();

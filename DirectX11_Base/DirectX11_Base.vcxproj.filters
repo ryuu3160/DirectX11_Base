@@ -132,9 +132,6 @@
     <Filter Include="Game">
       <UniqueIdentifier>{4dda4223-894e-469b-a87d-c3cd55ed5709}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Source">
-      <UniqueIdentifier>{f0d793d5-dec2-49c8-9ccf-2752fab45bd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Component\Camera">
       <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
     </Filter>
@@ -143,6 +140,9 @@
     </Filter>
     <Filter Include="Engine\ThirdParty\CPON">
       <UniqueIdentifier>{956271ba-cf0c-4556-9126-9b3c6abeb1bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Script">
+      <UniqueIdentifier>{b7b9134d-9e0b-4a67-bc1f-2856eb50fe31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -428,8 +428,13 @@
     <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp">
       <Filter>Engine\ThirdParty\CPON</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Utility\CustomWindowProc.cpp" />
     <ClCompile Include="Engine\Core\System\Utility\VisualStudioHelper.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\ProjectFileManager.cpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Utility\CustomWindowProc.cpp">
       <Filter>Engine\Core\System\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -737,8 +742,13 @@
     <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp">
       <Filter>Engine\ThirdParty\CPON</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System\Utility\CustomWindowProc.hpp" />
     <ClInclude Include="Engine\Core\System\Utility\VisualStudioHelper.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\ProjectFileManager.hpp">
+      <Filter>Engine\Core\System\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Utility\CustomWindowProc.hpp">
       <Filter>Engine\Core\System\Utility</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,8 +20,8 @@
 // ===============================
 namespace
 {
-    LPCSTR lpClassName = "DX11Base";				// ウィンドウクラス名
-	const std::string AppTitle = "DirectX11_Base";	// アプリケーションタイトル
+    LPCSTR lpClassName = "ForgeX";				// ウィンドウクラス名
+	const std::string AppTitle = "ForgeX Engine";	// アプリケーションタイトル
     constexpr int cx_nWINDOW_WIDTH = 1280;			// ウィンドウ幅
     constexpr int cx_nWINDOW_HEIGHT = 720;			// ウィンドウ高さ
 }

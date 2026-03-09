@@ -476,6 +476,7 @@ void ItemText::DrawImGui()
 
 ItemBind::ItemBind(_In_ std::string_view In_Name, _In_ Kind In_Kind, _In_ void *In_Ptr)
 	: m_IsString(false), m_Notice(nullptr), m_EnableDrag(false), m_DragSpeed(1.0f), m_DragMin(0.0f), m_DragMax(0.0f)
+	, m_vPtr(nullptr)
 {
 	m_Name = In_Name.data();
 

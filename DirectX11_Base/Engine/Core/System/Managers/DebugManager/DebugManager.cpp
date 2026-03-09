@@ -391,7 +391,11 @@ DebugManager::~DebugManager()
 void DebugManager::ProjectWindowInit()
 {
 	auto ProjectWindow = CreateDebugWindow("System", "Project");
-	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Engine/Assets");
+	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Game");
+
+	// Game/Scriptフォルダ作成
+	if(!std::filesystem::exists("Game/Script"))
+		std::filesystem::create_directory("Game/Script");
 
 	// プロジェクトウィンドウの設定
 	// フォルダアイコンを読み込み

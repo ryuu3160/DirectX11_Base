@@ -125,10 +125,10 @@ public:
 	/// <summary>
 	/// ドラッグ機能を有効または無効にします
 	/// </summary>
-	/// <param name="In_Enable">ドラッグ機能を有効にするかどうか</param>
-	/// <param name="In_DragSpeed">ドラッグの速度</param>
-	/// <param name="In_DragMin">ドラッグの最小値</param>
-	/// <param name="In_DragMax">ドラッグの最大値</param>
+	/// <param name="[In_Enable]">ドラッグ機能を有効にするかどうか</param>
+	/// <param name="[In_DragSpeed]">ドラッグの速度</param>
+	/// <param name="[In_DragMin]">ドラッグの最小値</param>
+	/// <param name="[In_DragMax]">ドラッグの最大値</param>
 	void EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed = 1.0f, _In_ float In_DragMin = 0.0f, _In_ float In_DragMax = 0.0f);
 
 	Value &GetValue() { return m_Value; }
@@ -208,10 +208,10 @@ public:
 	/// <summary>
 	/// ドラッグ機能を有効または無効にします
 	/// </summary>
-	/// <param name="In_Enable">ドラッグ機能を有効にするかどうか</param>
-	/// <param name="In_DragSpeed">ドラッグの速度</param>
-	/// <param name="In_DragMin">ドラッグの最小値</param>
-	/// <param name="In_DragMax">ドラッグの最大値</param>
+	/// <param name="[In_Enable]">ドラッグ機能を有効にするかどうか</param>
+	/// <param name="[In_DragSpeed]">ドラッグの速度</param>
+	/// <param name="[In_DragMin]">ドラッグの最小値</param>
+	/// <param name="[In_DragMax]">ドラッグの最大値</param>
 	void EnableDrag(_In_ bool In_Enable, _In_ float In_DragSpeed = 1.0f, _In_ float In_DragMin = 0.0f, _In_ float In_DragMax = 0.0f);
 
 	void DrawImGui() override;
@@ -219,6 +219,9 @@ public:
 	template <typename T>
 	T *GetPtr()
 	{
+		if(m_vPtr == nullptr)
+			return nullptr;
+
 		return reinterpret_cast<T *>(m_vPtr);
 	}
 
@@ -226,6 +229,9 @@ public:
 	requires std::is_same_v<T,char>
 	T *GetPtr()
 	{
+		if(m_vPtr == nullptr)
+			return nullptr;
+
 		if(m_IsString)
 			return reinterpret_cast<T *>(static_cast<std::string *>(m_vPtr)->data());
 		else
