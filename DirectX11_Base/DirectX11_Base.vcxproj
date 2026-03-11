@@ -334,6 +334,10 @@
     <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.hpp" />
     <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp" />
     <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp" />
+    <ClInclude Include="Engine\Core\EngineAPI.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\pch.h" />
     <ClInclude Include="Engine\Core\System\Component\Camera\Camera.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp" />

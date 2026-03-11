@@ -751,6 +751,9 @@
     <ClInclude Include="Engine\Core\System\Utility\CustomWindowProc.hpp">
       <Filter>Engine\Core\System\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\EngineAPI.hpp">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader\Shadow\PS_DepthShadow.hlsl">
