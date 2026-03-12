@@ -1,21 +1,7 @@
 #ifndef __TEXTURE_LOAD_H__
 #define __TEXTURE_LOAD_H__
 
-#include "DirectXTex.h"
-
-#ifdef _X86_
-#ifdef _DEBUG
-#pragma comment(lib, "Engine/ThirdParty/DirectXTex/32/D/DirectXTex.lib")
-#else
-#pragma comment(lib, "Engine/ThirdParty/DirectXTex/32/R/DirectXTex.lib")
-#endif
-#else
-#ifdef _DEBUG
-#pragma comment(lib, "Engine/ThirdParty/DirectXTex/64/D/DirectXTex.lib")
-#else
-#pragma comment(lib, "Engine/ThirdParty/DirectXTex/64/R/DirectXTex.lib")
-#endif
-#endif
+#include <DirectXTex.h>
 
 inline HRESULT LoadTextureFromFile(
 	ID3D11Device* pDevice,
