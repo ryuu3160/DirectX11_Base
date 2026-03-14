@@ -1,0 +1,11 @@
+#ObjNum : 1
+ProjectInfo[1]{Name:string,Version:string,RootPath:string,SolutionPath:string,ProjectPath:string,DllPath:string,ScriptsPath:string,AssetsPath:string}:
+  Name:TestGame
+  Version:1.0.0
+  RootPath:Projects\TestGame
+  SolutionPath:Projects\TestGame\TestGame.sln
+  ProjectPath:Projects\TestGame\TestGame.vcxproj
+  DllPath:Projects\TestGame\Binaries\Debug\TestGame.dll
+  ScriptsPath:Projects\TestGame\Assets\Scripts
+  AssetsPath:Projects\TestGame\Assets
+
