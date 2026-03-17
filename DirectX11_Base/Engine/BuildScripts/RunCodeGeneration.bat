@@ -75,7 +75,7 @@ echo.
 echo Executing Python script...
 
 set PYTHONIOENCODING=shift-jis
-"%PYTHON_EXE%" "%PYTHON_SCRIPT%" --source-dir "%PROJECT_DIR%" --output "%OUTPUT_FILE%"
+"%PYTHON_EXE%" "%PYTHON_SCRIPT%" --source-dir "%PROJECT_DIR%\Engine" --output "%OUTPUT_FILE%" --function-name RegisterAllEngineComponents --registry-mode singleton
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
