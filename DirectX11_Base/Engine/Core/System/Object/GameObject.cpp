@@ -13,7 +13,7 @@
 #include "Core/System/Component/Collider/ColliderBase.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
-#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 
 GameObject::GameObject(_In_ std::string_view In_Name)
@@ -21,6 +21,7 @@ GameObject::GameObject(_In_ std::string_view In_Name)
 	, m_pScene(nullptr)
 	, m_Data(nullptr)
 	, m_pTransform(nullptr)
+	, m_IsReloadingInspector(false)
 {
 	m_Data = std::make_shared<cpon_object>();
 	m_Data->SetObjectName(m_Name);
@@ -487,7 +488,7 @@ void GameObject::ReloadingInspector()
 }
 void GameObject::ExecuteReloadingInspector()
 {
-	auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+	auto *window = DebugManager::GetInstance().GetDebugWindow("View", "Inspector");
 	window->ClearItems();
 
 	if(this)

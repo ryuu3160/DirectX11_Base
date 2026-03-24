@@ -11,6 +11,7 @@
 // ==============================
 #include "Core/System/Component/Collider/ColliderBase.hpp"
 #include "OctreeCell.hpp"
+#include "Core/EngineAPI.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================
@@ -23,7 +24,7 @@ namespace
 /// <summary>
 /// CollisionManagerƒNƒ‰ƒX
 /// </summary>
-class CollisionManager : public Singleton<CollisionManager>
+class ENGINE_API CollisionManager : public Singleton<CollisionManager>
 {
 	friend class Singleton<CollisionManager>;
 public:

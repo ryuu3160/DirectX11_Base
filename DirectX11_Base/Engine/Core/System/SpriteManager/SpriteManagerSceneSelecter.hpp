@@ -15,7 +15,7 @@
 /// <summary>
 /// SpriteManagerSceneSelecterƒNƒ‰ƒX
 /// </summary>
-class SpriteManagerSceneSelecter : public SpriteManagerWindow
+class ENGINE_API SpriteManagerSceneSelecter : public SpriteManagerWindow
 {
 public:
 	/// <summary>

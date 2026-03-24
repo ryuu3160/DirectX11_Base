@@ -42,6 +42,11 @@ public:
 
 	int GetComponentCount() const;
 
+	/// <summary>
+	/// 登録されているすべてのコンポーネントをクリアする
+	/// </summary>
+	void Clear();
+
 private:
 	ComponentRegistry();
 	~ComponentRegistry();
@@ -54,3 +59,5 @@ private:
 /// すべてのコンポーネントを登録（自動生成関数）
 /// </summary>
 void RegisterAllComponents();
+
+void RegisterAllEngineComponents();

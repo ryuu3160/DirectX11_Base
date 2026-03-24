@@ -12,6 +12,7 @@
 #include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
 #include "Core/DirectX11/Resource/Texture.hpp"
 #include "ResourceSetting.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
@@ -21,7 +22,7 @@ struct aiMaterial;
 /// <summary>
 /// MaterialƒNƒ‰ƒX
 /// </summary>
-class Material
+class ENGINE_API Material
 {
 private:
 	struct ShaderParamInfo

@@ -22,7 +22,7 @@ class ItemGroup;
 /// <summary>
 /// Componentクラス
 /// </summary>
-class Component : public Object
+class ENGINE_API Component : public Object
 {
 	friend class GameObject;
 public:
@@ -40,126 +40,22 @@ public:
 		}
 
 		template<TypeValue T>
-		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
-		{
-			if(Inout_Value == nullptr)
-				return;
-
-			if (m_IsWrite)
-			{
-				(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
-			}
-			else
-			{
-				auto ValuePtr = (*m_Data)[0]->GetValuePtr<T>(In_Key);
-				if(!ValuePtr)
-					return;
-				*Inout_Value = *ValuePtr;
-			}
-		}
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value);
 
 		template<typename T>
-			requires std::same_as<T, DirectX::XMFLOAT2>
-		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
-		{
-			if(Inout_Value == nullptr)
-				return;
-			if(m_IsWrite)
-			{
-				std::vector<float> vec = { Inout_Value->x, Inout_Value->y };
-				(*m_Data)[0]->CreateArray(In_Key, vec);
-			}
-			else
-			{
-				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
-				if(!opt)
-				{
-					*Inout_Value = DirectX::XMFLOAT2{};
-					return;
-				}
-				std::vector<float> &vec = *opt;
-				if(vec.size() >= 2)
-				{
-					Inout_Value->x = vec[0];
-					Inout_Value->y = vec[1];
-				}
-			}
-		}
+		requires std::same_as<T, DirectX::XMFLOAT2>
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value);
 
 		template<typename T>
 		requires std::same_as<T, DirectX::XMFLOAT3>
-		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
-		{
-			if (Inout_Value == nullptr)
-				return;
-			if (m_IsWrite)
-			{
-				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z };
-				(*m_Data)[0]->SetArray(In_Key, vec);
-			}
-			else
-			{
-				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
-				if(!opt)
-				{
-					*Inout_Value = DirectX::XMFLOAT3{};
-					return;
-				}
-				std::vector<float> &vec = *opt;
-				if (vec.size() >= 3)
-				{
-					Inout_Value->x = vec[0];
-					Inout_Value->y = vec[1];
-					Inout_Value->z = vec[2];
-				}
-			}
-		}
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value);
 
 		template<typename T>
 		requires std::same_as<T, DirectX::XMFLOAT4>
-		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
-		{
-			if(Inout_Value == nullptr)
-				return;
-			if(m_IsWrite)
-			{
-				std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z, Inout_Value->w };
-				(*m_Data)[0]->SetArray(In_Key, vec);
-			}
-			else
-			{
-				auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
-				if(!opt)
-				{
-					*Inout_Value = DirectX::XMFLOAT4{};
-					return;
-				}
-				std::vector<float> &vec = *opt;
-				if(vec.size() >= 4)
-				{
-					Inout_Value->x = vec[0];
-					Inout_Value->y = vec[1];
-					Inout_Value->z = vec[2];
-					Inout_Value->w = vec[3];
-				}
-			}
-		}
+		void AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value);
 
 		template<TypeValue T>
-		void AccessArray(_In_ std::string_view In_Key, _Inout_ std::vector<T> *Inout_Array)
-		{
-			if(Inout_Array == nullptr)
-				return;
-
-			if (m_IsWrite)
-			{
-				(*m_Data)[0]->CreateArray(In_Key, *Inout_Array);
-			}
-			else
-			{
-				*Inout_Array = *(*m_Data)[0]->GetArrayPtr<T>(In_Key);
-			}
-		}
+		void AccessArray(_In_ std::string_view In_Key, _Inout_ std::vector<T> *Inout_Array);
 
 		void AccessObject(_In_ std::string_view In_Key, _Inout_opt_ cpon_block::Object Inout_Object)
 		{
@@ -172,6 +68,7 @@ public:
 				Inout_Object = (*m_Data)[0]->GetObject(In_Key);
 			}
 		}
+
 	private:
 		cpon_block::Object m_Data;
 		bool m_IsWrite; // 書き込みモードか読み込みモードか
@@ -220,3 +117,125 @@ protected:
 	GameObject *m_pGameObject;
 	std::string m_Name;
 };
+
+template<TypeValue T>
+inline void Component::DataAccessor::AccessValue(std::string_view In_Key, T *Inout_Value)
+{
+	if(Inout_Value == nullptr)
+		return;
+
+	if(m_IsWrite)
+	{
+		(*m_Data)[0]->SetValue(In_Key, *Inout_Value);
+	}
+	else
+	{
+		auto ValuePtr = (*m_Data)[0]->GetValuePtr<T>(In_Key);
+		if(!ValuePtr)
+			return;
+		*Inout_Value = *ValuePtr;
+	}
+}
+
+template<typename T>
+requires std::same_as<T, DirectX::XMFLOAT2>
+inline void Component::DataAccessor::AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
+{
+	if(Inout_Value == nullptr)
+		return;
+	if(m_IsWrite)
+	{
+		std::vector<float> vec = { Inout_Value->x, Inout_Value->y };
+		(*m_Data)[0]->CreateArray(In_Key, vec);
+	}
+	else
+	{
+		auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+		if(!opt)
+		{
+			*Inout_Value = DirectX::XMFLOAT2{};
+			return;
+		}
+		std::vector<float> &vec = *opt;
+		if(vec.size() >= 2)
+		{
+			Inout_Value->x = vec[0];
+			Inout_Value->y = vec[1];
+		}
+	}
+}
+
+template<typename T>
+requires std::same_as<T, DirectX::XMFLOAT3>
+void Component::DataAccessor::AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
+{
+	if(Inout_Value == nullptr)
+		return;
+	if(m_IsWrite)
+	{
+		std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z };
+		(*m_Data)[0]->SetArray(In_Key, vec);
+	}
+	else
+	{
+		auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+		if(!opt)
+		{
+			*Inout_Value = DirectX::XMFLOAT3{};
+			return;
+		}
+		std::vector<float> &vec = *opt;
+		if(vec.size() >= 3)
+		{
+			Inout_Value->x = vec[0];
+			Inout_Value->y = vec[1];
+			Inout_Value->z = vec[2];
+		}
+	}
+}
+
+template<typename T>
+requires std::same_as<T, DirectX::XMFLOAT4>
+void Component::DataAccessor::AccessValue(_In_ std::string_view In_Key, _Inout_ T *Inout_Value)
+{
+	if(Inout_Value == nullptr)
+		return;
+	if(m_IsWrite)
+	{
+		std::vector<float> vec = { Inout_Value->x, Inout_Value->y, Inout_Value->z, Inout_Value->w };
+		(*m_Data)[0]->SetArray(In_Key, vec);
+	}
+	else
+	{
+		auto opt = (*m_Data)[0]->GetArray<float>(In_Key);
+		if(!opt)
+		{
+			*Inout_Value = DirectX::XMFLOAT4{};
+			return;
+		}
+		std::vector<float> &vec = *opt;
+		if(vec.size() >= 4)
+		{
+			Inout_Value->x = vec[0];
+			Inout_Value->y = vec[1];
+			Inout_Value->z = vec[2];
+			Inout_Value->w = vec[3];
+		}
+	}
+}
+
+template<TypeValue T>
+inline void Component::DataAccessor::AccessArray(std::string_view In_Key, std::vector<T> *Inout_Array)
+{
+	if(Inout_Array == nullptr)
+		return;
+
+	if(m_IsWrite)
+	{
+		(*m_Data)[0]->CreateArray(In_Key, *Inout_Array);
+	}
+	else
+	{
+		*Inout_Array = *(*m_Data)[0]->GetArrayPtr<T>(In_Key);
+	}
+}

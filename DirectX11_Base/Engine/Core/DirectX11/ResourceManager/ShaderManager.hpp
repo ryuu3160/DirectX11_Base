@@ -15,7 +15,7 @@
 /// <summary>
 /// ShaderManagerƒNƒ‰ƒX
 /// </summary>
-class ShaderManager : public Singleton<ShaderManager>
+class ENGINE_API ShaderManager : public Singleton<ShaderManager>
 {
 	friend class Singleton<ShaderManager>;
 public:

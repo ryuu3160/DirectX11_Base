@@ -9,6 +9,7 @@
 // ==============================
 //	include
 // ==============================
+#include "Core/EngineAPI.hpp"
 
 /// <summary>
 /// ParticleƒNƒ‰ƒX

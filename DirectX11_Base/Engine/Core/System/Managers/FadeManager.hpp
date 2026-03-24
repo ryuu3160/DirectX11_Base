@@ -12,6 +12,7 @@
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "ryuu_lib/Easing/Easing.hpp"
 #include "Core/Defines.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾
@@ -21,7 +22,7 @@ class GameObject;
 /// <summary>
 /// FadeManagerƒNƒ‰ƒX
 /// </summary>
-class FadeManager : public Singleton<FadeManager>
+class ENGINE_API FadeManager : public Singleton<FadeManager>
 {
 	friend class Singleton<FadeManager>;
 public:

@@ -22,7 +22,7 @@ namespace
 // ---ComponentDescription---
 // ラインを描画するコンポーネント
 // --------------------------
-class LineRenderer : public RenderComponent
+class ENGINE_API LineRenderer : public RenderComponent
 {
 public:
 	LineRenderer();

@@ -10,6 +10,7 @@
 //	include
 // ==============================
 #include "Core/System/Scene/SceneBase.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾
@@ -21,7 +22,7 @@ class FadeManager;
 /// <summary>
 /// SceneManagerƒNƒ‰ƒX
 /// </summary>
-class SceneManager : public Singleton<SceneManager>
+class ENGINE_API SceneManager : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
 public:

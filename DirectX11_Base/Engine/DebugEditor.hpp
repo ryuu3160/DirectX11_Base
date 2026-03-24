@@ -11,7 +11,10 @@
 // ==============================
 
 // DebugManager
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
-#include "Core/System/Managers/DebugManager/DebugWindow.hpp"
+#include "Core/System/Managers/DebugManager/Item/DebugItem.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugWindowBase.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugWindow.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugModal.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugPopup.hpp"
 #include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"

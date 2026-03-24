@@ -21,7 +21,7 @@ struct aiMesh;
 /// <summary>
 /// MeshƒNƒ‰ƒX
 /// </summary>
-class Mesh
+class ENGINE_API Mesh
 {
 public:
 	/// <summary>

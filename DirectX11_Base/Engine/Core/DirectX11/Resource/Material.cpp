@@ -155,9 +155,9 @@ void Material::SetTexture(_In_ const ResourceSetting::TextureType &In_Type, _In_
 void Material::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Binaries/Shader/VS_Model.cso");
+	m_defVS->Load("Engine/Assets/Binaries/Shader/VS_Model.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_Model.cso");
+	m_defPS->Load("Engine/Assets/Binaries/Shader/PS_Model.cso");
 }
 
 bool Material::LoadShaderInfo(_In_ std::string_view In_Directory) noexcept

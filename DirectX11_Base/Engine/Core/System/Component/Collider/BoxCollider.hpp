@@ -14,7 +14,7 @@
 // ---ComponentDescription---
 // BOX型コライダー
 // --------------------------
-class BoxCollider : public ColliderBase
+class ENGINE_API BoxCollider : public ColliderBase
 {
 	friend class CapsuleCollider;
 public:

@@ -11,7 +11,7 @@
 #include "Component.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
-#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 
 Component::Component(_In_ std::string_view In_Name)
 	: m_Name(In_Name.data()), m_pGameObject(nullptr)

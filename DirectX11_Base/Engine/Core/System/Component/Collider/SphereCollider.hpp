@@ -14,7 +14,7 @@
 // ---ComponentDescription---
 // スフィア型コライダー
 // --------------------------
-class SphereCollider : public ColliderBase
+class ENGINE_API SphereCollider : public ColliderBase
 {
 public:
 	SphereCollider();

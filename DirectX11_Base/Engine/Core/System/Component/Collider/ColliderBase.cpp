@@ -12,7 +12,7 @@
 #include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
 #include "Core/System/Managers/CollisionManager/TreeData.hpp"
 #include "Core/System/Object/GameObject.hpp"
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/DebugItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 ColliderBase::ColliderBase(_In_ std::string_view In_Name)

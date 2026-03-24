@@ -19,7 +19,7 @@ struct aiMesh;
 /// <summary>
 /// ModelManagerƒNƒ‰ƒX
 /// </summary>
-class ModelManager : public Singleton<ModelManager>
+class ENGINE_API ModelManager : public Singleton<ModelManager>
 {
 	friend class Singleton<ModelManager>;
 public:

@@ -9,11 +9,11 @@
 // ==============================
 //	include
 // ==============================
-
+#include "Core/EngineAPI.hpp"
 /// <summary>
 /// InstancedMeshBufferƒNƒ‰ƒX
 /// </summary>
-class InstancedMeshBuffer
+class ENGINE_API InstancedMeshBuffer
 {
 public:
 

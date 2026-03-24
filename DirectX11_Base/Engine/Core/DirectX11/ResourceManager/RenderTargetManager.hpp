@@ -10,23 +10,17 @@
 //	include
 // ==============================
 #include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/EngineAPI.hpp"
 // ==============================
 //	前方宣言
 // ==============================
 class RenderTarget;
 class DepthStencil;
 
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-}
-
 /// <summary>
 /// RenderTargetManagerクラス
 /// </summary>
-class RenderTargetManager : public Singleton<RenderTargetManager>
+class ENGINE_API RenderTargetManager : public Singleton<RenderTargetManager>
 {
 	friend class Singleton<RenderTargetManager>;
 public:

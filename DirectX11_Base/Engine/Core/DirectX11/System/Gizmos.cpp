@@ -162,14 +162,14 @@ void Gizmos::DrawSphere(_In_ DirectX::XMFLOAT4X4 In_World) noexcept
 void Gizmos::MakeVertexShader() noexcept
 {
 	m_Data.defVS = std::make_shared<VertexShader>();
-	HRESULT hr = m_Data.defVS->Load("Binaries/Shader/VS_Geometory.cso");
+	HRESULT hr = m_Data.defVS->Load("Engine/Assets/Binaries/Shader/VS_Geometory.cso");
 	m_Data.pVS = m_Data.defVS.get();
 }
 
 void Gizmos::MakePixelShader() noexcept
 {
 	m_Data.defPS = std::make_shared<PixelShader>();
-	HRESULT hr = m_Data.defPS->Load("Binaries/Shader/PS_Geometory.cso");
+	HRESULT hr = m_Data.defPS->Load("Engine/Assets/Binaries/Shader/PS_Geometory.cso");
 	m_Data.pPS = m_Data.defPS.get();
 }
 

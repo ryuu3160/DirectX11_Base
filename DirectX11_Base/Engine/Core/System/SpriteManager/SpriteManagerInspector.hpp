@@ -19,7 +19,7 @@ class GameObject;
 /// <summary>
 /// SpriteManagerInspectorƒNƒ‰ƒX
 /// </summary>
-class SpriteManagerInspector : public SpriteManagerWindow
+class ENGINE_API SpriteManagerInspector : public SpriteManagerWindow
 {
 public:
 	/// <summary>

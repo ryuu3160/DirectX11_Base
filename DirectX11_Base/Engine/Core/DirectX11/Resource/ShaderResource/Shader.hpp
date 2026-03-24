@@ -13,7 +13,7 @@
 #include "UnorderedAccessView.hpp"
 
 // シェーダーの基本クラス
-class Shader
+class ENGINE_API Shader
 {
 protected:
 	enum Kind
@@ -82,7 +82,7 @@ protected:
 
 //----------
 // 頂点シェーダ
-class VertexShader : public Shader
+class ENGINE_API VertexShader : public Shader
 {
 public:
 	VertexShader();
@@ -104,7 +104,7 @@ private:
 
 //----------
 // インスタンシング頂点シェーダ
-class InstancedVertexShader : public Shader
+class ENGINE_API InstancedVertexShader : public Shader
 {
 public:
 	InstancedVertexShader();
@@ -132,7 +132,7 @@ private:
 
 //----------
 // ピクセルシェーダ
-class PixelShader : public Shader
+class ENGINE_API PixelShader : public Shader
 {
 public:
 	PixelShader();
@@ -152,7 +152,7 @@ private:
 
 //----------
 // ハルシェーダー
-class HullShader : public Shader
+class ENGINE_API HullShader : public Shader
 {
 public:
 	HullShader();
@@ -173,7 +173,7 @@ private:
 
 //----------
 // ドメインシェーダー
-class DomainShader : public Shader
+class ENGINE_API DomainShader : public Shader
 {
 public:
 	DomainShader();
@@ -194,7 +194,7 @@ private:
 
 //----------
 // ジオメトリシェーダー
-class GeometryShader : public Shader
+class ENGINE_API GeometryShader : public Shader
 {
 public:
 	GeometryShader();
@@ -218,7 +218,7 @@ private:
 
 //----------
 // コンピュートシェーダー
-class ComputeShader : public Shader
+class ENGINE_API ComputeShader : public Shader
 {
 public:
 	ComputeShader();

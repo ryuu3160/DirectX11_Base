@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-
+#include "Core/EngineAPI.hpp"
 // ==============================
 //	‘O•ûéŒ¾
 // ==============================
@@ -20,7 +20,7 @@ class DepthStencil;
 /// <summary>
 /// RenderContext\‘¢‘Ì
 /// </summary>
-class RenderContext
+class ENGINE_API RenderContext
 {
 public:
 	RenderContext();

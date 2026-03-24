@@ -23,7 +23,7 @@ namespace
 	inline constexpr DirectX::XMFLOAT4 DefaultLineColor = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-class Gizmos
+class ENGINE_API Gizmos
 {
 	friend class RenderManager;
 public:

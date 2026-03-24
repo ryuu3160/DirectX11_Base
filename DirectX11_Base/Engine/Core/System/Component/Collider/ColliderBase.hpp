@@ -35,7 +35,7 @@ enum ColliderType
 /// <summary>
 /// ColliderBaseƒNƒ‰ƒX
 /// </summary>
-class ColliderBase : public Component
+class ENGINE_API ColliderBase : public Component
 {
 public:
 	ColliderBase(_In_ std::string_view In_Name);

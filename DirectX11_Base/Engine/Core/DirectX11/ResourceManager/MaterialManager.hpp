@@ -19,7 +19,7 @@ struct aiMaterial;
 /// <summary>
 /// MaterialManagerƒNƒ‰ƒX
 /// </summary>
-class MaterialManager : public Singleton<MaterialManager>
+class ENGINE_API MaterialManager : public Singleton<MaterialManager>
 {
 	friend class Singleton<MaterialManager>;
 public:

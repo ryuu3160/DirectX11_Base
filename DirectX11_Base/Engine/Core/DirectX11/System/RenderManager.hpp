@@ -22,7 +22,7 @@ class Gizmos;
 /// <summary>
 /// RenderManagerƒNƒ‰ƒX
 /// </summary>
-class RenderManager : public Singleton<RenderManager>
+class ENGINE_API RenderManager : public Singleton<RenderManager>
 {
 	friend class Singleton<RenderManager>;
 public:

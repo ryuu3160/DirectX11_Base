@@ -37,7 +37,7 @@ enum LayerGroup : int
 /// <summary>
 /// RenderComponentƒNƒ‰ƒX
 /// </summary>
-class RenderComponent : public Component
+class ENGINE_API RenderComponent : public Component
 {
 public:
 	RenderComponent(_In_ std::string_view In_Name);

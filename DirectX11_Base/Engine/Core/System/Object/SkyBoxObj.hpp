@@ -15,7 +15,7 @@
 /// <summary>
 /// SkyBoxObjƒNƒ‰ƒX
 /// </summary>
-class SkyBoxObj : public GameObject
+class ENGINE_API SkyBoxObj : public GameObject
 {
 public:
 	SkyBoxObj();

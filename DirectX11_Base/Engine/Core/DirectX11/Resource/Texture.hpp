@@ -11,6 +11,7 @@
 // ===============================
 #include "Core/DirectX11/DX11_Core.hpp"
 #include "Core/Defines.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ===============================
 //	前方宣言
@@ -20,7 +21,7 @@ struct aiTexture;
 /// <summary>
 /// テクスチャ
 /// </summary>
-class Texture
+class ENGINE_API Texture
 {
 public:
 	Texture();
@@ -80,7 +81,7 @@ protected:
 /// <summary>
 /// レンダーターゲット
 /// </summary>
-class RenderTarget : public Texture
+class ENGINE_API RenderTarget : public Texture
 {
 public:
 	RenderTarget();
@@ -130,7 +131,7 @@ private:
 /// <summary>
 /// 深度テクスチャ
 /// </summary>
-class DepthStencil : public Texture
+class ENGINE_API DepthStencil : public Texture
 {
 public:
 	DepthStencil();

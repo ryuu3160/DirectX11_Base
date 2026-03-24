@@ -230,14 +230,6 @@ SoundManager::SoundManager() noexcept
 {
 	HRESULT hr = E_FAIL;
 
-	// COMオブジェクト初期化
-	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	if (FAILED(hr))
-	{
-		DebugManager::GetInstance().DebugLogError("COMオブジェクトの初期化に失敗しました : " + hr);
-		return;
-	}
-
 	// XAUDIO2初期化
 	hr = XAudio2Create(&m_pXAudio);
 	if (FAILED(hr))

@@ -23,7 +23,7 @@ namespace
 // ---ComponentDescription---
 // レンダーターテクスチャを描画するコンポーネント
 // --------------------------
-class RTSpriteRenderer : public RenderComponent
+class ENGINE_API RTSpriteRenderer : public RenderComponent
 {
 public:
 	RTSpriteRenderer();
@@ -57,22 +57,22 @@ public:
 	/// オフセット値を取得
 	/// </summary>
 	/// <returns>DirectX::XMFLOAT2型のオフセット値</returns>
-	inline const DirectX::XMFLOAT2 &GetOffset() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].x, m_SpriteData.param[0].y); }
+	inline const DirectX::XMFLOAT2 GetOffset() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].x, m_SpriteData.param[0].y); }
 	/// <summary>
 	/// サイズを取得
 	/// </summary>
 	/// <returns>DirectX::XMFLOAT2型のサイズ</returns>
-	inline const DirectX::XMFLOAT2 &GetSize() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].z, m_SpriteData.param[0].w); }
+	inline const DirectX::XMFLOAT2 GetSize() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[0].z, m_SpriteData.param[0].w); }
 	/// <summary>
 	/// UV座標を取得
 	/// </summary>
 	/// <returns>DirectX::XMFLOAT2型のUV座標</returns>
-	inline const DirectX::XMFLOAT2 &GetUVPos() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].x, m_SpriteData.param[1].y); }
+	inline const DirectX::XMFLOAT2 GetUVPos() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].x, m_SpriteData.param[1].y); }
 	/// <summary>
 	/// UVスケールを取得
 	/// </summary>
 	/// <returns>DirectX::XMFLOAT2型のUVスケール</returns>
-	inline const DirectX::XMFLOAT2 &GetUVScale() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].z, m_SpriteData.param[1].w); }
+	inline const DirectX::XMFLOAT2 GetUVScale() const noexcept { return DirectX::XMFLOAT2(m_SpriteData.param[1].z, m_SpriteData.param[1].w); }
 	/// <summary>
 	/// 色を取得
 	/// </summary>

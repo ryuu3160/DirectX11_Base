@@ -14,7 +14,7 @@
 // ---ComponentDescription---
 // Transformコンポーネント
 // --------------------------
-class Transform : public Component
+class ENGINE_API Transform : public Component
 {
 public:
 	Transform();

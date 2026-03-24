@@ -23,7 +23,7 @@ namespace
 /// <summary>
 /// CameraBaseObjƒNƒ‰ƒX
 /// </summary>
-class CameraObj : public GameObject
+class ENGINE_API CameraObj : public GameObject
 {
 public:
 	CameraObj();

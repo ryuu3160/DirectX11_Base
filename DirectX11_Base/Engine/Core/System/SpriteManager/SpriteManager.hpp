@@ -13,6 +13,7 @@
 #include "SpriteManagerWindow.hpp"
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Input/Input.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
@@ -28,7 +29,7 @@ class Camera;
 /// <summary>
 /// SpriteManagerƒNƒ‰ƒX
 /// </summary>
-class SpriteManager : public Singleton<SpriteManager>
+class ENGINE_API SpriteManager : public Singleton<SpriteManager>
 {
 	friend class Singleton<SpriteManager>;
 	using SpriteObjects = std::list<GameObject *>;

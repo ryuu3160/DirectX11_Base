@@ -9,6 +9,7 @@
 // ==============================
 //	include
 // ==============================
+#include "Core/EngineAPI.hpp"
 
 enum SpriteManagerWindowType
 {
@@ -30,7 +31,7 @@ namespace
 /// <summary>
 /// SpriteManagerWindowƒNƒ‰ƒX
 /// </summary>
-class SpriteManagerWindow
+class ENGINE_API SpriteManagerWindow
 {
 public:
 	SpriteManagerWindow(_In_ std::string_view In_WindowName);

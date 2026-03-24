@@ -9,6 +9,7 @@
 // ==============================
 //	include
 // ==============================
+#include "Core/EngineAPI.hpp"
 #include "ryuu_lib/Singleton/Singleton.hpp"
 // ==============================
 //	‘O•ûéŒ¾
@@ -18,7 +19,7 @@ class GameObject;
 /// <summary>
 /// CameraManagerƒNƒ‰ƒX
 /// </summary>
-class CameraManager : public Singleton<CameraManager>
+class ENGINE_API CameraManager : public Singleton<CameraManager>
 {
 	friend class Singleton<CameraManager>;
 public:

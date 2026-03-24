@@ -289,7 +289,7 @@ void ModelRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 void ModelRenderer::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Binaries/Shader/VS_Object.cso");
+	m_defVS->Load("Engine/Assets/Binaries/Shader/VS_Object.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_TexColor.cso");
+	m_defPS->Load("Engine/Assets/Binaries/Shader/PS_TexColor.cso");
 }

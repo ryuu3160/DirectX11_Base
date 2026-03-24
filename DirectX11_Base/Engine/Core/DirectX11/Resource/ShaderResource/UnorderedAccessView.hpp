@@ -11,7 +11,7 @@
 // ==============================
 #include "Core/DirectX11/DX11_Core.hpp"
 
-class UnorderedAccessView
+class ENGINE_API UnorderedAccessView
 {
 public:
 	UnorderedAccessView();

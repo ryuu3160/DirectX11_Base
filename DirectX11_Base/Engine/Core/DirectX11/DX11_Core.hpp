@@ -17,6 +17,7 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #include "ryuu_lib/Singleton/Singleton.hpp"
+#include "Core/EngineAPI.hpp"
 
 // COM
 #include <wrl/client.h>
@@ -77,7 +78,7 @@ enum DepthState
 /// <summary>
 /// DirectX‰Šú‰»ƒNƒ‰ƒX
 /// </summary>
-class DX11_Core : public Singleton<DX11_Core>
+class ENGINE_API DX11_Core : public Singleton<DX11_Core>
 {
 	friend class Singleton;
 public:

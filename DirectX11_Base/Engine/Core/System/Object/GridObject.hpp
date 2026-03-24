@@ -20,7 +20,7 @@ class GridComponent;
 /// <summary>
 /// GridObjectƒNƒ‰ƒX
 /// </summary>
-class GridObject : public GameObject
+class ENGINE_API GridObject : public GameObject
 {
 public:
 	GridObject();

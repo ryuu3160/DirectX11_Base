@@ -11,7 +11,7 @@
 #include "Transform.hpp"
 #include "Core/DirectX11/System/DX11_Math.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
-#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Core/System/Object/GameObject.hpp"
 
 // ==============================

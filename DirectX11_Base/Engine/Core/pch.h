@@ -33,6 +33,13 @@ using Microsoft::WRL::ComPtr;
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 
+// フォルダ関連
+#include <ShObjIdl.h>
+
+// WindowsAPIのライブラリリンク
+#pragma comment(lib, "Ole32.lib")
+#pragma comment(lib, "Shell32.lib")
+
 // ==============================
 // DirectX11
 // ==============================

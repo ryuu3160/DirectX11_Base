@@ -18,6 +18,7 @@
 #include "ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
 #include "Core/System/Utility/Utility.hpp"
 #include "Core/System/Utility/EngineUtility.hpp"
+#include "Core/EngineAPI.hpp"
 // ==============================
 //  undefine
 // ==============================
@@ -32,7 +33,7 @@ class ItemHierarchy;
 /// <summary>
 /// SceneBaseクラス
 /// </summary>
-class SceneBase
+class ENGINE_API SceneBase
 {
 private:
 	friend class SceneManager; // シーンマネージャーをフレンドクラスに登録
@@ -194,7 +195,7 @@ protected:
 
 template <typename T>
 requires std::derived_from<T, GameObject>
-T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
+inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transform *In_pParent) noexcept
 {
 	// オブジェクト生成
 	T *ptr = new T(In_Name.data());
@@ -371,7 +372,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 /// <returns>見つかった場合は指定した型Tのポインタ、見つからなかった場合はnullptrを返します</returns>
 template <typename T>
 requires std::derived_from<T, GameObject>
-T *SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
+inline T *SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
 {
 	// オブジェクトの探索
 	std::string ObjName = m_Name + "_";

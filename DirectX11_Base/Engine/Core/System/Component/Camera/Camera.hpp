@@ -14,7 +14,7 @@
 // ---ComponentDescription---
 // カメラのコンポーネント
 // --------------------------
-class Camera : public Component
+class ENGINE_API Camera : public Component
 {
 public:
 	Camera();

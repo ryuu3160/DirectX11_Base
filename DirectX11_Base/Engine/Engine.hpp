@@ -9,9 +9,9 @@
 // ==============================
 // Engine Info
 // ==============================
-namespace RyuuEngine
+namespace ForgeX_Engine
 {
-	constexpr const char *ENGINE_NAME = "RyuuEngine";
+	constexpr const char *ENGINE_NAME = "ForgeX_Engine";
 	constexpr const char *ENGINE_VERSION = "1.0.0";
 	constexpr const char *AUTHOR = "ryuu3160";
 }
@@ -85,8 +85,6 @@ namespace RyuuEngine
 #include "Core/System/Managers/FadeManager.hpp"
 
 // CollisionManager
-#include "Core/System/Managers/CollisionManager/TreeData.hpp"
-#include "Core/System/Managers/CollisionManager/OctreeCell.hpp"
 #include "Core/System/Managers/CollisionManager/CollisionManager.hpp"
 
 // ==============================

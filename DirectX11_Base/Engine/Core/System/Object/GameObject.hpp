@@ -22,7 +22,7 @@ class SceneBase;
 /// <summary>
 /// GameObjectƒNƒ‰ƒX
 /// </summary>
-class GameObject : public Object
+class ENGINE_API GameObject : public Object
 {
 	friend class SceneBase;
 public:

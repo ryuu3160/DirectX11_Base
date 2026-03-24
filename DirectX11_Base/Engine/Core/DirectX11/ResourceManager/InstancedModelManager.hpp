@@ -19,7 +19,7 @@ struct aiMesh;
 /// <summary>
 /// InstancedModelManagerƒNƒ‰ƒX
 /// </summary>
-class InstancedModelManager : public Singleton<InstancedModelManager>
+class ENGINE_API InstancedModelManager : public Singleton<InstancedModelManager>
 {
 	friend class Singleton<InstancedModelManager>;
 public:

@@ -269,9 +269,9 @@ void RTSpriteRenderer::SetPositionPixel(_In_ const DirectX::XMFLOAT3 &In_Pos) no
 void RTSpriteRenderer::MakeDefaultShader() noexcept
 {
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Binaries/Shader/VS_Sprite.cso");
+	m_defVS->Load("Engine/Assets/Binaries/Shader/VS_Sprite.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_Sprite.cso");
+	m_defPS->Load("Engine/Assets/Binaries/Shader/PS_Sprite.cso");
 }
 
 void RTSpriteRenderer::MakeDefaultTexture() noexcept

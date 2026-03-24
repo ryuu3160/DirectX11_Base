@@ -144,6 +144,15 @@
     <Filter Include="Game\Script">
       <UniqueIdentifier>{b7b9134d-9e0b-4a67-bc1f-2856eb50fe31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\System\Project">
+      <UniqueIdentifier>{1f03f1ef-6872-41e5-8224-10cdde7c5ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Managers\DebugManager\Window">
+      <UniqueIdentifier>{df34d752-5d91-4422-845a-130d2f4dd14d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\System\Managers\DebugManager\Item">
+      <UniqueIdentifier>{839ccde9-a4f7-4c40-97cf-adc1f25c216f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
@@ -281,13 +290,7 @@
     <ClCompile Include="Engine\Core\System\Managers\CollisionManager\TreeData.cpp">
       <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugItem.cpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugManager.cpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugWindow.cpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.cpp">
@@ -401,9 +404,6 @@
     <ClCompile Include="Engine\ThirdParty\ImGui\imgui_widgets.cpp">
       <Filter>Engine\ThirdParty\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\EngineUtility.cpp">
       <Filter>Engine\Core\System\Utility</Filter>
     </ClCompile>
@@ -436,6 +436,30 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\CustomWindowProc.cpp">
       <Filter>Engine\Core\System\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Project\GameProject.cpp">
+      <Filter>Engine\Core\System\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugModal.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugPopup.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindow.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindowBase.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Item\DebugItem.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Item\SystemItem.cpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Project\NuGetRestore.cpp">
+      <Filter>Engine\Core\System\Project</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -580,13 +604,7 @@
     <ClInclude Include="Engine\Core\System\Managers\CollisionManager\TreeData.hpp">
       <Filter>Engine\Core\System\Managers\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugItem.hpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugManager.hpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugWindow.hpp">
       <Filter>Engine\Core\System\Managers\DebugManager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.hpp">
@@ -715,9 +733,6 @@
     <ClInclude Include="Engine\Engine.hpp">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
-      <Filter>Engine\Core\System\Managers\DebugManager</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\EngineUtility.hpp">
       <Filter>Engine\Core\System\Utility</Filter>
     </ClInclude>
@@ -753,6 +768,30 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\EngineAPI.hpp">
       <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Project\GameProject.hpp">
+      <Filter>Engine\Core\System\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugModal.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugPopup.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindow.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindowBase.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Item\DebugItem.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Item\SystemItem.hpp">
+      <Filter>Engine\Core\System\Managers\DebugManager\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Project\NuGetRestore.hpp">
+      <Filter>Engine\Core\System\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

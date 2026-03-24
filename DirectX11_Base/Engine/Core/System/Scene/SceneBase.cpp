@@ -15,7 +15,7 @@
 #include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Object/GridObject.hpp"
 #include "Core/System/Object/SkyBoxObj.hpp"
-#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 SceneBase::SceneBase(_In_ std::string_view In_Name) noexcept
@@ -54,7 +54,7 @@ void SceneBase::CommonProcessScene() noexcept
 	 pCamObj->AddComponent<CameraDCC>();
 
 	auto &DebugM = DebugManager::GetInstance();
-	DebugWindow *window = DebugM.GetDebugWindow("System", "Hierarchy");
+	DebugWindow *window = DebugM.GetDebugWindow("View", "Hierarchy");
 	m_Hierarchy = window->CreateItem<ItemHierarchy>("Objects", this,
 		[](GameObject *obj)
 		{
@@ -62,7 +62,7 @@ void SceneBase::CommonProcessScene() noexcept
 				obj->ReloadingInspector();
 			else
 			{
-				auto *window = DebugManager::GetInstance().GetDebugWindow("System", "Inspector");
+				auto *window = DebugManager::GetInstance().GetDebugWindow("View", "Inspector");
 				window->ClearItems();
 			}
 		});

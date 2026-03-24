@@ -18,11 +18,12 @@
 #pragma comment(lib, "shlwapi.lib")
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/Defines.hpp"
+#include "Core/EngineAPI.hpp"
 
 /// <summary>
 /// SoundManagerƒNƒ‰ƒX
 /// </summary>
-class SoundManager : public Singleton<SoundManager>
+class ENGINE_API SoundManager : public Singleton<SoundManager>
 {
 	friend class Singleton<SoundManager>;
 public:

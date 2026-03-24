@@ -12,7 +12,7 @@
 // ==============================
 #include "Core/DirectX11/DX11_Core.hpp"
 
-class MeshBuffer
+class ENGINE_API MeshBuffer
 {
 public:
 	/// <summary>

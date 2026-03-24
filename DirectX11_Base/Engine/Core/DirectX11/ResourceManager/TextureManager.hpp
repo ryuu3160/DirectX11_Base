@@ -21,7 +21,7 @@ enum aiTextureType;
 /// <summary>
 /// TextureManagerƒNƒ‰ƒX
 /// </summary>
-class TextureManager : public Singleton<TextureManager>
+class ENGINE_API TextureManager : public Singleton<TextureManager>
 {
 	friend class Singleton<TextureManager>;
 public:

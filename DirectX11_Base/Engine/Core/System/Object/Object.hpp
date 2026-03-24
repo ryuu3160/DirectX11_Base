@@ -9,6 +9,7 @@
 // ==============================
 //	include
 // ==============================
+#include "Core/EngineAPI.hpp"
 #include "Core/DirectX11/System/Gizmos.hpp"
 // ==============================
 //	‘O•ûéŒ¾
@@ -19,7 +20,7 @@ class DebugWindow;
 /// <summary>
 /// ObjectƒNƒ‰ƒX
 /// </summary>
-class Object
+class ENGINE_API Object
 {
 public:
 	Object() = default;

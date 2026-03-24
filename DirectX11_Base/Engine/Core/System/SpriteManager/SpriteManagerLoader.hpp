@@ -14,7 +14,7 @@
 /// <summary>
 /// SpriteManagerLoaderƒNƒ‰ƒX
 /// </summary>
-class SpriteManagerLoader : public SpriteManagerWindow
+class ENGINE_API SpriteManagerLoader : public SpriteManagerWindow
 {
 public:
 	/// <summary>

@@ -19,7 +19,7 @@ class Transform;
 // ---ComponentDescription---
 // 動きを制御するコンポーネント
 // --------------------------
-class MovementComponent : public Component
+class ENGINE_API MovementComponent : public Component
 {
 public:
 	MovementComponent();

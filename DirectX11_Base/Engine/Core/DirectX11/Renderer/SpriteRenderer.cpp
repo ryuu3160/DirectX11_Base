@@ -285,9 +285,9 @@ void SpriteRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 void SpriteRenderer::MakeDefaultShader() noexcept
 {
 	m_defVS = std::make_shared<VertexShader>();
-	m_defVS->Load("Binaries/Shader/VS_Sprite.cso");
+	m_defVS->Load("Engine/Assets/Binaries/Shader/VS_Sprite.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_Sprite.cso");
+	m_defPS->Load("Engine/Assets/Binaries/Shader/PS_Sprite.cso");
 }
 
 void SpriteRenderer::MakeDefaultTexture() noexcept

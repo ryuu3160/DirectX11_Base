@@ -9,11 +9,11 @@
 // ==============================
 //	include
 // ==============================
-
+#include "Core/EngineAPI.hpp"
 /// <summary>
 /// ShaderParamƒNƒ‰ƒX
 /// </summary>
-class ShaderParam
+class ENGINE_API ShaderParam
 {
 public:
 

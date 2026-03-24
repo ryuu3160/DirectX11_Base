@@ -275,7 +275,7 @@ void InstancedModelRenderer::RemakeVertex(_In_ const int &In_VtxSize, _In_ std::
 void InstancedModelRenderer::MakeDefaultShader()
 {
 	m_defVS = std::make_shared<InstancedVertexShader>();
-	m_defVS->Load("Binaries/Shader/IVS_InstancedObject.cso");
+	m_defVS->Load("Engine/Assets/Binaries/Shader/IVS_InstancedObject.cso");
 	m_defPS = std::make_shared<PixelShader>();
-	m_defPS->Load("Binaries/Shader/PS_Model.cso");
+	m_defPS->Load("Engine/Assets/Binaries/Shader/PS_Model.cso");
 }

@@ -21,7 +21,7 @@ class Mesh;
 // ---ComponentDescription---
 // スカイボックスを描画するコンポーネント
 // --------------------------
-class SkyBoxRenderer : public RenderComponent
+class ENGINE_API SkyBoxRenderer : public RenderComponent
 {
 public:
 	using Meshes = std::vector<std::shared_ptr<Mesh>>;

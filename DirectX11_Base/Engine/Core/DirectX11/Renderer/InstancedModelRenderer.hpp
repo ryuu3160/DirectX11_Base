@@ -22,7 +22,7 @@ class Material;
 // ---ComponentDescription---
 // インスタンシングモデルを描画するコンポーネント
 // --------------------------
-class InstancedModelRenderer : public RenderComponent
+class ENGINE_API InstancedModelRenderer : public RenderComponent
 {
 public:
 	using Meshes = std::vector<std::shared_ptr<InstancedMesh>>;
@@ -86,7 +86,7 @@ public:
 	/// メッシュの数を取得します
 	/// </summary>
 	/// <returns>メッシュの数を表す定数参照（unsigned int型）を返します。</returns>
-	inline const unsigned int &GetMeshNum() const noexcept { return static_cast<uint32_t>(m_vecMeshes.size()); }
+	inline const unsigned int GetMeshNum() const noexcept { return static_cast<uint32_t>(m_vecMeshes.size()); }
 
 
 	/// <summary>

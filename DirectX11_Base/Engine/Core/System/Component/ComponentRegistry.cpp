@@ -49,6 +49,11 @@ int ComponentRegistry::GetComponentCount() const
 	return static_cast<int>(m_Components.size());
 }
 
+void ComponentRegistry::Clear()
+{
+	m_Components.clear();
+}
+
 ComponentRegistry::ComponentRegistry()
 {
 }

@@ -133,9 +133,9 @@ void LineRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 void LineRenderer::MakeDefaultShader()
 {
 	m_Data.defVS = std::make_shared<VertexShader>();
-	m_Data.defVS->Load("Binaries/Shader/VS_Geometory.cso");
+	m_Data.defVS->Load("Engine/Assets/Binaries/Shader/VS_Geometory.cso");
 	m_Data.pVS = m_Data.defVS.get();
 	m_Data.defPS = std::make_shared<PixelShader>();
-	m_Data.defPS->Load("Binaries/Shader/PS_Geometory.cso");
+	m_Data.defPS->Load("Engine/Assets/Binaries/Shader/PS_Geometory.cso");
 	m_Data.pPS = m_Data.defPS.get();
 }

@@ -15,7 +15,7 @@
 // ---ComponentDescription---
 // デフォルトのプレイヤーコントローラーコンポーネント
 // --------------------------
-class PlayerController : public Component
+class ENGINE_API PlayerController : public Component
 {
 public:
     PlayerController();

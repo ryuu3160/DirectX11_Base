@@ -14,7 +14,7 @@
 // ---ComponentDescription---
 // カプセル型コライダー
 // --------------------------
-class CapsuleCollider : public ColliderBase
+class ENGINE_API CapsuleCollider : public ColliderBase
 {
 	friend class SphereCollider;
 public:

@@ -17,11 +17,14 @@
 /// <summary>
 /// ParticleEffectƒNƒ‰ƒX
 /// </summary>
-class ParticleEffect : public RenderComponent
+class ENGINE_API ParticleEffect : public RenderComponent
 {
 public:
     ParticleEffect();
     ~ParticleEffect();
+
+    ParticleEffect(const ParticleEffect &) = delete;
+    ParticleEffect &operator=(const ParticleEffect &) = delete;
 
     void Init() noexcept override;
     void Update(_In_ float In_Tick) noexcept override;

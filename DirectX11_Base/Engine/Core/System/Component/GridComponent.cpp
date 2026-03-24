@@ -37,7 +37,7 @@ GridComponent::~GridComponent()
 
 void GridComponent::Init() noexcept
 {
-	auto &DebugMenu = DebugManager::GetInstance().GetDebugWindowRef("System", "DebugMenu");
+	auto &DebugMenu = DebugManager::GetInstance().GetDebugWindowRef("View", "DebugMenu");
 	m_pDebugGroup = DebugMenu.CreateItem<ItemGroup>("Grid##GridObject");
 	m_pDebugGroup->CreateGroupItem<ItemSetNextItemWidth>("##GridObject", 100.0f);
 	m_pDebugGroup->CreateGroupItem<ItemValue>("GridSize##GridObject", DebugItem::Float, true);

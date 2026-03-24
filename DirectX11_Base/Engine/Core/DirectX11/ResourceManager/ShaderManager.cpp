@@ -71,7 +71,7 @@ void ShaderManager::SetupShader(_In_ std::string_view In_FileName) noexcept
 	}
 
 	// csoファイルのパスを設定
-	std::string path = "Binaries/Shader/";
+	std::string path = "Engine/Assets/Binaries/Shader/";
 	path += In_FileName;
 	path += ".cso";
 	if(shader && FAILED(shader->Load(path.c_str())))

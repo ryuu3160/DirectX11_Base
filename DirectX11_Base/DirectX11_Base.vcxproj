@@ -75,6 +75,7 @@
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
     <PreBuildEventUseInBuild>true</PreBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>true</PreLinkEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -112,13 +113,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- DLLの警告を無効化 -->
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PreprocessorDefinitions>ENGINE_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Engine\Core\pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>$(ProjectDir)Engine\Core\pch.h</ForcedIncludeFiles>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>true</OpenMPSupport>
@@ -126,11 +129,16 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!--.lib も出力する-->
+      <ImportLibrary>$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\$(TargetName).lib</ImportLibrary>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>$(ProjectDir)Binaries\Shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Engine\Assets\Binaries\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <PreLinkEvent>
+      <Command>if not exist "$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\" mkdir "$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\"</Command>
+    </PreLinkEvent>
     <PreBuildEvent>
       <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
       <Message>コンポーネント自動登録の生成</Message>
@@ -142,13 +150,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- DLLの警告を無効化 -->
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <PreprocessorDefinitions>ENGINE_EXPORTS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>$(ProjectDir)Engine\Core\pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>$(ProjectDir)Engine\Core\pch.h</ForcedIncludeFiles>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <OpenMPSupport>true</OpenMPSupport>
@@ -158,11 +168,16 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!--.lib も出力する-->
+      <ImportLibrary>$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\$(TargetName).lib</ImportLibrary>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>$(ProjectDir)Engine\Assets\Shader\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)Engine\Assets\Binaries\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <PreLinkEvent>
+      <Command>if not exist "$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\" mkdir "$(ProjectDir)Engine\Assets\Binaries\EngineLib\x64\$(Configuration)\"</Command>
+    </PreLinkEvent>
     <PreBuildEvent>
       <Command>"$(ProjectDir)Engine\BuildScripts\RunCodeGeneration.bat"</Command>
       <Message>コンポーネント自動登録の生成</Message>
@@ -238,14 +253,14 @@
     <ClCompile Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\CollisionManager\TreeData.cpp" />
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugItem.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugManager.cpp" />
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\DebugWindow.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.cpp" />
-    <ClCompile Include="Engine\Core\System\Managers\DebugManager\SystemItem.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Item\DebugItem.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Item\SystemItem.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugModal.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugPopup.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindow.cpp" />
+    <ClCompile Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindowBase.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\FadeManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SceneManager.cpp" />
     <ClCompile Include="Engine\Core\System\Managers\SoundManager.cpp" />
@@ -254,6 +269,14 @@
     <ClCompile Include="Engine\Core\System\Object\GridObject.cpp" />
     <ClCompile Include="Engine\Core\System\Object\Object.cpp" />
     <ClCompile Include="Engine\Core\System\Object\SkyBoxObj.cpp" />
+    <ClCompile Include="Engine\Core\System\Project\GameProject.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\Project\NuGetRestore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\Core\System\Scene\SceneBase.cpp" />
     <ClCompile Include="Engine\Core\System\Scene\SceneRoot.cpp" />
     <ClCompile Include="Engine\Core\System\SpriteManager\SpriteManager.cpp" />
@@ -363,14 +386,14 @@
     <ClInclude Include="Engine\Core\System\Managers\CollisionManager\CollisionManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\CollisionManager\OctreeCell.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\CollisionManager\TreeData.hpp" />
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugItem.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugManager.hpp" />
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\DebugWindow.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\DebugManager\InitializeImGui.hpp" />
-    <ClInclude Include="Engine\Core\System\Managers\DebugManager\SystemItem.hpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Item\DebugItem.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Item\SystemItem.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugModal.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugPopup.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindow.hpp" />
+    <ClInclude Include="Engine\Core\System\Managers\DebugManager\Window\DebugWindowBase.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\FadeManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SceneManager.hpp" />
     <ClInclude Include="Engine\Core\System\Managers\SoundManager.hpp" />
@@ -379,6 +402,14 @@
     <ClInclude Include="Engine\Core\System\Object\GridObject.hpp" />
     <ClInclude Include="Engine\Core\System\Object\Object.hpp" />
     <ClInclude Include="Engine\Core\System\Object\SkyBoxObj.hpp" />
+    <ClInclude Include="Engine\Core\System\Project\GameProject.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\Project\NuGetRestore.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Engine\Core\System\Scene\SceneBase.hpp" />
     <ClInclude Include="Engine\Core\System\Scene\SceneRoot.hpp" />
     <ClInclude Include="Engine\Core\System\SpriteManager\SpriteManager.hpp" />
@@ -523,11 +554,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\assimp-v143.5.4.3\build\native\assimp-v143.targets" Condition="Exists('..\packages\assimp-v143.5.4.3\build\native\assimp-v143.targets')" />
+    <Import Project="..\packages\directxtex_desktop_win10.2025.10.28.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('..\packages\directxtex_desktop_win10.2025.10.28.1\build\native\directxtex_desktop_win10.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\assimp-v143.5.4.3\build\native\assimp-v143.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\assimp-v143.5.4.3\build\native\assimp-v143.targets'))" />
+    <Error Condition="!Exists('..\packages\directxtex_desktop_win10.2025.10.28.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtex_desktop_win10.2025.10.28.1\build\native\directxtex_desktop_win10.targets'))" />
   </Target>
 </Project>

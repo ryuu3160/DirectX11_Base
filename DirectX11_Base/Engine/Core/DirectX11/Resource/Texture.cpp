@@ -73,12 +73,24 @@ HRESULT Texture::Create(_In_ const aiTexture *In_aiTex) noexcept
 
 	DirectX::TexMetadata mdata;
 	DirectX::ScratchImage image;
-	// 埋め込みテクスチャの読み込み
-	hr = DirectX::LoadFromWICMemory(In_aiTex->pcData, In_aiTex->mWidth, DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &mdata, image);
-	if (FAILED(hr))
+	// 圧縮形式のみ対応
+	if(In_aiTex->mHeight != 0)
 	{
-		return E_FAIL;
+		// 非圧縮形式はサポートしない
+		return E_NOTIMPL;
 	}
+
+	// 埋め込みテクスチャの読み込み
+	hr = DirectX::LoadFromWICMemory(
+		reinterpret_cast<const uint8_t *>(In_aiTex->pcData),
+		static_cast<size_t>(In_aiTex->mWidth),
+		DirectX::WIC_FLAGS_NONE,
+		&mdata,
+		image
+	);
+
+	if (FAILED(hr))
+		return E_FAIL;
 
 	// シェーダリソース生成
 	hr = CreateShaderResourceView(DX11_Core::GetInstance().GetDevice(), image.GetImages(), image.GetImageCount(), mdata, m_pSRV.GetAddressOf());

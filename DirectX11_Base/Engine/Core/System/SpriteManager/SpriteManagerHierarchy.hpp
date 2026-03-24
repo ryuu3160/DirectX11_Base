@@ -14,7 +14,7 @@
 /// <summary>
 /// SpriteManagerHierarchyƒNƒ‰ƒX
 /// </summary>
-class SpriteManagerHierarchy : public SpriteManagerWindow
+class ENGINE_API SpriteManagerHierarchy : public SpriteManagerWindow
 {
 public:
 	/// <summary>
