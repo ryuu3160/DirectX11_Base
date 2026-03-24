@@ -59,6 +59,21 @@ void InputSystem::Update(_In_ float In_DeltaTime) noexcept
     }
 }
 
+void InputSystem::DisableInput() noexcept
+{
+	Input::SetInputEnabled(false);
+}
+
+void InputSystem::EnableInput() noexcept
+{
+	Input::SetInputEnabled(true);
+}
+
+void InputSystem::SetInputEnabled(_In_ bool In_Enabled) noexcept
+{
+	Input::SetInputEnabled(In_Enabled);
+}
+
 InputSystem::CallbackHandle InputSystem::RegisterKeyCallBack(_In_ BYTE In_Key, _In_ KeyState In_State, _In_ std::function<void()> In_CallBack, _In_ bool In_Enabled) noexcept
 {
     CallbackHandle Handle = m_NextHandle++;

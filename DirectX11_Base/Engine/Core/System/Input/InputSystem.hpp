@@ -11,6 +11,7 @@
 // ==============================
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Input/Input.hpp"
+#include "Core/EngineAPI.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -21,7 +22,7 @@ namespace
 /// <summary>
 /// InputSystemクラス
 /// </summary>
-class InputSystem : public Singleton<InputSystem>
+class ENGINE_API InputSystem : public Singleton<InputSystem>
 {
 	friend class Singleton<InputSystem>;
 public:
@@ -40,6 +41,12 @@ public:
 	void Init() noexcept;
 
 	void Update(_In_ float In_DeltaTime) noexcept;
+
+	void DisableInput() noexcept;
+
+	void EnableInput() noexcept;
+
+	void SetInputEnabled(_In_ bool In_Enabled) noexcept;
 
 	/// <summary>
 	/// 指定されたキーと状態に対してコールバック関数を登録します

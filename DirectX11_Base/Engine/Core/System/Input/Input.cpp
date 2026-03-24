@@ -14,6 +14,7 @@ namespace Input
 
 		POINTS g_MouseRelativePos;	// マウスポインタのウィンドウ上の相対座標
 		int g_nMouseWheelDelta;		// マウスホイールの回転量
+		bool g_InputEnabled = true; // 入力が有効かどうか
 	}
 
 HRESULT Init()
@@ -40,6 +41,10 @@ void Update()
 {
 	//古い入力を更新
 	memcpy_s(g_oldKeyTable, sizeof(g_oldKeyTable), g_KeyTable, sizeof(g_KeyTable));
+
+	if(!g_InputEnabled)
+		return;
+
 	//現在の入力を取得
 	//最初の入力
 	if (!GetKeyboardState(g_KeyTable))
@@ -52,6 +57,11 @@ void EndUpdate() noexcept
 {
 	g_nMouseWheelDelta = 0; // マウスホイールの回転量をリセット
 	g_MousePrevPos = g_MousePos;
+}
+
+void SetInputEnabled(_In_ bool In_Enabled) noexcept
+{
+	g_InputEnabled = In_Enabled;
 }
 
 bool IsKeyPress(BYTE key)

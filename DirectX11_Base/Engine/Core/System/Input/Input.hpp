@@ -37,6 +37,8 @@ namespace Input
 	/// </summary>
 	void EndUpdate() noexcept;
 
+	void SetInputEnabled(_In_ bool In_Enabled) noexcept;
+
 	/// <summary>
 	/// ƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
 	/// </summary>
