@@ -13,6 +13,7 @@
 #include "Core/System/Component/ComponentRegistry.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Utility/CustomWindowProc.hpp"
+#include "Core/System/Project/GameProject.hpp"
 
 // ==============================
 //  プロトタイプ宣言
@@ -21,7 +22,7 @@ void Update(_In_ float In_DeltaTime);
 void FixedUpdate(_In_ double In_FixedDeltaTime);
 void Draw();
 void ExecuteObjectsChange();
-
+void TestProjectCreation();
 // ==============================
 //  グローバル変数
 // ==============================
@@ -39,7 +40,7 @@ HRESULT Main::Init()
 		return hr;
 
 	// 各種機能の初期化
-	RegisterAllComponents(); // コンポーネントの登録
+	RegisterAllEngineComponents(); // コンポーネントの登録
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
 	auto &Sound = SoundManager::GetInstance();
@@ -116,6 +117,11 @@ HRESULT Main::Init()
 	Instance.AddCustomProc(ImGui_ImplWin32_WndProcHandler);
 #endif
 	Instance.AddCustomProc(EngineCustomWindowProc::DisableSingleAltKey);
+
+	// GameProjectManagerの初期化
+	GameProjectManager::GetInstance();
+
+	TestProjectCreation();
 
 	return hr;
 }
@@ -208,4 +214,30 @@ void ExecuteObjectsChange()
 {
 	auto &SceneM = SceneManager::GetInstance();
 	SceneM.ChangeSceneContent();
+}
+
+void TestProjectCreation()
+{
+	auto &manager = GameProjectManager::GetInstance();
+
+	// テストプロジェクトを作成
+	bool success = manager.CreateNewProject("TestGame", "Projects");
+
+	if(success)
+	{
+		DebugManager::GetInstance().DebugLog("Test project created successfully!");
+
+		// 確認
+		const auto *info = manager.GetCurrentProject();
+		if(info)
+		{
+			DebugManager::GetInstance().DebugLog("  Project Name: {}", info->Name);
+			DebugManager::GetInstance().DebugLog("  Project Path: {}", info->RootPath.string());
+			DebugManager::GetInstance().DebugLog("  Solution: {}", info->SolutionPath.string());
+		}
+	}
+	else
+	{
+		DebugManager::GetInstance().DebugLogError("Failed to create test project");
+	}
 }
