@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-// DLL ã‚¨ãƒ³ãƒˆãƒªãƒã‚¤ãƒ³ãƒˆ
+// DLL ƒGƒ“ƒgƒŠƒ|ƒCƒ“ƒg
 BOOL APIENTRY DllMain(
     HMODULE hModule,
     DWORD ul_reason_for_call,
@@ -11,26 +11,26 @@ BOOL APIENTRY DllMain(
     switch(ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
-        // DLL ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã¨ã
+        // DLL ‚ªƒ[ƒh‚³‚ê‚½‚Æ‚«
         break;
         
     case DLL_THREAD_ATTACH:
-        // æ–°ã—ã„ã‚¹ãƒ¬ãƒƒãƒ‰ãŒä½œæˆã•ã‚ŒãŸã¨ã
+        // V‚µ‚¢ƒXƒŒƒbƒh‚ªì¬‚³‚ê‚½‚Æ‚«
         break;
         
     case DLL_THREAD_DETACH:
-        // ã‚¹ãƒ¬ãƒƒãƒ‰ãŒçµ‚äº†ã—ãŸã¨ã
+        // ƒXƒŒƒbƒh‚ªI—¹‚µ‚½‚Æ‚«
         break;
         
     case DLL_PROCESS_DETACH:
-        // DLL ãŒã‚¢ãƒ³ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸã¨ã
+        // DLL ‚ªƒAƒ“ƒ[ƒh‚³‚ê‚½‚Æ‚«
         break;
     }
     
     return TRUE;
 }
 
-// ã‚²ãƒ¼ãƒ ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆæƒ…å ±
+// ƒQ[ƒ€ƒvƒƒWƒFƒNƒgî•ñ
 extern "C" __declspec(dllexport) const char* GetGameProjectName()
 {
     return "{PROJECT_NAME}";

@@ -2,21 +2,33 @@
 <!-- GameProject Filters Template -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Scripts">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Generated">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+
+    <Filter Include="Assets">
+      <UniqueIdentifier>{0B0C0F0A-2B47-4C2A-9A3E-7C8A5B6B8F10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Scripts">
+      <UniqueIdentifier>{1C9A1A2B-3C4D-5E6F-7081-92A3B4C5D6E7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Scenes">
+      <UniqueIdentifier>{2D8B2B3C-4D5E-6F70-8192-A3B4C5D6E7F8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures">
+      <UniqueIdentifier>{3E7C3C4D-5E6F-7081-92A3-B4C5D6E7F809}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
+
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
-    <ClCompile Include="Generated\ComponentRegistry.cpp">
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Generated\ComponentRegistry_Game_Generated.cpp">
       <Filter>Generated</Filter>
     </ClCompile>
   </ItemGroup>
+
   <ItemGroup>
   </ItemGroup>
 </Project>
