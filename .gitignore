@@ -37,8 +37,9 @@ bld/
 DirectX11_Base/Engine/Core/System/Generated/*
 !DirectX11_Base/Engine/Core/System/Generated/.gitkeep
 
-# ゲームプロジェクトフォルダ
+# ゲームプロジェクト関連フォルダ
 DirectX11_Base/Projects/*
+DirectX11_Base/Engine/Assets/Data/Project/*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
