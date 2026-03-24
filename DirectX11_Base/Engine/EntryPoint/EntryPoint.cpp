@@ -21,6 +21,11 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	//_CrtSetBreakAlloc(145);
 
 	// ------------------------------
+	// COMの初期化
+	// ------------------------------
+	HRESULT hrCOM = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+
+	// ------------------------------
 	// ウィンドウの初期化
 	// ------------------------------
 	Window &window = Window::GetInstance();														// インスタンス生成
@@ -68,6 +73,9 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// ImGuiの終了処理
 	InitializeImGui::UninitImGui();
+
+	if(SUCCEEDED(hrCOM))
+		CoUninitialize();
 
 	return 0;
 }
