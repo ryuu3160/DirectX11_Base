@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: VisualStudioHelper.cpp
-	Summary:
+	Summary: VisualStudioでファイルを開くためのヘルパークラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2026/3/9 Mon AM 06:34:51 初回作成
 ===================================================================+*/
@@ -17,7 +17,7 @@
 
 bool VisualStudioHelper::OpenFileInVisualStudio(_In_ const std::filesystem::path &In_FilePath, _In_ const std::filesystem::path &In_SolutionPath)
 {
-    // 既に実行中の Visual Studio があるか確認
+    // 既に実行中のVisualStudioがあるか確認
     if(IsVisualStudioRunning())
     {
         if(OpenFileInRunningInstance(In_FilePath))

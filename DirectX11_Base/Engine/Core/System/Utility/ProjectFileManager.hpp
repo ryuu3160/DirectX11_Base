@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ProjectFileManager.hpp
-	Summary:
+	Summary: .vcxprojの読み書きを行うクラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2026/3/9 Mon AM 07:27:02 初回作成
 ===================================================================+*/
@@ -23,6 +23,12 @@ namespace
 class ProjectFileManager
 {
 public:
+    struct ProjectInfo
+    {
+        std::filesystem::path ProjectDir;
+        std::string ProjectName;
+    };
+
     struct FileEntry
     {
         std::filesystem::path FilePath;     // ファイルパス
@@ -43,7 +49,11 @@ public:
     /// <summary>
     /// C++ スクリプトをプロジェクトに追加（.cpp + .hpp）
     /// </summary>
-    static bool AddCppScriptToProject(_In_ const std::filesystem::path &In_CppPath, _In_ const std::filesystem::path &In_HppPath, _In_ const std::string &In_FilterPath);
+	/// <param name="[In_ProjectInfo]">プロジェクト情報</param>
+	/// <param name="[In_CppPath]">追加する .cpp ファイルのパス</param>
+	/// <param name="[In_HppPath]">追加する .hpp ファイルのパス</param>
+	/// <param name="[In_FilterPath]">フィルターのパス（例: "Game/Script/AI"）</param>
+    static bool AddCppScriptToProject(_In_ ProjectInfo In_ProjectInfo, _In_ const std::filesystem::path &In_CppPath, _In_ const std::filesystem::path &In_HppPath, _In_ const std::string &In_FilterPath);
 
 private:
     /// <summary>

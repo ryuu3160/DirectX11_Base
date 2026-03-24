@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: ProjectFileManager.cpp
-	Summary:
+	Summary: .vcxprojの読み書きを行うクラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2026/3/9 Mon AM 07:27:08 初回作成
 ===================================================================+*/
@@ -128,12 +128,14 @@ bool ProjectFileManager::AddFileToFilters(_In_ const std::filesystem::path &In_F
     return true;
 }
 
-bool ProjectFileManager::AddCppScriptToProject(_In_ const std::filesystem::path &In_CppPath, _In_ const std::filesystem::path &In_HppPath, _In_ const std::string &In_FilterPath)
+bool ProjectFileManager::AddCppScriptToProject(_In_ ProjectInfo In_ProjectInfo, _In_ const std::filesystem::path &In_CppPath, _In_ const std::filesystem::path &In_HppPath, _In_ const std::string &In_FilterPath)
 {
     // プロジェクトファイルのパス
-	std::filesystem::path Directory = std::filesystem::current_path();
-    std::filesystem::path ProjectPath = Directory / "DirectX11_Base.vcxproj";
-    std::filesystem::path FiltersPath = Directory / "DirectX11_Base.vcxproj.filters";
+	std::string vcxproj = In_ProjectInfo.ProjectName + ".vcxproj";
+	std::string filters = In_ProjectInfo.ProjectName + ".vcxproj.filters";
+    std::filesystem::path Directory = In_ProjectInfo.ProjectDir;
+    std::filesystem::path ProjectPath = Directory / vcxproj;
+    std::filesystem::path FiltersPath = Directory / filters;
 
     // .cpp を追加
     FileEntry CppEntry;

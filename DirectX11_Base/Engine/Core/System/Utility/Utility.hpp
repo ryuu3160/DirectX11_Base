@@ -187,6 +187,12 @@ namespace Util
     }
 
     /// <summary>
+    /// 実行ファイルのディレクトリを取得します
+    /// </summary>
+    /// <returns>実行可能ファイルが配置されているディレクトリのパス</returns>
+    std::filesystem::path GetExecutableDir();
+
+    /// <summary>
     /// システムのエクスプローラーで指定されたパスを開きます
     /// </summary>
     /// <param name="[In_Path]">開くファイルまたはフォルダーのパス</param>
@@ -207,6 +213,64 @@ namespace Util
         std::wstring wpath = std::filesystem::path(In_FilePath).wstring();
         ShellExecuteW(NULL, L"open", wpath.c_str(), NULL, NULL, SW_SHOW);
     }
+
+    /// <summary>
+    /// テンプレートファイルからファイルを生成します
+    /// </summary>
+    /// <param name="[In_TemplatePath]">テンプレートファイルのパス</param>
+    /// <param name="[In_OutputPath]">出力ファイルのパス</param>
+    /// <param name="[In_Replacements]">テンプレート内で置換する文字列のマップ(キーが置換対象、値が置換後の文字列)</param>
+    /// <returns>生成が成功した場合はtrue、失敗した場合はfalse</returns>
+    bool GenerateFromTemplate(_In_ const std::filesystem::path &In_TemplatePath, _In_ const std::filesystem::path &In_OutputPath, _In_ const std::map<std::string, std::string> &In_Replacements);
+
+    /// <summary>
+    /// フィルター文字列からフィルター仕様を構築します
+    /// </summary>
+    /// <param name="[In_Filter]">入力フィルター文字列</param>
+    /// <param name="[Inout_OwnedStrings]">所有する文字列を格納するためのベクター</param>
+    /// <param name="[Out_Specs]">構築されたフィルター仕様を受け取るベクター</param>
+    void BuildFilterSpecs(_In_ std::wstring_view In_Filter, _Out_ std::vector<std::wstring> &Out_OwnedStrings, _Out_ std::vector<COMDLG_FILTERSPEC> &Out_Specs);
+
+    /// <summary>
+    /// フォルダー選択ダイアログを表示します
+    /// </summary>
+    /// <param name="[In_Owner]">ダイアログの親ウィンドウハンドル</param>
+    /// <param name="[In_Title]">ダイアログのタイトル</param>
+    /// <param name="[In_DefaultFolder]">初期表示するフォルダーのパス</param>
+    /// <returns>選択されたフォルダーのパス(キャンセルされた場合は空の値)</returns>
+    std::optional<std::wstring> PickFolderW(_In_ HWND In_Owner, _In_ std::wstring_view In_Title = L"Select Folder", _In_ std::wstring_view In_DefaultFolder = L"");
+
+    /// <summary>
+    /// フォルダー選択ダイアログを表示します
+    /// </summary>
+    /// <param name="[In_Owner]">ダイアログの所有者となるウィンドウハンドル</param>
+    /// <param name="[In_Title]">ダイアログのタイトル</param>
+    /// <param name="[In_DefaultFolderUtf8]">UTF-8エンコードされた既定のフォルダーパス</param>
+    /// <returns>選択されたフォルダーのUTF-8パス(キャンセルされた場合は空の値)</returns>
+    std::optional<std::string> PickFolderUTF8(_In_ HWND In_Owner, _In_ std::string_view In_Title = "Select Folder", _In_ std::string_view In_DefaultFolderUtf8 = "");
+
+    /// <summary>
+    /// ファイル選択ダイアログを表示します
+    /// </summary>
+    /// <param name="[In_Owner]">ダイアログの親ウィンドウハンドル</param>
+    /// <param name="[In_Title]">ダイアログのタイトル</param>
+    /// <param name="[In_DefaultFolder]">初期ディレクトリのパス</param>
+    /// <param name="[In_Filter]">ファイルフィルター文字列</param>
+	/// <param name="[In_DefaultExtension]">デフォルトの拡張子</param>
+    /// <returns>選択されたファイルのパス(キャンセルされた場合は空の値)</returns>
+    std::optional<std::wstring> PickFileW(_In_ HWND In_Owner, _In_ std::wstring_view In_Title, _In_ std::wstring_view In_DefaultFolder, _In_ std::wstring_view In_Filter, _In_ std::wstring_view In_DefaultExtension);
+
+    /// <summary>
+    /// ファイル選択ダイアログを表示します
+    /// </summary>
+    /// <param name="[In_Owner]">ダイアログの親ウィンドウのハンドル</param>
+    /// <param name="[In_Title]">ダイアログのタイトル</param>
+    /// <param name="[In_DefaultFolder]">初期ディレクトリ</param>
+    /// <param name="[In_Filter]">ファイルフィルター</param>
+	/// <param name="[In_DefaultExtension]">デフォルトの拡張子</param>
+    /// <returns>選択されたファイルのパス(キャンセルされた場合は空)</returns>
+    std::optional<std::string> PickFileUTF8(_In_ HWND In_Owner, _In_ std::string_view In_Title, _In_ std::string_view In_DefaultFolder, _In_ std::string_view In_Filter, _In_ std::string_view In_DefaultExtension);
+
 }
 
 using namespace Util; // Util名前空間をグローバルに展開
