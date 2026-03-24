@@ -10,11 +10,15 @@
 //	include
 // ==============================
 #include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
-#include "Core/System/Managers/DebugManager/DebugWindow.hpp"
-#include "Core/System/Managers/DebugManager/DebugItem.hpp"
-#include "Core/System/Managers/DebugManager/SystemItem.hpp"
+#include "Core/System/Managers/DebugManager/Item/DebugItem.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugWindowBase.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugWindow.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugModal.hpp"
+#include "Core/System/Managers/DebugManager/Window/DebugPopup.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Utility/Utility.hpp"
+#include "Core/EngineAPI.hpp"
 
 // ==============================
 //	定数定義
@@ -26,14 +30,13 @@ namespace
 /// <summary>
 /// DebugManagerクラス
 /// </summary>
-class DebugManager : public Singleton<DebugManager>
+class ENGINE_API DebugManager : public Singleton<DebugManager>
 {
 	friend class Singleton<DebugManager>;
 
-	struct ToolBarMenu
+	struct MenuBar
 	{
 		std::string Name;
-
 		std::function<void()> Func;
 	};
 
@@ -57,7 +60,25 @@ public:
 	/// </summary>
 	/// <param name="[In_Name]">ウィンドウ名</param>
 	/// <returns>作成されたウィンドウへのポインタ</returns>
-	DebugWindow *CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags = 0);
+	DebugWindow *CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar = true, _In_ ImGuiWindowFlags In_Flags = 0);
+
+	/// <summary>
+	/// モーダルダイアログを作成する
+	/// </summary>
+	/// <param name="[In_GroupName]">デバッグモーダルのグループ名</param>
+	/// <param name="[In_Name]">デバッグモーダルの名前</param>
+	/// <param name="[In_Flags]">ImGuiウィンドウフラグ(デフォルトは0)</param>
+	/// <returns>作成されたDebugModalオブジェクトへのポインタ</returns>
+	DebugModal *CreateDebugModal(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar = true, _In_ ImGuiWindowFlags In_Flags = 0);
+
+	/// <summary>
+	/// ポップアップウィンドウを作成する
+	/// </summary>
+	/// <param name="[In_GroupName]">グループの名前</param>
+	/// <param name="[In_Name]">ポップアップの名前</param>
+	/// <param name="[In_Flags]">ImGuiウィンドウフラグ(デフォルトは0)</param>
+	/// <returns>作成されたDebugPopupオブジェクトへのポインタ</returns>
+	DebugPopup *CreateDebugPopup(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar = true, _In_ ImGuiWindowFlags In_Flags = 0);
 
 	/// <summary>
 	/// ツールバーにメニュー項目を追加する
@@ -65,7 +86,23 @@ public:
 	/// <param name="[In_GroupName]">グループ名</param>
 	/// <param name="[In_Name]">追加するメニュー項目の表示名</param>
 	/// <param name="[In_Func]">メニュー項目が選択されたときに実行されるコールバック関数（引数なし、戻り値なし）。</param>
-	void AddToolBarMenu(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ std::function<void()> In_Func);
+	void AddMenuBar(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ std::function<void()> In_Func);
+
+	/// <summary>
+	/// 指定されたグループ名と名前でデバッグウィンドウベースを取得する
+	/// </summary>
+	/// <param name="[In_GroupName]">デバッグウィンドウのグループ名</param>
+	/// <param name="[In_Name]">デバッグウィンドウの名前</param>
+	/// <returns>DebugWindowBase オブジェクトへのポインタ</returns>
+	DebugWindowBase *GetDebugWindowBase(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name);
+
+	/// <summary>
+	/// 指定されたグループ名と名前でデバッグウィンドウベースの参照を取得する
+	/// </summary>
+	/// <param name="[In_GroupName]">デバッグウィンドウのグループ名</param>
+	/// <param name="[In_Name]">デバッグウィンドウの名前</param>
+	/// <returns>デバッグウィンドウへの参照</returns>
+	DebugWindowBase &GetDebugWindowBaseRef(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name);
 
 	/// <summary>
 	/// 指定した名前に対応するデバッグウィンドウを取得する
@@ -136,20 +173,23 @@ private:
 
 	void ProjectWindowInit();
 
+	void FileMenuInit();
+	void EditMenuInit();
+	void ViewMenuInit();
+
 	void SaveDebugData();
 	void DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugItem *In_Item);
-	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindow *In_Window);
+	void WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindowBase *In_Window);
 
 	void LoadDebugData();
 
-	void WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindow *Inout_Window);
+	void WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindowBase *Inout_Window);
 
 	std::string CharacterLimitRecursion(_In_ std::string_view In_Text, _In_ int In_LimitNum);
 
 private:
-	ImGuiWindowFlags m_ToolBarFlags;
-	std::unordered_map<std::string, std::vector<ToolBarMenu>> m_ToolBarFuncs;
-	std::vector<DebugWindow*> m_DebugWindows;
+	std::unordered_map<std::string, std::vector<MenuBar>> m_MenuBarFuncs;
+	std::vector<DebugWindowBase*> m_DebugWindows;
 	std::vector<SaveData> m_SaveData;
 	bool m_IsRequestLoadLayout;
 	bool m_IsRequestSaveLayout;

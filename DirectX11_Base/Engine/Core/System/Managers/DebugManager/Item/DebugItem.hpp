@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "InitializeImGui.hpp"
+#include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
 #include "Core/System/Utility/Concept.hpp"
 // ==============================
 //  前方宣言
@@ -17,12 +17,48 @@
 class ItemGroup;
 class ItemLayoutFunc;
 
+// ==============================
+//  定数
+// ==============================
+namespace
+{
+	constexpr ImVec4 ImGuiColor_Red(1.0f, 0.0f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Green(0.0f, 1.0f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Blue(0.0f, 0.0f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Yellow(1.0f, 1.0f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Cyan(0.0f, 1.0f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Magenta(1.0f, 0.0f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_White(1.0f, 1.0f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Black(0.0f, 0.0f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Gray(0.5f, 0.5f, 0.5f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Transparent(0.0f, 0.0f, 0.0f, 0.0f);
+	constexpr ImVec4 ImGuiColor_Orange(1.0f, 0.65f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Purple(0.5f, 0.0f, 0.5f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Brown(0.6f, 0.3f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Pink(1.0f, 0.75f, 0.8f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightBlue(0.68f, 0.85f, 0.9f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightGreen(0.56f, 0.93f, 0.56f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightYellow(1.0f, 1.0f, 0.88f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightCyan(0.88f, 1.0f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightMagenta(1.0f, 0.88f, 1.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_LightGray(0.83f, 0.83f, 0.83f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkRed(0.5f, 0.0f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkGreen(0.0f, 0.5f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkBlue(0.0f, 0.0f, 0.5f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkYellow(0.5f, 0.5f, 0.0f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkCyan(0.0f, 0.5f, 0.5f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkMagenta(0.5f, 0.0f, 0.5f, 1.0f);
+	constexpr ImVec4 ImGuiColor_DarkGray(0.25f, 0.25f, 0.25f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Silver(0.75f, 0.75f, 0.75f, 1.0f);
+	constexpr ImVec4 ImGuiColor_Gold(1.0f, 0.84f, 0.0f, 1.0f);
+}
+
 /// <summary>
 /// DebugItemクラス
 /// </summary>
 class DebugItem
 {
-	friend class DebugWindow;
+	friend class DebugWindowBase;
 public:
 	using CallBack = std::function<void(bool, void *)>;
 	using ConstCallback = std::function<void(const void *)>;
@@ -45,6 +81,7 @@ public:
 		Vector,		// ベクター入力
 		Color,		// 色入力
 		Path,		// ファイルパスの指定
+		Text,		// テキスト
 		InputStr,	// 文字列入力
 		Console,	// 文字列表示
 		Command,	// ボタン
@@ -56,6 +93,7 @@ public:
 		__Hierarchy, // ヒエラルキーウィンドウ
 		__ComponentSelector, // コンポーネントセレクター
 		__ProjectWindow, // プロジェクトウィンドウ
+		__NewProject, // 新規プロジェクト作成ウィンドウ
 	};
 
 protected:
@@ -63,6 +101,8 @@ protected:
 
 public:
 	virtual ~DebugItem();
+
+	virtual void Awake() {};
 
 	std::string GetName() const;
 
@@ -104,6 +144,7 @@ protected:
 	std::string m_WindowName;
 	std::string m_Name;
 	Kind m_Kind;
+	DebugWindowBase *m_pWindow;
 };
 
 /// <summary>
@@ -161,19 +202,153 @@ private:
 	bool m_EnableDrag;
 };
 
+/// <summary>
+/// テキスト表示
+/// </summary>
+/// <param name="[In_Text]">表示するテキスト</param>
+/// <param name="[In_IsWrapped]">折り返すかどうか</param>
+/// <param name="[In_IsBullet]">箇条書き表示にするかどうか</param>
+/// <param name="[In_IsSave]">値を保存するかどうか</param>
 class ItemText : public DebugItem
 {
 public:
-	ItemText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
+	ItemText(_In_ std::string_view In_Text, _In_ bool In_IsWrapped = false, _In_ bool In_IsBullet = false, _In_ bool In_IsSave = false);
 	~ItemText();
 
 	void DrawImGui() override;
 
+	inline std::string GetText() { return m_Text; }
+
+	inline void SetText(_In_ std::string_view In_Text) { m_Text = In_Text; }
+
+	/// <summary>
+	/// 折り返すかどうかを取得
+	/// </summary>
+	inline bool IsWrapped() const { return m_IsWrapped; }
+	/// <summary>
+	/// 折り返すかどうかを設定
+	/// </summary>
+	inline void SetWrapped(_In_ bool In_IsWrapped) { m_IsWrapped = In_IsWrapped; }
+	
+	/// <summary>
+	/// 箇条書き表示にするかどうかを取得
+	/// </summary>
+	inline bool IsBullet() const { return m_IsBullet; }
+	/// <summary>
+	/// 箇条書き表示にするかどうかを設定
+	/// </summary>
+	inline void SetBullet(_In_ bool In_IsBullet) { m_IsBullet = In_IsBullet; }
+
+	/// <summary>
+	/// 色を取得
+	/// </summary>
+	inline ImVec4 GetColor() const { return m_Color; }
+
+	/// <summary>
+	/// 色を設定
+	/// </summary>
+	inline void SetColor(_In_ ImVec4 In_Color)
+	{
+		m_Color = In_Color;
+		m_IsChangeColor = true;
+	}
+
+	/// <summary>
+	/// 色をリセット
+	/// </summary>
+	inline void ResetColor()
+	{
+		m_Color = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+		m_IsChangeColor = false;
+	}
+
+	inline bool IsSave() const { return m_IsSave; }
+	inline int GetLineCount() const { return m_LineCount; }
+
+	/// <summary>
+	/// <para>マルチライン時の行数を設定</para>
+	/// <para>0の場合は描画時余っているスペース全てを使用</para>
+	/// </summary>
+	/// <param name="In_LineCount"></param>
+	inline void SetLineCount(_In_ int In_LineCount = 0) { m_LineCount = In_LineCount; }
+
+private:
+	std::string m_Text;
+	ImVec4 m_Color;
+	int m_LineCount;
+	bool m_IsChangeColor;
+	bool m_IsWrapped;
+	bool m_IsBullet;
+	bool m_IsSave;
+};
+
+/// <summary>
+/// テキスト入力項目
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_IsMultiline]">マルチライン入力かどうか</param>
+/// <param name="[In_Flags]">ImGuiInputTextFlagsのフラグ</param>
+/// <param name="[Is_HideLabel]">ラベルを非表示にするかどうか</param>
+/// <param name="[In_IsSave]">値を保存するかどうか</param>
+class ItemInputText : public DebugItem
+{
+public:
+	ItemInputText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave);
+	~ItemInputText();
+
+	void DrawImGui() override;
+
 	std::string &GetText() { return m_Text; }
+
+	/// <summary>
+	/// ImGuiInputTextFlagsのフラグを取得
+	/// </summary>
 	ImGuiInputTextFlags GetFlags() const { return m_Flags; }
+
+	/// <summary>
+	/// ImGuiInputTextFlagsのフラグを設定
+	/// </summary>
+	void SetFlags(_In_ ImGuiInputTextFlags In_Flags) { m_Flags = In_Flags; }
+
+	/// <summary>
+	/// ImGuiInputTextFlagsのフラグを追加
+	/// </summary>
+	void AddFlags(_In_ ImGuiInputTextFlags In_Flags) { m_Flags |= In_Flags; }
+
+	/// <summary>
+	/// 複数行入力かどうかを取得
+	/// </summary>
 	bool IsMultiline() const { return m_IsMultiline; }
+
+	/// <summary>
+	/// 複数行入力かどうかを設定
+	/// </summary>
+	void SetIsMultiline(_In_ bool In_IsMultiline) { m_IsMultiline = In_IsMultiline; }
+
+	/// <summary>
+	/// ラベルを非表示にするかどうかを取得
+	/// </summary>
 	bool IsHideLabel() const { return m_IsHideLabel; }
+
+	/// <summary>
+	/// ラベルを非表示にするかどうかを設定
+	/// </summary>
+	void SetHideLabel(_In_ bool In_IsHideLabel) { m_IsHideLabel = In_IsHideLabel; }
+
+	/// <summary>
+	/// 値を保存するかどうかを取得
+	/// </summary>
 	bool IsSave() const { return m_IsSave; }
+
+	/// <summary>
+	/// 値を保存するかどうかを設定
+	/// </summary>
+	void SetIsSave(_In_ bool In_IsSave) { m_IsSave = In_IsSave; }
+
+	/// <summary>
+	/// <para>マルチライン時の行数を取得</para>
+	/// <para>0の場合は描画時余っているスペース全てを使用</para>
+	/// </summary>
 	int GetLineCount() const { return m_LineCount; }
 
 	/// <summary>

@@ -14,6 +14,9 @@
 #include "Core/System/Managers/SceneManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
 #include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/System/Project/GameProject.hpp"
+#include "Core/System/Input/Input.hpp"
+#include "ryuu_lib/WindowGenerator/Window.hpp"
 
 // ==============================
 //	定数定義
@@ -26,51 +29,19 @@ namespace
 
 void DebugManager::Init()
 {
-	m_ToolBarFlags |= ImGuiWindowFlags_MenuBar;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoCollapse;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoMove;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoResize;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoTitleBar;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoScrollbar;
-	m_ToolBarFlags |= ImGuiWindowFlags_NoDocking;
-	m_ToolBarFlags |= ImGuiWindowFlags_AlwaysAutoResize;
-
 	// データの読み込み
 	LoadDebugData();
 
-	// デフォルトウィンドウの作成
-	auto log = CreateDebugWindow("System", "Log");
-	auto DebugMenu = CreateDebugWindow("System", "DebugMenu");
-	// フレームレート表示ウィンドウ
-	CreateDebugWindow("System", "Hierarchy");
-	CreateDebugWindow("System", "Inspector");
-	// ツールバーメニューの初期設定
-	AddToolBarMenu("System", "Show All Debug Windows", [this]()
-		{
-			ShowAllWindows();
-		});
-	AddToolBarMenu("System", "Hide All Debug Windows", [this]()
-		{
-			HideAllWindows();
-		});
-	AddToolBarMenu("System", "Reset ImGui Layout", [this]()
-		{
-			m_IsRequestLoadLayout = true;
-		});
-	AddToolBarMenu("System", "Save ImGui Layout", [this]()
-		{
-			m_IsRequestSaveLayout = true;
-		});
+	// ファイルメニューの初期設定
+	FileMenuInit();
 
-	// ログウィンドウの初期設定
-	auto Output = log->CreateItem<ItemConsole>("ConsoleLog",true);
-	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
-	Output->AddLevel("Error",{1.0f,0.1f,0.1f,1.0f});
+	// 編集メニューの初期化
+	EditMenuInit();
 
-	// プロジェクトウィンドウ追加
-	ProjectWindowInit();
+	// 表示メニューの初期化
+	ViewMenuInit();
 
-	AddToolBarMenu("Camera", "Editor", [this]()
+	AddMenuBar("Camera", "Editor", [this]()
 		{
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
@@ -91,7 +62,7 @@ void DebugManager::Init()
 				}
 			}
 		});
-	AddToolBarMenu("Camera", "Game", [this]()
+	AddMenuBar("Camera", "Game", [this]()
 		{
 			auto scene = SceneManager::GetInstance().GetCurrentScene();
 			if (scene)
@@ -112,43 +83,6 @@ void DebugManager::Init()
 				}
 			}
 		});
-
-	// デバッグメニューの初期設定
-	DebugMenu->CreateItem<ItemCallback>("Pause", DebugItem::Kind::Bool,
-		[](bool IsSet, void *ptr)
-		{
-			if(!IsSet)
-				return;
-
-			bool *IsPause = reinterpret_cast<bool*>(ptr);
-			if (*IsPause)
-			{
-				FrameManager::GetInstance().SetTimeScale(0.0f);
-			}
-			else
-			{
-				FrameManager::GetInstance().SetTimeScale(1.0f);
-			}
-		});
-	DebugMenu->CreateItem<ItemSameLine>("SameLine1");
-	auto IsDrawGizmoCallback = DebugMenu->CreateItem<ItemCallback>("IsDrawGizmo", DebugItem::Kind::Bool,
-		[](bool IsSet, void *ptr)
-		{
-			if(!IsSet)
-				return;
-			bool *IsDrawGizmo = reinterpret_cast<bool*>(ptr);
-			RenderManager::GetInstance().SetDrawGizmos(*IsDrawGizmo);
-		});
-	IsDrawGizmoCallback->GetValue() = RenderManager::GetInstance().IsDrawGizmos();
-
-	auto ScreenColor = DebugMenu->CreateItem<ItemValue>("ScreenColor", DebugItem::Kind::Color, true);
-	DX11_Core::GetInstance().SetWindowColor(ScreenColor->GetColor());
-	ScreenColor->SetNoticeFunc([]()
-		{
-			auto& DX11Core = DX11_Core::GetInstance();
-			auto color = DebugManager::GetInstance().GetDebugWindowRef("System", "DebugMenu")["ScreenColor"].GetColor();
-			DX11Core.SetWindowColor(color);
-		});
 }
 
 void DebugManager::Update() noexcept
@@ -157,52 +91,32 @@ void DebugManager::Update() noexcept
 
 void DebugManager::Draw() noexcept
 {
-	ImGuiViewport *vp = ImGui::GetMainViewport();
-	ImVec2 pos = ImVec2(vp->WorkPos.x, vp->WorkPos.y);
-	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(cx_nWINDOW_WIDTH, cx_fToolBarHeight));
-	if (ImGui::Begin("ToolBar",nullptr, m_ToolBarFlags))
+	if(ImGui::BeginMainMenuBar())
 	{
-		ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
-		ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.06f, 0.06f, 0.06f, 1.0f));
-		if (ImGui::BeginMenuBar())
+		// ツールバーメニュー
+		for(const auto &itr : m_MenuBarFuncs)
 		{
-			for (const auto &itr : m_ToolBarFuncs)
+			if(ImGui::BeginMenu(itr.first.c_str()))
 			{
-				if (ImGui::BeginMenu(itr.first.c_str()))
+				for(const auto &menu : itr.second)
 				{
-					for (const auto &menu : itr.second)
+					if(ImGui::MenuItem(menu.Name.c_str(), nullptr))
 					{
-						if (ImGui::MenuItem(menu.Name.c_str(), nullptr))
-						{
-							menu.Func();
-						}
+						menu.Func();
 					}
-					ImGui::EndMenu();
 				}
+				ImGui::EndMenu();
 			}
-
-			ImGui::EndMenuBar();
 		}
-		ImGui::PopStyleColor();
-		ImGui::PopItemWidth();
+		ImGui::EndMainMenuBar();
 	}
-	ImGui::End();
 
+	// デバッグウィンドウの描画
 	for (const auto &window : m_DebugWindows)
 	{
-		if (!window)
-			continue;
-
-		if (window->IsOpen())
+		if(window)
 		{
-			std::string name = window->GetGroupName() + "/" + window->GetName();
-			if(ImGui::Begin(name.c_str()))
-			{
-				window->Draw();
-				window->ChangeItems();
-			}
-			ImGui::End();
+			window->Draw();
 		}
 	}
 
@@ -218,69 +132,157 @@ void DebugManager::Draw() noexcept
 	}
 }
 
-DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags)
+DebugWindow *DebugManager::CreateDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar, _In_ ImGuiWindowFlags In_Flags)
 {
-	auto itr = m_ToolBarFuncs.try_emplace(In_GroupName.data());
+	auto itr = m_MenuBarFuncs.try_emplace(In_GroupName.data());
 
+	// 既に存在チェック
 	auto WinItr = std::find_if(m_DebugWindows.begin(), m_DebugWindows.end(),
-		[&](DebugWindow *window)
+		[&](DebugWindowBase *window)
 		{
 			return window->m_GroupName == In_GroupName && window->GetName() == In_Name;
 		});
 
-	if (WinItr != m_DebugWindows.end())
-		return *WinItr;
+	if(WinItr != m_DebugWindows.end())
+		return dynamic_cast<DebugWindow *>(*WinItr);
 
 	DebugWindow *NewWindow = new DebugWindow(In_Name, In_Flags);
 	NewWindow->m_GroupName = std::string(In_GroupName);
+
 	std::string Path = In_GroupName.data();
 	Path += "/";
 	WindowDataRead(Path, NewWindow);
 
 	m_DebugWindows.push_back(NewWindow);
 
-	auto menu = m_ToolBarFuncs.try_emplace(In_GroupName.data());
-	ToolBarMenu NewMenu;
-	NewMenu.Name = In_Name.data();
-	NewMenu.Func = [NewWindow]() { NewWindow->ToggleIsOpen(); };
-	menu.first->second.push_back(NewMenu);
+	// メニュー登録
+	if(In_IsShowMenuBar)
+	{
+		auto menu = m_MenuBarFuncs.try_emplace(In_GroupName.data());
+		MenuBar NewMenu;
+		NewMenu.Name = In_Name.data();
+		NewMenu.Func = [NewWindow]() { NewWindow->ToggleIsOpen(); };
+		menu.first->second.push_back(NewMenu);
+	}
 
 	return NewWindow;
 }
 
-void DebugManager::AddToolBarMenu(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ std::function<void()> In_Func)
+DebugModal *DebugManager::CreateDebugModal(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar, _In_ ImGuiWindowFlags In_Flags)
 {
-	auto menu = m_ToolBarFuncs.try_emplace(In_GroupName.data());
+	auto itr = m_MenuBarFuncs.try_emplace(In_GroupName.data());
+
+	// 既に存在チェック
+	auto WinItr = std::find_if(m_DebugWindows.begin(), m_DebugWindows.end(),
+		[&](DebugWindowBase *window)
+		{
+			return window->m_GroupName == In_GroupName && window->GetName() == In_Name;
+		});
+
+	if(WinItr != m_DebugWindows.end())
+		return dynamic_cast<DebugModal *>(*WinItr);
+
+	DebugModal *NewModal = new DebugModal(In_Name, In_Flags);
+	NewModal->m_GroupName = std::string(In_GroupName);
+
+	std::string Path = In_GroupName.data();
+	Path += "/";
+	WindowDataRead(Path, NewModal);
+
+	m_DebugWindows.push_back(NewModal);
+
+	// メニュー登録(モーダルはOpen()を呼ぶ)
+	if(In_IsShowMenuBar)
+	{
+		auto menu = m_MenuBarFuncs.try_emplace(In_GroupName.data());
+		MenuBar NewMenu;
+		NewMenu.Name = In_Name.data();
+		NewMenu.Func = [NewModal]() { NewModal->Open(); };
+		menu.first->second.push_back(NewMenu);
+	}
+
+	return NewModal;
+}
+
+DebugPopup *DebugManager::CreateDebugPopup(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ bool In_IsShowMenuBar, _In_ ImGuiWindowFlags In_Flags)
+{
+	auto itr = m_MenuBarFuncs.try_emplace(In_GroupName.data());
+
+	// 既に存在チェック
+	auto WinItr = std::find_if(m_DebugWindows.begin(), m_DebugWindows.end(),
+		[&](DebugWindowBase *window)
+		{
+			return window->m_GroupName == In_GroupName && window->GetName() == In_Name;
+		});
+
+	if(WinItr != m_DebugWindows.end())
+		return dynamic_cast<DebugPopup *>(*WinItr);
+
+	DebugPopup *NewPopup = new DebugPopup(In_Name, In_Flags);
+	NewPopup->m_GroupName = std::string(In_GroupName);
+
+	std::string Path = In_GroupName.data();
+	Path += "/";
+	WindowDataRead(Path, NewPopup);
+
+	m_DebugWindows.push_back(NewPopup);
+
+	// メニュー登録(ポップアップはOpen()を呼ぶ)
+	if(In_IsShowMenuBar)
+	{
+		auto menu = m_MenuBarFuncs.try_emplace(In_GroupName.data());
+		MenuBar NewMenu;
+		NewMenu.Name = In_Name.data();
+		NewMenu.Func = [NewPopup]() { NewPopup->Open(); };
+		menu.first->second.push_back(NewMenu);
+	}
+
+	return NewPopup;
+}
+
+void DebugManager::AddMenuBar(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name, _In_ std::function<void()> In_Func)
+{
+	auto menu = m_MenuBarFuncs.try_emplace(In_GroupName.data());
 
 	auto FindItr = std::find_if(menu.first->second.begin(), menu.first->second.end(),
-		[&](const ToolBarMenu &item)
+		[&](const MenuBar &item)
 		{
 			return item.Name == In_Name;
 		});
 	if (FindItr != menu.first->second.end())
 		return;
 
-	ToolBarMenu NewMenu;
+	MenuBar NewMenu;
 	NewMenu.Name = In_Name.data();
 	NewMenu.Func = In_Func;
 	menu.first->second.push_back(NewMenu);
 }
 
-DebugWindow *DebugManager::GetDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
+DebugWindowBase *DebugManager::GetDebugWindowBase(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
 {
-	auto itr = m_ToolBarFuncs.find(In_GroupName.data());
+	auto itr = m_MenuBarFuncs.find(In_GroupName.data());
 
-	if (itr != m_ToolBarFuncs.end())
+	if(itr != m_MenuBarFuncs.end())
 	{
-		for (const auto &window : m_DebugWindows)
+		for(const auto &window : m_DebugWindows)
 		{
-			if (window && window->m_GroupName == In_GroupName && window->GetName() == In_Name)
+			if(window && window->m_GroupName == In_GroupName && window->GetName() == In_Name)
 			{
 				return window;
 			}
 		}
 	}
 	return c_NullWindow;
+}
+
+DebugWindowBase &DebugManager::GetDebugWindowBaseRef(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
+{
+	return *GetDebugWindowBase(In_GroupName, In_Name);
+}
+
+DebugWindow *DebugManager::GetDebugWindow(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
+{
+	return dynamic_cast<DebugWindow *>(GetDebugWindowBase(In_GroupName, In_Name));
 }
 
 DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName, _In_ std::string_view In_Name)
@@ -290,7 +292,7 @@ DebugWindow &DebugManager::GetDebugWindowRef(_In_ std::string_view In_GroupName,
 
 void DebugManager::DebugLog(_In_ std::string_view In_Msg)
 {
-	auto window = GetDebugWindow("System", "Log");
+	auto window = GetDebugWindow("View", "Log");
 	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
@@ -308,7 +310,7 @@ void DebugManager::DebugLog(_In_ std::string_view In_Msg)
 
 void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
 {
-	auto window = GetDebugWindow("System", "Log");
+	auto window = GetDebugWindow("View", "Log");
 	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
@@ -326,7 +328,7 @@ void DebugManager::DebugLogWarning(_In_ std::string_view In_Msg)
 
 void DebugManager::DebugLogError(_In_ std::string_view In_Msg)
 {
-	auto window = GetDebugWindow("System", "Log");
+	auto window = GetDebugWindow("View", "Log");
 	if(window && window->NotDummy())
 	{
 		auto &item = (*window)["ConsoleLog"];
@@ -365,7 +367,7 @@ void DebugManager::ShowAllWindows()
 }
 
 DebugManager::DebugManager()
-	: m_ToolBarFlags(0), m_IsRequestLoadLayout(false), m_IsRequestSaveLayout(false)
+	: m_IsRequestLoadLayout(false), m_IsRequestSaveLayout(false)
 {
 	c_NullWindow = new DebugWindow("NullWindow");
 	c_NullWindow->m_IsDummy = true;
@@ -385,17 +387,13 @@ DebugManager::~DebugManager()
 		delete itr;
 	}
 	m_DebugWindows.clear();
-	m_ToolBarFuncs.clear();
+	m_MenuBarFuncs.clear();
 }
 
 void DebugManager::ProjectWindowInit()
 {
-	auto ProjectWindow = CreateDebugWindow("System", "Project");
-	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow", "Game");
-
-	// Game/Scriptフォルダ作成
-	if(!std::filesystem::exists("Game/Script"))
-		std::filesystem::create_directory("Game/Script");
+	auto ProjectWindow = CreateDebugWindow("View", "Project");
+	auto Project = ProjectWindow->CreateItem<ItemProjectWindow>("ProjectWindow");
 
 	// プロジェクトウィンドウの設定
 	// フォルダアイコンを読み込み
@@ -424,6 +422,182 @@ void DebugManager::ProjectWindowInit()
 	Project->SetFileSelectedCallback([](const std::string &path)
 		{
 			DebugManager::GetInstance().DebugLog("File selected: {}", path);
+		});
+}
+
+void DebugManager::FileMenuInit()
+{
+	// 新規プロジェクト作成ウィンドウ
+	auto NewProjectWindow = CreateDebugModal("File", "NewProject", true, ImGuiWindowFlags_NoResize);
+	NewProjectWindow->CreateItem<ItemNewProject>("NewProject");
+	NewProjectWindow->SetShowDefaultButtons(false);
+	NewProjectWindow->SetOpenCallback([]()
+		{
+			// 入力を無効化
+			Input::SetInputEnabled(false);
+			// ダイアログのサイズと位置
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+			ImGui::SetNextWindowSize(ImVec2(400, 180), ImGuiCond_Appearing);
+		});
+	NewProjectWindow->SetCloseCallback([]()
+		{
+			// 入力を有効化
+			Input::SetInputEnabled(true);
+		});
+
+	ImGuiWindowFlags PopupFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	auto ConfirmSwitchProject = CreateDebugModal("File", "ConfirmSwitchProject", false, PopupFlags);
+	ConfirmSwitchProject->CreateItem<ItemText>("Switch project?");
+	ConfirmSwitchProject->CreateItem<ItemSpacing>();
+	ConfirmSwitchProject->CreateItem<ItemText>("The current project will be closed and a different project will be opened.", true);
+	ConfirmSwitchProject->CreateItem<ItemSpacing>();
+	ConfirmSwitchProject->CreateItem<ItemText>("Target:");
+	ConfirmSwitchProject->CreateItem<ItemSameLine>();
+	auto TargetPathText = ConfirmSwitchProject->CreateItem<ItemText>("Path", true);
+	ConfirmSwitchProject->CreateItem<ItemSpacing>();
+	ConfirmSwitchProject->CreateItem<ItemSeparator>();
+	auto IsNoAsk = ConfirmSwitchProject->CreateItem<ItemValue>("Don't ask again", DebugItem::Kind::Bool);
+
+	AddMenuBar("File", "Open Project...", [ConfirmSwitchProject,TargetPathText, IsNoAsk]()
+		{
+			bool IsNoAskValue = IsNoAsk->GetValue<bool>();
+
+			if(!IsNoAskValue)
+			{
+				ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+				ConfirmSwitchProject->SetOpenCallback([center]()
+					{
+						// ダイアログの位置
+						ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+					});
+			}
+
+			HWND owner = Window::GetInstance().GetHwnd();
+
+			auto picked = Util::PickFileUTF8(
+				owner,
+				"Open Project",
+				"Projects",
+				"Visual Studio Solution (*.sln)|*.sln||All Files (*.*)|*.*",
+				"sln"
+			);
+
+			if(!picked)
+				return;
+
+			const std::string path = *picked;
+
+			// 既にプロジェクトが開いていないなら、確認不要で即オープン
+			if(!GameProjectManager::GetInstance().IsProjectLoaded())
+			{
+				if(!GameProjectManager::GetInstance().OpenProject(path))
+					DebugManager::GetInstance().DebugLogError("Failed to open project: {}", path);
+				return;
+			}
+
+			// 「次回から確認しない」がオンなら、即オープン
+			if(IsNoAskValue)
+			{
+				if(!GameProjectManager::GetInstance().OpenProject(path))
+					DebugManager::GetInstance().DebugLogError("Failed to open project: {}", path);
+				return;
+			}
+
+			// 確認ダイアログを表示
+			TargetPathText->SetText(path);
+			ConfirmSwitchProject->SetOkCallback([path]()
+				{
+					if(!GameProjectManager::GetInstance().OpenProject(path))
+						DebugManager::GetInstance().DebugLogError("Failed to open project: {}", path);
+				});
+			ConfirmSwitchProject->SetCancelCallback([IsNoAsk]()
+				{
+					IsNoAsk->GetValue<bool>() = false;
+				});
+			ConfirmSwitchProject->Open();
+		});
+
+	// 終了ボタン
+	AddMenuBar("File", "Exit", []()
+		{
+			PostQuitMessage(0);
+		});
+}
+
+void DebugManager::EditMenuInit()
+{
+	// ツールバーメニューの初期設定
+	AddMenuBar("Edit", "Show All Debug Windows", [this]()
+		{
+			ShowAllWindows();
+		});
+	AddMenuBar("Edit", "Hide All Debug Windows", [this]()
+		{
+			HideAllWindows();
+		});
+	AddMenuBar("Edit", "Reset ImGui Layout", [this]()
+		{
+			m_IsRequestLoadLayout = true;
+		});
+	AddMenuBar("Edit", "Save ImGui Layout", [this]()
+		{
+			m_IsRequestSaveLayout = true;
+		});
+}
+
+void DebugManager::ViewMenuInit()
+{
+	// フレームレート表示ウィンドウ
+	CreateDebugWindow("View", "Hierarchy");
+	CreateDebugWindow("View", "Inspector");
+
+	// プロジェクトウィンドウの設定
+	ProjectWindowInit();
+
+	auto log = CreateDebugWindow("View", "Log");
+	auto DebugMenu = CreateDebugWindow("View", "DebugMenu");
+
+	// ログウィンドウの初期設定
+	auto Output = log->CreateItem<ItemConsole>("ConsoleLog", true);
+	Output->AddLevel("Warning", { 1.0f,0.5f,0.0f,1.0f });
+	Output->AddLevel("Error", { 1.0f,0.1f,0.1f,1.0f });
+
+	// デバッグメニューの初期設定
+	DebugMenu->CreateItem<ItemCallback>("Pause", DebugItem::Kind::Bool,
+		[](bool IsSet, void *ptr)
+		{
+			if(!IsSet)
+				return;
+
+			bool *IsPause = reinterpret_cast<bool *>(ptr);
+			if(*IsPause)
+			{
+				FrameManager::GetInstance().SetTimeScale(0.0f);
+			}
+			else
+			{
+				FrameManager::GetInstance().SetTimeScale(1.0f);
+			}
+		});
+	DebugMenu->CreateItem<ItemSameLine>("SameLine1");
+	auto IsDrawGizmoCallback = DebugMenu->CreateItem<ItemCallback>("IsDrawGizmo", DebugItem::Kind::Bool,
+		[](bool IsSet, void *ptr)
+		{
+			if(!IsSet)
+				return;
+			bool *IsDrawGizmo = reinterpret_cast<bool *>(ptr);
+			RenderManager::GetInstance().SetDrawGizmos(*IsDrawGizmo);
+		});
+	IsDrawGizmoCallback->GetValue() = RenderManager::GetInstance().IsDrawGizmos();
+
+	auto ScreenColor = DebugMenu->CreateItem<ItemValue>("ScreenColor", DebugItem::Kind::Color, true);
+	DX11_Core::GetInstance().SetWindowColor(ScreenColor->GetColor());
+	ScreenColor->SetNoticeFunc([]()
+		{
+			auto &DX11Core = DX11_Core::GetInstance();
+			auto color = DebugManager::GetInstance().GetDebugWindowRef("View", "DebugMenu")["ScreenColor"].GetColor();
+			DX11Core.SetWindowColor(color);
 		});
 }
 
@@ -486,22 +660,22 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	// 保存フラグが立っていれば保存する
 	ItemValue *pValue = dynamic_cast<ItemValue *>(In_Item);
 	ItemList *pList = nullptr;
-	ItemText *pText = nullptr;
+	ItemInputText *pInputText = nullptr;
 	ItemProjectWindow *pProject = nullptr;
 
 	if(!pValue)
 		pList = dynamic_cast<ItemList *>(In_Item);
 
 	if (!pValue && !pList)
-		pText = dynamic_cast<ItemText *>(In_Item);
+		pInputText = dynamic_cast<ItemInputText *>(In_Item);
 
-	if(!pValue && !pList && !pText)
+	if(!pValue && !pList && !pInputText)
 		pProject = dynamic_cast<ItemProjectWindow *>(In_Item);
 
-	if(!pValue && !pList && !pText && !pProject)
+	if(!pValue && !pList && !pInputText && !pProject)
 		return;
 
-	if(!((pValue && pValue->IsSave()) || (pList && pList->IsSave()) || (pText && pText->IsSave()) || pProject))
+	if(!((pValue && pValue->IsSave()) || (pList && pList->IsSave()) || (pInputText && pInputText->IsSave()) || pProject))
 		return;
 
 	// 種類保存
@@ -565,8 +739,8 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 			Inout_Data += pValue->GetValue<std::string>();
 		break;
 	case DebugItem::InputStr:
-		if(pText)
-			Inout_Data += pText->GetText();
+		if(pInputText)
+			Inout_Data += pInputText->GetText();
 		break;
 	case DebugItem::List:
 		if (pList)
@@ -593,24 +767,52 @@ void DebugManager::DataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::stri
 	case DebugItem::__ProjectWindow:
 		if (pProject)
 		{
-			std::string ValueStr;
-			ValueStr = ToString(pProject->GetIconSize());
-			Inout_Data += ValueStr;
+			std::string IconSize,ProjectName, CurrentProjectPath;
+			IconSize = ToString(pProject->GetIconSize());
+			ProjectName = pProject->GetProjectName();
+			CurrentProjectPath = pProject->GetRootPath();
+			Inout_Data += IconSize + "^" + ProjectName + "^" + CurrentProjectPath;
 		}
 		break;
 	}
 	Inout_Data += "\n";
 }
 
-void DebugManager::WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindow *In_Window)
+void DebugManager::WindowDataWrite(_Inout_opt_ std::string &Inout_Data, _In_ std::string_view In_Path, _In_ DebugWindowBase *In_Window)
 {
 	if (!In_Window)
 		return;
 
-	Inout_Data += "Window,";
-	Inout_Data += In_Path.data() + In_Window->GetName() + ",";
-	Inout_Data += In_Window->IsOpen() ? "1" : "0";
-	Inout_Data += "\n";
+	DebugWindow *pWindow = dynamic_cast<DebugWindow *>(In_Window);
+	DebugModal *pModal = nullptr;
+	DebugPopup *pPopup = nullptr;
+
+	if(!pWindow)
+		pModal = dynamic_cast<DebugModal *>(In_Window);
+	if(!pWindow && !pModal)
+		pPopup = dynamic_cast<DebugPopup *>(In_Window);
+	if(!pWindow && !pModal && !pPopup)
+		return;
+
+	if(pWindow)
+	{
+		Inout_Data += "Window,";
+		Inout_Data += In_Path.data() + pWindow->GetName() + ",";
+		Inout_Data += pWindow->IsOpen() ? "1" : "0";
+		Inout_Data += "\n";
+	}
+	else if(pModal)
+	{
+		//Inout_Data += "Modal,";
+		//Inout_Data += In_Path.data() + pModal->GetName();
+		//Inout_Data += "\n";
+	}
+	else if(pPopup)
+	{
+		//Inout_Data += "Popup,";
+		//Inout_Data += In_Path.data() + pPopup->GetName();
+		//Inout_Data += "\n";
+	}
 }
 
 void DebugManager::LoadDebugData()
@@ -644,9 +846,20 @@ void DebugManager::LoadDebugData()
 	}
 }
 
-void DebugManager::WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindow *Inout_Window)
+void DebugManager::WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWindowBase *Inout_Window)
 {
 	if (!Inout_Window)
+		return;
+
+	DebugWindow *pWindow = dynamic_cast<DebugWindow *>(Inout_Window);
+	DebugModal *pModal = nullptr;
+	DebugPopup *pPopup = nullptr;
+
+	if(!pWindow)
+		pModal = dynamic_cast<DebugModal *>(Inout_Window);
+	if(!pWindow && !pModal)
+		pPopup = dynamic_cast<DebugPopup *>(Inout_Window);
+	if(!pWindow && !pModal && !pPopup)
 		return;
 
 	std::string Path = In_Path.data();
@@ -658,7 +871,17 @@ void DebugManager::WindowDataRead(_In_ std::string_view In_Path, _Inout_ DebugWi
 		});
 	if (DataItr == m_SaveData.end())
 		return;
-	Inout_Window->SetIsOpen(atoi(DataItr->value.c_str()) > 0);
+
+	if(pWindow)
+	{
+		pWindow->SetIsOpen(FromString<int>(DataItr->value) > 0);
+	}
+	else if(pModal)
+	{
+	}
+	else if(pPopup)
+	{
+	}
 }
 
 std::string DebugManager::CharacterLimitRecursion(_In_ std::string_view In_Text, _In_ int In_LimitNum)
@@ -693,16 +916,16 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 	// 保存フラグの確認
 	ItemValue *pValue = dynamic_cast<ItemValue *>(Inout_Item);
 	ItemList *pList = nullptr;
-	ItemText *pText = nullptr;
+	ItemInputText *pInputText = nullptr;
 	ItemProjectWindow *pProject = nullptr;
 
 	if(!pValue)
 		pList = dynamic_cast<ItemList *>(Inout_Item);
 	if (!pValue && !pList)
-		pText = dynamic_cast<ItemText *>(Inout_Item);
-	if(!pValue && !pList && !pText)
+		pInputText = dynamic_cast<ItemInputText *>(Inout_Item);
+	if(!pValue && !pList && !pInputText)
 		pProject = dynamic_cast<ItemProjectWindow *>(Inout_Item);
-	if(!pValue && !pList && !pText && !pProject)
+	if(!pValue && !pList && !pInputText && !pProject)
 		return;
 
 	Path += Inout_Item->GetName();
@@ -768,10 +991,9 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 		break;
 	case DebugItem::InputStr:
 	{
-		ItemText *pText = dynamic_cast<ItemText *>(Inout_Item);
-		if (pText)
+		if (pInputText)
 		{
-			pText->GetText() = DataItr->value;
+			pInputText->GetText() = DataItr->value;
 		}
 	}
 	break;
@@ -804,7 +1026,20 @@ void DebugManager::DataRead(_In_ std::string_view In_Path, _Inout_ DebugItem *In
 	break;
 	case DebugItem::__ProjectWindow:
 	{
-		pProject->SetIconSize(FromString<float>(DataItr->value));
+		std::string value = DataItr->value;
+		if(value.empty())
+			return;
+		std::string elem = value;
+		float IconSize = FromString<float>(elem.erase(elem.find('^')));
+		value.erase(0, value.find('^') + 1);
+		elem = value;
+		std::string ProjectName = elem.erase(elem.find('^'));
+		value.erase(0, value.find('^') + 1);
+		elem = value;
+		std::string RootPath = elem;
+		pProject->SetIconSize(IconSize);
+		pProject->SetProjectName(ProjectName);
+		pProject->SetRootPath(RootPath);
 	}
 	break;
 	}

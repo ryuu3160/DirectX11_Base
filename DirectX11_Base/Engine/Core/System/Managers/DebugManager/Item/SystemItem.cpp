@@ -17,6 +17,8 @@
 #include "Engine/Core/DirectX11/System/DX11_Math.hpp"
 #include "Core/System/Utility/VisualStudioHelper.hpp"
 #include "Core/System/Utility/ProjectFileManager.hpp"
+#include "Core/System/Project/GameProject.hpp"
+#include "ryuu_lib/WindowGenerator/Window.hpp"
 // ==============================
 //	定数定義
 // ==============================
@@ -751,9 +753,9 @@ void ItemComponentGroup::ChangeComponentOrder()
 //  ItemProjectWindow
 // ==============================
 
-ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::string_view In_RootPath)
-    : m_RootPath(In_RootPath)
-    , m_CurrentPath(In_RootPath)
+ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name)
+    : m_RootPath("")
+    , m_CurrentPath("")
     , m_IsRenaming(false)
     , m_ShowImages(true)
     , m_ShowModels(true)
@@ -779,16 +781,6 @@ ItemProjectWindow::ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::st
 
     ZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
     m_Overlapped.hEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
-
-    // ルートパスが存在しない場合は作成
-    if(!std::filesystem::exists(m_RootPath))
-    {
-        std::filesystem::create_directories(m_RootPath);
-    }
-
-    RefreshCurrentFolder();
-	// ディレクトリの監視を開始
-    StartWatching();
 }
 
 ItemProjectWindow::~ItemProjectWindow()
@@ -1325,12 +1317,22 @@ void ItemProjectWindow::CreateCppScript(_In_ std::string_view In_ScriptName)
         // プロジェクトファイルに追加
 
         // フィルターパスを決定(現在のフォルダから)
-        std::filesystem::path relativePath = m_CurrentPath;
-        std::string filterPath = relativePath.string();
+        std::filesystem::path RelativePath = m_CurrentPath;
+		RelativePath = std::filesystem::relative(RelativePath, m_RootPath.parent_path());
+        std::string filterPath = RelativePath.string();
         std::replace(filterPath.begin(), filterPath.end(), '/', '\\');
 
         // プロジェクトに追加
-        ProjectFileManager::AddCppScriptToProject(cppPath, hppPath, filterPath);
+        ProjectFileManager::ProjectInfo Info;
+		auto CurrentProjectInfo = GameProjectManager::GetInstance().GetCurrentProject();
+        if(!CurrentProjectInfo)
+        {
+            DebugManager::GetInstance().DebugLogError("No project loaded");
+			return;
+        }
+        Info.ProjectDir = CurrentProjectInfo->RootPath;
+        Info.ProjectName = m_ProjectName;
+        ProjectFileManager::AddCppScriptToProject(Info,cppPath, hppPath, filterPath);
 
         // Python スクリプトを実行(ComponentRegistry更新)
         std::thread([scriptName]()
@@ -1376,7 +1378,12 @@ void ItemProjectWindow::OpenFileInEditor(_In_ const std::filesystem::path &In_Pa
     if(ext == ".cpp" || ext == ".hpp" || ext == ".h" || ext == ".c" || ext == ".hlsl")
     {
         // ソリューションパスを取得
-        std::filesystem::path solutionPath = "DirectX11_Base.sln";
+		auto CurrentProjectInfo = GameProjectManager::GetInstance().GetCurrentProject();
+        std::filesystem::path SolutionDir = "";
+        if(CurrentProjectInfo)
+            SolutionDir = CurrentProjectInfo->SolutionPath;
+
+        std::filesystem::path solutionPath = SolutionDir;
 
         VisualStudioHelper::OpenFileInVisualStudio(In_Path, solutionPath);
     }
@@ -1384,56 +1391,6 @@ void ItemProjectWindow::OpenFileInEditor(_In_ const std::filesystem::path &In_Pa
     else
     {
         Util::OpenWithDefaultApp(In_Path.string());
-    }
-}
-
-bool ItemProjectWindow::GenerateFromTemplate(_In_ const std::filesystem::path &In_TemplatePath, _In_ const std::filesystem::path &In_OutputPath, _In_ const std::map<std::string, std::string> &In_Replacements)
-{
-    try
-    {
-        // テンプレートを読み込み
-        std::ifstream templateFile(In_TemplatePath);
-        if(!templateFile.is_open())
-        {
-            DebugManager::GetInstance().DebugLogError("Failed to open template: {}",
-                In_TemplatePath.string());
-            return false;
-        }
-
-        std::stringstream buffer;
-        buffer << templateFile.rdbuf();
-        std::string content = buffer.str();
-        templateFile.close();
-
-        // 置換処理
-        for(const auto &[key, value] : In_Replacements)
-        {
-            size_t pos = 0;
-            while((pos = content.find(key, pos)) != std::string::npos)
-            {
-                content.replace(pos, key.length(), value);
-                pos += value.length();
-            }
-        }
-
-        // ファイルに書き込み
-        std::ofstream outputFile(In_OutputPath);
-        if(!outputFile.is_open())
-        {
-            DebugManager::GetInstance().DebugLogError("Failed to create file: {}",
-                In_OutputPath.string());
-            return false;
-        }
-
-        outputFile << content;
-        outputFile.close();
-
-        return true;
-    }
-    catch(const std::exception &e)
-    {
-        DebugManager::GetInstance().DebugLogError("Error generating file: {}", e.what());
-        return false;
     }
 }
 
@@ -1932,18 +1889,18 @@ bool ItemProjectWindow::IsSubPath(_In_ const std::filesystem::path &In_Path, _In
 
 void ItemProjectWindow::WatchFileSystemChanges()
 {
-    const DWORD bufferSize = 4096;
-    BYTE buffer[bufferSize];
+    const DWORD BufferSize = 4096;
+    BYTE buffer[BufferSize];
 
     while(m_IsWatching)
     {
-        std::filesystem::path watchPath = m_CurrentPath;
+        std::filesystem::path WatchPath = m_CurrentPath;
 
         // パスが変わったらすぐに新しい監視を開始
-        if(m_hDirectory != INVALID_HANDLE_VALUE && watchPath != m_CurrentPath)
+        if(m_hDirectory != INVALID_HANDLE_VALUE && WatchPath != m_CurrentPath)
         {
             DebugManager::GetInstance().DebugLog("Path changed during wait, canceling current watch");
-            CancelIo(m_hDirectory);
+            CancelIoEx(m_hDirectory, &m_Overlapped);
             CloseHandle(m_hDirectory);
             m_hDirectory = INVALID_HANDLE_VALUE;
             continue;  // 新しいパスで監視を開始
@@ -1956,7 +1913,7 @@ void ItemProjectWindow::WatchFileSystemChanges()
             std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
             // ディレクトリハンドルを開く(非同期モード)
             hDirectory = CreateFileW(
-                watchPath.wstring().c_str(),
+                WatchPath.wstring().c_str(),
                 FILE_LIST_DIRECTORY,
                 FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                 NULL,
@@ -1965,9 +1922,12 @@ void ItemProjectWindow::WatchFileSystemChanges()
                 NULL
             );
 
+			// ハンドルが無効な場合はエラーをログに出してリトライ
             if(hDirectory == INVALID_HANDLE_VALUE)
             {
-                DebugManager::GetInstance().DebugLogError("Failed to open directory for watching: {}", watchPath.string());
+				auto &debug = DebugManager::GetInstance();
+                debug.DebugLogError("Failed to open directory for watching: {}", WatchPath.string());
+                debug.DebugLogError("Stop watching this directory and retrying: {}", GetLastError());
                 std::this_thread::sleep_for(std::chrono::seconds(5));
                 continue;
             }
@@ -1978,19 +1938,19 @@ void ItemProjectWindow::WatchFileSystemChanges()
         // OVERLAPPEDをリセット
         ResetEvent(m_Overlapped.hEvent);
 
-        DWORD bytesReturned = 0;
+        DWORD BytesReturned = 0;
 
         // 非同期で変更を監視
         BOOL result = ReadDirectoryChangesW(
             hDirectory,
             buffer,
-            bufferSize,
+            BufferSize,
             TRUE,
             FILE_NOTIFY_CHANGE_FILE_NAME |
             FILE_NOTIFY_CHANGE_DIR_NAME |
             FILE_NOTIFY_CHANGE_SIZE |
             FILE_NOTIFY_CHANGE_LAST_WRITE,
-            &bytesReturned,
+            &BytesReturned,
             &m_Overlapped,  // OVERLAPPEDを渡す
             NULL
         );
@@ -2006,33 +1966,33 @@ void ItemProjectWindow::WatchFileSystemChanges()
         }
 
         // イベントを待つ(停止イベントまたは変更イベント)
-        HANDLE waitHandles[2] = { m_hStopEvent, m_Overlapped.hEvent };
-        DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, INFINITE);
+        HANDLE WaitHandles[2] = { m_hStopEvent, m_Overlapped.hEvent };
+        DWORD WaitResult = WaitForMultipleObjects(2, WaitHandles, FALSE, INFINITE);
 
-        if(waitResult == WAIT_OBJECT_0)
+        if(WaitResult == WAIT_OBJECT_0)
         {
             // 停止イベントがシグナルされた->終了
             CancelIoEx(hDirectory, &m_Overlapped);
             // I/Oのキャンセルを待つ
-            DWORD bytesTransferred = 0;
-            GetOverlappedResult(hDirectory, &m_Overlapped, &bytesTransferred, TRUE);
+            DWORD BytesTransferred = 0;
+            GetOverlappedResult(hDirectory, &m_Overlapped, &BytesTransferred, TRUE);
 
             std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
             CloseHandle(hDirectory);
             m_hDirectory = INVALID_HANDLE_VALUE;
             break;
         }
-        else if(waitResult == WAIT_OBJECT_0 + 1)
+        else if(WaitResult == WAIT_OBJECT_0 + 1)
         {
             // 変更イベントがシグナルされた->変更を処理
-            DWORD bytesTransferred = 0;
-            if(GetOverlappedResult(hDirectory, &m_Overlapped, &bytesTransferred, FALSE))
+            DWORD BytesTransferred = 0;
+            if(GetOverlappedResult(hDirectory, &m_Overlapped, &BytesTransferred, FALSE))
             {
-                if(bytesTransferred > 0)
+                if(BytesTransferred > 0)
                 {
                     FILE_NOTIFY_INFORMATION *info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(buffer);
 
-                    do
+                    for(;;)
                     {
                         std::wstring filename(info->FileName, info->FileNameLength / sizeof(WCHAR));
 
@@ -2041,10 +2001,9 @@ void ItemProjectWindow::WatchFileSystemChanges()
                         if(info->NextEntryOffset == 0)
                             break;
                         info = reinterpret_cast<FILE_NOTIFY_INFORMATION *>(
-                            reinterpret_cast<BYTE *>(info) + info->NextEntryOffset
-                            );
+                            reinterpret_cast<BYTE *>(info) + info->NextEntryOffset);
 
-                    } while(true);
+                    }
                 }
             }
         }
@@ -2057,7 +2016,7 @@ void ItemProjectWindow::WatchFileSystemChanges()
         }
 
         // パスが変更されたかチェック
-        if(watchPath != m_CurrentPath)
+        if(WatchPath != m_CurrentPath)
             continue;
 
         // 監視継続フラグをチェック
@@ -2106,9 +2065,18 @@ void ItemProjectWindow::StopWatching()
 
 void ItemProjectWindow::SetRootPath(_In_ std::string_view In_RootPath)
 {
+    if(In_RootPath.empty())
+    {
+        DebugManager::GetInstance().DebugLogError("Root path cannot be empty");
+        return;
+	}
+
     m_RootPath = In_RootPath;
     m_CurrentPath = m_RootPath;
     RefreshCurrentFolder();
+
+    // ディレクトリの監視を開始
+    StartWatching();
 }
 
 std::string ItemProjectWindow::GetSelectedFilePath() const
@@ -2138,4 +2106,162 @@ void ItemProjectWindow::SetDefaultFolderIcon(_In_ std::shared_ptr<Texture> In_Te
 void ItemProjectWindow::SetDefaultFileIcon(_In_ std::shared_ptr<Texture> In_Texture)
 {
     m_DefaultFileIcon = In_Texture;
+}
+
+// ================================
+// ItemNewProject クラス
+// ================================
+
+ItemNewProject::ItemNewProject(_In_ std::string_view In_Name)
+{
+    m_Name = In_Name.data();
+    m_Kind = Kind::__NewProject;
+}
+
+void ItemNewProject::DrawImGui()
+{
+    // プロジェクト名
+    ImGui::Text("Project Name:");
+    ImGui::SetNextItemWidth(-1);
+    ImGui::InputText("##ProjectName", m_ProjectName, sizeof(m_ProjectName));
+
+    ImGui::Spacing();
+
+    // 場所
+    ImGui::Text("Location:");
+    const float BrowseW = 90.0f;
+    const float LocationSpacing = ImGui::GetStyle().ItemSpacing.x;
+
+    ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - (BrowseW + LocationSpacing));
+    ImGui::InputText("##Location", m_Location, sizeof(m_Location));
+
+    if(ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::TextUnformatted(m_Location);
+        ImGui::EndTooltip();
+    }
+
+    ImGui::SameLine();
+
+    if(ImGui::Button("Browse..."))
+    {
+        HWND owner = Window::GetInstance().GetHwnd();
+
+        std::string initial = m_Location;
+        if(auto picked = Util::PickFolderUTF8(owner, "Select Project Folder", initial))
+        {
+            strcpy_s(m_Location, picked->c_str());
+            m_ErrorMessage.clear();
+        }
+    }
+
+    ImGui::Spacing();
+    ImGui::Separator();
+
+    // エラーメッセージ
+    if(!m_ErrorMessage.empty())
+    {
+        ImGui::Spacing();
+        ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f), "%s", m_ErrorMessage.c_str());
+        ImGui::Spacing();
+    }
+
+    // ボタン
+    ImGui::Spacing();
+    float ButtonWidth = 100.0f;
+    float ButtonSpacing = ImGui::GetContentRegionAvail().x - (ButtonWidth * 2 + ImGui::GetStyle().ItemSpacing.x);
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ButtonSpacing);
+
+    if(ImGui::Button("Cancel", ImVec2(ButtonWidth, 0)))
+    {
+        auto ThisWindow = dynamic_cast<DebugModal *>(m_pWindow);
+        if(ThisWindow)
+            ThisWindow->Close();
+        m_ErrorMessage.clear();
+    }
+
+    ImGui::SameLine();
+
+    bool canCreate = ValidateProjectName();
+    if(!canCreate)
+    {
+        ImGui::BeginDisabled();
+    }
+
+    if(ImGui::Button("Create", ImVec2(ButtonWidth, 0)))
+    {
+        CreateProject();
+    }
+
+    if(!canCreate)
+    {
+        ImGui::EndDisabled();
+    }
+}
+
+void ItemNewProject::CreateProject()
+{
+    // バリデーション
+    if(!ValidateProjectName())
+    {
+        m_ErrorMessage = "Invalid project name";
+        return;
+    }
+
+    // プロジェクト作成
+    auto &manager = GameProjectManager::GetInstance();
+
+    bool success = manager.CreateNewProject(m_ProjectName, m_Location);
+
+    if(success)
+    {
+        DebugManager::GetInstance().DebugLog("Project created successfully!");
+
+        // ダイアログを閉じる
+        auto ThisWindow = dynamic_cast<DebugModal *>(m_pWindow);
+        if(ThisWindow)
+            ThisWindow->Close();
+        m_ErrorMessage.clear();
+
+        // 成功メッセージ
+        const auto *info = manager.GetCurrentProject();
+        if(info)
+        {
+            DebugManager::GetInstance().DebugLog("========================================");
+            DebugManager::GetInstance().DebugLog("Project: {}", info->Name);
+            DebugManager::GetInstance().DebugLog("Location: {}", info->RootPath.string());
+            DebugManager::GetInstance().DebugLog("========================================");
+            DebugManager::GetInstance().DebugLog("Next steps:");
+            DebugManager::GetInstance().DebugLog("1. Open {} in Visual Studio", info->SolutionPath.string());
+            DebugManager::GetInstance().DebugLog("2. Build the project");
+            DebugManager::GetInstance().DebugLog("3. Start creating scripts!");
+            DebugManager::GetInstance().DebugLog("========================================");
+        }
+    }
+    else
+    {
+        m_ErrorMessage = "Failed to create project. Check the console for details.";
+    }
+}
+
+bool ItemNewProject::ValidateProjectName() const
+{
+    // 空文字チェック
+    if(strlen(m_ProjectName) == 0)
+        return false;
+
+    // 無効な文字をチェック
+    const std::string invalidChars = "\\/:*?\"<>|";
+    std::string projectName(m_ProjectName);
+
+    if(projectName.find_first_of(invalidChars) != std::string::npos)
+        return false;
+
+    // 既に存在するかチェック
+    std::filesystem::path fullPath = std::filesystem::path(m_Location) / m_ProjectName;
+    if(std::filesystem::exists(fullPath))
+        return false;
+
+    return true;
 }

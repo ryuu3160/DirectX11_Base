@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "DebugItem.hpp"
-#include "DebugManager.hpp"
+#include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
 
 // ==============================
@@ -412,15 +412,15 @@ void ItemValue::DrawDragValue()
 //  ItemText
 // ==============================
 
-ItemText::ItemText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave)
+ItemText::ItemText(_In_ std::string_view In_Text, _In_ bool In_IsWrapped, _In_ bool In_IsBullet, _In_ bool In_IsSave)
+	: m_IsWrapped(In_IsWrapped), m_IsBullet(In_IsBullet), m_IsSave(In_IsSave)
+	, m_IsChangeColor(false)
 {
-	m_Name = In_Name.data();
-	m_Kind = Kind::InputStr;
-	m_Flags = In_Flags;
-	m_IsMultiline = In_IsMultiline;
-	m_IsHideLabel = Is_HideLabel;
-	m_IsSave = In_IsSave;
+	m_Name = In_Text.data();
+	m_Text = m_Name;
+	m_Kind = Kind::Text;
 	m_LineCount = 0;
+	m_Color = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 }
 
 ItemText::~ItemText()
@@ -432,27 +432,83 @@ void ItemText::DrawImGui()
 	switch (m_Kind)
 	{
 		// 入力文字列項目の表示
+	case DebugItem::Text:
+	{
+		if(m_IsBullet)
+		{
+			ImGui::Bullet();
+			ImGui::SameLine();
+			ImGui::Indent();
+		}
+		if(m_IsChangeColor)
+			ImGui::PushStyleColor(ImGuiCol_Text, m_Color);
+		if(m_IsWrapped)
+		{
+			ImGui::PushTextWrapPos();
+			ImGui::TextUnformatted(m_Text.c_str());
+			ImGui::PopTextWrapPos();
+		}
+		else
+		{
+			ImGui::TextUnformatted(m_Text.c_str());
+		}
+
+		if(m_IsChangeColor)
+			ImGui::PopStyleColor();
+		if(m_IsBullet)
+			ImGui::Unindent();
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+// ==============================
+//  ItemInputText
+// ==============================
+
+ItemInputText::ItemInputText(_In_ std::string_view In_Name, _In_ bool In_IsMultiline, _In_ ImGuiInputTextFlags In_Flags, _In_ bool Is_HideLabel, _In_ bool In_IsSave)
+{
+	m_Name = In_Name.data();
+	m_Kind = Kind::InputStr;
+	m_Flags = In_Flags;
+	m_IsMultiline = In_IsMultiline;
+	m_IsHideLabel = Is_HideLabel;
+	m_IsSave = In_IsSave;
+	m_LineCount = 0;
+}
+
+ItemInputText::~ItemInputText()
+{
+}
+
+void ItemInputText::DrawImGui()
+{
+	switch(m_Kind)
+	{
+		// 入力文字列項目の表示
 	case DebugItem::InputStr:
 	{
-		if (m_IsMultiline)
+		if(m_IsMultiline)
 		{
 			// 複数行入力
 			char buffer[4096];
-			strncpy_s(buffer,m_Text.c_str(), 4096);
+			strncpy_s(buffer, m_Text.c_str(), 4096);
 			float height = ImGui::GetTextLineHeight();
 			float width = ImGui::GetContentRegionAvail().x;
 			std::string label;
-			if (m_IsHideLabel)
+			if(m_IsHideLabel)
 				label = std::string("##");
 			else
 				width -= ImGui::CalcTextSize(m_Name.c_str()).x + ImGui::GetStyle().ItemSpacing.x;
 
 			label += m_Name;
-			if (m_LineCount > 0)
+			if(m_LineCount > 0)
 				height *= m_LineCount;
 			else
 				height = ImGui::GetContentRegionAvail().y;
-			if (ImGui::InputTextMultiline(label.c_str(), buffer, 4096, ImVec2(width, height), m_Flags))
+			if(ImGui::InputTextMultiline(label.c_str(), buffer, 4096, ImVec2(width, height), m_Flags))
 				m_Text = buffer;
 		}
 		else
@@ -460,7 +516,13 @@ void ItemText::DrawImGui()
 			// 単一行入力
 			char buffer[256];
 			strncpy_s(buffer, m_Text.c_str(), 256);
-			if (ImGui::InputText(m_Name.c_str(), buffer, 256, m_Flags))
+
+			std::string label;
+			if(m_IsHideLabel)
+				label = std::string("##");
+			label += m_Name;
+
+			if(ImGui::InputText(label.c_str(), buffer, 256, m_Flags))
 				m_Text = buffer;
 		}
 	}
@@ -1034,7 +1096,7 @@ void ItemConsole::DrawImGui()
 					int idx = indices[line];
 					const OutputData &e = snapshot[idx];
 
-					// 行全体を Selectable にして行選択を実装（行単位コピー用）
+					// 行全体をSelectableにして行選択を実装(行単位コピー用)
 					ImGui::PushID(line);
 					ImVec4 col = e.Color;
 					// 時刻とレベルを先頭に表示するフォーマット例
@@ -1047,11 +1109,11 @@ void ItemConsole::DrawImGui()
 						ImGui::TextUnformatted(LevelStr.c_str()); ImGui::PopStyleColor(); ImGui::SameLine();
 					}
 
-					// カラーテキストを単純に描く（必要なら BeginGroup/EndGroup で整形）
+					// カラーテキストを単純に描く(必要ならBeginGroup/EndGroupで整形)
 					ImGui::PushStyleColor(ImGuiCol_Text, col);
-					// Selectable はテキストを表示しつつ選択可能にする：幅をフルに取るため ImGui::GetContentRegionAvail().x を利用
+					// Selectableはテキストを表示しつつ選択可能にする：幅をフルに取るためImGui::GetContentRegionAvail().xを利用
 					float availW = ImGui::GetContentRegionAvail().x;
-					// 改行の可能性があるので TextWrapped で折り返し表示する（ただし Selectable 内での折返しは難しいため単純実装）
+					// 改行の可能性があるのでTextWrappedで折り返し表示する
 					ImGui::TextWrapped("%s", e.Text.c_str());
 					ImGui::PopStyleColor();
 

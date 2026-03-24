@@ -120,6 +120,10 @@ private:
     bool m_RenameJustStarted;               // リネーム開始フラグ
 };
 
+// ==============================
+// ItemComponentSelector クラス
+// ==============================
+
 /// <summary>
 /// Unity風のAddComponentセレクター
 /// </summary>
@@ -152,6 +156,10 @@ private:
     bool m_IsAddingComponent;
 };
 
+// ==============================
+// ItemComponentGroup クラス
+// ==============================
+
 /// <summary>
 /// コンポーネント専用のグループアイテム
 /// 右クリックメニュー付き
@@ -182,6 +190,10 @@ private:
 	std::vector<std::function<void()>> m_MoveActions;
 };
 
+// ==============================
+// ItemProjectWindow クラス
+// ==============================
+
 /// <summary>
 /// Unity のプロジェクトウィンドウ/UE のコンテンツドロワー
 /// ファイルブラウザ機能
@@ -189,15 +201,29 @@ private:
 class ItemProjectWindow : public DebugItem
 {
 public:
-    ItemProjectWindow(_In_ std::string_view In_Name, _In_ std::string_view In_RootPath);
+    ItemProjectWindow(_In_ std::string_view In_Name);
     ~ItemProjectWindow();
 
     void DrawImGui() override;
+
+	/// <summary>
+	/// ルートパスを取得します
+	/// </summary>
+	/// <returns>ルートパスを表す文字列</returns>
+	std::string GetRootPath() const { return m_RootPath.string(); }
 
     /// <summary>
     /// ルートパスを設定
     /// </summary>
     void SetRootPath(_In_ std::string_view In_RootPath);
+
+	std::string GetProjectName() const { return m_ProjectName; }
+
+	/// <summary>
+	/// プロジェクト名を設定
+	/// </summary>
+    /// <param name="[In_ProjectName]">設定するプロジェクト名</param>
+	void SetProjectName(_In_ std::string_view In_ProjectName) { m_ProjectName = In_ProjectName; }
 
     /// <summary>
     /// 選択中のファイルパスを取得
@@ -273,11 +299,6 @@ private:
 	void OpenFileInEditor(_In_ const std::filesystem::path &In_Path);
 
     /// <summary>
-    /// テンプレートからファイルを生成
-    /// </summary>
-    bool GenerateFromTemplate(_In_ const std::filesystem::path &In_TemplatePath, _In_ const std::filesystem::path &In_OutputPath, _In_ const std::map<std::string, std::string> &In_Replacements);
-
-    /// <summary>
     /// ファイルアイコン（テクスチャ）を取得
     /// </summary>
     std::shared_ptr<Texture> GetFileIconTexture(_In_ const std::filesystem::path &In_Path);
@@ -333,6 +354,8 @@ private:
     void StopWatching();
 
 private:
+    std::string m_ProjectName;
+
     // ファイル監視関連
     std::thread m_WatcherThread;
     HANDLE m_hDirectory;
@@ -384,4 +407,38 @@ private:
     bool m_ShowDeleteConfirmation;
 	// Createメニュー用
     bool m_ShowScriptNameInput = false;
+};
+
+// ==============================
+// ItemNewProject クラス
+// ==============================
+
+/// <summary>
+/// New Project ダイアログ
+/// </summary>
+class ItemNewProject : public DebugItem
+{
+public:
+    ItemNewProject(_In_ std::string_view In_Name);
+    ~ItemNewProject() override = default;
+
+    void DrawImGui() override;
+
+private:
+
+    /// <summary>
+    /// プロジェクトを作成
+    /// </summary>
+    void CreateProject();
+
+    /// <summary>
+    /// プロジェクト名のバリデーション
+    /// </summary>
+    bool ValidateProjectName() const;
+
+private:
+    char m_ProjectName[256] = "MyGame";
+    char m_Location[512] = "Projects";
+
+    std::string m_ErrorMessage;
 };

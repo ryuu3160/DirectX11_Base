@@ -11,11 +11,12 @@
 // ==============================
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "Core/Defines.hpp"
+#include "Core/EngineAPI.hpp"
 
 /// <summary>
 /// InitializeImGuiƒNƒ‰ƒX
 /// </summary>
-class InitializeImGui
+class ENGINE_API InitializeImGui
 {
 public:
 	/// <summary>
