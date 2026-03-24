@@ -1,8 +1,7 @@
-Window,File/NewProject,0
 Window,View/Hierarchy,1
 Window,View/Inspector,1
 Window,View/Project,1
-__ProjectWindow,View/Project/ProjectWindow,50^TestGame^Projects\TestGame\Assets
+__ProjectWindow,View/Project/ProjectWindow,50^TestGame^C:\ryuu\VisualStudioFolder\DirectX11_Base\DirectX11_Base\Projects\TestGame\Assets
 Window,View/Log,1
 Window,View/DebugMenu,1
 Color,View/DebugMenu/ScreenColor,0.0470588244/0.7647058964/0.7921568751/1.0000000000
