@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: DebugWindowBase.hpp
-	Summary:
+	Summary: デバッグウィンドウの基底クラス
 	Author: AT13C192 01 青木雄一郎
 	Date: 2026/3/12 Thu PM 04:18:45 初回作成
 ===================================================================+*/
@@ -10,12 +10,12 @@
 //	include
 // ==============================
 #include "Core/System/Managers/DebugManager/Item/DebugItem.hpp"
+
 // ==============================
-//	定数定義
+// コンセプト
 // ==============================
-namespace
-{
-}
+template <typename T>
+concept IsDebugItemOnly = std::derived_from<T, DebugItem> && !std::derived_from<T, ItemLayoutFunc>;
 
 /// <summary>
 /// DebugWindowBaseクラス
@@ -27,9 +27,9 @@ class ENGINE_API DebugWindowBase
 public:
 	enum class WindowType
 	{
-		Normal,      // 通常のウィンドウ (ImGui::Begin)
-		Modal,       // モーダルダイアログ (ImGui::BeginPopupModal)
-		Popup        // ポップアップ (ImGui::BeginPopup)
+		Normal,      // 通常のウィンドウ(ImGui::Begin)
+		Modal,       // モーダルダイアログ(ImGui::BeginPopupModal)
+		Popup        // ポップアップ(ImGui::BeginPopup)
 	};
 
 	DebugWindowBase(_In_ std::string_view In_Name, _In_ WindowType In_Type, _In_ ImGuiWindowFlags In_Flags = 0);
@@ -60,13 +60,20 @@ public:
 	/// <summary>
 	/// アイテムを作成
 	/// </summary>
-	template <typename T, typename ...Args>
-	requires std::derived_from<T, DebugItem>
-	T *CreateItem(std::string_view In_Name, Args&& ...args);
+	template <IsDebugItemOnly T, typename ...Args>
+	T *CreateItem(_In_ std::string_view In_Name, Args&& ...In_Args);
 
+	/// <summary>
+	/// ItemLayoutFuncから派生した型のアイテムを作成します
+	/// </summary>
+	/// <returns>作成されたアイテムへのポインタ</returns>
 	template<typename T>
 	requires std::derived_from<T, ItemLayoutFunc>
 	T *CreateItem();
+
+	template<typename T, typename ...Args>
+	requires std::derived_from<T, ItemLayoutFunc>
+	T *CreateItem(Args&& ...In_Args);
 
 	/// <summary>
 	/// アイテムを削除
@@ -143,11 +150,10 @@ protected:
 };
 
 // テンプレート実装
-template<typename T, typename ...Args>
-requires std::derived_from<T, DebugItem>
-inline T *DebugWindowBase::CreateItem(std::string_view In_Name, Args && ...args)
+template<IsDebugItemOnly T, typename ...Args>
+inline T *DebugWindowBase::CreateItem(_In_ std::string_view In_Name, Args && ...In_Args)
 {
-	T *item = new T(In_Name.data(), std::forward<Args>(args)...);
+	T *item = new T(In_Name.data(), std::forward<Args>(In_Args)...);
 	item->m_GroupName = m_GroupName;
 	item->m_WindowName = m_Name;
 	item->m_pWindow = this;
@@ -160,10 +166,26 @@ inline T *DebugWindowBase::CreateItem(std::string_view In_Name, Args && ...args)
 }
 
 template<typename T>
-	requires std::derived_from<T, ItemLayoutFunc>
+requires std::derived_from<T, ItemLayoutFunc>
 inline T *DebugWindowBase::CreateItem()
 {
 	T *item = new T();
+	item->m_GroupName = m_GroupName;
+	item->m_WindowName = m_Name;
+	item->m_pWindow = this;
+	item->Awake();
+
+	DebugManager::GetInstance().DataRead(m_GroupName + "/" + m_Name + "/", item);
+
+	m_Items.push_back(item);
+	return item;
+}
+
+template<typename T, typename ...Args>
+requires std::derived_from<T, ItemLayoutFunc>
+inline T *DebugWindowBase::CreateItem(Args&& ...In_Args)
+{
+	T *item = new T(In_Args...);
 	item->m_GroupName = m_GroupName;
 	item->m_WindowName = m_Name;
 	item->m_pWindow = this;
