@@ -112,6 +112,10 @@ bool GameProjectManager::CreateNewProject(_In_ std::string_view In_ProjectName, 
         return false;
     }
 
+    // 現在ロードされているプロジェクトがある場合は閉じる
+    if(m_CurrentProject.has_value())
+        CloseProject();
+
     // プロジェクト情報を設定
     GameProjectInfo info;
     info.Name = ProjectName;
@@ -127,10 +131,6 @@ bool GameProjectManager::CreateNewProject(_In_ std::string_view In_ProjectName, 
     DebugManager::GetInstance().DebugLog("  Project created successfully!");
     DebugManager::GetInstance().DebugLog("  Location: {}", ProjectRoot.string());
     DebugManager::GetInstance().DebugLog("========================================");
-
-	// 現在ロードされているプロジェクトがある場合は閉じる
-    if(m_CurrentProject.has_value())
-        CloseProject();
 
 	// プロジェクトウィンドウでプロジェクトを開く
 	OpenProjectInProjectWindow(ProjectName, ProjectRoot);
@@ -158,6 +158,8 @@ bool GameProjectManager::CreateProjectStructure(_In_ const std::filesystem::path
         std::filesystem::create_directory(In_ProjectRoot / "Binaries");
         std::filesystem::create_directory(In_ProjectRoot / "Binaries" / "Debug");
         std::filesystem::create_directory(In_ProjectRoot / "Binaries" / "Release");
+        std::filesystem::create_directory(In_ProjectRoot / "Binaries" / "Debug" / "Builds");
+        std::filesystem::create_directory(In_ProjectRoot / "Binaries" / "Release" / "Builds");
 
         // Intermediate フォルダ
         std::filesystem::create_directory(In_ProjectRoot / "Intermediate");
@@ -527,7 +529,7 @@ void GameProjectManager::CreateReloadingUI()
     m_ReloadingWindow = debug.CreateDebugModal("File", "DllReloading", false, flags);
     m_ReloadingWindow->SetShowCloseButton(false);
     m_ReloadingWindow->SetShowDefaultButtons(false);
-    m_ReloadingWindow->CreateItem<ItemText>("ReloadingProjectDll...");
+    m_ReloadingWindow->CreateItem<ItemText>("Reloading Project Dll...");
 
 	m_MainViewport = ImGui::GetMainViewport();
 
@@ -536,7 +538,7 @@ void GameProjectManager::CreateReloadingUI()
             // ダイアログのサイズと位置
 		    ImVec2 center = m_MainViewport->GetCenter();
 		    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-		    ImGui::SetNextWindowSize(ImVec2(400, 180), ImGuiCond_Appearing);
+		    ImGui::SetNextWindowSize(ImVec2(300, 135), ImGuiCond_Appearing);
 			ImGui::SetNextWindowViewport(m_MainViewport->ID);
             Input::SetInputEnabled(false);
 
@@ -1234,6 +1236,11 @@ void GameProjectManager::StartWatching()
 
 void GameProjectManager::StopWatching()
 {
+    if(m_ReloadingThread.joinable())
+    {
+        m_ReloadingThread.join();
+    }
+
     if(!m_IsWatching)
         return;
 
@@ -1258,11 +1265,6 @@ void GameProjectManager::StopWatching()
     if(m_WatcherThread.joinable())
     {
         m_WatcherThread.join();
-    }
-
-	if(m_ReloadingThread.joinable())
-    {
-        m_ReloadingThread.join();
     }
 }
 
