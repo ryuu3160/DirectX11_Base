@@ -495,6 +495,13 @@ GameProjectManager::GameProjectManager()
 
     // Dllリロード時に表示するUIを作成
     CreateReloadingUI();
+
+    // プロジェクトが開かれている場合Dllロード
+    if(LoadProjectDll())
+    {
+        // ビルド監視を開始
+		StartWatching();
+    }
 }
 
 GameProjectManager::~GameProjectManager()
@@ -529,7 +536,12 @@ void GameProjectManager::CreateReloadingUI()
     m_ReloadingWindow = debug.CreateDebugModal("File", "DllReloading", false, flags);
     m_ReloadingWindow->SetShowCloseButton(false);
     m_ReloadingWindow->SetShowDefaultButtons(false);
-    m_ReloadingWindow->CreateItem<ItemText>("Reloading Project Dll...");
+    m_ReloadingWindow->CreateItem<ItemPushFontSize>(30.0f);
+    auto ReloadingText = m_ReloadingWindow->CreateItem<ItemText>("Reloading Project Dll...");
+    ReloadingText->SetTextPosCenterX();
+    m_ReloadingWindow->CreateItem<ItemPopFontSize>();
+	DirectX::XMFLOAT4 color = { 0.0f, 120.0f / 255.0f, 215.0f / 255.0f, 1.0f };
+	m_ReloadingWindow->CreateItem<ItemLoadingIcon>("LoadingIcon", 12.0f, 3.0f,4.0f, color);
 
 	m_MainViewport = ImGui::GetMainViewport();
 
@@ -564,6 +576,9 @@ void GameProjectManager::CreateReloadingUI()
         {
 		    m_IsReloading = false;
             Input::SetInputEnabled(true);
+
+            if(m_ReloadingThread.joinable())
+				m_ReloadingThread.join();
         });
 }
 
@@ -1185,12 +1200,6 @@ void GameProjectManager::WatchProjectBuild()
                                 std::lock_guard<std::mutex> lock(m_ReloadingUiMutex);
                                 m_ReloadingWindow->Open();
                                 IsBreak = true;
-                            }
-                            else if(m_ReloadingThread.joinable())
-                            {
-                                // すでにリロードスレッドが走っているなら新しいビルドを待つためにリロード完了まで待機する
-								m_ReloadingThread.join();
-								IsBreak = true;
                             }
                             break;
                         }
