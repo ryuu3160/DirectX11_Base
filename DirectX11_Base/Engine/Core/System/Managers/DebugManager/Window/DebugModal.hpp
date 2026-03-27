@@ -71,7 +71,7 @@ private:
 
 private:
 	bool m_ShouldOpen;
-	bool m_IsNotPushCloseButton;
+	bool m_ShouldClose;
 	bool m_ShowDefaultButtons;
 	bool m_IsShowCloseButton;
 	std::function<void()> m_OkCallback;

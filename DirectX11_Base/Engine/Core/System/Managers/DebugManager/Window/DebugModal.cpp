@@ -12,7 +12,7 @@
 
 DebugModal::DebugModal(_In_ std::string_view In_Name, _In_ ImGuiWindowFlags In_Flags)
 	: DebugWindowBase(In_Name, WindowType::Modal, In_Flags)
-	, m_ShouldOpen(false), m_IsNotPushCloseButton(true)
+	, m_ShouldOpen(false), m_ShouldClose(false)
 	, m_ShowDefaultButtons(true), m_IsShowCloseButton(true)
 	, m_OkCallback(nullptr)
 	, m_CancelCallback(nullptr)
@@ -34,7 +34,7 @@ void DebugModal::Draw() noexcept
 		ImGui::OpenPopup(WindowName.c_str());
 		m_ShouldOpen = false;
 		m_IsOpen = true;
-		m_IsNotPushCloseButton = true;
+		m_ShouldClose = false;
 		// 開いた時のコールバックを呼ぶ
 		if(m_OpenCallback)
 			m_OpenCallback();
@@ -46,7 +46,7 @@ void DebugModal::Draw() noexcept
 	std::string windowName = GetViewWindowName();
 
 	// BeginPopupModalがtrueの時だけ処理
-	if(ImGui::BeginPopupModal(windowName.c_str(), m_IsShowCloseButton ? &m_IsNotPushCloseButton : NULL, m_WindowFlags))
+	if(ImGui::BeginPopupModal(windowName.c_str(), m_IsShowCloseButton ? &m_IsOpen : NULL, m_WindowFlags))
 	{
 		DrawItems();
 
@@ -58,26 +58,28 @@ void DebugModal::Draw() noexcept
 
 		ChangeItems();
 
+		if(m_ShouldClose)
+		{
+			ImGui::CloseCurrentPopup();
+			m_IsOpen = false;
+		}
+
 		// trueの時だけEndPopupを呼ぶ
 		ImGui::EndPopup();
 	}
 
-	// バツボタンでモーダルが閉じられた場合
-	if(!m_IsNotPushCloseButton)
+	// モーダルが閉じられた場合
+	if(!m_IsOpen)
 	{
-		m_IsOpen = false;
 		if(m_CloseCallback)
 			m_CloseCallback();
+		m_ShouldClose = false;
 	}
 }
 
 void DebugModal::Close() noexcept
 {
-	ImGui::CloseCurrentPopup();
-	m_IsOpen = false;
-
-	if(m_CloseCallback)
-		m_CloseCallback();
+	m_ShouldClose = true;
 }
 
 void DebugModal::DrawDefaultButtons() noexcept
