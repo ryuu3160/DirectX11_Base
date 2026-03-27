@@ -11,6 +11,7 @@
 #include "DebugItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
+#include "Core/DirectX11/System/DX11_Math.hpp"
 
 // ==============================
 //	定数定義
@@ -414,10 +415,10 @@ void ItemValue::DrawDragValue()
 
 ItemText::ItemText(_In_ std::string_view In_Text, _In_ bool In_IsWrapped, _In_ bool In_IsBullet, _In_ bool In_IsSave)
 	: m_IsWrapped(In_IsWrapped), m_IsBullet(In_IsBullet), m_IsSave(In_IsSave)
-	, m_IsChangeColor(false)
+	, m_IsChangeColor(false), m_IsChangePosX(false), m_PosX(0.0f)
 {
-	m_Name = In_Text.data();
-	m_Text = m_Name;
+	m_Name = "ItemText";
+	m_Text = In_Text.data();
 	m_Kind = Kind::Text;
 	m_LineCount = 0;
 	m_Color = ImGui::GetStyleColorVec4(ImGuiCol_Text);
@@ -442,6 +443,19 @@ void ItemText::DrawImGui()
 		}
 		if(m_IsChangeColor)
 			ImGui::PushStyleColor(ImGuiCol_Text, m_Color);
+		if(m_IsChangePosX)
+		{
+			if(m_PosX == -1.0f)
+			{
+				auto TextSize = ImGui::CalcTextSize(m_Text.c_str());
+				auto AvailWidth = ImGui::GetContentRegionAvail().x;
+
+				m_PosX = (AvailWidth - TextSize.x) * 0.5f;
+			}
+
+			if(m_PosX > 0.0f)
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + m_PosX);
+		}
 		if(m_IsWrapped)
 		{
 			ImGui::PushTextWrapPos();
@@ -1068,7 +1082,7 @@ void ItemConsole::DrawImGui()
 				snapshot = m_Outputs;
 			}
 
-			// 検索/フィルタ処理（簡易）
+			// 検索/フィルタ処理
 			std::vector<int> indices; indices.reserve(snapshot.size());
 			for (int i = 0; i < (int)snapshot.size(); ++i)
 			{
@@ -1077,7 +1091,7 @@ void ItemConsole::DrawImGui()
 				if (m_SerchBuffer[0] != '\0')
 				{
 					std::string s = m_SerchBuffer;
-					// 小文字化して簡易検索（必要なら強化）
+					// 小文字化して簡易検索
 					std::string hay = e.Text;
 					std::transform(hay.begin(), hay.end(), hay.begin(), ::tolower);
 					std::transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -1241,6 +1255,66 @@ void ItemConsole::WriteLogToFile()
 }
 
 // ==============================
+//  ItemLoadingIcon
+// ==============================
+
+ItemLoadingIcon::ItemLoadingIcon(_In_ std::string_view In_Name, _In_ float In_Radius, _In_ float In_Thickness, _In_ float In_Speed, _In_ DirectX::XMFLOAT4 In_Color)
+	: m_Radius(In_Radius), m_Thickness(In_Thickness), m_Speed(In_Speed)
+{
+	m_Name = In_Name.data();
+	m_Kind = Kind::LoadingIcon;
+	m_Color = IM_COL32(static_cast<int>(In_Color.x * 255.0f), static_cast<int>(In_Color.y * 255.0f), static_cast<int>(In_Color.z * 255.0f), static_cast<int>(In_Color.w * 255.0f));
+}
+
+ItemLoadingIcon::~ItemLoadingIcon()
+{
+}
+
+void ItemLoadingIcon::DrawImGui()
+{
+	switch(m_Kind)
+	{
+		// 入力文字列項目の表示
+	case DebugItem::LoadingIcon:
+	{
+		ImDrawList *draw = ImGui::GetWindowDrawList();
+
+		// コンテンツ領域の利用可能サイズを取得
+		ImVec2 avail = ImGui::GetContentRegionAvail();
+		float diameter = m_Radius * 2.0f;
+		// 横中央
+		float CurX = ImGui::GetCursorPosX();
+		float PosX = CurX + (avail.x - diameter) * 0.5f;
+		if(PosX < CurX)
+			PosX = CurX;
+		ImGui::SetCursorPosX(PosX);
+
+		// 縦中央位置はコンテンツ全体の高さに対して計算
+		float CurY = ImGui::GetCursorPosY();
+		float PosY = CurY + (avail.y - diameter) * 0.5f;
+		if(PosY < CurY)
+			PosY = CurY;
+		ImGui::SetCursorPosY(PosY);
+
+		ImVec2 pos = ImGui::GetCursorScreenPos(); // スクリーン座標の左上
+		ImVec2 center = ImVec2(pos.x + m_Radius, pos.y + m_Radius);
+
+		// 回転するアークを描画
+		float time = static_cast<float>(ImGui::GetTime());
+		float start = time * m_Speed;
+		float sweep = PI * 1.5f; // 270度
+		int segments = 48;
+		draw->PathClear();
+		draw->PathArcTo(center, m_Radius, start, start + sweep, segments);
+		draw->PathStroke(m_Color, false, m_Thickness);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+// ==============================
 //  ItemLayoutFunc
 // ==============================
 
@@ -1259,8 +1333,8 @@ ItemLayoutFunc::~ItemLayoutFunc()
 //  ItemSameLine
 // ==============================
 
-ItemSameLine::ItemSameLine(_In_ std::string_view In_Name, _In_ float In_OffsetX, _In_ float In_SpacingW)
-	: ItemLayoutFunc(In_Name, LayoutType::SameLine), m_OffsetX(In_OffsetX), m_SpacingW(In_SpacingW)
+ItemSameLine::ItemSameLine(_In_ float In_OffsetX, _In_ float In_SpacingW)
+	: ItemLayoutFunc("SameLine", LayoutType::SameLine), m_OffsetX(In_OffsetX), m_SpacingW(In_SpacingW)
 {
 	if(m_SpacingW < 0.0f)
 		m_SpacingW = -1.0f;
@@ -1278,8 +1352,12 @@ void ItemSameLine::DrawImGui()
 	ImGui::SameLine(m_OffsetX, m_SpacingW);
 }
 
-ItemNewLine::ItemNewLine(_In_ std::string_view In_Name)
-	: ItemLayoutFunc(In_Name, LayoutType::NewLine)
+// ==============================
+//  ItemNewLine
+// ==============================
+
+ItemNewLine::ItemNewLine()
+	: ItemLayoutFunc("NewLine", LayoutType::NewLine)
 {
 }
 
@@ -1294,8 +1372,12 @@ void ItemNewLine::DrawImGui()
 	ImGui::NewLine();
 }
 
-ItemSpacing::ItemSpacing(_In_ std::string_view In_Name, _In_ int In_SpaceNum)
-	: ItemLayoutFunc(In_Name, LayoutType::Spacing), m_SpaceNum(In_SpaceNum)
+// ==============================
+//  ItemSpacing
+// ==============================
+
+ItemSpacing::ItemSpacing(_In_ int In_SpaceNum)
+	: ItemLayoutFunc("Spacing", LayoutType::Spacing), m_SpaceNum(In_SpaceNum)
 {
 }
 
@@ -1311,8 +1393,12 @@ void ItemSpacing::DrawImGui()
 		ImGui::Spacing();
 }
 
-ItemSeparator::ItemSeparator(_In_ std::string_view In_Name)
-	: ItemLayoutFunc(In_Name, LayoutType::Separator)
+// ==============================
+//  ItemSeparator
+// ==============================
+
+ItemSeparator::ItemSeparator()
+	: ItemLayoutFunc("Separator", LayoutType::Separator)
 {
 }
 
@@ -1327,8 +1413,12 @@ void ItemSeparator::DrawImGui()
 	ImGui::Separator();
 }
 
-ItemIndent::ItemIndent(_In_ std::string_view In_Name, _In_ float In_IndentW)
-	: ItemLayoutFunc(In_Name, LayoutType::Indent), m_IndentW(In_IndentW)
+// ==============================
+//  ItemIndent
+// ==============================
+
+ItemIndent::ItemIndent(_In_ float In_IndentW)
+	: ItemLayoutFunc("Indent", LayoutType::Indent), m_IndentW(In_IndentW)
 {
 	if(m_IndentW < 0.0f)
 		m_IndentW = 0.0f;
@@ -1345,8 +1435,12 @@ void ItemIndent::DrawImGui()
 	ImGui::Indent(m_IndentW);
 }
 
-ItemUnIndent::ItemUnIndent(_In_ std::string_view In_Name, _In_ float In_IndentW)
-	: ItemLayoutFunc(In_Name, LayoutType::UnIndent), m_IndentW(In_IndentW)
+// ==============================
+//  ItemUnIndent
+// ==============================
+
+ItemUnIndent::ItemUnIndent(_In_ float In_IndentW)
+	: ItemLayoutFunc("UnIndent", LayoutType::UnIndent), m_IndentW(In_IndentW)
 {
 	if(m_IndentW < 0.0f)
 		m_IndentW = 0.0f;
@@ -1363,8 +1457,12 @@ void ItemUnIndent::DrawImGui()
 	ImGui::Unindent(m_IndentW);
 }
 
-ItemDummy::ItemDummy(_In_ std::string_view In_Name, _In_ float In_Width, _In_ float In_Height)
-	: ItemLayoutFunc(In_Name, LayoutType::Dummy), m_Width(In_Width), m_Height(In_Height)
+// ==============================
+//  ItemDummy
+// ==============================
+
+ItemDummy::ItemDummy(_In_ float In_Width, _In_ float In_Height)
+	: ItemLayoutFunc("Dummy", LayoutType::Dummy), m_Width(In_Width), m_Height(In_Height)
 {
 	if(m_Width < 0.0f)
 		m_Width = 0.0f;
@@ -1383,8 +1481,12 @@ void ItemDummy::DrawImGui()
 	ImGui::Dummy(ImVec2(m_Width, m_Height));
 }
 
-ItemSetNextItemWidth::ItemSetNextItemWidth(_In_ std::string_view In_Name, _In_ float In_Width)
-	: ItemLayoutFunc(In_Name, LayoutType::SetNextItemWidth), m_Width(In_Width)
+// ==============================
+//  ItemSetNextItemWidth
+// ==============================
+
+ItemSetNextItemWidth::ItemSetNextItemWidth(_In_ float In_Width)
+	: ItemLayoutFunc("SetNextItemWidth", LayoutType::SetNextItemWidth), m_Width(In_Width)
 {
 	if(m_Width < 0.0f)
 		m_Width = -1.0f;
@@ -1401,8 +1503,12 @@ void ItemSetNextItemWidth::DrawImGui()
 	ImGui::SetNextItemWidth(m_Width);
 }
 
-ItemAlignTextToFramePadding::ItemAlignTextToFramePadding(_In_ std::string_view In_Name)
-	: ItemLayoutFunc(In_Name, LayoutType::AlignTextToFramePadding)
+// ==============================
+//  ItemAlignTextToFramePadding
+// ==============================
+
+ItemAlignTextToFramePadding::ItemAlignTextToFramePadding()
+	: ItemLayoutFunc("AlignTextToFramePadding", LayoutType::AlignTextToFramePadding)
 {
 }
 
@@ -1415,4 +1521,80 @@ void ItemAlignTextToFramePadding::DrawImGui()
 	if (m_Kind != Kind::LayoutFunc)
 		return;
 	ImGui::AlignTextToFramePadding();
+}
+
+// ==============================
+//  ItemSetCursorPosX
+// ==============================
+
+ItemSetCursorPosX::ItemSetCursorPosX(_In_ float In_PosX)
+	: ItemLayoutFunc("SetCursorPosX", LayoutType::SetCursorPosX), m_PosX(In_PosX)
+{
+}
+
+ItemSetCursorPosX::~ItemSetCursorPosX()
+{
+}
+
+void ItemSetCursorPosX::DrawImGui()
+{
+	if(m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::SetCursorPosX(m_PosX);
+}
+
+// ==============================
+//  ItemSetCursorPosY
+// ==============================
+
+ItemSetCursorPosY::ItemSetCursorPosY(_In_ float In_PosY)
+	: ItemLayoutFunc("SetCursorPosY", LayoutType::SetCursorPosY), m_PosY(In_PosY)
+{
+}
+
+ItemSetCursorPosY::~ItemSetCursorPosY()
+{
+}
+
+void ItemSetCursorPosY::DrawImGui()
+{
+	if(m_Kind != Kind::LayoutFunc)
+		return;
+	ImGui::SetCursorPosY(m_PosY);
+}
+
+// ==============================
+//  ItemPushFontSize
+// ==============================
+
+ItemPushFontSize::ItemPushFontSize(_In_ float In_FontSize)
+	: ItemLayoutFunc("PushFontSize", LayoutType::PushFontSize), m_FontSize(In_FontSize)
+{
+}
+
+ItemPushFontSize::~ItemPushFontSize()
+{
+}
+
+void ItemPushFontSize::DrawImGui()
+{
+	ImGui::PushFontSize(m_FontSize);
+}
+
+// ==============================
+//  ItemPopFontSize
+// ==============================
+
+ItemPopFontSize::ItemPopFontSize()
+	: ItemLayoutFunc("PopFontSize", LayoutType::PopFontSize)
+{
+}
+
+ItemPopFontSize::~ItemPopFontSize()
+{
+}
+
+void ItemPopFontSize::DrawImGui()
+{
+	ImGui::PopFontSize();
 }

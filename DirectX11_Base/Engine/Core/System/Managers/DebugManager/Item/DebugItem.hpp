@@ -87,6 +87,7 @@ public:
 		Command,	// ボタン
 		Group,		// 表示項目をまとめる
 		List,		// 一覧表示
+		LoadingIcon,// ローディングアイコン
 		LayoutFunc,	// レイアウト用関数
 
 		// システム専用
@@ -105,6 +106,8 @@ public:
 	virtual void Awake() {};
 
 	std::string GetName() const;
+
+	inline void SetName(_In_ std::string_view In_Name) { m_Name = In_Name; }
 
 	const char *GetCStrName() const;
 
@@ -221,6 +224,24 @@ public:
 
 	inline void SetText(_In_ std::string_view In_Text) { m_Text = In_Text; }
 
+	inline void SetTextPosX(_In_ float In_PosX)
+	{
+		m_PosX = In_PosX;
+		m_IsChangePosX = true;
+	}
+
+	inline void SetTextPosCenterX()
+	{
+		m_PosX = -1.0f;
+		m_IsChangePosX = true;
+	}
+
+	inline void ResetTextPosX()
+	{
+		m_PosX = 0.0f;
+		m_IsChangePosX = false;
+	}
+
 	/// <summary>
 	/// 折り返すかどうかを取得
 	/// </summary>
@@ -275,7 +296,9 @@ public:
 private:
 	std::string m_Text;
 	ImVec4 m_Color;
+	float m_PosX;
 	int m_LineCount;
+	bool m_IsChangePosX;
 	bool m_IsChangeColor;
 	bool m_IsWrapped;
 	bool m_IsBullet;
@@ -479,7 +502,7 @@ public:
 	// グループで使用する関数
 
 	template <typename T, typename ...Args>
-	requires (std::derived_from<T, DebugItem>)
+	requires (std::derived_from<T, DebugItem> && !std::derived_from<T, ItemLayoutFunc>)
 	T *CreateGroupItem(std::string_view In_Name, Args&& ...In_Args)
 	{
 		if(m_Kind != Kind::Group)
@@ -613,6 +636,27 @@ private:
 };
 
 /// <summary>
+/// アイテムの読み込みアイコン
+/// </summary>
+/// <param name="[In_Name]">アイテム名</param>
+/// <param name="[In_Radius]">アイコンの半径</param>
+/// <param name="[In_Thickness]">アイコンの線の太さ</param>
+/// <param name="[In_Color]">アイコンの色</param>
+class ItemLoadingIcon : public DebugItem
+{
+public:
+	ItemLoadingIcon(_In_ std::string_view In_Name, _In_ float In_Radius = 12.0f, _In_ float In_Thickness = 3.0f, _In_ float In_Speed = 4.0f, _In_ DirectX::XMFLOAT4 In_Color = { 0.0f, 120.0f / 255.0f, 215.0f / 255.0f, 1.0f });
+	~ItemLoadingIcon();
+	void DrawImGui() override;
+
+private:
+	float m_Radius;
+	float m_Thickness;
+	float m_Speed;
+	ImU32 m_Color;
+};
+
+/// <summary>
 /// ItemLayoutFuncクラス
 /// </summary>
 /// <param name="[In_Name]">アイテム名</param>
@@ -631,6 +675,10 @@ public:
 		Dummy,						// 見えないスペーサー
 		SetNextItemWidth,			// 次のアイテムの幅を設定
 		AlignTextToFramePadding,	// テキストをフレームパディングに合わせる
+		SetCursorPosX,				// カーソルのX位置を設定
+		SetCursorPosY,				// カーソルのY位置を設定
+		PushFontSize,				// フォントサイズを設定
+		PopFontSize,				// フォントサイズを元に戻す
 	};
 
 	ItemLayoutFunc(_In_ std::string_view In_Name, _In_ LayoutType In_LayoutType);
@@ -644,13 +692,12 @@ private:
 /// <summary>
 /// ImGuiの同一行にアイテムを配置するためのレイアウト機能を提供する
 /// </summary>
-/// <param name="[In_Name]">アイテム名</param>
 /// <param name="[In_OffsetX]">同一行に配置する際のX方向のオフセット値</param>
 /// <param name="[In_SpacingW]">同一行に配置する際の間隔幅（負の値の場合はデフォルト値を使用）</param>
 class ItemSameLine : public ItemLayoutFunc
 {
 public:
-	ItemSameLine(_In_ std::string_view In_Name = "SameLine", _In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
+	ItemSameLine(_In_ float In_OffsetX = 0.0f, _In_ float In_SpacingW = -1.0f);
 	~ItemSameLine();
 	void DrawImGui() override;
 private:
@@ -664,7 +711,7 @@ private:
 class ItemNewLine : public ItemLayoutFunc
 {
 public:
-	ItemNewLine(_In_ std::string_view In_Name = "NewLine");
+	ItemNewLine();
 	~ItemNewLine();
 	void DrawImGui() override;
 };
@@ -675,7 +722,7 @@ public:
 class ItemSpacing : public ItemLayoutFunc
 {
 public:
-	ItemSpacing(_In_ std::string_view In_Name = "Spacing", _In_ int In_SpaceNum = 1);
+	ItemSpacing(_In_ int In_SpaceNum = 1);
 	~ItemSpacing();
 	void DrawImGui() override;
 private:
@@ -688,7 +735,7 @@ private:
 class ItemSeparator : public ItemLayoutFunc
 {
 public:
-	ItemSeparator(_In_ std::string_view In_Name = "Separator");
+	ItemSeparator();
 	~ItemSeparator();
 	void DrawImGui() override;
 };
@@ -696,12 +743,11 @@ public:
 /// <summary>
 /// ImGuiのインデントを追加するためのレイアウト機能を提供する
 /// </summary>
-/// <param name="[In_Name]">アイテム名</param>
 /// <param name="[In_IndentW]">インデント幅（負の値の場合はデフォルト値を使用）</param>
 class ItemIndent : public ItemLayoutFunc
 {
 public:
-	ItemIndent(_In_ std::string_view In_Name = "Indent", _In_ float In_IndentW = 0.0f);
+	ItemIndent(_In_ float In_IndentW = 0.0f);
 	~ItemIndent();
 	void DrawImGui() override;
 private:
@@ -711,12 +757,11 @@ private:
 /// <summary>
 /// ImGuiのインデントを元に戻すためのレイアウト機能を提供する
 /// </summary>
-/// <param name="[In_Name]">アイテム名</param>
 /// param name="[In_IndentW]">インデント幅（負の値の場合はデフォルト値を使用）</param>
 class ItemUnIndent : public ItemLayoutFunc
 {
 public:
-	ItemUnIndent(_In_ std::string_view In_Name = "UnIndent", _In_ float In_IndentW = 0.0f);
+	ItemUnIndent(_In_ float In_IndentW = 0.0f);
 	~ItemUnIndent();
 	void DrawImGui() override;
 private:
@@ -726,13 +771,12 @@ private:
 /// <summary>
 /// ImGuiの見えないスペーサーを描画するためのレイアウト機能を提供する
 /// </summary>
-/// <param name="[In_Name]">アイテム名</param>
 /// <param name="[In_Width]">スペーサーの幅</param>
 /// <param name="[In_Height]">スペーサーの高さ</param>
 class ItemDummy : public ItemLayoutFunc
 {
 public:
-	ItemDummy(_In_ std::string_view In_Name = "Dummy", _In_ float In_Width = 0.0f, _In_ float In_Height = 0.0f);
+	ItemDummy(_In_ float In_Width = 0.0f, _In_ float In_Height = 0.0f);
 	~ItemDummy();
 	void DrawImGui() override;
 private:
@@ -743,22 +787,75 @@ private:
 /// <summary>
 /// ImGuiの次のアイテムの幅を設定するためのレイアウト機能を提供する
 ///	</summary>
-/// <param name="[In_Name]">アイテム名</param>
 /// <param name="[In_Width]">次のアイテムの幅</param>
 class ItemSetNextItemWidth : public ItemLayoutFunc
 {
 public:
-	ItemSetNextItemWidth(_In_ std::string_view In_Name = "NextItemWidth", _In_ float In_Width = 16.0f);
+	ItemSetNextItemWidth(_In_ float In_Width = 16.0f);
 	~ItemSetNextItemWidth();
 	void DrawImGui() override;
 private:
 	float m_Width;
 };
 
+/// <summary>
+/// ImGuiのテキストをフレームパディングに合わせるためのレイアウト機能を提供する
+/// </summary>
 class ItemAlignTextToFramePadding : public ItemLayoutFunc
 {
 public:
-	ItemAlignTextToFramePadding(_In_ std::string_view In_Name = "ItemAlignTextToFramePadding");
+	ItemAlignTextToFramePadding();
 	~ItemAlignTextToFramePadding();
+	void DrawImGui() override;
+};
+
+/// <summary>
+/// ImGuiレイアウトでカーソルのX位置を設定するクラス
+/// </summary>
+class ItemSetCursorPosX : public ItemLayoutFunc
+{
+public:
+	ItemSetCursorPosX(_In_ float In_PosX = 0.0f);
+	~ItemSetCursorPosX();
+	void DrawImGui() override;
+
+private:
+	float m_PosX;
+};
+
+/// <summary>
+/// ImGuiレイアウトでカーソルのY位置を設定するクラス
+/// </summary>
+class ItemSetCursorPosY : public ItemLayoutFunc
+{
+public:
+	ItemSetCursorPosY(_In_ float In_PosY = 0.0f);
+	~ItemSetCursorPosY();
+	void DrawImGui() override;
+private:
+	float m_PosY;
+};
+
+/// <summary>
+/// ImGuiレイアウトでフォントサイズを設定するクラス
+/// </summary>
+class ItemPushFontSize : public ItemLayoutFunc
+{
+public:
+	ItemPushFontSize(_In_ float In_FontSize = 16.0f);
+	~ItemPushFontSize();
+	void DrawImGui() override;
+private:
+	float m_FontSize;
+};
+
+/// <summary>
+/// ImGuiレイアウトでフォントサイズを元に戻すクラス
+/// </summary>
+class ItemPopFontSize : public ItemLayoutFunc
+{
+public:
+	ItemPopFontSize();
+	~ItemPopFontSize();
 	void DrawImGui() override;
 };
