@@ -580,7 +580,7 @@ void DebugManager::ViewMenuInit()
 				FrameManager::GetInstance().SetTimeScale(1.0f);
 			}
 		});
-	DebugMenu->CreateItem<ItemSameLine>("SameLine1");
+	DebugMenu->CreateItem<ItemSameLine>();
 	auto IsDrawGizmoCallback = DebugMenu->CreateItem<ItemCallback>("IsDrawGizmo", DebugItem::Kind::Bool,
 		[](bool IsSet, void *ptr)
 		{
