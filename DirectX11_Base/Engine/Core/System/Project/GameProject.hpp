@@ -24,8 +24,8 @@ struct GameProjectInfo
 	std::string Name;                           // プロジェクト名
 	std::string Version;                        // バージョン
 	std::filesystem::path RootPath;             // プロジェクトルート
-	std::filesystem::path SolutionPath;         // .sln パス
-	std::filesystem::path ProjectPath;          // .vcxproj パス
+	std::filesystem::path SolutionPath;         // .slnパス
+	std::filesystem::path ProjectPath;          // .vcxprojパス
 	std::filesystem::path ScriptsPath;          // スクリプトフォルダ
 	std::filesystem::path AssetsPath;           // アセットフォルダ
 };
@@ -192,7 +192,7 @@ private:
 	/// <summary>
 	/// 最新のビルド出力を待機します
 	/// </summary>
-	/// <param name="[In_TimeoutMs]">待機する最大時間（ミリ秒）</param>
+	/// <param name="[In_TimeoutMs]">待機する最大時間(ミリ秒)</param>
 	/// <returns>最新のビルド出力が見つかった場合はtrue、タイムアウトした場合はfalseを返します</returns>
 	bool WaitForLatestBuildOutput(_In_ std::chrono::milliseconds In_TimeoutMs) const;
 
