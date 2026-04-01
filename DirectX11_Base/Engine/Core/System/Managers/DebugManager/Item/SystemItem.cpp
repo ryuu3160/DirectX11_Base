@@ -1374,7 +1374,7 @@ void ItemProjectWindow::OpenFileInEditor(_In_ const std::filesystem::path &In_Pa
     std::string ext = In_Path.extension().string();
     std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-    // C++/HLSLファイルはVisual Studioで開く
+    // C++/HLSLファイルはVisualStudioで開く
     if(ext == ".cpp" || ext == ".hpp" || ext == ".h" || ext == ".c" || ext == ".hlsl")
     {
         // ソリューションパスを取得

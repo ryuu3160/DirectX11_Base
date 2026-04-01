@@ -10,13 +10,6 @@
 //	include
 // ==============================
 
-// ==============================
-//	定数定義
-// ==============================
-namespace
-{
-}
-
 /// <summary>
 /// ProjectFileManagerクラス
 /// </summary>
@@ -32,22 +25,22 @@ public:
     struct FileEntry
     {
         std::filesystem::path FilePath;     // ファイルパス
-        std::string FilterPath;              // フィルター（Game/Script/AI など）
-        bool IsHeader;                       // .hpp の場合 true
+        std::string FilterPath;             // フィルター
+        bool IsHeader;                      // .hpp の場合true
     };
 
     /// <summary>
-    /// .vcxproj にファイルを追加
+    /// .vcxprojにファイルを追加
     /// </summary>
     static bool AddFileToProject(_In_ const std::filesystem::path &In_ProjectPath, _In_ const FileEntry &In_Entry);
 
     /// <summary>
-    /// .vcxproj.filters にフィルターエントリを追加
+    /// .vcxproj.filtersにフィルターエントリを追加
     /// </summary>
     static bool AddFileToFilters(_In_ const std::filesystem::path &In_FiltersPath, _In_ const FileEntry &In_Entry);
 
     /// <summary>
-    /// C++ スクリプトをプロジェクトに追加（.cpp + .hpp）
+    /// C++スクリプトをプロジェクトに追加(.cpp + .hpp)
     /// </summary>
 	/// <param name="[In_ProjectInfo]">プロジェクト情報</param>
 	/// <param name="[In_CppPath]">追加する .cpp ファイルのパス</param>
