@@ -1383,9 +1383,7 @@ void ItemProjectWindow::OpenFileInEditor(_In_ const std::filesystem::path &In_Pa
         if(CurrentProjectInfo)
             SolutionDir = CurrentProjectInfo->SolutionPath;
 
-        std::filesystem::path solutionPath = SolutionDir;
-
-        VisualStudioHelper::OpenFileInVisualStudio(In_Path, solutionPath);
+        VisualStudioHelper::OpenFileInVisualStudio(In_Path, SolutionDir);
     }
     // その他のファイルはデフォルトアプリで開く
     else
