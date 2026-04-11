@@ -129,9 +129,6 @@
     <Filter Include="Engine\ThirdParty\ImGui">
       <UniqueIdentifier>{28b6f403-b9ec-4edd-a2e1-d641edf0c59a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{4dda4223-894e-469b-a87d-c3cd55ed5709}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Component\Camera">
       <UniqueIdentifier>{a3f4fb9e-7e99-4ec6-ae91-78858e350e95}</UniqueIdentifier>
     </Filter>
@@ -141,9 +138,6 @@
     <Filter Include="Engine\ThirdParty\CPON">
       <UniqueIdentifier>{956271ba-cf0c-4556-9126-9b3c6abeb1bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Script">
-      <UniqueIdentifier>{b7b9134d-9e0b-4a67-bc1f-2856eb50fe31}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Project">
       <UniqueIdentifier>{1f03f1ef-6872-41e5-8224-10cdde7c5ab0}</UniqueIdentifier>
     </Filter>
@@ -152,6 +146,9 @@
     </Filter>
     <Filter Include="Engine\Core\System\Managers\DebugManager\Item">
       <UniqueIdentifier>{839ccde9-a4f7-4c40-97cf-adc1f25c216f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ryuu_lib\ThreadPool">
+      <UniqueIdentifier>{29a19b3a-472b-43c7-b409-48c6ced8a2a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -460,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Project\NuGetRestore.cpp">
       <Filter>Engine\Core\System\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ryuu_lib\ThreadPool\ThreadPool.cpp">
+      <Filter>Engine\ryuu_lib\ThreadPool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -792,6 +792,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Project\NuGetRestore.hpp">
       <Filter>Engine\Core\System\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ryuu_lib\ThreadPool\ThreadPool.hpp">
+      <Filter>Engine\ryuu_lib\ThreadPool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

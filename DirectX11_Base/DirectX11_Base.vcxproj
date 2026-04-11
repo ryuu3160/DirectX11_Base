@@ -312,6 +312,7 @@
     <ClCompile Include="Engine\ryuu_lib\Observer\Observer.cpp" />
     <ClCompile Include="Engine\ryuu_lib\RandomModule\Random.cpp" />
     <ClCompile Include="Engine\ryuu_lib\Singleton\SingletonController.cpp" />
+    <ClCompile Include="Engine\ryuu_lib\ThreadPool\ThreadPool.cpp" />
     <ClCompile Include="Engine\ryuu_lib\WindowGenerator\Window.cpp" />
     <ClCompile Include="Engine\ThirdParty\CPON\cpon.cpp" />
     <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp" />
@@ -456,6 +457,7 @@
     <ClInclude Include="Engine\ryuu_lib\RandomModule\Random.hpp" />
     <ClInclude Include="Engine\ryuu_lib\Singleton\Singleton.hpp" />
     <ClInclude Include="Engine\ryuu_lib\Singleton\SingletonController.hpp" />
+    <ClInclude Include="Engine\ryuu_lib\ThreadPool\ThreadPool.hpp" />
     <ClInclude Include="Engine\ryuu_lib\WindowGenerator\Window.hpp" />
     <ClInclude Include="Engine\ThirdParty\CPON\cpon.hpp" />
     <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp" />

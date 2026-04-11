@@ -14,6 +14,7 @@
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Utility/CustomWindowProc.hpp"
 #include "Core/System/Project/GameProject.hpp"
+#include "ryuu_lib/ThreadPool/ThreadPool.hpp"
 
 // ==============================
 //  プロトタイプ宣言
@@ -39,6 +40,7 @@ HRESULT Main::Init()
 		return hr;
 
 	// 各種機能の初期化
+	ThreadPool::GetInstance(); // スレッドプールの初期化
 	RegisterAllEngineComponents(); // コンポーネントの登録
 	auto &RenderM = RenderManager::GetInstance();
 	auto &CollM = CollisionManager::GetInstance();
