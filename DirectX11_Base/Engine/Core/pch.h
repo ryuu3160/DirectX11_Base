@@ -78,6 +78,12 @@ using Microsoft::WRL::ComPtr;
 #include <memory>
 #include <functional>
 #include <algorithm>
+#include <condition_variable>
+
+// ƒXƒŒƒbƒh
+#include <thread>
+#include <mutex>
+#include <atomic>
 
 // ‚»‚Ì‘¼
 #include <typeindex>
@@ -87,9 +93,9 @@ using Microsoft::WRL::ComPtr;
 #include <chrono>
 #include <filesystem>
 #include <random>
-#include <mutex>
 #include <future>
 #include <stdexcept>
+#include <cstddef>
 
 // C++20 ˆÈ~
 #if __cplusplus >= 202002L
