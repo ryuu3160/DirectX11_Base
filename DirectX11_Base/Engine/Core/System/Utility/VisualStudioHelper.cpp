@@ -22,9 +22,7 @@ bool VisualStudioHelper::OpenFileInVisualStudio(_In_ const std::filesystem::path
     if(IsVisualStudioRunning())
     {
         if(OpenFileInRunningInstance(In_FilePath, In_SolutionPath))
-        {
             return true;
-        }
     }
 
     // インストールされているVisualStudioを検出
@@ -61,9 +59,7 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectVisualStudioVe
 
     // 見つからなければレジストリから検出
     if(versions.empty())
-    {
         versions = DetectUsingRegistry();
-    }
 
     // 見つかった場合は、バージョンが大きい順にソート
     if(!versions.empty())
@@ -92,7 +88,7 @@ bool VisualStudioHelper::IsVisualStudioRunning()
 
     if(Process32FirstW(hSnapshot, &pe32))
     {
-        do
+        for(;;)
         {
             std::wstring ProcessName = pe32.szExeFile;
 
@@ -102,7 +98,9 @@ bool VisualStudioHelper::IsVisualStudioRunning()
                 found = true;
                 break;
             }
-        } while(Process32NextW(hSnapshot, &pe32));
+			if(!Process32NextW(hSnapshot, &pe32))
+				break;
+        }
     }
 
     CloseHandle(hSnapshot);
