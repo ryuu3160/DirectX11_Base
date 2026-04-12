@@ -34,52 +34,24 @@ bool VisualStudioHelper::OpenFileInVisualStudio(_In_ const std::filesystem::path
     {
         DebugManager::GetInstance().DebugLogWarning("No Visual Studio installation found");
 
-        // フォールバック: テキストエディタで開く
+		// VisualStudioが見つからなかった場合は、テキストエディタで開く
         return OpenInTextEditor(In_FilePath);
     }
 
-    // 優先順にソート
-    std::sort(VsVersions.begin(), VsVersions.end(),
-        [](const VSInfo &a, const VSInfo &b)
-        {
-            return a.Priority > b.Priority;
-        });
+	// 実行中のVisualStudioで開けなかった、又は実行中のVisualStudioが無かった場合、ソリューションパスが有効ならば
+	// ソリューションを指定してVisualStudioを起動し、起動したインスタンスでファイルを開く方法を試す
+	if(!In_SolutionPath.empty() && std::filesystem::exists(In_SolutionPath))
+	{
+		if(OpenFileInLaunchedInstance(In_FilePath, In_SolutionPath))
+			return true;
+	}
 
-    // 最優先のVisualStudioで開く
-    const VSInfo &vs = VsVersions[0];
+	// VisualStudioで開けなかった場合は、テキストエディタで開く
+	DWORD error = GetLastError();
+	DebugManager::GetInstance().DebugLogError("Failed to open Visual Studio (Error: {})", error);
 
-    std::wstring command;
-    if(!In_SolutionPath.empty() && std::filesystem::exists(In_SolutionPath))
-    {
-        // ソリューションと一緒に開く
-        command = L"\"" + In_SolutionPath.wstring() + L"\" /edit \"" + In_FilePath.wstring() + L"\"";
-    }
-    else
-    {
-        // ファイルだけを開く
-        command = L"/edit \"" + In_FilePath.wstring() + L"\"";
-    }
-
-    SHELLEXECUTEINFOW sei = {};
-    sei.cbSize = sizeof(SHELLEXECUTEINFOW);
-    sei.fMask = SEE_MASK_NOCLOSEPROCESS;
-    sei.lpVerb = L"open";
-    sei.lpFile = vs.DevEnvPath.c_str();
-    sei.lpParameters = command.c_str();
-    sei.nShow = SW_SHOW;
-
-    if(ShellExecuteExW(&sei))
-    {
-        return true;
-    }
-    else
-    {
-        DWORD error = GetLastError();
-        DebugManager::GetInstance().DebugLogError("Failed to open Visual Studio (Error: {})", error);
-
-        // フォールバック: テキストエディタで開く
-        return OpenInTextEditor(In_FilePath);
-    }
+	// フォールバック: テキストエディタで開く
+	return OpenInTextEditor(In_FilePath);
 }
 
 std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectVisualStudioVersions()
@@ -325,6 +297,7 @@ bool VisualStudioHelper::OpenFileInLaunchedInstance(_In_ const std::filesystem::
 		const VSInfo &vs = VsVersions[0];
 		std::wstring DevenvExe = vs.DevEnvPath; // 既にDetectで得ているdevenv.exe のパス
 
+		// 別スレッドでVisualStudioを起動してROTをポーリングするタスクを生成
 		auto handle = Pool.AddTask([DevenvExe, In_FilePath, In_SolutionPath]()
 			{
 				IStream *stream = nullptr;
@@ -392,9 +365,7 @@ IStream *VisualStudioHelper::LaunchVisualStudioForSolution(_In_ std::wstring_vie
     {
 		// まず WaitForInputIdleを試す
 		if(sei.hProcess)
-		{
 			DWORD WaitRet = WaitForInputIdle(sei.hProcess, 5000); // 5秒
-		}
 
 		// ROT ポーリング
 		int waited = 0;
@@ -522,7 +493,7 @@ bool VisualStudioHelper::UseMarshaledDTEAndOpen(_In_opt_ IStream *In_pStream, _I
 
 	IDispatch *pDTE = nullptr;
 	hr = CoGetInterfaceAndReleaseStream(In_pStream, IID_IDispatch, (void **)&pDTE);
-	// CoGetInterfaceAndReleaseStream は成功すればIn_pStreamを解放してくれる
+	// CoGetInterfaceAndReleaseStreamは成功すればIn_pStreamを解放してくれる
 
 	if(SUCCEEDED(hr) && pDTE)
 	{
@@ -572,25 +543,21 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingVSWhere()
 {
     std::vector<VSInfo> versions;
 
-    // vswhere.exe のパス
+    // vswhere.exeのパス
     std::filesystem::path VswherePath =
         LR"(C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe)";
 
     if(!std::filesystem::exists(VswherePath))
-    {
         return versions;
-    }
 
-    // vswhere を実行して JSON を取得
+    // vswhereを実行してJSONを取得
     std::wstring command = L"\"" + VswherePath.wstring() +
         LR"(" -format json -utf8 -products * -requires Microsoft.Component.MSBuild)";
 
     // パイプで出力を取得
     FILE *pipe = _wpopen(command.c_str(), L"r");
     if(!pipe)
-    {
         return versions;
-    }
 
     char buffer[4096];
     std::string result;
@@ -601,7 +568,6 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingVSWhere()
     _pclose(pipe);
 
     // 簡易的なJSONパース
-    // ここでは手動でパースする簡易版
     size_t pos = 0;
     while((pos = result.find("\"installationPath\":", pos)) != std::string::npos)
     {
@@ -613,7 +579,7 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingVSWhere()
 
         std::string InstallPath = result.substr(start + 1, end - start - 1);
 
-        // エスケープシーケンスを処理（\\を\に変換）
+        // エスケープシーケンスを処理(\\を\に変換)
         size_t EscapePos = 0;
         while((EscapePos = InstallPath.find("\\\\", EscapePos)) != std::string::npos)
         {
@@ -632,30 +598,25 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingVSWhere()
 
             // バージョンを判定
             std::wstring PathStr = VsPath.wstring();
-            if(PathStr.find(L"18") != std::wstring::npos)
+            if(PathStr.find(L"18") != std::wstring::npos) // VisualStudio2026は18
             {
                 info.Version = L"2026";
                 info.Priority = 100;  // 最優先
             }
-            else if(PathStr.find(L"2025") != std::wstring::npos)
-            {
-                info.Version = L"2025";
-                info.Priority = 90;
-            }
             else if(PathStr.find(L"2022") != std::wstring::npos)
             {
                 info.Version = L"2022";
-                info.Priority = 80;
+                info.Priority = 90;
             }
             else if(PathStr.find(L"2019") != std::wstring::npos)
             {
                 info.Version = L"2019";
-                info.Priority = 70;
+                info.Priority = 80;
             }
             else
             {
                 info.Version = L"Unknown";
-                info.Priority = 50;
+                info.Priority = 60;
             }
 
             versions.push_back(info);
@@ -676,12 +637,12 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingRegistry(
         { LR"(C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\devenv.exe)", 100 },
         { LR"(C:\Program Files\Microsoft Visual Studio\18\Professional\Common7\IDE\devenv.exe)", 100 },
         { LR"(C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\devenv.exe)", 100 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2025\Community\Common7\IDE\devenv.exe)", 90 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2025\Professional\Common7\IDE\devenv.exe)", 90 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2025\Enterprise\Common7\IDE\devenv.exe)", 90 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe)", 80 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe)", 80 },
-        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe)", 80 },
+        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe)", 90 },
+        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\devenv.exe)", 90 },
+        { LR"(C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe)", 90 },
+		{ LR"(C:\Program Files\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe)", 80 },
+		{ LR"(C:\Program Files\Microsoft Visual Studio\2019\Professional\Common7\IDE\devenv.exe)", 80 },
+		{ LR"(C:\Program Files\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.exe)", 80  },
     };
 
     for(const auto &[path, priority] : paths)
@@ -696,10 +657,10 @@ std::vector<VisualStudioHelper::VSInfo> VisualStudioHelper::DetectUsingRegistry(
             // バージョンを抽出
             if(path.find(L"2026") != std::wstring::npos)
                 info.Version = L"2026";
-            else if(path.find(L"2025") != std::wstring::npos)
-                info.Version = L"2025";
             else if(path.find(L"2022") != std::wstring::npos)
                 info.Version = L"2022";
+			else if(path.find(L"2019") != std::wstring::npos)
+				info.Version = L"2019";
             else
                 info.Version = L"Unknown";
 
@@ -757,8 +718,8 @@ void VisualStudioHelper::ActivateIDEMainWindow(_In_opt_ IDispatch *In_pDTE)
 		return;
 	}
 
-	IDispatch *pMainWindow = VarMain.pdispVal; // 参照カウントは pMainWindow にある
-	// Window.Activate() を呼ぶ
+	IDispatch *pMainWindow = VarMain.pdispVal; // 参照カウントはpMainWindowにある
+	// Window.Activate()を呼ぶ
 	DISPID DispidActivate;
 	LPOLESTR NameActivate = const_cast<LPOLESTR>(L"Activate");
 	if(SUCCEEDED(pMainWindow->GetIDsOfNames(IID_NULL, &NameActivate, 1, LOCALE_USER_DEFAULT, &DispidActivate)))

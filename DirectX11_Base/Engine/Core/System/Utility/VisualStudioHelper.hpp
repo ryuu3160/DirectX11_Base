@@ -50,19 +50,19 @@ private:
 	/// DTEを使用して実行中のインスタンスでファイルを開く
 	/// </summary>
 	/// <returns>ファイルが正常に開かれた場合はtrue、それ以外の場合はfalse</returns>
-	static bool OpenFileInRunningInstanceWithDTE(_In_ const std::filesystem::path &In_FilePath, _In_ const std::filesystem::path &In_SolutionPath, _In_ int In_LineNumber);
+	static bool OpenFileInRunningInstanceWithDTE(_In_ const std::filesystem::path &In_FilePath, _In_ const std::filesystem::path &In_SolutionPath, _In_ int In_LineNumber = -1);
     
 	/// <summary>
 	/// 指定されたソリューションでVisualStudioを起動し、起動したインスタンスでファイルを開く
 	/// </summary>
 	/// <returns>タスクが正常に生成された場合はtrue、それ以外の場合はfalse</returns>
-	static bool OpenFileInLaunchedInstance(_In_ const std::filesystem::path &In_FilePath, _In_ const std::filesystem::path &In_SolutionPath, _In_ int In_LineNumber);
+	static bool OpenFileInLaunchedInstance(_In_ const std::filesystem::path &In_FilePath, _In_ const std::filesystem::path &In_SolutionPath, _In_ int In_LineNumber = -1);
 
 	/// <summary>
 	/// ShellExecuteExを使用して実行中のインスタンスでファイルを開く
 	/// </summary>
 	/// <returns>ファイルが正常に開かれた場合はtrue、それ以外の場合はfalse</returns>
-	static bool OpenFileInRunningInstanceWithDevenv(_In_ const std::filesystem::path &In_FilePath, _In_ int In_LineNumber);
+	static bool OpenFileInRunningInstanceWithDevenv(_In_ const std::filesystem::path &In_FilePath, _In_ int In_LineNumber = -1);
 
     /// <summary>
 	/// ソリューションを指定してVisualStudioを起動し、起動したインスタンスでファイルを開く
