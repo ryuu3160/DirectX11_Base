@@ -1077,6 +1077,9 @@ bool GameProjectManager::WaitForLatestBuildOutput(_In_ std::chrono::milliseconds
 
         if(IsBuildOutputUsable(LatestFolder, info->Name))
             break;
+
+		// ƒXƒŠ[ƒvˆ—
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     return true;
