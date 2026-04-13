@@ -70,12 +70,12 @@ public:
 	 * @return タスクハンドル(受付拒否ならstd::nullopt)
      */
     template <typename T>
-    std::optional<TaskHandle> AddTask(_In_ T &&In_Task);
+    std::optional<TaskHandle> AppendTask(_In_ T &&In_Task);
 
     /**
 	 * @brief タスク追加(引数付きオーバーロード)
-	 * @brief 例1: AddTask(Function, arg1, arg2);
-	 * @brief 例2: AddTask(&MyClass::MemberFunction, &obj, arg1, arg2);
+	 * @brief 例1: AppendTask(Function, arg1, arg2);
+	 * @brief 例2: AppendTask(&MyClass::MemberFunction, &obj, arg1, arg2);
 	 * @tparam T タスクの型(呼び出し可能オブジェクト)
 	 * @tparam ...Args タスクの引数の型
 	 * @param In_Task 実行したいタスク
@@ -83,7 +83,7 @@ public:
 	 * @return タスクハンドル(受付拒否ならstd::nullopt)
      */
     template <typename T, typename... Args>
-	std::optional<TaskHandle> AddTask(_In_ T &&In_Task, _In_ Args&&... In_Args);
+	std::optional<TaskHandle> AppendTask(_In_ T &&In_Task, _In_ Args&&... In_Args);
 
     /**
 	 * @brief (受付停止後に)全タスク完了まで待つ
@@ -193,7 +193,7 @@ private:
 };
 
 template<typename T>
-inline std::optional<ThreadPool::TaskHandle> ThreadPool::AddTask(_In_ T &&In_Task)
+inline std::optional<ThreadPool::TaskHandle> ThreadPool::AppendTask(_In_ T &&In_Task)
 {
     if(!m_AcceptTasks.load(std::memory_order_acquire))
         return std::nullopt;
@@ -240,7 +240,7 @@ inline std::optional<ThreadPool::TaskHandle> ThreadPool::AddTask(_In_ T &&In_Tas
 }
 
 template<typename T, typename ...Args>
-inline std::optional<ThreadPool::TaskHandle> ThreadPool::AddTask(_In_ T &&In_Task, _In_ Args && ...In_Args)
+inline std::optional<ThreadPool::TaskHandle> ThreadPool::AppendTask(_In_ T &&In_Task, _In_ Args && ...In_Args)
 {
 	if(!m_AcceptTasks.load(std::memory_order_acquire))
 		return std::nullopt;

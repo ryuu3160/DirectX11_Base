@@ -296,7 +296,7 @@ bool VisualStudioHelper::OpenFileInLaunchedInstance(_In_ const std::filesystem::
 		std::wstring DevenvExe = vs.DevEnvPath; // 既にDetectで得ているdevenv.exe のパス
 
 		// 別スレッドでVisualStudioを起動してROTをポーリングするタスクを生成
-		auto handle = Pool.AddTask([DevenvExe, In_FilePath, In_SolutionPath]()
+		auto handle = Pool.AppendTask([DevenvExe, In_FilePath, In_SolutionPath]()
 			{
 				IStream *stream = nullptr;
 				stream = LaunchVisualStudioForSolution(DevenvExe, In_SolutionPath, 5000, 100);

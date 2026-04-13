@@ -51,7 +51,7 @@ int ThreadPool::GetCurrentThreadIndex() const
 
 void ThreadPool::Shutdown(_In_ ShutdownMode In_Mode)
 {
-    // ó•t’â~(Ä‹AAddTask‚ğ~‚ß‚é)
+    // ó•t’â~(Ä‹AAppendTask‚ğ~‚ß‚é)
     m_AcceptTasks.store(false, std::memory_order_release);
 
     // Drain‚È‚çpending==0‚ğ‘Ò‚Â(ó•t’â~Ï‚İ‚È‚Ì‚Å‘‚¦‚È‚¢)
