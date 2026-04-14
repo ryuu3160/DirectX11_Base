@@ -302,6 +302,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Engine\EngineAPI\EngineAPI_thunk.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Engine\EntryPoint\EntryPoint.cpp" />
     <ClCompile Include="Engine\EntryPoint\Main.cpp" />
     <ClCompile Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.cpp" />
@@ -358,7 +362,7 @@
     <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.hpp" />
     <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp" />
     <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp" />
-    <ClInclude Include="Engine\Core\EngineAPI.hpp">
+    <ClInclude Include="Engine\Core\DirectPublishedAPI.hpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -445,6 +449,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Engine\EngineAPI\EngineDebugAPI.h" />
+    <ClInclude Include="Engine\EngineAPI\EngineAPI.h" />
     <ClInclude Include="Engine\EntryPoint\EntryPoint.hpp" />
     <ClInclude Include="Engine\EntryPoint\Main.hpp" />
     <ClInclude Include="Engine\ryuu_lib\CRC31_HashGenerator\HashGenerator.hpp" />

@@ -9,7 +9,7 @@
 // ==============================
 //	include
 // ==============================
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 /// <summary>
 /// ParticleƒNƒ‰ƒX

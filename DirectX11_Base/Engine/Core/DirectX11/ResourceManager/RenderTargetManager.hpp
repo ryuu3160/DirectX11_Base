@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "ryuu_lib/Singleton/Singleton.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 // ==============================
 //	‘O•ûéŒ¾
 // ==============================

@@ -18,7 +18,7 @@
 #include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Utility/Utility.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // ==============================
 //	’è”’è‹`

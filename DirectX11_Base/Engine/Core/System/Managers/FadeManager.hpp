@@ -12,7 +12,7 @@
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "ryuu_lib/Easing/Easing.hpp"
 #include "Core/Defines.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾

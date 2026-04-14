@@ -11,7 +11,7 @@
 // ===============================
 #include "Core/DirectX11/DX11_Core.hpp"
 #include "Core/Defines.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // ===============================
 //	‘O•ûéŒ¾

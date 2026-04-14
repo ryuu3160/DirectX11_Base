@@ -17,7 +17,7 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #include "ryuu_lib/Singleton/Singleton.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // COM
 #include <wrl/client.h>

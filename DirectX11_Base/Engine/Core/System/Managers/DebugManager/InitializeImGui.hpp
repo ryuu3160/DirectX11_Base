@@ -11,7 +11,7 @@
 // ==============================
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "Core/Defines.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 /// <summary>
 /// InitializeImGuiƒNƒ‰ƒX

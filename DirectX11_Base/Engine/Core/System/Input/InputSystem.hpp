@@ -11,7 +11,7 @@
 // ==============================
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/System/Input/Input.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 // ==============================
 //	’è”’è‹`
 // ==============================

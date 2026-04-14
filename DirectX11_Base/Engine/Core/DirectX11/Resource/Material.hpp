@@ -12,7 +12,7 @@
 #include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
 #include "Core/DirectX11/Resource/Texture.hpp"
 #include "ResourceSetting.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾

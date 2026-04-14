@@ -18,7 +18,7 @@
 #include "ryuu_lib/CRC31_HashGenerator/HashGenerator.hpp"
 #include "Core/System/Utility/Utility.hpp"
 #include "Core/System/Utility/EngineUtility.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 // ==============================
 //  undefine
 // ==============================

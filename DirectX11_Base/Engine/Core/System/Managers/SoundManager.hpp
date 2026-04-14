@@ -18,7 +18,7 @@
 #pragma comment(lib, "shlwapi.lib")
 #include "ryuu_lib/Singleton/Singleton.hpp"
 #include "Core/Defines.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 /// <summary>
 /// SoundManagerƒNƒ‰ƒX

@@ -1,5 +1,5 @@
 /*+===================================================================
-	File: EngineAPI.hpp
+	File: DirectPublishedAPI.hpp
 	Summary: エンジンAPI エクスポート/インポート定義
 			 ENGINE_EXPORTS が定義されている場合：エンジンビルド時(dllexport)
 			 ENGINE_EXPORTS が定義されていない場合：ゲームプロジェクトから参照時(dllimport)

@@ -13,6 +13,8 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
+#include <stdint.h>
+#include <stdarg.h>
 
 // ==============================
 // Windows API

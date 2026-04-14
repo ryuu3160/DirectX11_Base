@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "Core/System/Scene/SceneBase.hpp"
-#include "Core/EngineAPI.hpp"
+#include "Core/DirectPublishedAPI.hpp"
 
 // ==============================
 //	‘O•ûéŒ¾
