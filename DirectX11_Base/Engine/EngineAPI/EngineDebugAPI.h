@@ -56,11 +56,6 @@ namespace Debug
 		return true;
 	}
 
-	/// <summary>
-	/// 条件をアサートします。
-	/// </summary>
-	/// <param name="In_Condition">チェックする条件。</param>
-	/// <param name="In_Message">アサートが失敗した場合に表示するメッセージ。</param>
 	inline void Assert(_In_ bool In_Condition, _In_ const char *In_Message = "Assertion failed")
 	{
 		if(!In_Condition)
