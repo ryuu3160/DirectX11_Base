@@ -128,6 +128,9 @@ void Camera::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 #ifdef _DEBUG
 void Camera::Inspector(_In_ ItemGroup *In_pGroup)
 {
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
+
 	In_pGroup->CreateGroupItem<ItemBind>("is3D", DebugItem::Kind::Bool, &m_bIs3D);
 	In_pGroup->CreateGroupItem<ItemBind>("Fovy", DebugItem::Kind::Float, &m_fFovy);
 	In_pGroup->CreateGroupItem<ItemBind>("Focus", DebugItem::Kind::Float, &m_fFocus);

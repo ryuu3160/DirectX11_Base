@@ -86,6 +86,12 @@ void PlayerController::SetCameraObj(_In_ GameObject *In_CameraObj)
     m_CameraObj = In_CameraObj;
 }
 
+void PlayerController::Inspector(_In_ ItemGroup *In_pGroup)
+{
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
+}
+
 DirectX::XMFLOAT3 PlayerController::GetCameraForward()
 {
     return m_CameraObj->GetFront();

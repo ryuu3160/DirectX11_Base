@@ -167,6 +167,8 @@ void ColliderBase::DrawGizmos(_In_ Gizmos *In_Gizmos) noexcept
 #ifdef _DEBUG
 void ColliderBase::Inspector(_In_ ItemGroup *In_pGroup)
 {
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
 	In_pGroup->CreateGroupItem<ItemBind>("IsTrigger", DebugItem::Kind::Bool, &m_IsTrigger);
 	In_pGroup->CreateGroupItem<ItemBind>("LocalCenter", DebugItem::Kind::Vector, &m_Center);
 }

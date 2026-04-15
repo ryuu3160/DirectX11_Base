@@ -127,6 +127,7 @@ void LineRenderer::Draw(_In_ RenderContext *In_RenderContext) noexcept
 #ifdef _DEBUG
 void LineRenderer::Inspector(_In_ ItemGroup *In_pGroup)
 {
+	RenderComponent::Inspector(In_pGroup);
 }
 #endif
 

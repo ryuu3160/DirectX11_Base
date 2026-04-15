@@ -11,6 +11,7 @@
 #include "MovementComponent.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Component/Transform.hpp"
+#include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 
 MovementComponent::MovementComponent()
 	: Component("MovementComponent")
@@ -48,6 +49,12 @@ void MovementComponent::Jump()
 {
 	// ÉWÉÉÉìÉvèàóù
 	m_Velocity.y = 5.0f;
+}
+
+void MovementComponent::Inspector(ItemGroup *In_pGroup)
+{
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
 }
 
 void MovementComponent::ProcessMovement(_In_ float In_DeltaTime)

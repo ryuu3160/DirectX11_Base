@@ -1,6 +1,7 @@
 // Engine/Templates/ProjectTemplate/DllMain.cpp
 
 #include <Windows.h>
+#include "EngineAPI/EngineAPI.h"
 
 // DLL エントリポイント
 BOOL APIENTRY DllMain(
@@ -40,3 +41,12 @@ extern "C" __declspec(dllexport) const char* GetGameProjectVersion()
 {
     return "1.0.0";
 }
+
+const ForgeXEngineAPI_POD *g_EngineAPI = nullptr;
+
+extern "C" __declspec(dllexport)
+void SetEngineAPI(const ForgeXEngineAPI_POD *api)
+{
+	g_EngineAPI = api;
+}
+

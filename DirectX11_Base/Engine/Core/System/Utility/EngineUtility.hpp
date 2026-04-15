@@ -1,6 +1,6 @@
 /*+===================================================================
 	File: EngineUtility.hpp
-	Summary: エンジン用のユーティリティ関数群
+	Summary: エンジン内で使うユーティリティ関数群
 	Author: AT13C192 01 青木雄一郎
 	Date: 2026/1/23 Fri AM 06:02:37 初回作成
 ===================================================================+*/
@@ -11,52 +11,50 @@
 // ==============================
 #include "Utility.hpp"
 
-namespace Engine
+namespace _Engine
 {
-	namespace Debug
+
+    // ================================
+    //  Logging
+    // ================================
+
+	/// <summary>
+	/// デバッグメッセージをログに出力します
+	/// </summary>
+	/// <param name="In_Msg">ログに出力するメッセージ</param>
+	void DebugLog(_In_ std::string_view In_Message);
+
+	/// <summary>
+	/// デバッグ用の警告メッセージをログに記録します
+	/// </summary>
+	/// <param name="In_Msg">ログに記録する警告メッセージ</param>
+	void DebugLogWarning(_In_ std::string_view In_Message);
+
+	/// <summary>
+	/// デバッグ用のエラーメッセージをログに記録します
+	/// </summary>
+	/// <param name="In_Msg">ログに記録するエラーメッセージ</param>
+	void DebugLogError(_In_ std::string_view In_Message);
+
+    template<typename... Args>
+	void DebugLog(_In_ std::string_view In_Format, Args&&... In_Args)
 	{
-        // ================================
-        //  Logging
-        // ================================
+		auto Msg = FormatString(In_Format, In_Args...);
+		DebugLog(Msg);
+	}
 
-		/// <summary>
-		/// デバッグメッセージをログに出力します
-		/// </summary>
-		/// <param name="In_Msg">ログに出力するメッセージ</param>
-		void DebugLog(_In_ std::string_view In_Message);
+    template<typename... Args>
+	void DebugLogWarning(_In_ std::string_view In_Format, Args&&... In_Args)
+	{
+		auto Msg = FormatString(In_Format, In_Args...);
+		DebugLogWarning(Msg);
+	}
 
-		/// <summary>
-		/// デバッグ用の警告メッセージをログに記録します
-		/// </summary>
-		/// <param name="In_Msg">ログに記録する警告メッセージ</param>
-		void DebugLogWarning(_In_ std::string_view In_Message);
-
-		/// <summary>
-		/// デバッグ用のエラーメッセージをログに記録します
-		/// </summary>
-		/// <param name="In_Msg">ログに記録するエラーメッセージ</param>
-		void DebugLogError(_In_ std::string_view In_Message);
-
-        template<typename... Args>
-		void DebugLog(_In_ std::string_view In_Format, Args&&... In_Args)
-		{
-			auto Msg = FormatString(In_Format, In_Args...);
-			DebugLog(Msg);
-		}
-
-        template<typename... Args>
-		void DebugLogWarning(_In_ std::string_view In_Format, Args&&... In_Args)
-		{
-			auto Msg = FormatString(In_Format, In_Args...);
-			DebugLogWarning(Msg);
-		}
-
-        template<typename... Args>
-		void DebugLogError(_In_ std::string_view In_Format, Args&&... In_Args)
-		{
-			auto Msg = FormatString(In_Format, In_Args...);
-			DebugLogError(Msg);
-		}
+    template<typename... Args>
+	void DebugLogError(_In_ std::string_view In_Format, Args&&... In_Args)
+	{
+		auto Msg = FormatString(In_Format, In_Args...);
+		DebugLogError(Msg);
 	}
 
     // ================================
@@ -80,4 +78,4 @@ namespace Engine
 
 } // namespace Engine
 
-using namespace Engine;
+using namespace _Engine;

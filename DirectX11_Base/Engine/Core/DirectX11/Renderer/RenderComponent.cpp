@@ -67,6 +67,9 @@ void RenderComponent::SaveLoad(_In_ DataAccessor *In_Data)
 #ifdef _DEBUG
 void RenderComponent::Inspector(_In_ ItemGroup *In_pGroup)
 {
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
+
 	auto Bind1 = In_pGroup->CreateGroupItem<ItemBind>("LayerGroup", DebugItem::Kind::Int, reinterpret_cast<void *>(&m_LayerGroup));
 	Bind1->SetNoticeFunc([this]() { CheckLayerGroupChange(); });
 	auto Bind2 = In_pGroup->CreateGroupItem<ItemBind>("Layer", DebugItem::Kind::Int, &m_nLayer);

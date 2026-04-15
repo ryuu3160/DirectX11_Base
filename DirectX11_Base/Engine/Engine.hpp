@@ -45,6 +45,11 @@ namespace ForgeX_Engine
 #include "ryuu_lib/IME_Controller/IME.hpp"
 
 // ==============================
+// EngineAPI
+// ==============================
+#include "EngineAPI/EngineDebugAPI.h"
+
+// ==============================
 // Core System
 // ==============================
 

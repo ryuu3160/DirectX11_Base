@@ -17,15 +17,19 @@ extern "C"
 {
 #endif
 
+	typedef enum ForgeXEngineLogLevel : int32_t
+	{
+		FORGEX_LOG_INFO = 0,
+		FORGEX_LOG_WARN = 1,
+		FORGEX_LOG_ERROR = 2,
+	} ForgeXEngineLogLevel;
+
 	// APIテーブル(PODのみ)
 	typedef struct ForgeXEngineAPI_POD
 	{
-		uint32_t version; // 互換性確認用
+		uint32_t version; // 1
 
-		// printf互換（va_list版が安全）
-		void (FORGEX_CALL *Log)(const char *fmt, va_list args);
-		void (FORGEX_CALL *LogWarning)(const char *fmt, va_list args);
-		void (FORGEX_CALL *LogError)(const char *fmt, va_list args);
+		void (FORGEX_CALL *LogV)(ForgeXEngineLogLevel level, const char *fmt, va_list args);
 
 	} ForgeXEngineAPI_POD;
 

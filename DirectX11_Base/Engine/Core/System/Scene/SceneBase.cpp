@@ -110,7 +110,7 @@ GameObject *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Tran
 			++suffix;
 			if(suffix > 1000) // 1000‰ñŽŽ‚Ý‚Ä‚àƒ_ƒ‚È‚ç’ú‚ß‚é
 			{
-				DebugManager::GetInstance().DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				_Engine::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -150,14 +150,14 @@ GameObject * SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
 
 	if(!ptr)
 	{
-		Debug::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
+		_Engine::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
 		return nullptr;
 	}
 
 	// ”jŠü—\–ñ‚³‚ê‚Ä‚¢‚½ê‡‚ÍŽæ“¾•s‰Â
 	if(ptr->IsDestroySelf())
 	{
-		Debug::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
+		_Engine::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
 		return nullptr;
 	}
 
@@ -172,14 +172,14 @@ void SceneBase::RenameObj(_In_ std::string_view In_OldName, _In_ std::string_vie
 	OldObjName += In_OldName.data();
 	if(m_Objects.find(NewObjName) != m_Objects.end())
 	{
-		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The name '{}' is already in use.", In_NewName);
+		_Engine::DebugLogError("RenameObj: Failed to rename object. The name '{}' is already in use.", In_NewName);
 		return;
 	}
 
 	auto obj = m_Objects.find(OldObjName);
 	if(obj == m_Objects.end())
 	{
-		DebugManager::GetInstance().DebugLogError("RenameObj: Failed to rename object. The object '{}' was not found.", In_OldName);
+		_Engine::DebugLogError("RenameObj: Failed to rename object. The object '{}' was not found.", In_OldName);
 		return;
 	}
 

@@ -21,6 +21,9 @@
 #include <Windows.h>
 #include <combaseapi.h>
 
+// エンジンAPI
+#include "EngineAPI/EngineAPI_Implementation.hpp"
+
 // DLLからエクスポートされる関数の型定義
 using RegisterAllGameComponentsFn = void(*)(void(*)(const ComponentInfo &));
 // コンポーネント登録関数のプロトタイプ宣言
@@ -432,6 +435,12 @@ bool GameProjectManager::LoadProjectDll()
         DebugManager::GetInstance().DebugLogError("LoadLibrary failed: {}", DllPath.string());
         return false;
     }
+
+	// エンジンAPIをDLLにセット
+	if(!SetEngineAPIForDll(m_hProjectDll))
+	{
+		return false;
+	}
 
     m_LoadedDllPath = DllPath;
 
@@ -861,6 +870,29 @@ bool GameProjectManager::RegisterComponentsFromLoadedDll() const
     DebugManager::GetInstance().DebugLog(
         "Components refreshed (engine + game). Total: {}", registry.GetComponentCount());
     return true;
+}
+
+bool GameProjectManager::SetEngineAPIForDll(_In_ HMODULE In_Dll) const
+{
+	using SetEngineAPIFn = void(*)(const ForgeXEngineAPI_POD *);
+
+	auto setApi = reinterpret_cast<SetEngineAPIFn>(
+		GetProcAddress(In_Dll, "SetEngineAPI"));
+
+	if(setApi)
+	{
+		static ForgeXEngineAPI_POD api{};
+		api.version = 1;
+		api.LogV = &Engine_LogV;
+
+		setApi(&api);
+		return true;
+	}
+	else
+	{
+		DebugManager::GetInstance().DebugLogWarning("Game DLL does not export SetEngineAPI (logging API not injected).");
+	}
+	return false;
 }
 
 std::filesystem::path GameProjectManager::GetProjectDllPathForEditorConfig() const

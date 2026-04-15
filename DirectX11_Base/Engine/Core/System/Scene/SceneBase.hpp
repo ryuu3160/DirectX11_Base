@@ -226,7 +226,7 @@ inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transf
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				_Engine::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -285,7 +285,7 @@ inline T *SceneBase::CreateObject(_In_ std::string_view In_Name, _In_opt_ Transf
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				_Engine::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -344,7 +344,7 @@ inline T *SceneBase::CreateObject_NotAddHierarchy(_In_ std::string_view In_Name,
 			++suffix;
 			if(suffix > 1000) // 1000回試みてもダメなら諦める
 			{
-				Debug::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
+				_Engine::DebugLogError("CreateObject: Failed to create object '{}'. Name conflict could not be resolved.", In_Name);
 				delete ptr;
 				return nullptr;
 			}
@@ -386,14 +386,14 @@ inline T *SceneBase::GetObject(_In_ std::string_view In_Name) const noexcept
 
 	if(!ptr)
 	{
-		Debug::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
+		_Engine::DebugLogError("GetObject: Failed to get object '{}'. Type mismatch.", In_Name);
 		return nullptr;
 	}
 
 	// 破棄予約されていた場合は取得不可
 	if(static_cast<GameObject *>(ptr)->IsDestroySelf())
 	{
-		Debug::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
+		_Engine::DebugLogWarning("GetObject: Object '{}' is marked for destruction.", In_Name);
 		return nullptr;
 	}
 

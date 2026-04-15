@@ -34,6 +34,11 @@ public:
 
     void Jump();
 
+protected:
+#ifdef _DEBUG
+	virtual void Inspector(_In_ ItemGroup *In_pGroup) override;
+#endif
+
 private:
     void ProcessMovement(_In_ float In_DeltaTime);
 

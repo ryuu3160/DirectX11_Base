@@ -557,6 +557,7 @@ void Transform::Inspector(_In_ ItemGroup *In_pGroup)
 	auto Group = dynamic_cast<ItemComponentGroup*>(In_pGroup);
 	Group->SetIsDeletable(false);
 	Group->SetIsMovable(false);
+	Group->SetIsScript(false);
 
 	// トランスフォームグループのメンバーを作成
 	auto PosBind = In_pGroup->CreateGroupItem<ItemBind>("Pos", DebugItem::Kind::Vector, &m_Pos);

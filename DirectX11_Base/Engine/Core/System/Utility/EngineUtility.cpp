@@ -11,22 +11,22 @@
 #include "EngineUtility.hpp"
 #include "Engine/Core/System/Managers/DebugManager/DebugManager.hpp"
 
-void Engine::Debug::DebugLog(_In_ std::string_view In_Message)
+void _Engine::DebugLog(_In_ std::string_view In_Message)
 {
 	DebugManager::GetInstance().DebugLog(In_Message);
 }
 
-void Engine::Debug::DebugLogWarning(_In_ std::string_view In_Message)
+void _Engine::DebugLogWarning(_In_ std::string_view In_Message)
 {
 	DebugManager::GetInstance().DebugLogWarning(In_Message);
 }
 
-void Engine::Debug::DebugLogError(_In_ std::string_view In_Message)
+void _Engine::DebugLogError(_In_ std::string_view In_Message)
 {
 	DebugManager::GetInstance().DebugLogError(In_Message);
 }
 
-bool Engine::IsValid(_In_opt_ void *In_Ptr, _In_ std::string_view In_Message)
+bool _Engine::IsValid(_In_opt_ void *In_Ptr, _In_ std::string_view In_Message)
 {
 	if(In_Ptr == nullptr)
 	{
@@ -36,7 +36,7 @@ bool Engine::IsValid(_In_opt_ void *In_Ptr, _In_ std::string_view In_Message)
 	return true;
 }
 
-void Engine::Assert(_In_ bool In_Condition, _In_ std::string_view In_Message)
+void _Engine::Assert(_In_ bool In_Condition, _In_ std::string_view In_Message)
 {
 	if(!In_Condition)
 	{

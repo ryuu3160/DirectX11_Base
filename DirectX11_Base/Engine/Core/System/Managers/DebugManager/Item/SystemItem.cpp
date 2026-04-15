@@ -46,7 +46,7 @@ ItemHierarchy::ItemHierarchy(_In_ std::string_view In_Name, _In_ SceneBase *In_p
 	m_pEditorCamera = m_pScene->GetObject("EditorCamera");
 
     if(!m_pEditorCamera)
-		Debug::DebugLogError("ItemHierarchy: EditorCamera Not Found in the scene. Please ensure there is a GameObject named 'EditorCamera' in the scene.");
+		DebugManager::GetInstance().DebugLogError("ItemHierarchy: EditorCamera Not Found in the scene. Please ensure there is a GameObject named 'EditorCamera' in the scene.");
 }
 
 ItemHierarchy::~ItemHierarchy()
@@ -623,7 +623,7 @@ void ItemComponentSelector::DrawComponentList(const std::string &category)
 ItemComponentGroup::ItemComponentGroup(_In_ std::string_view In_Name, _In_ Component *In_pComponent)
     : ItemGroup(In_Name)
     , m_pComponent(In_pComponent)
-	, m_IsDeletable(true), m_IsMovable(true)
+	, m_IsDeletable(true), m_IsMovable(true), m_IsScript(true), m_IsHidden(false)
 {
     m_Kind = Kind::Group;
     m_DeletedComponents.clear();
@@ -636,11 +636,15 @@ ItemComponentGroup::~ItemComponentGroup()
 
 void ItemComponentGroup::DrawImGui()
 {
-    if(m_Items.empty())
-        return;
+	if(m_IsHidden)
+		return;
 
     // CollapsingHeader を表示
-    bool isOpen = ImGui::CollapsingHeader(m_Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+	std::string Name = m_Name;
+	if(m_IsScript)
+		Name += " (Script)";
+
+    bool isOpen = ImGui::CollapsingHeader(Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
 
     // 右クリックメニュー
     if(ImGui::BeginPopupContextItem())
@@ -656,6 +660,13 @@ void ItemComponentGroup::DrawImGui()
         {
             itr->DrawImGui();
         }
+
+		// スクリプトならば、最後にスクリプト特有の項目を表示
+		if(m_IsScript)
+		{
+			ImGui::Separator();
+			ImGui::TextColored(ImVec4(0.5f, 0.8f, 1.0f, 1.0f), m_Name.c_str());
+		}
     }
 }
 

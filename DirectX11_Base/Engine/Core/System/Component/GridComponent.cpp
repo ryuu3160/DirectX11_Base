@@ -86,6 +86,12 @@ void GridComponent::SaveLoad(_In_ DataAccessor *In_Data)
 	In_Data->AccessValue<bool>("GridAxis", &m_GridAxis);
 }
 
+void GridComponent::Inspector(ItemGroup *In_pGroup)
+{
+	auto Group = dynamic_cast<ItemComponentGroup *>(In_pGroup);
+	Group->SetIsScript(false);
+}
+
 void GridComponent::CreateGrid() noexcept
 {
 	// ƒOƒŠƒbƒh‚Ìì¬

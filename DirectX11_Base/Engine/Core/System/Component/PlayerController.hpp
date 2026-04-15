@@ -32,6 +32,11 @@ public:
     /// <param name="[In_CameraObj]">設定するカメラオブジェクトへのポインタ</param>
     void SetCameraObj(_In_ GameObject *In_CameraObj);
 
+protected:
+#ifdef _DEBUG
+	virtual void Inspector(_In_ ItemGroup *In_pGroup) override;
+#endif
+
 private:
     // カメラの前方向・右方向を取得
     DirectX::XMFLOAT3 GetCameraForward();

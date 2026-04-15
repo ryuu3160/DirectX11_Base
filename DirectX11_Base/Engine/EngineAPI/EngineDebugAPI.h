@@ -11,36 +11,62 @@
 // ==============================
 #include "EngineAPI.h"
 
+extern const ForgeXEngineAPI_POD *g_EngineAPI;
+
 namespace Debug
 {
-	extern const ForgeXEngineAPI_POD *g_Engine;
-
-	inline void Log(const char *fmt, ...)
+	inline void Log(const char *In_Fmt, ...)
 	{
-		if(!g_Engine || !g_Engine->Log) return;
-
+		if(!g_EngineAPI || !g_EngineAPI->LogV)
+			return;
 		va_list args;
-		va_start(args, fmt);
-		g_Engine->Log(fmt, args);
+		va_start(args, In_Fmt);
+		g_EngineAPI->LogV(FORGEX_LOG_INFO, In_Fmt, args);
 		va_end(args);
 	}
 
-	inline void LogWarning(const char *fmt, ...)
+	inline void LogWarning(const char *In_Fmt, ...)
 	{
-		if(!g_Engine || !g_Engine->LogWarning) return;
+		if(!g_EngineAPI || !g_EngineAPI->LogV)
+			return;
 		va_list args;
-		va_start(args, fmt);
-		g_Engine->LogWarning(fmt, args);
+		va_start(args, In_Fmt);
+		g_EngineAPI->LogV(FORGEX_LOG_WARN, In_Fmt, args);
 		va_end(args);
 	}
 
-	inline void LogError(const char *fmt, ...)
+	inline void LogError(const char *In_Fmt, ...)
 	{
-		if(!g_Engine || !g_Engine->LogError) return;
+		if(!g_EngineAPI || !g_EngineAPI->LogV)
+			return;
 		va_list args;
-		va_start(args, fmt);
-		g_Engine->LogError(fmt, args);
+		va_start(args, In_Fmt);
+		g_EngineAPI->LogV(FORGEX_LOG_ERROR, In_Fmt, args);
 		va_end(args);
+	}
+
+	inline bool IsValid(_In_opt_ void *In_Ptr, _In_ const char *In_Message = "Not Valid")
+	{
+		if(In_Ptr == nullptr)
+		{
+			LogError("Null Pointer Exception: {}", In_Message);
+			return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// 条件をアサートします。
+	/// </summary>
+	/// <param name="In_Condition">チェックする条件。</param>
+	/// <param name="In_Message">アサートが失敗した場合に表示するメッセージ。</param>
+	inline void Assert(_In_ bool In_Condition, _In_ const char *In_Message = "Assertion failed")
+	{
+		if(!In_Condition)
+		{
+			LogError(In_Message);
+		}
 	}
 
 }

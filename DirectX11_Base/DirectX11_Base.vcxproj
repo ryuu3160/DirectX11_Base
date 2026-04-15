@@ -302,7 +302,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Engine\EngineAPI\EngineAPI_thunk.cpp">
+    <ClCompile Include="Engine\EngineAPI\EngineAPI_Implementation.hpp">
       <SubType>
       </SubType>
     </ClCompile>

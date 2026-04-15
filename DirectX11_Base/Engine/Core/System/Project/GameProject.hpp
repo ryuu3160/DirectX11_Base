@@ -161,6 +161,11 @@ private:
     /// </summary>
     bool RegisterComponentsFromLoadedDll() const;
 
+	/// <summary>
+	/// DLLにエンジンのAPI関数をセットします
+	/// </summary>
+	bool SetEngineAPIForDll(_In_ HMODULE In_Dll) const;
+
     /// <summary>
     /// エディター設定用のプロジェクトDLLパスを取得します
     /// </summary>
