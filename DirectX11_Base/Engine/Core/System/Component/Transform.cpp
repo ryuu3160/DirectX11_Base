@@ -911,6 +911,9 @@ DirectX::XMFLOAT4 Transform::LocalToWorldRotation(_In_ const DirectX::XMFLOAT4 &
 
 void Transform::UpdateWorldMatrix() const noexcept
 {
+	if(!m_WorldMatrixDirty)
+		return;
+
 	// 各要素の行列を取得
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&m_Quat));
@@ -930,6 +933,8 @@ void Transform::UpdateWorldMatrix() const noexcept
 	DirectX::XMStoreFloat4x4(&m_WorldMatrix, M);
 	// 転置したものも保存
 	DirectX::XMStoreFloat4x4(&m_TransposeWorldMatrix, DirectX::XMMatrixTranspose(M));
+
+	m_WorldMatrixDirty = false; // 更新完了
 }
 
 void Transform::MarkDirty() noexcept
