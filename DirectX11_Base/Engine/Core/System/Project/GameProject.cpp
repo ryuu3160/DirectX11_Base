@@ -14,6 +14,7 @@
 #include "Core/System/Managers/DebugManager/Item/DebugItem.hpp"
 #include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Core/System/Component/ComponentRegistry.hpp"
+#include "Core/System/Managers/SceneManager.hpp"
 #include "Core/System/Input/Input.hpp"
 #include "NuGetRestore.hpp"
 #include <fstream>
@@ -400,6 +401,9 @@ void GameProjectManager::CloseProject()
 	// ビルド監視を停止
     StopWatching();
 
+	// シーンマネージャーにホットリロード前のクリーンアップを依頼
+	SceneManager::GetInstance().BeforeHotReloadRemoveGameComponentsImmediate();
+
     auto &registry = ComponentRegistry::GetInstance();
     registry.Clear();
     RegisterAllEngineComponents();
@@ -457,10 +461,6 @@ void GameProjectManager::UnloadProjectDll()
     if(!m_hProjectDll)
         return;
 
-    // TODO: ゲーム由来コンポーネントが残っていないことを保証してから解放する
-    DebugManager::GetInstance().DebugLogWarning(
-        "UnloadProjectDll: FreeLibrary is unsafe if game components are still alive. Proceeding anyway (Phase5-1).");
-
     FreeLibrary(m_hProjectDll);
     m_hProjectDll = nullptr;
     m_LoadedDllPath.clear();
@@ -469,6 +469,9 @@ void GameProjectManager::UnloadProjectDll()
 bool GameProjectManager::ReloadProjectDll()
 {
     auto &registry = ComponentRegistry::GetInstance();
+
+	// ホットリロード前のクリーンアップをシーンマネージャーに依頼
+	SceneManager::GetInstance().BeforeHotReloadRemoveGameComponentsImmediate();
 
     // DLLを解放する前にゲーム登録を捨て、エンジン登録だけ復元
     registry.Clear();
@@ -861,6 +864,9 @@ bool GameProjectManager::RegisterComponentsFromLoadedDll() const
             "RegisterComponentsFromLoadedDll: GetProcAddress failed: RegisterAllGameComponents");
         return false;
     }
+
+	// ホットリロード前のクリーンアップをシーンマネージャーに依頼
+	SceneManager::GetInstance().BeforeHotReloadRemoveGameComponentsImmediate();
 
     auto &registry = ComponentRegistry::GetInstance();
     registry.Clear();

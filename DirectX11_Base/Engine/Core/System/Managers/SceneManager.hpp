@@ -74,6 +74,8 @@ public:
 	/// <returns>シーンへのシェアポインタ</returns>
 	std::shared_ptr<SceneBase> GetCurrentScene() const noexcept { return m_pCurrentScene; }
 
+	void BeforeHotReloadRemoveGameComponentsImmediate();
+
 	template <typename T>
 	requires std::derived_from<T, SceneBase>
 	std::shared_ptr<T> GetSubScene() noexcept;

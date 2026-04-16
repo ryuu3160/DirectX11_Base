@@ -106,6 +106,8 @@ public:
 	/// <returns>このシーンのポインタを返します</returns>
 	inline SceneBase *GetScene() noexcept { return this; }
 
+	void RemoveAllGameComponentsImmediate();
+
 	// 継承先で使用する関数
 	virtual void Init() = 0;
 	virtual void Uninit() = 0;

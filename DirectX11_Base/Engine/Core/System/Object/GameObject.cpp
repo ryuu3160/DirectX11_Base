@@ -228,6 +228,49 @@ void GameObject::RemoveComponent(_In_ std::string_view In_Name)
 	}
 }
 
+void GameObject::RemoveAllGameComponentsImmediate()
+{
+	auto &reg = ComponentRegistry::GetInstance();
+
+	// m_Components ‚©‚çƒQ[ƒ€—R—ˆ‚¾‚¯íœ
+	for(auto itr = m_Components.begin(); itr != m_Components.end(); )
+	{
+		Component *component = *itr;
+		if(!component)
+		{
+			itr = m_Components.erase(itr);
+			continue;
+		}
+
+		const auto *info = reg.FindComponentInfo(component->GetName());
+		const bool IsGame = (info && info->Owner == ComponentOwner::Game);
+
+		if(IsGame)
+		{
+#ifdef _DEBUG
+			m_InspectorComponent.erase(
+				std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), component),
+				m_InspectorComponent.end());
+#endif
+			m_InitComponents.erase(
+				std::remove(m_InitComponents.begin(), m_InitComponents.end(), component),
+				m_InitComponents.end());
+
+			m_DeadComponents.erase(
+				std::remove(m_DeadComponents.begin(), m_DeadComponents.end(), component),
+				m_DeadComponents.end());
+
+			delete component;
+			itr = m_Components.erase(itr);
+		}
+		else
+		{
+			++itr;
+		}
+	}
+	ReloadingInspector();
+}
+
 void GameObject::ChangeOrderComponentUP(_In_ Component *In_pComponent) noexcept
 {
 	m_ChangeOrderFuncs.push_back([this, In_pComponent]()

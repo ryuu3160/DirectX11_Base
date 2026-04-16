@@ -200,6 +200,15 @@ void SceneBase::DestroyObj(_In_ std::string_view In_Name) noexcept
 	m_DeadItems.push_back(In_Name.data());
 }
 
+void SceneBase::RemoveAllGameComponentsImmediate()
+{
+	for(auto *obj : m_SceneObjects)
+	{
+		if(obj)
+			obj->RemoveAllGameComponentsImmediate();
+	}
+}
+
 void SceneBase::Setup(_In_ int const &In_ModelNum) noexcept
 {
 	// 表示オブジェクト作成

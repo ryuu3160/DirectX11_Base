@@ -179,6 +179,13 @@ void SceneManager::RemoveAllSubScene() noexcept
 	m_SubScene.clear();
 }
 
+void SceneManager::BeforeHotReloadRemoveGameComponentsImmediate()
+{
+	if(m_pCurrentScene) m_pCurrentScene->RemoveAllGameComponentsImmediate();
+	for(auto &p : m_SubScene)
+		if(p.second) p.second->RemoveAllGameComponentsImmediate();
+}
+
 void SceneManager::UnLoadCurrentScene() noexcept
 {
 	// 先にサブシーンを解放

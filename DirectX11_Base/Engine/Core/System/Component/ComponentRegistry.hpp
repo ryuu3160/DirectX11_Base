@@ -17,12 +17,19 @@
 class Component;
 class GameObject;
 
+enum class ComponentOwner
+{
+	Engine,
+	Game
+};
+
 struct ComponentInfo
 {
 	std::string Name;
 	std::string Category;
 	std::string Description;
 	std::function<Component *(GameObject *)> CreateFunc;
+	ComponentOwner Owner = ComponentOwner::Engine;
 };
 
 /// <summary>
@@ -41,6 +48,8 @@ public:
 	std::vector<std::string> GetAllCategories() const;
 
 	int GetComponentCount() const;
+
+	const ComponentInfo *FindComponentInfo(_In_ std::string_view name) const;
 
 	/// <summary>
 	/// 登録されているすべてのコンポーネントをクリアする

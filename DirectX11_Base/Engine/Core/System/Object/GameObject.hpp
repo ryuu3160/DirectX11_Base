@@ -100,6 +100,11 @@ public:
 	/// <param name="[In_Name]">削除するコンポーネントの名前</param>
 	void RemoveComponent(_In_ std::string_view In_Name);
 
+	/**
+	 * @brief すべてのゲームプロジェクト側コンポーネントを削除
+	 */
+	void RemoveAllGameComponentsImmediate();
+
 	/// <summary>
 	/// コンポーネントの順序を上に変更します
 	/// </summary>

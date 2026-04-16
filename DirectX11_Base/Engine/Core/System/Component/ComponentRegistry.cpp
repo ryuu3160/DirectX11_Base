@@ -49,6 +49,15 @@ int ComponentRegistry::GetComponentCount() const
 	return static_cast<int>(m_Components.size());
 }
 
+const ComponentInfo *ComponentRegistry::FindComponentInfo(_In_ std::string_view name) const
+{
+	auto itr = m_Components.find(name.data());
+	if(itr != m_Components.end())
+		return &itr->second;
+
+	return nullptr;
+}
+
 void ComponentRegistry::Clear()
 {
 	m_Components.clear();
