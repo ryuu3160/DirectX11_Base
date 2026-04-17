@@ -464,9 +464,7 @@
     <ClCompile Include="Engine\ryuu_lib\ThreadPool\ThreadPool.cpp">
       <Filter>Engine\ryuu_lib\ThreadPool</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EngineAPI\EngineAPI_thunk.cpp">
-      <Filter>Engine\EngineAPI</Filter>
-    </ClCompile>
+    <ClCompile Include="Engine\EngineAPI\EngineAPI_Implementation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
