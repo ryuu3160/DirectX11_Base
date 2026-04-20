@@ -207,6 +207,8 @@ private:
 	void DataWrite(_In_ cpon *In_pCpon);
 	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
 
+	void ComponentDataWrite(_Inout_ std::shared_ptr<cpon_block> In_pCponBlock);
+
 private:
 	// コンポーネントリスト
 	using Components = std::vector<Component *>;

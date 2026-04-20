@@ -181,9 +181,14 @@ void SceneManager::RemoveAllSubScene() noexcept
 
 void SceneManager::BeforeHotReloadRemoveGameComponentsImmediate()
 {
-	if(m_pCurrentScene) m_pCurrentScene->RemoveAllGameComponentsImmediate();
+	if(m_pCurrentScene)
+		m_pCurrentScene->RemoveAllGameComponentsImmediate();
+
 	for(auto &p : m_SubScene)
-		if(p.second) p.second->RemoveAllGameComponentsImmediate();
+	{
+		if(p.second)
+			p.second->RemoveAllGameComponentsImmediate();
+	}
 }
 
 void SceneManager::UnLoadCurrentScene() noexcept
