@@ -1,8 +1,8 @@
 /*+===================================================================
 	File: EngineAPI.h
-	Summary: Engineとゲームプロジェクトを繋ぐAPI
-	Author: 青木雄一郎
-	Date: 2026/04/14 Mon PM 12:08:34 初回作成
+	Summary: Engine�ƃQ�[���v���W�F�N�g���q��API
+	Author: �ؗY��Y
+	Date: 2026/04/14 Mon PM 12:08:34 ����쐬
 ===================================================================+*/
 #pragma once
 
@@ -24,7 +24,7 @@ extern "C"
 		FORGEX_LOG_ERROR = 2,
 	} ForgeXEngineLogLevel;
 
-	// APIテーブル(PODのみ)
+	// API�e�[�u��(POD�̂�)
 	typedef struct ForgeXEngineAPI_POD
 	{
 		uint32_t version; // 1
