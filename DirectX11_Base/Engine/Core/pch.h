@@ -114,6 +114,13 @@ using Microsoft::WRL::ComPtr;
 #endif
 
 // ==============================
+// NuGetで管理しているライブラリ
+// ==============================
+
+// CPONはNuGet管理に移行した
+#include "cpon.hpp"
+
+// ==============================
 // サードパーティライブラリ
 // ==============================
 // ImGuiは変更頻度が低いのでpchに含めても良い
@@ -123,6 +130,3 @@ using Microsoft::WRL::ComPtr;
 
 // NlohmannJsonも変更頻度が低い
 #include "ThirdParty/NlohmannJson/nlohmann/json.hpp"
-
-// CPONも変更頻度が低い
-#include "ThirdParty/CPON/cpon.hpp"

@@ -135,9 +135,6 @@
     <Filter Include="Engine\Core\System\Generated">
       <UniqueIdentifier>{b36b91f6-4cfc-4ce5-ad4d-d262cd32b53a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ThirdParty\CPON">
-      <UniqueIdentifier>{956271ba-cf0c-4556-9126-9b3c6abeb1bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System\Project">
       <UniqueIdentifier>{1f03f1ef-6872-41e5-8224-10cdde7c5ab0}</UniqueIdentifier>
     </Filter>
@@ -421,12 +418,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Component\GridComponent.cpp">
       <Filter>Engine\Core\System\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ThirdParty\CPON\cpon.cpp">
-      <Filter>Engine\ThirdParty\CPON</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ThirdParty\CPON\cpon_object.cpp">
-      <Filter>Engine\ThirdParty\CPON</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\System\Utility\VisualStudioHelper.cpp">
       <Filter>Engine\Core\System\Utility</Filter>
@@ -754,12 +745,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Component\GridComponent.hpp">
       <Filter>Engine\Core\System\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ThirdParty\CPON\cpon.hpp">
-      <Filter>Engine\ThirdParty\CPON</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ThirdParty\CPON\cpon_object.hpp">
-      <Filter>Engine\ThirdParty\CPON</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\System\Utility\VisualStudioHelper.hpp">
       <Filter>Engine\Core\System\Utility</Filter>
