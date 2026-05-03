@@ -19,6 +19,17 @@ class Component;
 class DebugWindow;
 class SceneBase;
 
+struct HotReloadSavedComponent
+{
+	std::string name;                      // コンポ登録名（GetName）
+	std::shared_ptr<cpon_object> data;     // 1コンポぶんのCPONデータ
+};
+
+struct HotReloadSavedObject
+{
+	std::vector<HotReloadSavedComponent> components;
+};
+
 /// <summary>
 /// GameObjectクラス
 /// </summary>
