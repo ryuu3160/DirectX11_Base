@@ -510,6 +510,102 @@ void GameObject::ComponentDataWrite(_Inout_ std::shared_ptr<cpon_block> In_pCpon
 	}
 }
 
+void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObject &Out_Saved)
+{
+	Out_Saved.components.clear();
+
+	auto &reg = ComponentRegistry::GetInstance();
+
+	for(auto it = m_Components.begin(); it != m_Components.end(); )
+	{
+		Component *c = *it;
+		if(!c)
+		{
+			it = m_Components.erase(it);
+			continue;
+		}
+
+		const auto *info = reg.FindComponentInfo(c->GetName());
+		const bool isGame = (info && info->Owner == ComponentOwner::Game);
+
+		if(!isGame)
+		{
+			++it;
+			continue;
+		}
+
+		// 1) CPONに退避
+		HotReloadSavedComponent saved{};
+		saved.name = c->GetName();
+
+		// Component::DataWrite は private なので、ここでは SaveLoad を直接使うのがコツ
+		// ＝DataWriteと同等の形を自前で作る
+		cpon tmp;
+		auto obj = tmp.CreateObject("Component");         // ルート名は何でもいい（後で読む側が一致してればOK）
+		auto block = obj->CreateDataBlock();
+		auto dataObj = std::make_shared<cpon_object>();
+		dataObj->SetObjectName(saved.name);               // ←名前で紐づけたいならここ重要
+
+		Component::DataAccessor accessor(dataObj);
+		c->SaveLoad(&accessor);
+
+		// dataObj を block に入れる（DataAccessor::AccessObject の使い方に合わせてもOK）
+		block->AddObject(dataObj);
+
+		// 保存（ここは shared_ptr だけ取っておけば良い）
+		saved.data = dataObj;
+		Out_Saved.components.push_back(std::move(saved));
+
+		// 2) 即削除（Aと同じ掃除）
+#ifdef _DEBUG
+		m_InspectorComponent.erase(
+			std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), c),
+			m_InspectorComponent.end());
+#endif
+		m_InitComponents.erase(
+			std::remove(m_InitComponents.begin(), m_InitComponents.end(), c),
+			m_InitComponents.end());
+		m_DeadComponents.erase(
+			std::remove(m_DeadComponents.begin(), m_DeadComponents.end(), c),
+			m_DeadComponents.end());
+
+		delete c;
+		it = m_Components.erase(it);
+	}
+}
+
+void GameObject::RestoreGameComponentsFromSaved(_In_ const HotReloadSavedObject &In_Saved)
+{
+	auto &reg = ComponentRegistry::GetInstance();
+
+	for(const auto &sc : In_Saved.components)
+	{
+		Component *c = reg.CreateComponent(sc.name, this);
+		if(!c)
+		{
+			DebugManager::GetInstance().DebugLogWarning(
+				"HotReload: component '{}' could not be recreated (not registered).", sc.name);
+			continue;
+		}
+
+		// GameObjectにアタッチ（既存の _addComponent を使う）
+		_addComponent(c);
+		m_Components.push_back(c);
+		m_InitComponents.push_back(c);
+#ifdef _DEBUG
+		m_InspectorComponent.push_back(c);
+#endif
+
+		// 保存データを読み戻し
+		if(sc.data)
+		{
+			// DataReadは private なので、SaveLoad を逆方向で呼ぶ
+			Component::DataAccessor accessor(sc.data);
+			c->SaveLoad(&accessor);
+		}
+	}
+}
+
 #ifdef _DEBUG
 void GameObject::RegisterDebugInspector(_In_ DebugWindow *In_pWindow)
 {
