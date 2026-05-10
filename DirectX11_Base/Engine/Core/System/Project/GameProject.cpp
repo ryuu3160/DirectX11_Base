@@ -495,6 +495,7 @@ GameProjectManager::GameProjectManager()
 	, m_ReloadingWindow(nullptr), m_IsWatching(false), m_IsReloading(false)
     , m_MainViewport(nullptr)
 	, m_hStopEvent(nullptr)
+	, m_hDirectory(nullptr)
 {
     // 停止イベント
     m_hStopEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
@@ -1281,6 +1282,22 @@ void GameProjectManager::StartWatching()
         return;
 
     m_IsWatching = true;
+
+	// イベントの通知やハンドルをリセット
+	if(m_hStopEvent != nullptr)
+	{
+		ResetEvent(m_hStopEvent);
+	}
+	{
+		std::lock_guard<std::mutex> lock(m_DirectoryHandleMutex);
+		if(m_hDirectory != INVALID_HANDLE_VALUE)
+		{
+			CancelIoEx(m_hDirectory, &m_Overlapped);
+			CloseHandle(m_hDirectory);
+			m_hDirectory = INVALID_HANDLE_VALUE;
+		}
+	}
+
     m_WatcherThread = std::thread(&GameProjectManager::WatchProjectBuild, this);
 }
 
