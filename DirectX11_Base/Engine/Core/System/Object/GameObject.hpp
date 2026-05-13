@@ -19,6 +19,17 @@ class Component;
 class DebugWindow;
 class SceneBase;
 
+struct HotReloadSavedComponent
+{
+	std::string name;                      // コンポ登録名（GetName）
+	std::shared_ptr<cpon_object> data;     // 1コンポぶんのCPONデータ
+};
+
+struct HotReloadSavedObject
+{
+	std::vector<HotReloadSavedComponent> components;
+};
+
 /// <summary>
 /// GameObjectクラス
 /// </summary>
@@ -208,18 +219,6 @@ private:
 	void DataRead(_In_ std::shared_ptr<cpon_object> In_pCponObj);
 
 	void ComponentDataWrite(_Inout_ std::shared_ptr<cpon_block> In_pCponBlock);
-
-
-	struct HotReloadSavedComponent
-	{
-		std::string name;                      // コンポ登録名
-		std::shared_ptr<cpon_object> data;     // 1コンポぶんのCPONデータ
-	};
-
-	struct HotReloadSavedObject
-	{
-		std::vector<HotReloadSavedComponent> components;
-	};
 
 	void SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObject &Out_Saved);
 	void RestoreGameComponentsFromSaved(_In_ const HotReloadSavedObject &In_Saved);

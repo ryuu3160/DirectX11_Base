@@ -373,3 +373,23 @@ void SceneBase::DataLoad()
 	// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚Ýž‚Ý
 	m_Data->LoadFromFile("Engine/Assets/Data/Scene/" + m_Name + ".cpon");
 }
+
+void SceneBase::SaveAndRemoveAllGameComponentsImmediate(HotReloadSavedScene &Out_Saved)
+{
+	Out_Saved.objects.clear();
+	for(auto *obj : m_SceneObjects)
+	{
+		if(!obj) continue;
+		auto &entry = Out_Saved.objects[obj];
+		obj->SaveAndRemoveAllGameComponentsImmediate(entry);
+	}
+}
+
+void SceneBase::RestoreAllGameComponentsFromSaved(const HotReloadSavedScene &In_Saved)
+{
+	for(auto &[obj, data] : In_Saved.objects)
+	{
+		if(obj)
+			obj->RestoreGameComponentsFromSaved(data);
+	}
+}

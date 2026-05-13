@@ -30,6 +30,11 @@
 class SceneManager;
 class ItemHierarchy;
 
+struct HotReloadSavedScene
+{
+	std::unordered_map<GameObject *, HotReloadSavedObject> objects;
+};
+
 /// <summary>
 /// SceneBaseƒNƒ‰ƒX
 /// </summary>
@@ -168,6 +173,11 @@ private:
 
 	void DataSave();
 	void DataLoad();
+
+private:
+
+	void SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedScene &Out_Saved);
+	void RestoreAllGameComponentsFromSaved(_In_ const HotReloadSavedScene &In_Saved);
 
 private:
 	inline static Objects m_Objects;

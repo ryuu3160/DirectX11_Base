@@ -181,6 +181,9 @@ void SceneManager::RemoveAllSubScene() noexcept
 
 void SceneManager::BeforeHotReloadRemoveGameComponentsImmediate()
 {
+	// ホットリロード前の処理
+	BeforeHotReload_SaveAndRemoveGameComponents();
+
 	if(m_pCurrentScene)
 		m_pCurrentScene->RemoveAllGameComponentsImmediate();
 
@@ -280,4 +283,22 @@ void SceneManager::_ChangeAndAddSubScene() noexcept
 		itr.second = nullptr;
 	}
 	m_NextSubScene.clear();
+}
+
+void SceneManager::BeforeHotReload_SaveAndRemoveGameComponents()
+{
+	m_HotReloadSnapshot = {};
+	if(m_pCurrentScene)
+	{
+		m_pCurrentScene->SaveAndRemoveAllGameComponentsImmediate(m_HotReloadSnapshot.current);
+	}
+}
+
+void SceneManager::AfterHotReload_RestoreGameComponents()
+{
+	if(m_pCurrentScene && !m_HotReloadSnapshot.current.objects.empty())
+	{
+		m_pCurrentScene->RestoreAllGameComponentsFromSaved(m_HotReloadSnapshot.current);
+	}
+	m_HotReloadSnapshot = {};
 }

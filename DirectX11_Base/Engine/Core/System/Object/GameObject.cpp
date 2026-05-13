@@ -16,6 +16,8 @@
 #include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
 
+#include "Core/System/Scene/SceneBase.hpp"
+
 GameObject::GameObject(_In_ std::string_view In_Name)
 	: m_Name(In_Name.data())
 	, m_pScene(nullptr)

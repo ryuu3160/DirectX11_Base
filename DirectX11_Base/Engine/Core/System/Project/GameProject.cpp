@@ -471,14 +471,21 @@ bool GameProjectManager::ReloadProjectDll()
     auto &registry = ComponentRegistry::GetInstance();
 
 	// ホットリロード前のクリーンアップをシーンマネージャーに依頼
-	SceneManager::GetInstance().BeforeHotReloadRemoveGameComponentsImmediate();
+	auto &sceneManager = SceneManager::GetInstance();
+	sceneManager.BeforeHotReloadRemoveGameComponentsImmediate();
 
     // DLLを解放する前にゲーム登録を捨て、エンジン登録だけ復元
     registry.Clear();
     RegisterAllEngineComponents();
 
     UnloadProjectDll();
-    return LoadProjectDll();
+
+	bool result = LoadProjectDll();
+
+	if(result)
+		sceneManager.AfterHotReload_RestoreGameComponents();
+
+	return result;
 }
 
 std::filesystem::path GameProjectManager::GetLoadedBuildFolder() const
@@ -935,7 +942,8 @@ std::filesystem::path GameProjectManager::FindLatestBuiltDllPath(_In_ std::files
 
     for(const auto &DirEnt : std::filesystem::directory_iterator(BuildsRoot, ec))
     {
-        if(ec) break;
+        if(ec)
+			break;
         if(!DirEnt.is_directory(ec))
             continue;
 

@@ -18,6 +18,7 @@
 class RenderManager;
 class CollisionManager;
 class FadeManager;
+struct HotReloadSavedScene;
 
 /// <summary>
 /// SceneManagerクラス
@@ -113,6 +114,20 @@ private:
 	/// サブシーンを変更し、追加します。
 	/// </summary>
 	void _ChangeAndAddSubScene() noexcept;
+
+private:
+	
+	struct HotReloadSnapshot
+	{
+		HotReloadSavedScene current;
+		// sub scenesも必要なら vector で持つ
+	};
+	HotReloadSnapshot m_HotReloadSnapshot;
+
+	void BeforeHotReload_SaveAndRemoveGameComponents();
+
+public:
+	void AfterHotReload_RestoreGameComponents();
 
 private:
 
