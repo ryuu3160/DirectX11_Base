@@ -387,6 +387,7 @@ bool GameProjectManager::OpenProject(_In_ const std::filesystem::path &In_Projec
     if(!LoadProjectDll())
     {
         DebugManager::GetInstance().DebugLogWarning("Project opened, but DLL load failed. Build the project first.");
+		return false;
     }
 
 	// DLLのロードに成功したら監視を開始する
