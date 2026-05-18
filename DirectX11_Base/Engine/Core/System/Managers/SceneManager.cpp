@@ -98,6 +98,7 @@ void SceneManager::RootDraw() noexcept
 		if (itr.valid())
 			itr.get();
 	}
+	m_DrawFutures.clear();
 
 	// ‘S‚Ä‚Ì•`‰æ
 	m_RenderManager.DrawAll();

@@ -137,6 +137,7 @@ FrameManager::FrameManager()
 	, m_fTick(0.0f), m_FixedDeltaTime(0.02), m_AccumulatedTime(0.0), m_MaxStepCount(5)
 	, m_fTimeScale(1.0f)
 {
+	[[maybe_unused]] const auto &tzdb = std::chrono::get_tzdb();
 }
 
 FrameManager::~FrameManager()
