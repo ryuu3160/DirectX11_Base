@@ -112,13 +112,14 @@ std::string FrameManager::GetNowTimeString() const
 #if defined(_MSC_VER)
 #if _MSC_VER >= 1950 // Visual Studio 2026
 	// 現地時刻（タイムゾーン考慮）
-	std::chrono::zoned_time zt{ std::chrono::current_zone(), now };
+	std::chrono::zoned_time zt{ m_TimeZone, now };
 	auto local_tp = zt.get_local_time(); // システムタイム->ローカルタイム
 
 	// 秒未満を切り捨て（ミリ秒以下を切る）
 	auto local_sec = std::chrono::floor<std::chrono::seconds>(local_tp);
 	result = std::format("{:%H:%M:%S}", local_sec);
-#elif _MSC_VER >= 1930 // Visual Studio 2022
+#endif
+#elif
 	// std::format の代わりに std::put_time + std::ostringstream を使う
 	std::time_t t = std::chrono::system_clock::to_time_t(now);
 	std::tm local_tm{};
@@ -126,7 +127,6 @@ std::string FrameManager::GetNowTimeString() const
 	std::ostringstream oss;
 	oss << std::put_time(&local_tm, "%H:%M:%S");
 	result = oss.str();
-#endif
 #endif
 	return result;
 }
@@ -136,11 +136,26 @@ FrameManager::FrameManager()
 	, m_TargetDuration(std::chrono::duration<double>(0.0)), m_bYieldWhenWaiting(true)
 	, m_fTick(0.0f), m_FixedDeltaTime(0.02), m_AccumulatedTime(0.0), m_MaxStepCount(5)
 	, m_fTimeScale(1.0f)
+	, m_TimeZone(nullptr)
 {
-	[[maybe_unused]] const auto &tzdb = std::chrono::get_tzdb();
+#ifdef _DEBUG
+	// 現在のデバッグフラグを取得
+	int oldFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+
+	// メモリ確保の追跡を一時的にオフにする
+	_CrtSetDbgFlag(oldFlag & ~_CRTDBG_ALLOC_MEM_DF);
+
+	m_TimeZone = std::chrono::current_zone();
+
+	// メモリリーク追跡を戻す
+	_CrtSetDbgFlag(oldFlag);
+#else
+	m_TimeZone = std::chrono::current_zone();
+#endif
 }
 
 FrameManager::~FrameManager()
 {
+	m_TimeZone = nullptr;
 	m_bInitialized = false;
 }

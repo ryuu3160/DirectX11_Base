@@ -135,6 +135,7 @@ private:
 	bool m_bYieldWhenWaiting;
 
 	std::chrono::steady_clock::time_point m_FpsTime;
+	const std::chrono::time_zone *m_TimeZone;
 	double m_LastFps;
 	float m_fMainFps;
 	float m_fTick;
