@@ -545,8 +545,7 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 		cpon tmp;
 		auto obj = tmp.CreateObject("Component");         // ルート名は何でもいい（後で読む側が一致してればOK）
 		auto block = obj->CreateDataBlock();
-		auto dataObj = std::make_shared<cpon_object>();
-		dataObj->SetObjectName(saved.name);               // ←名前で紐づけたいならここ重要
+		auto dataObj = block->CreateObject(saved.name);
 
 		Component::DataAccessor accessor(dataObj);
 		c->SaveLoad(&accessor);

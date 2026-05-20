@@ -1196,7 +1196,12 @@ void ItemConsole::AddOutput(_In_ std::string_view In_Text, _In_ const ImVec4 &In
 
 std::string ItemConsole::CurrentTimeString()
 {
-	return FrameManager::GetInstance().GetNowTimeString();
+	std::string time;
+	time = FrameManager::GetInstance().GetNowTimeString();
+
+	if(!time.empty())
+		return time;
+
 	std::time_t t = std::time(nullptr);
 	std::tm tm{};
 
