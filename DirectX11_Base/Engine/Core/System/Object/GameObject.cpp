@@ -518,27 +518,27 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 
 	auto &reg = ComponentRegistry::GetInstance();
 
-	for(auto it = m_Components.begin(); it != m_Components.end(); )
+	for(auto itr = m_Components.begin(); itr != m_Components.end(); )
 	{
-		Component *c = *it;
-		if(!c)
+		Component *cmp = *itr;
+		if(!cmp)
 		{
-			it = m_Components.erase(it);
+			itr = m_Components.erase(itr);
 			continue;
 		}
 
-		const auto *info = reg.FindComponentInfo(c->GetName());
+		const auto *info = reg.FindComponentInfo(cmp->GetName());
 		const bool isGame = (info && info->Owner == ComponentOwner::Game);
 
 		if(!isGame)
 		{
-			++it;
+			++itr;
 			continue;
 		}
 
 		// 1) CPONに退避
 		HotReloadSavedComponent saved{};
-		saved.name = c->GetName();
+		saved.name = cmp->GetName();
 
 		// Component::DataWrite は private なので、ここでは SaveLoad を直接使うのがコツ
 		// ＝DataWriteと同等の形を自前で作る
@@ -548,7 +548,7 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 		auto dataObj = block->CreateObject(saved.name);
 
 		Component::DataAccessor accessor(dataObj);
-		c->SaveLoad(&accessor);
+		cmp->SaveLoad(&accessor);
 
 		// dataObj を block に入れる（DataAccessor::AccessObject の使い方に合わせてもOK）
 		block->AddObject(dataObj);
@@ -560,18 +560,18 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 		// 2) 即削除（Aと同じ掃除）
 #ifdef _DEBUG
 		m_InspectorComponent.erase(
-			std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), c),
+			std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), cmp),
 			m_InspectorComponent.end());
 #endif
 		m_InitComponents.erase(
-			std::remove(m_InitComponents.begin(), m_InitComponents.end(), c),
+			std::remove(m_InitComponents.begin(), m_InitComponents.end(), cmp),
 			m_InitComponents.end());
 		m_DeadComponents.erase(
-			std::remove(m_DeadComponents.begin(), m_DeadComponents.end(), c),
+			std::remove(m_DeadComponents.begin(), m_DeadComponents.end(), cmp),
 			m_DeadComponents.end());
 
-		delete c;
-		it = m_Components.erase(it);
+		delete cmp;
+		itr = m_Components.erase(itr);
 	}
 }
 
