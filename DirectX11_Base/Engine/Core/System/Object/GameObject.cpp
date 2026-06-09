@@ -589,14 +589,6 @@ void GameObject::RestoreGameComponentsFromSaved(_In_ const HotReloadSavedObject 
 			continue;
 		}
 
-		// GameObjectにアタッチ（既存の _addComponent を使う）
-		_addComponent(c);
-		m_Components.push_back(c);
-		m_InitComponents.push_back(c);
-#ifdef _DEBUG
-		m_InspectorComponent.push_back(c);
-#endif
-
 		// 保存データを読み戻し
 		if(sc.data)
 		{
