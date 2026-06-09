@@ -536,7 +536,7 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 			continue;
 		}
 
-		// 1) CPON‚É‘Ş”ğ
+		// CPON‚É‘Ş”ğ
 		HotReloadSavedComponent saved{};
 		saved.name = cmp->GetName();
 
@@ -557,7 +557,7 @@ void GameObject::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedObj
 		saved.data = dataObj;
 		Out_Saved.components.push_back(std::move(saved));
 
-		// 2) ‘¦íœiA‚Æ“¯‚¶‘|œj
+		// ‘¦íœ
 #ifdef _DEBUG
 		m_InspectorComponent.erase(
 			std::remove(m_InspectorComponent.begin(), m_InspectorComponent.end(), cmp),

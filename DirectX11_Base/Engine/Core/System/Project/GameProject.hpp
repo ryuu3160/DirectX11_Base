@@ -65,7 +65,7 @@ public:
     /// <summary>
     /// DLL をロード
     /// </summary>
-    bool LoadProjectDll(_In_ bool In_IsHotReload = false);
+    bool LoadProjectDll();
 
     /// <summary>
     /// DLL をアンロード
@@ -159,7 +159,7 @@ private:
     /// <summary>
 	/// DLLからコンポーネントを登録します
     /// </summary>
-    bool RegisterComponentsFromLoadedDll(_In_ bool In_IsHotReload = false) const;
+    bool RegisterComponentsFromLoadedDll() const;
 
 	/// <summary>
 	/// DLLにエンジンのAPI関数をセットします

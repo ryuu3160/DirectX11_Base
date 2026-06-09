@@ -421,7 +421,7 @@ const GameProjectInfo *GameProjectManager::GetCurrentProject() const
     return &m_CurrentProject.value();
 }
 
-bool GameProjectManager::LoadProjectDll(_In_ bool In_IsHotReload)
+bool GameProjectManager::LoadProjectDll()
 {
     if(m_hProjectDll)
         return true;
@@ -451,7 +451,7 @@ bool GameProjectManager::LoadProjectDll(_In_ bool In_IsHotReload)
 
     DebugManager::GetInstance().DebugLog("Loaded game DLL: {}", DllPath.string());
 
-    if(!RegisterComponentsFromLoadedDll(In_IsHotReload))
+    if(!RegisterComponentsFromLoadedDll())
         return false;
 
     return true;
@@ -481,7 +481,7 @@ bool GameProjectManager::ReloadProjectDll()
 
     UnloadProjectDll();
 
-	bool result = LoadProjectDll(true);
+	bool result = LoadProjectDll();
 
 	if(result)
 		sceneManager.AfterHotReload_RestoreGameComponents();
@@ -857,7 +857,7 @@ std::string GameProjectManager::MakeImportLineForVcxproj(_In_ const std::filesys
     return "  <Import Project=\"" + relStr + "\" Condition=\"Exists('" + relStr + "')\" />\n";
 }
 
-bool GameProjectManager::RegisterComponentsFromLoadedDll(_In_ bool In_IsHotReload) const
+bool GameProjectManager::RegisterComponentsFromLoadedDll() const
 {
     if(!m_hProjectDll)
         return false;

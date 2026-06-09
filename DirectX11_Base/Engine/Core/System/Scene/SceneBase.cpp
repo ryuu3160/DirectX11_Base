@@ -374,7 +374,7 @@ void SceneBase::DataLoad()
 	m_Data->LoadFromFile("Engine/Assets/Data/Scene/" + m_Name + ".cpon");
 }
 
-void SceneBase::SaveAndRemoveAllGameComponentsImmediate(HotReloadSavedScene &Out_Saved)
+void SceneBase::SaveAndRemoveAllGameComponentsImmediate(_Out_ HotReloadSavedScene &Out_Saved)
 {
 	Out_Saved.objects.clear();
 	for(auto *obj : m_SceneObjects)
@@ -385,7 +385,7 @@ void SceneBase::SaveAndRemoveAllGameComponentsImmediate(HotReloadSavedScene &Out
 	}
 }
 
-void SceneBase::RestoreAllGameComponentsFromSaved(const HotReloadSavedScene &In_Saved)
+void SceneBase::RestoreAllGameComponentsFromSaved(_In_ const HotReloadSavedScene &In_Saved)
 {
 	for(auto &[obj, data] : In_Saved.objects)
 	{
