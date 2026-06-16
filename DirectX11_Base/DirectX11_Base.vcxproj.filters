@@ -156,6 +156,9 @@
     <Filter Include="Engine\Core\DirectX\Utility">
       <UniqueIdentifier>{12bb86b6-c0ca-42cd-89d8-39d505371208}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\System\API">
+      <UniqueIdentifier>{417a7280-df94-4955-8424-bbbe2f92a5f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\pch.cpp">
@@ -458,6 +461,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\SpriteRenderer.cpp">
       <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\API\EditorApp.cpp">
+      <Filter>Engine\Core\System\API</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\API\Application.cpp">
+      <Filter>Engine\Core\System\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -793,6 +802,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\SpriteRenderer.hpp">
       <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\API\EditorApp.hpp">
+      <Filter>Engine\Core\System\API</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\API\Application.hpp">
+      <Filter>Engine\Core\System\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

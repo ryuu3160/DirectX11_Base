@@ -228,6 +228,11 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Engine;%(AddtionalIncludeDirectories);$(ProjectDir)/Engine/ThirdParty/NlohmannJson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Engine\Core\System\API\Application.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\System\API\EditorApp.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Camera\CameraDCC.cpp" />
     <ClCompile Include="Engine\Core\System\Component\Collider\BoxCollider.cpp" />
@@ -364,6 +369,11 @@
     <ClInclude Include="Engine\Core\DirectX\DirectX11\System\RenderManager.hpp" />
     <ClInclude Include="Engine\Core\DirectX\Utility\DX_Math.hpp" />
     <ClInclude Include="Engine\Core\pch.h" />
+    <ClInclude Include="Engine\Core\System\API\Application.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\System\API\EditorApp.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Camera\Camera.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Camera\CameraDCC.hpp" />
     <ClInclude Include="Engine\Core\System\Component\Collider\BoxCollider.hpp" />

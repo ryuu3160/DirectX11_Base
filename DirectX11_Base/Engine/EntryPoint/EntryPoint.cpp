@@ -6,6 +6,11 @@
 ===================================================================+*/
 
 // ==============================
+//  define
+// ==============================
+#define FORGEX_EDITOR
+
+// ==============================
 //	include
 // ==============================
 #include "EntryPoint.hpp"
@@ -13,6 +18,12 @@
 #include "Core/System/Managers/DebugManager/InitializeImGui.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "ryuu_lib/WindowGenerator/Window.hpp"
+
+#ifdef FORGEX_EDITOR
+#include "Core/System/API/EditorApp.hpp"
+#else
+#include "Core/System/API/Application.hpp"
+#endif
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -56,9 +67,21 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		return 0;
 	}
 
+	bool isLoop = true;
+#ifdef FORGEX_EDITOR
+	auto &app = EditorApp::GetInstance();
+#else
+	auto &app = Application::GetInstance();
+#endif
+
 	// ゲームループ
-	while (window.IsLoop())
+	while (window.IsLoop() && isLoop)
 	{
+#ifdef FORGEX_EDITOR
+#else
+		isLoop = !app.IsQuit();
+#endif
+
 		// ウィンドウのメッセージループ処理
 		if (window.MessageLoop())
 		{
