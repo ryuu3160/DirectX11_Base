@@ -237,7 +237,7 @@ int CollisionManager::GetMortonNumber(_In_ const DirectX::XMFLOAT3 In_LeftTopFro
 
 int CollisionManager::Get3DMortonOrder(_In_ BYTE In_X, _In_ BYTE In_Y, _In_ BYTE In_Z) const noexcept
 {
-	return DX11Math::BitSeparateFor3D(In_X) | DX11Math::BitSeparateFor3D(In_Y) << 1 | DX11Math::BitSeparateFor3D(In_Z) << 2;
+	return DXMath::BitSeparateFor3D(In_X) | DXMath::BitSeparateFor3D(In_Y) << 1 | DXMath::BitSeparateFor3D(In_Z) << 2;
 }
 
 int CollisionManager::GetPointElem(_In_ const DirectX::XMFLOAT3 In_Point) const noexcept

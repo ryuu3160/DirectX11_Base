@@ -24,38 +24,8 @@
     <Filter Include="Engine\ryuu_lib">
       <UniqueIdentifier>{5e3efb9a-a034-4ad9-b529-260f38005570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Core\DirectX11">
-      <UniqueIdentifier>{7ccac925-3b40-4c87-b7cf-5d697f044303}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Core\System">
       <UniqueIdentifier>{daf4a1ed-17a2-45cf-abed-3901f4548c75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\Renderer">
-      <UniqueIdentifier>{1f4ab04d-1146-4135-be32-1bc1938f5f2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\Resource">
-      <UniqueIdentifier>{ff7b2166-10c5-4e64-98a6-31d37e03ed09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\ResourceManager">
-      <UniqueIdentifier>{7e426195-d9e3-4c1a-9688-99bba0737451}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\System">
-      <UniqueIdentifier>{84e686e6-6f24-4210-9951-be04f4138fcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\Resource\MesheResource">
-      <UniqueIdentifier>{feb1611e-f10a-40bd-9a97-059e5bde1345}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\Resource\ShaderResource">
-      <UniqueIdentifier>{221f7f8c-1c57-41c5-bbdf-70487c95d4b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\System\Particle">
-      <UniqueIdentifier>{5086d289-2de5-4279-a9b7-f4138f02f1fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\System\Particle\Core">
-      <UniqueIdentifier>{f68706e7-c205-4546-a7b2-a533b1acbf8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Core\DirectX11\System\Particle\Components">
-      <UniqueIdentifier>{b7356017-0eca-47c2-a82c-f6602dc38d42}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Core\System\Component">
       <UniqueIdentifier>{174fbf91-7a33-47a4-bfc7-6e812a88b760}</UniqueIdentifier>
@@ -150,101 +120,44 @@
     <Filter Include="Engine\EngineAPI">
       <UniqueIdentifier>{0e05d346-86dd-4a88-aef4-3a154b878379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Core\DirectX">
+      <UniqueIdentifier>{56bae9e8-cde9-4c83-97f5-b0a6ad5b63e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11">
+      <UniqueIdentifier>{7ccac925-3b40-4c87-b7cf-5d697f044303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\Renderer">
+      <UniqueIdentifier>{1f4ab04d-1146-4135-be32-1bc1938f5f2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\Resource">
+      <UniqueIdentifier>{ff7b2166-10c5-4e64-98a6-31d37e03ed09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource">
+      <UniqueIdentifier>{feb1611e-f10a-40bd-9a97-059e5bde1345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource">
+      <UniqueIdentifier>{221f7f8c-1c57-41c5-bbdf-70487c95d4b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\ResourceManager">
+      <UniqueIdentifier>{7e426195-d9e3-4c1a-9688-99bba0737451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\System">
+      <UniqueIdentifier>{84e686e6-6f24-4210-9951-be04f4138fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\System\Particle">
+      <UniqueIdentifier>{5086d289-2de5-4279-a9b7-f4138f02f1fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\System\Particle\Core">
+      <UniqueIdentifier>{f68706e7-c205-4546-a7b2-a533b1acbf8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\DirectX11\System\Particle\Components">
+      <UniqueIdentifier>{b7356017-0eca-47c2-a82c-f6602dc38d42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Core\DirectX\Utility">
+      <UniqueIdentifier>{12bb86b6-c0ca-42cd-89d8-39d505371208}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\LineRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\ModelRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\RenderComponent.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.cpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\Material.cpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\ResourceSetting.cpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\Texture.cpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.cpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ModelManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\ResourceManager\TextureManager.cpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.cpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\Particle.cpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\Gizmos.cpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\RenderContext.cpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\System\RenderManager.cpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Core\DirectX11\DX11_Core.cpp">
-      <Filter>Engine\Core\DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\pch.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
@@ -453,104 +366,101 @@
       <Filter>Engine\ryuu_lib\ThreadPool</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EngineAPI\EngineAPI_Implementation.hpp" />
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\DX11_Core.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\Particle\Components\ParticleEffect.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\Particle.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\ParticleEmitter.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\ParticlePoolManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\Gizmos.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\RenderContext.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\System\RenderManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\InstancedModelManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\MaterialManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\ModelManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\RenderTargetManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\ShaderManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\ResourceManager\TextureManager.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\Material.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\ResourceSetting.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\Texture.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\Shader.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\ShaderParam.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\UnorderedAccessView.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\InstancedMesh.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\InstancedMeshBuffer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\Mesh.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\MeshBuffer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\InstancedModelRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\LineRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\ModelRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\RenderComponent.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\RTSpriteRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\SkyBoxRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\DirectX\DirectX11\Renderer\SpriteRenderer.cpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\InstancedModelRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\LineRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\ModelRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\RenderComponent.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\RTSpriteRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\SkyBoxRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Renderer\SpriteRenderer.hpp">
-      <Filter>Engine\Core\DirectX11\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\Material.hpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\ResourceSetting.hpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\Texture.hpp">
-      <Filter>Engine\Core\DirectX11\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMesh.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\InstancedMeshBuffer.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\Mesh.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\MesheResource\MeshBuffer.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\MesheResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\Shader.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\ShaderParam.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\Resource\ShaderResource\UnorderedAccessView.hpp">
-      <Filter>Engine\Core\DirectX11\Resource\ShaderResource</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\InstancedModelManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\MaterialManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ModelManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\RenderTargetManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\ShaderManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\ResourceManager\TextureManager.hpp">
-      <Filter>Engine\Core\DirectX11\ResourceManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Components\ParticleEffect.hpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\Particle.hpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
-      <Filter>Engine\Core\DirectX11\System\Particle\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\DX11_Math.hpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\Gizmos.hpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\RenderContext.hpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\System\RenderManager.hpp">
-      <Filter>Engine\Core\DirectX11\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Core\DirectX11\DX11_Core.hpp">
-      <Filter>Engine\Core\DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\Defines.hpp">
       <Filter>Engine\Core</Filter>
     </ClInclude>
@@ -787,6 +697,102 @@
     </ClInclude>
     <ClInclude Include="Engine\EngineAPI\EngineDebugAPI.h">
       <Filter>Engine\EngineAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\Utility\DX_Math.hpp">
+      <Filter>Engine\Core\DirectX\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\DX11_Core.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\Particle\Components\ParticleEffect.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\Particle.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\ParticleEmitter.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\Particle\Core\ParticlePoolManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System\Particle\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\Gizmos.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\RenderContext.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\System\RenderManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\InstancedModelManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\MaterialManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\ModelManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\RenderTargetManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\ShaderManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\ResourceManager\TextureManager.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\Material.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\ResourceSetting.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\Texture.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\Shader.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\ShaderParam.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\ShaderResource\UnorderedAccessView.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\ShaderResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\InstancedMesh.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\InstancedMeshBuffer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\Mesh.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Resource\MesheResource\MeshBuffer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Resource\MesheResource</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\InstancedModelRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\LineRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\ModelRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\RenderComponent.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\RTSpriteRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\SkyBoxRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\DirectX\DirectX11\Renderer\SpriteRenderer.hpp">
+      <Filter>Engine\Core\DirectX\DirectX11\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@
 #include "DebugItem.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
-#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/DirectX/Utility/DX_Math.hpp"
 
 // ==============================
 //	’è”’è‹`

@@ -11,7 +11,7 @@
 #include "PlayerController.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Input/InputSystem.hpp"
-#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/DirectX/Utility/DX_Math.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 PlayerController::PlayerController()

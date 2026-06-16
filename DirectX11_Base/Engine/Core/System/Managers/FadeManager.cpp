@@ -9,8 +9,8 @@
 //	include
 // ==============================
 #include "FadeManager.hpp"
-#include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
-#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/DirectX/DirectX11/Renderer/SpriteRenderer.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/ShaderManager.hpp"
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 

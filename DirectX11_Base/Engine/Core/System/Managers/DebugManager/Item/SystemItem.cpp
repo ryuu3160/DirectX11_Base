@@ -14,7 +14,7 @@
 #include "Core/System/Object/GameObject.hpp"
 #include "Core/System/Scene/SceneBase.hpp"
 #include "Engine/Core/System/Component/ComponentRegistry.hpp"
-#include "Engine/Core/DirectX11/System/DX11_Math.hpp"
+#include "Engine/Core/DirectX/Utility/DX_Math.hpp"
 #include "Core/System/Utility/VisualStudioHelper.hpp"
 #include "Core/System/Utility/ProjectFileManager.hpp"
 #include "Core/System/Project/GameProject.hpp"

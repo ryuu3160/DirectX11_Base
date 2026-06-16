@@ -10,10 +10,10 @@
 // ==============================
 #include "DebugManager.hpp"
 #include "Core/System/Component/Camera/CameraDCC.hpp"
-#include "Core/DirectX11/System/RenderManager.hpp"
+#include "Core/DirectX/DirectX11/System/RenderManager.hpp"
 #include "Core/System/Managers/SceneManager.hpp"
 #include "ryuu_lib/FrameManager/FrameManager.hpp"
-#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/TextureManager.hpp"
 #include "Core/System/Project/GameProject.hpp"
 #include "Core/System/Input/Input.hpp"
 #include "ryuu_lib/WindowGenerator/Window.hpp"

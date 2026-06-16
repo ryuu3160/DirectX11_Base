@@ -27,7 +27,7 @@ namespace ForgeX_Engine
 // ==============================
 // Math
 // ==============================
-#include "Core/DirectX11/System/DX11_Math.hpp"           // DirectX Math ヘルパー
+#include "Core/DirectX/Utility/DX_Math.hpp"           // DirectX Math ヘルパー
 
 // ==============================
 // ryuu_lib(ユーティリティライブラリ)
@@ -54,7 +54,7 @@ namespace ForgeX_Engine
 // ==============================
 
 // DirectX Core
-#include "Core/DirectX11/DX11_Core.hpp"                  // DirectX11 初期化
+#include "Core/DirectX/DirectX11/DX11_Core.hpp"                  // DirectX11 初期化
 
 // Object(基底クラス)
 #include "Core/System/Object/Object.hpp"                 // Object 基底
@@ -97,50 +97,50 @@ namespace ForgeX_Engine
 // ==============================
 
 // Resource
-#include "Core/DirectX11/Resource/ResourceSetting.hpp"
-#include "Core/DirectX11/Resource/Texture.hpp"
-#include "Core/DirectX11/Resource/Material.hpp"
+#include "Core/DirectX/DirectX11/Resource/ResourceSetting.hpp"
+#include "Core/DirectX/DirectX11/Resource/Texture.hpp"
+#include "Core/DirectX/DirectX11/Resource/Material.hpp"
 
 // Mesh Resource
-#include "Core/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
-#include "Core/DirectX11/Resource/MesheResource/Mesh.hpp"
-#include "Core/DirectX11/Resource/MesheResource/InstancedMeshBuffer.hpp"
-#include "Core/DirectX11/Resource/MesheResource/InstancedMesh.hpp"
+#include "Core/DirectX/DirectX11/Resource/MesheResource/MeshBuffer.hpp"
+#include "Core/DirectX/DirectX11/Resource/MesheResource/Mesh.hpp"
+#include "Core/DirectX/DirectX11/Resource/MesheResource/InstancedMeshBuffer.hpp"
+#include "Core/DirectX/DirectX11/Resource/MesheResource/InstancedMesh.hpp"
 
 // Shader Resource
-#include "Core/DirectX11/Resource/ShaderResource/ShaderParam.hpp"
-#include "Core/DirectX11/Resource/ShaderResource/Shader.hpp"
-#include "Core/DirectX11/Resource/ShaderResource/UnorderedAccessView.hpp"
+#include "Core/DirectX/DirectX11/Resource/ShaderResource/ShaderParam.hpp"
+#include "Core/DirectX/DirectX11/Resource/ShaderResource/Shader.hpp"
+#include "Core/DirectX/DirectX11/Resource/ShaderResource/UnorderedAccessView.hpp"
 
 // Resource Manager
-#include "Core/DirectX11/ResourceManager/TextureManager.hpp"
-#include "Core/DirectX11/ResourceManager/MaterialManager.hpp"
-#include "Core/DirectX11/ResourceManager/ShaderManager.hpp"
-#include "Core/DirectX11/ResourceManager/ModelManager.hpp"
-#include "Core/DirectX11/ResourceManager/InstancedModelManager.hpp"
-#include "Core/DirectX11/ResourceManager/RenderTargetManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/TextureManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/MaterialManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/ShaderManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/ModelManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/InstancedModelManager.hpp"
+#include "Core/DirectX/DirectX11/ResourceManager/RenderTargetManager.hpp"
 
 // Renderer
-#include "Core/DirectX11/Renderer/RenderComponent.hpp"
-#include "Core/DirectX11/Renderer/SpriteRenderer.hpp"
-#include "Core/DirectX11/Renderer/ModelRenderer.hpp"
-#include "Core/DirectX11/Renderer/InstancedModelRenderer.hpp"
-#include "Core/DirectX11/Renderer/SkyBoxRenderer.hpp"
-#include "Core/DirectX11/Renderer/LineRenderer.hpp"
-#include "Core/DirectX11/Renderer/RTSpriteRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/RenderComponent.hpp"
+#include "Core/DirectX/DirectX11/Renderer/SpriteRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/ModelRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/InstancedModelRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/SkyBoxRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/LineRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/RTSpriteRenderer.hpp"
 
 // Render System
-#include "Core/DirectX11/System/RenderContext.hpp"
-#include "Core/DirectX11/System/RenderManager.hpp"
-#include "Core/DirectX11/System/Gizmos.hpp"
+#include "Core/DirectX/DirectX11/System/RenderContext.hpp"
+#include "Core/DirectX/DirectX11/System/RenderManager.hpp"
+#include "Core/DirectX/DirectX11/System/Gizmos.hpp"
 
 // ==============================
 // Particle System
 // ==============================
-#include "Core/DirectX11/System/Particle/Core/Particle.hpp"
-#include "Core/DirectX11/System/Particle/Core/ParticleEmitter.hpp"
-#include "Core/DirectX11/System/Particle/Core/ParticlePoolManager.hpp"
-#include "Core/DirectX11/System/Particle/Components/ParticleEffect.hpp"
+#include "Core/DirectX/DirectX11/System/Particle/Core/Particle.hpp"
+#include "Core/DirectX/DirectX11/System/Particle/Core/ParticleEmitter.hpp"
+#include "Core/DirectX/DirectX11/System/Particle/Core/ParticlePoolManager.hpp"
+#include "Core/DirectX/DirectX11/System/Particle/Components/ParticleEffect.hpp"
 
 // ==============================
 // Input

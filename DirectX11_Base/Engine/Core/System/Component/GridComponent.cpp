@@ -10,7 +10,7 @@
 // ==============================
 #include "GridComponent.hpp"
 #include "Core/System/Object/GameObject.hpp"
-#include "Core/DirectX11/Renderer/LineRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/LineRenderer.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 
 // ==============================

@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "Core/DirectPublishedAPI.hpp"
-#include "Core/DirectX11/System/Gizmos.hpp"
+#include "Core/DirectX/DirectX11/System/Gizmos.hpp"
 // ==============================
 //	‘O•ûéŒ¾
 // ==============================

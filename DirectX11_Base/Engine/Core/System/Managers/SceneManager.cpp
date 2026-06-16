@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "SceneManager.hpp"
-#include "Core/DirectX11/System/RenderManager.hpp"
+#include "Core/DirectX/DirectX11/System/RenderManager.hpp"
 #include "Core/System/Managers/FadeManager.hpp"
 
 SceneManager::SceneManager()

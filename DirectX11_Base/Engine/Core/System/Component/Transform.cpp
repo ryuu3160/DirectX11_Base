@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "Transform.hpp"
-#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/DirectX/Utility/DX_Math.hpp"
 #include "Core/System/Managers/DebugManager/DebugManager.hpp"
 #include "Core/System/Managers/DebugManager/Item/SystemItem.hpp"
 #include "Core/System/Object/GameObject.hpp"
@@ -635,7 +635,7 @@ DirectX::XMFLOAT3 Transform::ChoiceBestEuler(_In_ const std::vector<DirectX::XMF
 std::vector<DirectX::XMFLOAT3> Transform::GetPracticalEulerCandidates(_In_ DirectX::XMFLOAT4 In_Quat) const noexcept
 {
 	std::vector<DirectX::XMFLOAT3> candidates;
-	auto BaseEuler = DX11Math::QuaternionToRollPitchYaw(In_Quat);
+	auto BaseEuler = DXMath::QuaternionToRollPitchYaw(In_Quat);
 
 	float pitch = BaseEuler.x;
 	float yaw = BaseEuler.y;

@@ -14,7 +14,7 @@
 //	include
 // ==============================
 #include "FrameManager.hpp"
-#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/DirectX/Utility/DX_Math.hpp"
 #include "Core/System/Utility/Utility.hpp"
 
 void FrameManager::Init(_In_ float In_fFps, _In_ bool In_YieldWhenWaiting)

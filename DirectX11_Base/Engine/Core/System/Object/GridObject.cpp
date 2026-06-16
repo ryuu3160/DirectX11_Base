@@ -9,7 +9,7 @@
 //	include
 // ==============================
 #include "GridObject.hpp"
-#include "Core/DirectX11/Renderer/LineRenderer.hpp"
+#include "Core/DirectX/DirectX11/Renderer/LineRenderer.hpp"
 #include "Core/System/Component/GridComponent.hpp"
 
 GridObject::GridObject()

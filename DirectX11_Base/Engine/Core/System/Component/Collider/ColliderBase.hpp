@@ -10,7 +10,7 @@
 //	include
 // ==============================
 #include "Core/System/Component/Component.hpp"
-#include "Core/DirectX11/System/DX11_Math.hpp"
+#include "Core/DirectX/Utility/DX_Math.hpp"
 
 // ==============================
 //  ‘O•ûéŒ¾
