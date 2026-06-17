@@ -368,7 +368,6 @@
     <ClCompile Include="Engine\ryuu_lib\ThreadPool\ThreadPool.cpp">
       <Filter>Engine\ryuu_lib\ThreadPool</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EngineAPI\EngineAPI_Implementation.hpp" />
     <ClCompile Include="Engine\Core\DirectX\DirectX11\DX11_Core.cpp">
       <Filter>Engine\Core\DirectX\DirectX11</Filter>
     </ClCompile>
@@ -467,6 +466,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\System\API\Application.cpp">
       <Filter>Engine\Core\System\API</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EngineAPI\EngineAPI_Implementation.hpp">
+      <Filter>Engine\EngineAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
