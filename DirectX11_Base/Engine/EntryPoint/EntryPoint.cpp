@@ -85,7 +85,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 		// ウィンドウのメッセージループ処理
 		if (window.MessageLoop())
 		{
-			Main::GameLoop(frame);
+			Main::MainLoop(frame);
 		}
 	}
 

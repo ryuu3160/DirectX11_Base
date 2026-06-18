@@ -6,6 +6,11 @@
 ===================================================================+*/
 
 // ==============================
+// define
+// ==============================
+#define FORGEX_EDITOR
+
+// ==============================
 //	include
 // ==============================
 #include "Main.hpp"
@@ -16,9 +21,16 @@
 #include "Core/System/Project/GameProject.hpp"
 #include "ryuu_lib/ThreadPool/ThreadPool.hpp"
 
+#ifdef FORGEX_EDITOR
+#include "Core/System/API/EditorApp.hpp"
+#else
+#include "Core/System/API/Application.hpp"
+#endif
+
 // ==============================
 //  プロトタイプ宣言
 // ==============================
+void GameLoop(_In_ FrameManager &In_Frame);
 void Update(_In_ float In_DeltaTime);
 void FixedUpdate(_In_ double In_FixedDeltaTime);
 void Draw();
@@ -131,50 +143,63 @@ void Main::Uninit()
 	Input::Uninit();
 }
 
-void Main::GameLoop(_In_ FrameManager &In_Frame)
+void Main::MainLoop(_In_ FrameManager &In_Frame)
 {
 	// fps制御
 	if (In_Frame.UpdateMain())
 	{
-		auto &CollM = CollisionManager::GetInstance();
-
-		float DeltaTime = In_Frame.GetTick() * In_Frame.GetTimeScale();
-		double FixedDeltaTime = In_Frame.GetFixedDeltaTime();
-		In_Frame.AddAccumulatedTime(DeltaTime);
-
-		// スパイラル回避
-		In_Frame.SetAccumulatedTime(std::min(In_Frame.GetAccumulatedTime(), FixedDeltaTime * In_Frame.GetMaxStepCount()));
-		int Steps = 0;
-
 		// Inputの更新
 		Input::Update();
-		// InputSystemの更新
-		InputSystem::GetInstance().Update(DeltaTime);
+		bool IsLoop = true;
+#ifdef FORGEX_EDITOR
+		auto &app = EditorApp::GetInstance();
+		IsLoop = !app.IsPaused();
+#endif
+		if(IsLoop)
+			GameLoop(In_Frame);	// ゲームループ
 
-		while (In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
-		{
-			// 固定刻みで物理更新
-			FixedUpdate(FixedDeltaTime);
-
-			// 当たり判定処理
-			CollM.CheckAllCollisions();
-
-			// 当たり判定のコールバック呼び出し
-			CollM.CallAllCollisionCallbacks();
-
-			// フレーム時間の減算＆ステップ数加算
-			In_Frame.SubAccumulatedTime(FixedDeltaTime);
-			++Steps;
-		}
-
-		Update(DeltaTime);	// 更新処理
-		// シーン切り替えの更新
-		SceneManager::GetInstance().UpdateSceneChange();
+		
 		// Inputの更新終了処理
 		Input::EndUpdate();
 		Draw();	// 描画処理
 		ExecuteObjectsChange(); // オブジェクトの変更処理
 	}
+}
+
+void GameLoop(_In_ FrameManager &In_Frame)
+{
+	auto &CollM = CollisionManager::GetInstance();
+
+	float DeltaTime = In_Frame.GetTick() * In_Frame.GetTimeScale();
+	double FixedDeltaTime = In_Frame.GetFixedDeltaTime();
+	In_Frame.AddAccumulatedTime(DeltaTime);
+
+	// スパイラル回避
+	In_Frame.SetAccumulatedTime(std::min(In_Frame.GetAccumulatedTime(), FixedDeltaTime * In_Frame.GetMaxStepCount()));
+	int Steps = 0;
+
+	// InputSystemの更新
+	InputSystem::GetInstance().Update(DeltaTime);
+
+	while(In_Frame.GetAccumulatedTime() >= FixedDeltaTime && Steps < In_Frame.GetMaxStepCount())
+	{
+		// 固定刻みで物理更新
+		FixedUpdate(FixedDeltaTime);
+
+		// 当たり判定処理
+		CollM.CheckAllCollisions();
+
+		// 当たり判定のコールバック呼び出し
+		CollM.CallAllCollisionCallbacks();
+
+		// フレーム時間の減算＆ステップ数加算
+		In_Frame.SubAccumulatedTime(FixedDeltaTime);
+		++Steps;
+	}
+
+	Update(DeltaTime);	// 更新処理
+	// シーン切り替えの更新
+	SceneManager::GetInstance().UpdateSceneChange();
 }
 
 void FixedUpdate(_In_ double In_FixedDeltaTime)
