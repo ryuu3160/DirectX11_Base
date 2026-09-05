@@ -2268,7 +2268,7 @@ bool ItemNewProject::ValidateProjectName() const
         return false;
 
     // 既に存在するかチェック
-    std::filesystem::path fullPath = std::filesystem::path(m_Location) / m_ProjectName;
+	std::filesystem::path fullPath = std::filesystem::path(Util::UTF8ToUTF16(m_Location)) / m_ProjectName;
     if(std::filesystem::exists(fullPath))
         return false;
 

@@ -21,14 +21,19 @@ namespace Util
 {
 	std::string WideToUTF8(_In_ const std::wstring_view In_WideStr)
 	{
-		if(In_WideStr.empty()) return "";
+		if(In_WideStr.empty())
+			return "";
+
+		int wideLen = static_cast<int>(In_WideStr.size());
 
 		// まず必要なバッファサイズを取得
-		int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, In_WideStr.data(), -1, nullptr, 0, nullptr, nullptr);
+		int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, In_WideStr.data(), wideLen, nullptr, 0, nullptr, nullptr);
+		if(sizeNeeded <= 0)
+			return "";
 		std::string utf8Str(sizeNeeded, '\0');
 
 		// UTF-8に変換
-		WideCharToMultiByte(CP_UTF8, 0, In_WideStr.data(), -1, &utf8Str[0], sizeNeeded, nullptr, nullptr);
+		WideCharToMultiByte(CP_UTF8, 0, In_WideStr.data(), wideLen, &utf8Str[0], sizeNeeded, nullptr, nullptr);
 		return utf8Str;
 	}
 
@@ -70,10 +75,19 @@ namespace Util
 
 	std::u16string UTF8ToUTF16(_In_ std::string_view In_UTF8Str)
 	{
-		int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), -1, nullptr, 0);
+		if(In_UTF8Str.empty())
+			return u"";
+
+		int strLen = static_cast<int>(In_UTF8Str.size());
+
+		int sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), strLen, nullptr, 0);
+
+		if(sizeNeeded <= 0)
+			return u"";
+
 		std::u16string utf16Str(sizeNeeded, u'\0');
 
-		MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), -1, reinterpret_cast<wchar_t *>(&utf16Str[0]), sizeNeeded);
+		MultiByteToWideChar(CP_UTF8, 0, In_UTF8Str.data(), strLen, reinterpret_cast<wchar_t *>(&utf16Str[0]), sizeNeeded);
 		return utf16Str;
 	}
 
